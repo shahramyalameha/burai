@@ -9,7 +9,8 @@ Welcome to the BURAI documentation!
 BURAI
 -----
 
-This manual explains how to use The BURAI which is a GUI system of Quantum ESPRESSO. In additon, the entire BURAI package is available under the GNU Lesser General Public License, version 3.0. 
+This manual explains how to use The BURAI which is a GUI system of Quantum ESPRESSO.
+The entire BURAI package is available under the GNU Lesser General Public License, version 3.0. 
 
 Contents:
 
