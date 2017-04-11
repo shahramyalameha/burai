@@ -5,5 +5,5 @@ Download
 --------
 
 
-setting software
+Setting software
 ----------------
