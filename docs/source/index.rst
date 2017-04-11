@@ -16,10 +16,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   downloads
-   installation_guide
-   user_guide
-   tutorial
+   install
+   how_to_use_burai
 
 Indices and tables
 ==================
