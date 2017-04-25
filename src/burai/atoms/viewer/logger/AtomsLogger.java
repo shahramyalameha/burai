@@ -127,10 +127,10 @@ public class AtomsLogger {
         }
 
         this.cell.removeAllAtoms();
-        this.cell.stopBondResolving();
+        this.cell.stopResolving();
         this.restoreCell(config);
         this.restoreAtoms(config);
-        this.cell.restartBondResolving();
+        this.cell.restartResolving();
         return true;
     }
 

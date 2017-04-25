@@ -234,7 +234,7 @@ public class CellBinder {
     private void actionForAllAtoms(Cell cell) {
         cell.removeAllAtoms();
 
-        cell.stopBondResolving();
+        cell.stopResolving();
 
         List<Atom> atoms = this.input.getAtoms();
         for (Atom atom : atoms) {
@@ -243,6 +243,6 @@ public class CellBinder {
             }
         }
 
-        cell.restartBondResolving();
+        cell.restartResolving();
     }
 }

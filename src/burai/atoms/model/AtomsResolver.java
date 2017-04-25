@@ -42,6 +42,20 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
         return this.auto;
     }
 
+    protected void resolve() {
+        Atom[] atoms = this.cell.listAtoms();
+        if (atoms == null || atoms.length < 1) {
+            return;
+        }
+
+        for (Atom atom : atoms) {
+            double x = atom.getX();
+            double y = atom.getY();
+            double z = atom.getZ();
+            atom.moveTo(x, y, z);
+        }
+    }
+
     protected void packAtomIntoCell(Atom atom) {
         boolean orgAuto = this.auto;
         this.auto = false;
@@ -191,17 +205,7 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        Atom[] atoms = this.cell.listAtoms();
-        if (atoms == null || atoms.length < 1) {
-            return;
-        }
-
-        for (Atom atom : atoms) {
-            double x = atom.getX();
-            double y = atom.getY();
-            double z = atom.getZ();
-            atom.moveTo(x, y, z);
-        }
+        this.resolve();
     }
 
     @Override

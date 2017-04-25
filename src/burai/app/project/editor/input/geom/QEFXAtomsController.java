@@ -225,7 +225,7 @@ public class QEFXAtomsController extends QEFXInputModelController {
             return;
         }
 
-        this.modelCell.stopBondResolving();
+        this.modelCell.stopResolving();
 
         int numAtoms = atomicPositions.numPositions();
         for (int i = 0; i < numAtoms; i++) {
@@ -236,7 +236,7 @@ public class QEFXAtomsController extends QEFXInputModelController {
             }
         }
 
-        this.modelCell.restartBondResolving();
+        this.modelCell.restartResolving();
     }
 
     private void setupPlusButton() {
