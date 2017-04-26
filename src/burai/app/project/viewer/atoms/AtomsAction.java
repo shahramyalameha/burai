@@ -11,12 +11,15 @@ package burai.app.project.viewer.atoms;
 
 import javafx.scene.layout.BorderPane;
 import burai.app.project.QEFXProjectController;
+import burai.atoms.jmol.AtomsJmol;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerBase;
 import burai.project.Project;
 
 public class AtomsAction {
+
+    private static final boolean ATOMS_JMOL = true;
 
     private static final double ATOMS_VIEWER_SIZE = 400.0;
 
@@ -46,7 +49,11 @@ public class AtomsAction {
             return;
         }
 
-        this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
+        if (ATOMS_JMOL) {
+            this.atomsViewer = new AtomsJmol(cell, ATOMS_VIEWER_SIZE);
+        } else {
+            this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
+        }
 
         final BorderPane projectPane;
         if (this.controller != null) {
