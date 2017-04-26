@@ -33,7 +33,7 @@ import burai.app.project.menu.MenuItemSelected;
 import burai.app.project.menu.fan.QEFXFanMenu;
 import burai.app.project.menu.teeth.QEFXTeethMenu;
 import burai.app.project.viewer.ViewerActions;
-import burai.atoms.viewer.AtomsViewerBase;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
@@ -87,7 +87,7 @@ public class QEFXProjectController extends QEFXAppController {
 
     private EditorActions editorActions;
 
-    private AtomsViewerBase atomsViewer;
+    private AtomsViewerInterface atomsViewer;
 
     private int resultMode;
 
@@ -197,8 +197,8 @@ public class QEFXProjectController extends QEFXAppController {
             children.clear();
 
             if (node != null) {
-                if (node instanceof AtomsViewerBase) {
-                    this.atomsViewer = (AtomsViewerBase) node;
+                if (node instanceof AtomsViewerInterface) {
+                    this.atomsViewer = (AtomsViewerInterface) node;
                     this.atomsViewer.bindSceneTo(this.viewerPane);
                 }
                 children.add(node);

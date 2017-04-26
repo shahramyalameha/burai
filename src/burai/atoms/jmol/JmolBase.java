@@ -28,6 +28,12 @@ public class JmolBase extends JPanel {
         this.adapter = new SmarterJmolAdapter();
         this.viewer = JmolViewer.allocateViewer(this, this.adapter);
         this.viewer.setJmolDefaults();
+        this.setupJmolViewer();
+    }
+
+    private void setupJmolViewer() {
+        this.viewer.script("frank OFF");
+        this.viewer.script("background DIMGRAY");
     }
 
     public JmolViewer getJmolViewer() {

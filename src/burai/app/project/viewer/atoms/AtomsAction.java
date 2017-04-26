@@ -14,7 +14,7 @@ import burai.app.project.QEFXProjectController;
 import burai.atoms.jmol.AtomsJmol;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
-import burai.atoms.viewer.AtomsViewerBase;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.project.Project;
 
 public class AtomsAction {
@@ -27,7 +27,7 @@ public class AtomsAction {
 
     private QEFXProjectController controller;
 
-    private AtomsViewerBase atomsViewer;
+    private AtomsViewerInterface atomsViewer;
 
     public AtomsAction(Project project, QEFXProjectController controller) {
         if (project == null) {

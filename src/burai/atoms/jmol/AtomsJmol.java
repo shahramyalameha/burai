@@ -12,6 +12,9 @@ package burai.atoms.jmol;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.layout.BorderPane;
+
+import org.jmol.api.JmolViewer;
+
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewerBase;
 
@@ -37,6 +40,11 @@ public class AtomsJmol extends AtomsViewerBase<BorderPane> {
 
     private void createJmolBase() {
         this.jmolBase = new JmolBase();
+
+        JmolViewer jmolViewer = this.jmolBase.getJmolViewer();
+        if (jmolViewer != null) {
+            // TODO
+        }
     }
 
     private void createJmolNode() {
@@ -46,7 +54,9 @@ public class AtomsJmol extends AtomsViewerBase<BorderPane> {
 
     @Override
     protected BorderPane newSceneRoot() {
-        return new BorderPane();
+        BorderPane pane = new BorderPane();
+        pane.setStyle("-fx-background-color: transparent");
+        return pane;
     }
 
     @Override

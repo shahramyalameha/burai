@@ -16,7 +16,6 @@ import java.util.Map;
 
 import javafx.scene.Camera;
 import javafx.scene.DepthTest;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.Parent;
@@ -27,7 +26,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import burai.atoms.model.Cell;
 
-public abstract class AtomsViewerBase<R extends Parent> extends Group {
+public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInterface {
 
     private static final Color BACKGROUND_COLOR = Color.DIMGRAY;
 
@@ -104,18 +103,22 @@ public abstract class AtomsViewerBase<R extends Parent> extends Group {
         this.subScene.heightProperty().addListener(o -> this.resizeScene());
     }
 
+    @Override
     public Cell getCell() {
         return this.cell;
     }
 
+    @Override
     public double getSceneWidth() {
         return this.width;
     }
 
+    @Override
     public double getSceneHeight() {
         return this.height;
     }
 
+    @Override
     public void addExclusiveNode(Node node) {
         if (node == null) {
             return;
@@ -126,6 +129,7 @@ public abstract class AtomsViewerBase<R extends Parent> extends Group {
         });
     }
 
+    @Override
     public void addExclusiveNode(NodeWrapper nodeWrapper) {
         if (nodeWrapper == null) {
             return;
@@ -207,6 +211,7 @@ public abstract class AtomsViewerBase<R extends Parent> extends Group {
         this.onSceneResized();
     }
 
+    @Override
     public void bindSceneTo(Pane pane) {
         if (pane == null) {
             return;
@@ -237,6 +242,7 @@ public abstract class AtomsViewerBase<R extends Parent> extends Group {
         pane.getChildren().add(this.subScene);
     }
 
+    @Override
     public void unbindScene() {
 
         this.subScene.widthProperty().unbind();
