@@ -28,7 +28,7 @@ import burai.com.file.FileTools;
 public class JmolCIFAction implements JmolAction {
 
     private static final double MIN_VOLUME = 1.0e-6;
-    private static final double MAX_DENSITY = 1.0;
+    private static final double MAX_DENSITY = 0.5;
 
     private static final long PRE_DELETE_TIME = 4000L;
 
@@ -211,7 +211,6 @@ public class JmolCIFAction implements JmolAction {
         }
 
         viewer.script("load '" + cifFile.getPath() + "'");
-        viewer.script("refresh");
 
         this.deleteCIF(cifFile);
 

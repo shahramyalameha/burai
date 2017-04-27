@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -39,8 +40,6 @@ import burai.project.Project;
 
 public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventListener, CellEventListener {
 
-    private static final int LARGE_NUM_ATOMS = 64;
-
     private static final String FIGURE_CLASS = "icon-atoms";
     private static final double FIGURE_FONT_SIZE1 = 0.32;
     private static final double FIGURE_FONT_SIZE2 = 0.20;
@@ -56,6 +55,8 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
     private AtomsVLight atomsVLight;
 
+    private boolean isLightFigure;
+
     private boolean toBeFlushed;
 
     public QEFXProjectIcon(Project project) {
@@ -64,6 +65,7 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
         this.atomsSize = -1.0;
         this.atomsBase = null;
         this.atomsVLight = null;
+        this.isLightFigure = false;
         this.toBeFlushed = false;
 
         this.setupCellAndAtoms();
@@ -84,11 +86,22 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
         }
     }
 
+    private void detachAtomsVLight() {
+        if (this.atomsVLight == null) {
+            return;
+        }
+
+        AtomsVLight atomsVLight2 = this.atomsVLight;
+        Platform.runLater(() -> {
+            atomsVLight2.detachFromCell();
+        });
+
+        this.atomsVLight = null;
+    }
+
     @Override
     public void detach() {
-        if (this.atomsVLight != null) {
-            this.atomsVLight.detachFromCell();
-        }
+        this.detachAtomsVLight();
 
         this.toBeFlushed = true;
         Cell cell = this.content.getCell();
@@ -97,8 +110,6 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
         }
 
         this.content = null;
-
-        this.atomsVLight = null;
     }
 
     @Override
@@ -119,23 +130,25 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
     private Node getAtomsFigure(double size) {
         this.atomsSize = size;
 
-        if (size <= 0.0) {
-            this.atomsVLight = null;
+        Cell cell = this.content.getCell();
+        if (cell == null) {
             return null;
         }
 
-        Cell cell = this.content.getCell();
-        if (cell != null && cell.numAtoms() > LARGE_NUM_ATOMS) {
+        if (size <= 0.0) {
+            this.detachAtomsVLight();
+            return null;
+        }
+
+        if (this.isLightFigure || (!cell.isResolving())) {
+            this.isLightFigure = true;
+            this.detachAtomsVLight();
             return this.getLightFigure(size);
         }
 
         if (this.atomsVLight == null || this.atomsVLight.getSize() != size) {
-            if (cell != null) {
-                if (this.atomsVLight != null) {
-                    this.atomsVLight.detachFromCell();
-                }
-                this.atomsVLight = new AtomsVLight(cell, size);
-            }
+            this.detachAtomsVLight();
+            this.atomsVLight = new AtomsVLight(cell, size);
         }
 
         return this.atomsVLight;

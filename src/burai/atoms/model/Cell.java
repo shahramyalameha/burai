@@ -24,7 +24,11 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     public static final int ATOMS_POSITION_SCALED = 1;
     public static final int ATOMS_POSITION_LEFT = 2;
 
+    private static final int MAX_ATOMS_TO_RESOLVE = 64;
+
     private static final double MIN_VOLUME = 1.0e-6;
+
+    private static final double THR_LATTICE = 1.0e-4;
 
     private double[][] lattice;
 
@@ -38,23 +42,33 @@ public class Cell extends Model<CellEvent, CellEventListener> {
 
     private List<Bond> bonds;
 
+    private int maxAtomsToResolve;
+
+    private boolean resolverStopping;
+
     private AtomsResolver atomsResolver;
 
     private BondsResolver bondsResolver;
 
     public Cell(double[][] lattice) throws ZeroVolumCellException {
-        this(lattice, true);
+        this(lattice, MAX_ATOMS_TO_RESOLVE);
     }
 
-    public Cell(double[][] lattice, boolean withResolvers) throws ZeroVolumCellException {
+    public Cell(double[][] lattice, int maxAtomsToResolve) throws ZeroVolumCellException {
         this.checkLattice(lattice);
         this.setupLattice(lattice);
 
         this.atoms = null;
         this.bonds = null;
 
-        if (withResolvers) {
-            this.atomsResolver = new AtomsResolver(this);
+        this.maxAtomsToResolve = Math.max(0, maxAtomsToResolve);
+
+        this.resolverStopping = false;
+
+        this.atomsResolver = new AtomsResolver(this);
+
+        this.bondsResolver = null;
+        if (this.maxAtomsToResolve > 0) {
             this.bondsResolver = new BondsResolver(this);
         }
     }
@@ -235,7 +249,13 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         return this.bonds.toArray(new Bond[this.bonds.size()]);
     }
 
+    public boolean isResolving() {
+        return (this.numAtoms() <= this.maxAtomsToResolve);
+    }
+
     public void stopResolving() {
+        this.resolverStopping = true;
+
         if (this.atomsResolver != null) {
             this.atomsResolver.setAuto(false);
         }
@@ -246,56 +266,28 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     }
 
     public void restartResolving() {
-        if (this.atomsResolver != null && !this.atomsResolver.isAuto()) {
+        this.resolverStopping = false;
+
+        if (this.atomsResolver != null) {
             this.atomsResolver.setAuto(true);
             this.atomsResolver.resolve();
         }
 
-        if (this.bondsResolver != null && !this.bondsResolver.isAuto()) {
+        if (this.bondsResolver != null && this.isResolving()) {
             this.bondsResolver.setAuto(true);
             this.bondsResolver.resolve();
         }
     }
 
-    public void startResolving() {
-        if (this.atomsResolver == null) {
-            this.atomsResolver = new AtomsResolver(this);
-        }
-
-        if (this.bondsResolver == null) {
-            this.bondsResolver = new BondsResolver(this);
-        }
-
-        this.restartResolving();
+    public boolean moveLattice(double lattice[][]) throws ZeroVolumCellException {
+        return this.moveLattice(lattice, ATOMS_POSITION_WITH_LATTICE);
     }
 
-    public void cleanResolving() {
-        this.stopResolving();
-
-        Atom[] atomList = this.listAtoms(false);
-        for (Atom atom : atomList) {
-            if (atom != null && atom.isSlaveAtom()) {
-                this.removeAtom(atom);
-            }
-        }
-
-        Bond[] bondList = this.listBonds();
-        for (Bond bond : bondList) {
-            if (bond != null) {
-                this.removeBond(bond);
-            }
-        }
-    }
-
-    public void moveLattice(double lattice[][]) throws ZeroVolumCellException {
-        this.moveLattice(lattice, ATOMS_POSITION_WITH_LATTICE);
-    }
-
-    public void moveLattice(double lattice[][], int atomsPosition) throws ZeroVolumCellException {
+    public boolean moveLattice(double lattice[][], int atomsPosition) throws ZeroVolumCellException {
         this.checkLattice(lattice);
 
-        if (Matrix3D.equals(this.lattice, lattice)) {
-            return;
+        if (Matrix3D.equals(this.lattice, lattice, THR_LATTICE)) {
+            return false;
         }
 
         boolean orgAutoAtoms = false;
@@ -362,6 +354,8 @@ public class Cell extends Model<CellEvent, CellEventListener> {
                 listener.onLatticeMoved(event);
             }
         }
+
+        return true;
     }
 
     public boolean hasAtomAt(double a, double b, double c) {
@@ -426,6 +420,15 @@ public class Cell extends Model<CellEvent, CellEventListener> {
             return false;
         }
 
+        if (this.bondsResolver != null && (!this.resolverStopping)) {
+            boolean auto1 = this.bondsResolver.isAuto();
+            boolean auto2 = this.isResolving();
+            if (auto1 && (!auto2)) {
+                this.bondsResolver.setAuto(false);
+                //this.removeAllBonds();
+            }
+        }
+
         if (this.listeners != null) {
             CellEvent event = new CellEvent(this);
             event.setAtom(atom);
@@ -462,6 +465,15 @@ public class Cell extends Model<CellEvent, CellEventListener> {
             event.setAtom(atom2);
             for (CellEventListener listener : this.listeners) {
                 listener.onAtomRemoved(event);
+            }
+        }
+
+        if (this.bondsResolver != null && (!this.resolverStopping)) {
+            boolean auto1 = this.bondsResolver.isAuto();
+            boolean auto2 = this.isResolving();
+            if ((!auto1) && auto2) {
+                this.bondsResolver.setAuto(true);
+                this.bondsResolver.resolve();
             }
         }
 

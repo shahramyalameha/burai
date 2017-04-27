@@ -110,12 +110,16 @@ public class CellBinder {
                 cell.moveLattice(lattice, Cell.ATOMS_POSITION_WITH_LATTICE);
 
             } else if (atomicPositions.isAlat()) {
-                cell.moveLattice(lattice, Cell.ATOMS_POSITION_SCALED);
-                this.actionForAllAtoms(cell);
+                boolean cellMoved = cell.moveLattice(lattice, Cell.ATOMS_POSITION_SCALED);
+                if (cellMoved) {
+                    this.actionForAllAtoms(cell);
+                }
 
             } else {
-                cell.moveLattice(lattice, Cell.ATOMS_POSITION_LEFT);
-                this.actionForAllAtoms(cell);
+                boolean cellMoved = cell.moveLattice(lattice, Cell.ATOMS_POSITION_LEFT);
+                if (cellMoved) {
+                    this.actionForAllAtoms(cell);
+                }
             }
 
         } catch (ZeroVolumCellException e) {
