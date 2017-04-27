@@ -15,10 +15,16 @@ import javafx.scene.layout.BorderPane;
 
 import org.jmol.api.JmolViewer;
 
+import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.atoms.model.event.AtomEvent;
+import burai.atoms.model.event.AtomEventListener;
+import burai.atoms.model.event.CellEvent;
+import burai.atoms.model.event.CellEventListener;
+import burai.atoms.model.event.ModelEvent;
 import burai.atoms.viewer.AtomsViewerBase;
 
-public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> {
+public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements AtomEventListener, CellEventListener {
 
     private JmolBase jmolBase;
 
@@ -40,7 +46,7 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> {
         this.createJmolBase();
         this.createJmolNode();
         this.createJmolQueue();
-
+        this.setOneselfAsListener();
         this.sceneRoot.setCenter(this.jmolNode);
     }
 
@@ -60,8 +66,21 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> {
         JmolViewer jmolViewer = this.jmolBase == null ? null : this.jmolBase.getJmolViewer();
         this.jmolQueue = jmolViewer == null ? null : new JmolQueue(jmolViewer);
 
-        if (this.jmolQueue != null) {
+        if (this.jmolQueue != null && this.cell != null) {
             this.jmolQueue.addAction(new JmolCIFAction(this.cell));
+        }
+    }
+
+    private void setOneselfAsListener() {
+        this.cell.addListener(this);
+
+        Atom[] atoms = this.cell.listAtoms();
+        if (atoms != null) {
+            for (Atom atom : atoms) {
+                if (atom != null) {
+                    atom.addListener(this);
+                }
+            }
         }
     }
 
@@ -89,5 +108,90 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> {
         if (this.jmolQueue != null) {
             this.jmolQueue.stopActions();
         }
+    }
+
+    @Override
+    public boolean isToBeFlushed() {
+        return false;
+    }
+
+    @Override
+    public void onModelDisplayed(ModelEvent event) {
+        // NOP
+    }
+
+    @Override
+    public void onModelNotDisplayed(ModelEvent event) {
+        // NOP
+    }
+
+    @Override
+    public void onLatticeMoved(CellEvent event) {
+        if (event == null || this.cell != event.getSource()) {
+            return;
+        }
+
+        if (this.jmolQueue != null && this.cell != null) {
+            this.jmolQueue.addAction(new JmolCIFAction(this.cell));
+        }
+    }
+
+    @Override
+    public void onAtomAdded(CellEvent event) {
+        if (event == null || this.cell != event.getSource()) {
+            return;
+        }
+
+        Atom atom = event.getAtom();
+        if (atom == null) {
+            return;
+        }
+
+        atom.addListener(this);
+
+        // TODO 自動生成されたメソッド・スタブ
+    }
+
+    @Override
+    public void onAtomRemoved(CellEvent event) {
+        if (event == null || this.cell != event.getSource()) {
+            return;
+        }
+
+        // TODO 自動生成されたメソッド・スタブ
+    }
+
+    @Override
+    public void onBondAdded(CellEvent event) {
+        // NOP
+    }
+
+    @Override
+    public void onBondRemoved(CellEvent event) {
+        // NOP
+    }
+
+    @Override
+    public void onAtomRenamed(AtomEvent event) {
+        Object obj = event == null ? null : event.getSource();
+        if (obj == null || !(obj instanceof Atom)) {
+            return;
+        }
+
+        Atom atom = (Atom) obj;
+
+        // TODO 自動生成されたメソッド・スタブ
+    }
+
+    @Override
+    public void onAtomMoved(AtomEvent event) {
+        Object obj = event == null ? null : event.getSource();
+        if (obj == null || !(obj instanceof Atom)) {
+            return;
+        }
+
+        Atom atom = (Atom) obj;
+
+        // TODO 自動生成されたメソッド・スタブ
     }
 }

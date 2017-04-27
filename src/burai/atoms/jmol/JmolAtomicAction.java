@@ -20,6 +20,12 @@ public class JmolAtomicAction implements JmolAction {
     }
 
     @Override
+    public boolean isAvailable() {
+        // TODO 自動生成されたメソッド・スタブ
+        return false;
+    }
+
+    @Override
     public boolean actionOnJmol(JmolViewer viewer) {
         if (viewer == null) {
             return false;

@@ -294,6 +294,10 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     public void moveLattice(double lattice[][], int atomsPosition) throws ZeroVolumCellException {
         this.checkLattice(lattice);
 
+        if (Matrix3D.equals(this.lattice, lattice)) {
+            return;
+        }
+
         boolean orgAutoAtoms = false;
         if (this.atomsResolver != null) {
             orgAutoAtoms = this.atomsResolver.isAuto();

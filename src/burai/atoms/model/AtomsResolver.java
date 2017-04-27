@@ -31,6 +31,15 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
         this.cell = cell;
         this.cell.addListener(this);
 
+        Atom[] atoms = this.cell.listAtoms();
+        if (atoms != null) {
+            for (Atom atom : atoms) {
+                if (atom != null) {
+                    atom.addListener(this);
+                }
+            }
+        }
+
         this.auto = true;
     }
 

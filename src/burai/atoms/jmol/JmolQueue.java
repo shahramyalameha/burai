@@ -10,17 +10,18 @@
 package burai.atoms.jmol;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 import org.jmol.api.JmolViewer;
 
 public class JmolQueue implements Runnable {
 
+    private static final long POST_CIF_TIME = 500L;
+
     private JmolViewer viewer;
 
     private boolean alive;
 
-    private Queue<JmolAction> actions;
+    private LinkedList<JmolAction> actions;
 
     public JmolQueue(JmolViewer viewer) {
         if (viewer == null) {
@@ -47,7 +48,11 @@ public class JmolQueue implements Runnable {
     }
 
     public synchronized boolean addAction(JmolAction action) {
-        boolean status = action == null ? false : this.actions.offer(action);
+        if (action == null || (!action.isAvailable())) {
+            return false;
+        }
+
+        boolean status = this.actions.offer(action);
         if (status) {
             this.notifyAll();
         }
@@ -63,7 +68,19 @@ public class JmolQueue implements Runnable {
 
             synchronized (this) {
                 while (this.alive) {
-                    action = this.actions.poll();
+                    int indexAction = 0;
+                    int numActions = this.actions.size();
+                    for (int i = (numActions - 1); i >= 0; i--) {
+                        JmolAction action2 = this.actions.get(i);
+                        if (action2 != null && (action2 instanceof JmolCIFAction)) {
+                            indexAction = i;
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i <= indexAction; i++) {
+                        action = this.actions.poll();
+                    }
                     if (action != null) {
                         break;
                     }
@@ -78,6 +95,18 @@ public class JmolQueue implements Runnable {
 
             if (action != null && this.isAlive()) {
                 action.actionOnJmol(this.viewer);
+            }
+
+            if (action != null && (action instanceof JmolCIFAction)) {
+                synchronized (this) {
+                    if (this.alive) {
+                        try {
+                            this.wait(POST_CIF_TIME);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
     }
