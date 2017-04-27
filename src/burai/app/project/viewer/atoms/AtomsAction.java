@@ -13,13 +13,10 @@ import javafx.scene.layout.BorderPane;
 import burai.app.project.QEFXProjectController;
 import burai.atoms.jmol.JmolAtomsViewer;
 import burai.atoms.model.Cell;
-import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
 import burai.project.Project;
 
 public class AtomsAction {
-
-    private static final boolean JMOL_ATOMS_VIEWER = true;
 
     private static final double ATOMS_VIEWER_SIZE = 400.0;
 
@@ -49,19 +46,21 @@ public class AtomsAction {
             return;
         }
 
-        if (JMOL_ATOMS_VIEWER) {
-            this.atomsViewer = new JmolAtomsViewer(cell, ATOMS_VIEWER_SIZE);
+        //this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
+        this.atomsViewer = new JmolAtomsViewer(cell, ATOMS_VIEWER_SIZE);
 
-            if (this.controller != null) {
-                this.controller.setOnDetached(controller_ -> {
-                    if (this.atomsViewer != null && (this.atomsViewer instanceof JmolAtomsViewer)) {
-                        ((JmolAtomsViewer) this.atomsViewer).stopJmol();
-                    }
-                });
-            }
+        if (this.controller != null) {
+            this.controller.setOnDetached(controller_ -> {
+                if (this.atomsViewer != null && (this.atomsViewer instanceof JmolAtomsViewer)) {
+                    ((JmolAtomsViewer) this.atomsViewer).stopJmol();
+                }
+            });
 
-        } else {
-            this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
+            this.controller.setOnShown(controller_ -> {
+                if (this.atomsViewer != null && (this.atomsViewer instanceof JmolAtomsViewer)) {
+                    ((JmolAtomsViewer) this.atomsViewer).repaintJmol();
+                }
+            });
         }
 
         final BorderPane projectPane;

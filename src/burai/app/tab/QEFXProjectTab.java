@@ -34,6 +34,7 @@ public class QEFXProjectTab extends QEFXTab<Project> {
 
         this.setupOnCloseRequest();
         this.setupOnClosed();
+        this.setupOnSelected();
         this.setupTabTitle();
     }
 
@@ -65,6 +66,16 @@ public class QEFXProjectTab extends QEFXTab<Project> {
 
             if (this.projectController != null) {
                 this.projectController.detach();
+            }
+        });
+    }
+
+    private void setupOnSelected() {
+        this.setOnSelectionChanged(event -> {
+            if (this.isSelected()) {
+                if (this.projectController != null) {
+                    this.projectController.toBeShown();
+                }
             }
         });
     }

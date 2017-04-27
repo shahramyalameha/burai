@@ -97,6 +97,10 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements Atom
 
     @Override
     protected void onSceneResized() {
+        this.repaintJmol();
+    }
+
+    public void repaintJmol() {
         Platform.runLater(() -> {
             if (this.jmolBase != null) {
                 this.jmolBase.repaint();

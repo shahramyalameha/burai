@@ -89,6 +89,8 @@ public class QEFXProjectController extends QEFXAppController {
 
     private AtomsViewerInterface atomsViewer;
 
+    private ProjectAction shownAction;
+
     private ProjectAction detachAction;
 
     private int resultMode;
@@ -112,6 +114,7 @@ public class QEFXProjectController extends QEFXAppController {
 
         this.atomsViewer = null;
 
+        this.shownAction = null;
         this.detachAction = null;
 
         this.resultMode = RESULT_MODE_NULL;
@@ -435,6 +438,16 @@ public class QEFXProjectController extends QEFXAppController {
 
     public void sceenShot(Node subject) {
         this.viewerActions.screenShot(subject);
+    }
+
+    public void toBeShown() {
+        if (this.shownAction != null) {
+            this.shownAction.actionOnProject(this);
+        }
+    }
+
+    public void setOnShown(ProjectAction action) {
+        this.shownAction = action;
     }
 
     public void detach() {
