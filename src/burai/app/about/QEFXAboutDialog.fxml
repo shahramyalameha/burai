@@ -20,14 +20,14 @@
          <children>
             <BorderPane prefWidth="520.0" BorderPane.alignment="CENTER">
                <center>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BURAI 1.1" BorderPane.alignment="CENTER">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BURAI 1.2" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="Arial Black" size="48.0" />
                      </font>
                   </Text>
                </center>
                <bottom>
-                  <Label style="-fx-font-family: monospaced;" text="Copyright (C) 2016 Satomichi Nishihara &lt;nisihara.burai@gmail.com&gt;." BorderPane.alignment="CENTER">
+                  <Label style="-fx-font-family: monospaced;" text="Copyright (C) 2017 Satomichi Nishihara &lt;nisihara.burai@gmail.com&gt;." BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets top="12.0" />
                      </BorderPane.margin>
