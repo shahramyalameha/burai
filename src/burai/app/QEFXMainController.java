@@ -352,7 +352,7 @@ public class QEFXMainController implements Initializable {
         return this.stage;
     }
 
-    public void setStage(Stage stage) {
+    protected void setStage(Stage stage) {
         this.stage = stage;
         if (this.stage == null) {
             return;
@@ -366,7 +366,7 @@ public class QEFXMainController implements Initializable {
         this.stage.setHeight(height);
         this.stage.setTitle("BURAI" + Version.VERSION + ", a GUI of Quantum ESPRESSO.");
         this.stage.setOnCloseRequest(event -> this.actionOnCloseRequest(event));
-        this.stage.setOnHidden(event -> Life.getInstance().toBeDead());
+        this.stage.setOnHidden(event -> this.actionOnHidden(event));
 
         Scene scene = this.stage.getScene();
         if (scene != null) {
@@ -422,6 +422,18 @@ public class QEFXMainController implements Initializable {
         }
     }
 
+    private void actionOnHidden(WindowEvent event) {
+        if (event != null && event.isConsumed()) {
+            return;
+        }
+
+        if (this.tabManager != null) {
+            this.tabManager.hideAllTabs();
+        }
+
+        Life.getInstance().toBeDead();
+    }
+
     public void quitSystem() {
         if (this.stage != null) {
             WindowEvent event = new WindowEvent(this.stage, WindowEvent.ANY);
@@ -433,8 +445,7 @@ public class QEFXMainController implements Initializable {
             }
 
             if (!event.isConsumed()) {
-                this.stage.close();
-                Life.getInstance().toBeDead();
+                this.stage.hide();
             }
         }
     }
@@ -457,7 +468,7 @@ public class QEFXMainController implements Initializable {
         }
     }
 
-    public void setExplorer(QEFXExplorer explorer) {
+    protected void setExplorer(QEFXExplorer explorer) {
         if (explorer == null) {
             return;
         }

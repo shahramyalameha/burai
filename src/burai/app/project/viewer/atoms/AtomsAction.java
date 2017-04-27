@@ -51,6 +51,15 @@ public class AtomsAction {
 
         if (ATOMS_JMOL) {
             this.atomsViewer = new AtomsJmol(cell, ATOMS_VIEWER_SIZE);
+
+            if (this.controller != null) {
+                this.controller.setOnDetached(controller_ -> {
+                    if (this.atomsViewer != null && (this.atomsViewer instanceof AtomsJmol)) {
+                        ((AtomsJmol) this.atomsViewer).stopJmol();
+                    }
+                });
+            }
+
         } else {
             this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
         }

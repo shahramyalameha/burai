@@ -33,11 +33,15 @@ public class JmolBase extends JPanel {
 
     private void setupJmolViewer() {
         this.viewer.script("frank OFF");
-        this.viewer.script("background DIMGRAY");
+        this.viewer.script("background DimGray");
     }
 
     public JmolViewer getJmolViewer() {
         return this.viewer;
+    }
+
+    public void stopJmolViewer() {
+        this.viewer.dispose();
     }
 
     @Override

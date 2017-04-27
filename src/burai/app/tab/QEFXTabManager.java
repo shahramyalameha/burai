@@ -130,7 +130,6 @@ public class QEFXTabManager {
 
             projectTab.setContent(qefxProject.getNode());
             projectTab.setProjectController(qefxProject.getController());
-            projectTab.setOnClosed(event -> this.controller.refreshProjectOnExplorer(project));
             this.tabPane.getTabs().add(projectTab);
         }
 
@@ -253,5 +252,39 @@ public class QEFXTabManager {
         }
 
         return false;
+    }
+
+    public boolean hideAllTabs() {
+        List<Tab> tabs = this.tabPane.getTabs();
+        if (tabs == null || tabs.isEmpty()) {
+            return true;
+        }
+
+        Tab[] tabArray = new Tab[tabs.size()];
+        tabArray = tabs.toArray(tabArray);
+        if (tabArray.length < 1) {
+            return false;
+        }
+
+        for (int i = 1; i < tabArray.length; i++) { // avoid home tab
+            Tab tab = tabArray[i];
+            if (tab == null) {
+                continue;
+            }
+
+            boolean status = tabs.remove(tab);
+            if (!status) {
+                return false;
+            }
+
+            Event event = new Event(Event.ANY);
+            if (!event.isConsumed()) {
+                if (tab.getOnClosed() != null) {
+                    tab.getOnClosed().handle(event);
+                }
+            }
+        }
+
+        return true;
     }
 }

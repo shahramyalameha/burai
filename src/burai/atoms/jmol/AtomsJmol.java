@@ -43,7 +43,7 @@ public class AtomsJmol extends AtomsViewerBase<BorderPane> {
 
         JmolViewer jmolViewer = this.jmolBase.getJmolViewer();
         if (jmolViewer != null) {
-            // TODO
+            jmolViewer.script("axes 2");
         }
     }
 
@@ -66,4 +66,7 @@ public class AtomsJmol extends AtomsViewerBase<BorderPane> {
         });
     }
 
+    public void stopJmol() {
+        this.jmolBase.stopJmolViewer();
+    }
 }

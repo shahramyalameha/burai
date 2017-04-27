@@ -17,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import burai.app.QEFXMain;
+import burai.app.QEFXMainController;
 import burai.app.project.QEFXProjectController;
 import burai.project.Project;
 import burai.run.RunningManager;
@@ -32,6 +33,7 @@ public class QEFXProjectTab extends QEFXTab<Project> {
         this.projectController = null;
 
         this.setupOnCloseRequest();
+        this.setupOnClosed();
         this.setupTabTitle();
     }
 
@@ -46,6 +48,23 @@ public class QEFXProjectTab extends QEFXTab<Project> {
             }
             if (event != null && (!event.isConsumed())) {
                 this.checkProjectInRunning(event);
+            }
+        });
+    }
+
+    private void setupOnClosed() {
+        this.setOnClosed(event -> {
+            QEFXMainController mainController = null;
+            if (this.projectController != null) {
+                mainController = this.projectController.getMainController();
+            }
+
+            if (mainController != null) {
+                mainController.refreshProjectOnExplorer(this.body);
+            }
+
+            if (this.projectController != null) {
+                this.projectController.detach();
             }
         });
     }
