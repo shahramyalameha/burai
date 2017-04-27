@@ -33,13 +33,13 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
         }
 
         this.cell = cell;
-        this.cell.addListener(this);
+        this.cell.addListenerFirst(this);
 
         Atom[] atoms = this.cell.listAtoms();
         if (atoms != null) {
             for (Atom atom : atoms) {
                 if (atom != null) {
-                    atom.addListener(this);
+                    atom.addListenerFirst(this);
                 }
             }
         }
@@ -215,7 +215,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        atom.addListener(this);
+        atom.addListenerFirst(this);
 
         if (!this.auto) {
             return;

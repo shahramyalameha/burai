@@ -42,13 +42,13 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
             return;
         }
 
-        cell.addListener(this);
+        cell.addListenerFirst(this);
 
         Atom[] atoms = cell.listAtoms(true);
         if (atoms != null) {
             for (Atom atom : atoms) {
                 if (atom != null) {
-                    atom.addListener(this);
+                    atom.addListenerFirst(this);
                     atom.addPropertyListener(AtomProperty.FIXED_X, o -> this.onAtomFixedChanged(atom));
                     atom.addPropertyListener(AtomProperty.FIXED_Y, o -> this.onAtomFixedChanged(atom));
                     atom.addPropertyListener(AtomProperty.FIXED_Z, o -> this.onAtomFixedChanged(atom));
@@ -206,7 +206,7 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
             atom.setProperty(AtomProperty.INPUT_INDEX, index);
         }
 
-        atom.addListener(this);
+        atom.addListenerFirst(this);
         atom.addPropertyListener(AtomProperty.FIXED_X, o -> this.onAtomFixedChanged(atom));
         atom.addPropertyListener(AtomProperty.FIXED_Y, o -> this.onAtomFixedChanged(atom));
         atom.addPropertyListener(AtomProperty.FIXED_Z, o -> this.onAtomFixedChanged(atom));

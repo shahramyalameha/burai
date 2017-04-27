@@ -40,6 +40,14 @@ public abstract class Model<E extends ModelEvent, L extends ModelEventListener> 
     }
 
     public void addListener(L listener) {
+        this.addListener(listener, false);
+    }
+
+    public void addListenerFirst(L listener) {
+        this.addListener(listener, true);
+    }
+
+    private void addListener(L listener, boolean first) {
         if (listener == null) {
             return;
         }
@@ -48,7 +56,11 @@ public abstract class Model<E extends ModelEvent, L extends ModelEventListener> 
             this.listeners = new ArrayList<L>();
         }
 
-        this.listeners.add(listener);
+        if (first) {
+            this.listeners.add(0, listener);
+        } else {
+            this.listeners.add(listener);
+        }
     }
 
     public void flushListeners() {
