@@ -50,6 +50,10 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
     private static final String[] BUFFER_ELEMENTS = new String[BUFFER_LENGTH];
     private static final int[] BUFFER_MULTS = new int[BUFFER_LENGTH];
 
+    private double atomsSize;
+
+    private Group atomsBase;
+
     private AtomsVLight atomsVLight;
 
     private boolean toBeFlushed;
@@ -57,6 +61,8 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
     public QEFXProjectIcon(Project project) {
         super(project);
 
+        this.atomsSize = -1.0;
+        this.atomsBase = null;
         this.atomsVLight = null;
         this.toBeFlushed = false;
 
@@ -97,6 +103,22 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
     @Override
     public Node getFigure(double size) {
+        Node atomsFigure = this.getAtomsFigure(size);
+
+        if (atomsFigure == null) {
+            return this.getErrorFigure(size);
+        }
+
+        if (this.atomsBase == null) {
+            this.atomsBase = new Group(atomsFigure);
+        }
+
+        return this.atomsBase;
+    }
+
+    private Node getAtomsFigure(double size) {
+        this.atomsSize = size;
+
         if (size <= 0.0) {
             this.atomsVLight = null;
             return null;
@@ -114,10 +136,6 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
                 }
                 this.atomsVLight = new AtomsVLight(cell, size);
             }
-        }
-
-        if (this.atomsVLight == null) {
-            return this.getErrorFigure(size);
         }
 
         return this.atomsVLight;
@@ -145,9 +163,12 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
         StackPane.setAlignment(title, Pos.CENTER);
         stackPane.getChildren().add(title);
 
-        Group group = new Group(stackPane);
-        BorderPane.setMargin(group, new Insets(insetsSize));
-        return group;
+        BorderPane.setMargin(stackPane, new Insets(insetsSize));
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPrefSize(size, size);
+        borderPane.setCenter(stackPane);
+
+        return borderPane;
     }
 
     private Node getLightFigureTitle(double size, Cell cell) {
@@ -407,6 +428,14 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
         StringProperty caption = this.subCaptionProperty();
         caption.set(this.initSubCaption());
+
+        if (this.atomsBase != null) {
+            Node atomsFigure = this.getAtomsFigure(this.atomsSize);
+            if (atomsFigure != null) {
+                this.atomsBase.getChildren().clear();
+                this.atomsBase.getChildren().add(atomsFigure);
+            }
+        }
     }
 
     @Override
@@ -418,6 +447,14 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
         StringProperty caption = this.subCaptionProperty();
         caption.set(this.initSubCaption());
+
+        if (this.atomsBase != null) {
+            Node atomsFigure = this.getAtomsFigure(this.atomsSize);
+            if (atomsFigure != null) {
+                this.atomsBase.getChildren().clear();
+                this.atomsBase.getChildren().add(atomsFigure);
+            }
+        }
     }
 
     @Override
@@ -441,6 +478,14 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
         StringProperty caption = this.subCaptionProperty();
         caption.set(this.initSubCaption());
+
+        if (this.atomsBase != null) {
+            Node atomsFigure = this.getAtomsFigure(this.atomsSize);
+            if (atomsFigure != null) {
+                this.atomsBase.getChildren().clear();
+                this.atomsBase.getChildren().add(atomsFigure);
+            }
+        }
     }
 
     @Override

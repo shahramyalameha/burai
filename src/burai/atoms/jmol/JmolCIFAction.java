@@ -28,11 +28,13 @@ import burai.com.file.FileTools;
 public class JmolCIFAction implements JmolAction {
 
     private static final double MIN_VOLUME = 1.0e-6;
-    private static final double MAX_DENSITY = 0.25;
+    private static final double MAX_DENSITY = 1.0;
 
     private static final long PRE_DELETE_TIME = 4000L;
 
     private static final String KEY_JMOL_INDEX = "jmolIndex";
+
+    private static final String REAL_FORMAT = "%24.16e";
 
     private double a;
     private double b;
@@ -253,12 +255,12 @@ public class JmolCIFAction implements JmolAction {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 
             writer.println("data_" + name);
-            writer.println("_cell_length_a " + this.a);
-            writer.println("_cell_length_b " + this.b);
-            writer.println("_cell_length_c " + this.c);
-            writer.println("_cell_angle_alpha " + this.alpha);
-            writer.println("_cell_angle_beta  " + this.beta);
-            writer.println("_cell_angle_gamma " + this.gamma);
+            writer.println("_cell_length_a " + String.format(REAL_FORMAT, this.a));
+            writer.println("_cell_length_b " + String.format(REAL_FORMAT, this.b));
+            writer.println("_cell_length_c " + String.format(REAL_FORMAT, this.c));
+            writer.println("_cell_angle_alpha " + String.format(REAL_FORMAT, this.alpha));
+            writer.println("_cell_angle_beta  " + String.format(REAL_FORMAT, this.beta));
+            writer.println("_cell_angle_gamma " + String.format(REAL_FORMAT, this.gamma));
 
             writer.println("loop_");
             writer.println(" _symmetry_equiv_pos_site_id");
@@ -283,9 +285,9 @@ public class JmolCIFAction implements JmolAction {
                 String line = "  ";
                 line = line + label1 + " ";
                 line = line + label2 + " ";
-                line = line + x + " ";
-                line = line + y + " ";
-                line = line + z + " 1";
+                line = line + String.format(REAL_FORMAT, x) + " ";
+                line = line + String.format(REAL_FORMAT, y) + " ";
+                line = line + String.format(REAL_FORMAT, z) + " 1";
                 writer.println(line);
             }
 

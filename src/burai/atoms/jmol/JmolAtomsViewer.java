@@ -32,6 +32,8 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements Atom
 
     private JmolQueue jmolQueue;
 
+    private boolean toBeFlushed;
+
     public JmolAtomsViewer(Cell cell, double size) {
         this(cell, size, size);
     }
@@ -42,6 +44,8 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements Atom
         this.jmolBase = null;
         this.jmolNode = null;
         this.jmolQueue = null;
+
+        this.toBeFlushed = false;
 
         this.createJmolBase();
         this.createJmolNode();
@@ -108,11 +112,16 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements Atom
         if (this.jmolQueue != null) {
             this.jmolQueue.stopActions();
         }
+
+        this.toBeFlushed = true;
+        if (this.cell != null) {
+            this.cell.flushListeners();
+        }
     }
 
     @Override
     public boolean isToBeFlushed() {
-        return false;
+        return this.toBeFlushed;
     }
 
     @Override
