@@ -15,6 +15,7 @@ import java.util.List;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 
 public class Cell extends Model<CellEvent, CellEventListener> {
@@ -93,8 +94,8 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     private void calcNormLattice() {
         this.normLattice = new double[3];
         this.normLattice[0] = Matrix3D.norm(this.lattice[0]);
-        this.normLattice[1] = Matrix3D.norm(this.lattice[0]);
-        this.normLattice[2] = Matrix3D.norm(this.lattice[0]);
+        this.normLattice[1] = Matrix3D.norm(this.lattice[1]);
+        this.normLattice[2] = Matrix3D.norm(this.lattice[2]);
     }
 
     private void calcRecLattice() {
@@ -124,6 +125,30 @@ public class Cell extends Model<CellEvent, CellEventListener> {
 
     public double[][] copyLattice() {
         return Matrix3D.copy(this.lattice);
+    }
+
+    public double getA() {
+        return Lattice.getA(this.lattice);
+    }
+
+    public double getB() {
+        return Lattice.getB(this.lattice);
+    }
+
+    public double getC() {
+        return Lattice.getC(this.lattice);
+    }
+
+    public double getAlpha() {
+        return Lattice.getAlpha(this.lattice);
+    }
+
+    public double getBeta() {
+        return Lattice.getBeta(this.lattice);
+    }
+
+    public double getGamma() {
+        return Lattice.getGamma(this.lattice);
     }
 
     private double[] convertToCartesianPosition(double a, double b, double c, double[][] lattice) {

@@ -173,6 +173,10 @@ public class Atom extends Model<AtomEvent, AtomEventListener> {
         return this.name;
     }
 
+    public String getElementName() {
+        return ElementUtil.toElementName(this.name);
+    }
+
     public int getAtomNum() {
         return this.atomNum;
     }

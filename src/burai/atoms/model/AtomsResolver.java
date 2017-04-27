@@ -17,7 +17,7 @@ import burai.atoms.model.event.ModelEvent;
 
 public class AtomsResolver implements AtomEventListener, CellEventListener {
 
-    private static final double DELTA_ON_CELL = 0.1;
+    private static final double DELTA_ON_CELL = 0.5;
 
     private Cell cell;
 

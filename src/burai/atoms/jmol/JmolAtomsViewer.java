@@ -18,38 +18,51 @@ import org.jmol.api.JmolViewer;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewerBase;
 
-public class AtomsJmol extends AtomsViewerBase<BorderPane> {
+public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> {
 
     private JmolBase jmolBase;
+
     private SwingNode jmolNode;
 
-    public AtomsJmol(Cell cell, double size) {
+    private JmolQueue jmolQueue;
+
+    public JmolAtomsViewer(Cell cell, double size) {
         this(cell, size, size);
     }
 
-    public AtomsJmol(Cell cell, double width, double height) {
+    public JmolAtomsViewer(Cell cell, double width, double height) {
         super(cell, width, height);
 
         this.jmolBase = null;
         this.jmolNode = null;
+        this.jmolQueue = null;
 
         this.createJmolBase();
         this.createJmolNode();
+        this.createJmolQueue();
+
         this.sceneRoot.setCenter(this.jmolNode);
     }
 
     private void createJmolBase() {
         this.jmolBase = new JmolBase();
-
-        JmolViewer jmolViewer = this.jmolBase.getJmolViewer();
-        if (jmolViewer != null) {
-            jmolViewer.script("axes 2");
-        }
     }
 
     private void createJmolNode() {
         this.jmolNode = new SwingNode();
-        this.jmolNode.setContent(this.jmolBase);
+
+        if (this.jmolBase != null) {
+            this.jmolNode.setContent(this.jmolBase);
+        }
+    }
+
+    private void createJmolQueue() {
+        JmolViewer jmolViewer = this.jmolBase == null ? null : this.jmolBase.getJmolViewer();
+        this.jmolQueue = jmolViewer == null ? null : new JmolQueue(jmolViewer);
+
+        if (this.jmolQueue != null) {
+            this.jmolQueue.addAction(new JmolCIFAction(this.cell));
+        }
     }
 
     @Override
@@ -62,11 +75,19 @@ public class AtomsJmol extends AtomsViewerBase<BorderPane> {
     @Override
     protected void onSceneResized() {
         Platform.runLater(() -> {
-            this.jmolBase.repaint();
+            if (this.jmolBase != null) {
+                this.jmolBase.repaint();
+            }
         });
     }
 
     public void stopJmol() {
-        this.jmolBase.stopJmolViewer();
+        if (this.jmolBase != null) {
+            this.jmolBase.stopJmolViewer();
+        }
+
+        if (this.jmolQueue != null) {
+            this.jmolQueue.stopActions();
+        }
     }
 }

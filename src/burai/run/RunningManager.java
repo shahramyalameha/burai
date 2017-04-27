@@ -159,7 +159,7 @@ public class RunningManager implements Runnable {
                 }
             }
 
-            if (this.isAlive() && this.currentNode != null) {
+            if (this.currentNode != null && this.isAlive()) {
                 this.currentNode.setStatus(RunningStatus.RUNNING);
 
                 this.currentNode.run();
