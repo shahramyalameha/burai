@@ -192,8 +192,15 @@ public class JmolAtomsViewer extends AtomsViewerBase<BorderPane> implements Atom
         }
 
         Atom atom = (Atom) obj;
+        int natom = this.cell == null ? 0 : this.cell.numAtoms();
+        int index = this.cell == null ? -1 : this.cell.indexOfAtom(atom);
+        if (index < 0 || natom <= index) {
+            return;
+        }
 
-        // TODO 自動生成されたメソッド・スタブ
+        if (this.jmolQueue != null) {
+            this.jmolQueue.addAction(new JmolAtomRename(index, event));
+        }
     }
 
     @Override
