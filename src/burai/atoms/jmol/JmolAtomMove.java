@@ -70,9 +70,14 @@ public class JmolAtomMove implements JmolAction {
             return false;
         }
 
+        if (viewer_.ms.at[this.index] == null) {
+            return false;
+        }
+
         viewer_.ms.at[this.index].x = this.x;
         viewer_.ms.at[this.index].y = this.y;
         viewer_.ms.at[this.index].z = this.z;
+        viewer_.refreshMeasures(true);
         viewer_.refresh(3, "atom is moved #" + this.index);
 
         return true;
