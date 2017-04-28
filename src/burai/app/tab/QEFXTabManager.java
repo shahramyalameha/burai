@@ -118,7 +118,6 @@ public class QEFXTabManager {
         } else {
             PseudoLibrary.getInstance().waitToLoad();
             project.resolveQEInputs();
-            project.markQEInputs();
 
             QEFXProject qefxProject = null;
             try {
@@ -131,6 +130,8 @@ public class QEFXTabManager {
             projectTab.setContent(qefxProject.getNode());
             projectTab.setProjectController(qefxProject.getController());
             this.tabPane.getTabs().add(projectTab);
+
+            project.markQEInputs();
         }
 
         SingleSelectionModel<Tab> selectionModel = this.tabPane.getSelectionModel();
