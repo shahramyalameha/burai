@@ -15,8 +15,6 @@ import org.jmol.api.JmolViewer;
 
 public class JmolQueue implements Runnable {
 
-    private static final long POST_CIF_TIME = 500L;
-
     private JmolViewer viewer;
 
     private boolean alive;
@@ -72,7 +70,7 @@ public class JmolQueue implements Runnable {
                     int numActions = this.actions.size();
                     for (int i = (numActions - 1); i >= 0; i--) {
                         JmolAction action2 = this.actions.get(i);
-                        if (action2 != null && (action2 instanceof JmolCIFAction)) {
+                        if (action2 != null && (action2 instanceof JmolCIFRead)) {
                             indexAction = i;
                             break;
                         }
@@ -95,18 +93,6 @@ public class JmolQueue implements Runnable {
 
             if (action != null && this.isAlive()) {
                 action.actionOnJmol(this.viewer);
-            }
-
-            if (action != null && (action instanceof JmolCIFAction)) {
-                synchronized (this) {
-                    if (this.alive) {
-                        try {
-                            this.wait(POST_CIF_TIME);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
             }
         }
     }

@@ -25,10 +25,10 @@ import burai.atoms.model.Cell;
 import burai.com.env.Environments;
 import burai.com.file.FileTools;
 
-public class JmolCIFAction implements JmolAction {
+public class JmolCIFRead implements JmolAction {
 
     private static final double MIN_VOLUME = 1.0e-6;
-    private static final double MAX_DENSITY = 0.5;
+    private static final double MAX_DENSITY = 0.1;
 
     private static final long PRE_DELETE_TIME = 4000L;
 
@@ -49,7 +49,7 @@ public class JmolCIFAction implements JmolAction {
 
     private double density;
 
-    public JmolCIFAction(Cell cell) {
+    public JmolCIFRead(Cell cell) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
@@ -60,7 +60,7 @@ public class JmolCIFAction implements JmolAction {
     }
 
     private void setupDensity(Cell cell) {
-        double mass = (double) cell.numAtoms();
+        double mass = (double) cell.numAtoms(true);
         double volume = cell.getVolume();
 
         this.density = 2.0 * MAX_DENSITY;

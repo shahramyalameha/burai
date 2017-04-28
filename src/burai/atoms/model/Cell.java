@@ -199,19 +199,26 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         return this.atoms;
     }
 
-    public int numAtoms() {
+    public int numAtoms(boolean masterOnly) {
         if (this.atoms == null || this.atoms.isEmpty()) {
             return 0;
         }
 
-        int natom = 0;
-        for (Atom atom : this.atoms) {
-            if (atom != null && (!atom.isSlaveAtom())) {
-                natom++;
+        int natom = this.atoms.size();
+
+        if (masterOnly) {
+            for (Atom atom : this.atoms) {
+                if (atom == null || atom.isSlaveAtom()) {
+                    natom--;
+                }
             }
         }
 
         return natom;
+    }
+
+    public int numAtoms() {
+        return this.numAtoms(false);
     }
 
     public Atom[] listAtoms(boolean masterOnly) {
@@ -250,7 +257,7 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     }
 
     public boolean isResolving() {
-        return (this.numAtoms() <= this.maxAtomsToResolve);
+        return (this.numAtoms(true) <= this.maxAtomsToResolve);
     }
 
     public void stopResolving() {
@@ -430,6 +437,26 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         }
 
         return false;
+    }
+
+    public int indexOfAtom(Atom atom) {
+        if (atom == null) {
+            return -1;
+        }
+
+        if (this.atoms != null) {
+            return this.atoms.indexOf(atom);
+        }
+
+        //int natom = this.atoms == null ? 0 : this.atoms.size();
+        //for (int i = 0; i < natom; i++) {
+        //    Atom atom2 = this.atoms.get(i);
+        //    if (atom == atom2) {
+        //        return i;
+        //    }
+        //}
+
+        return -1;
     }
 
     public boolean addAtom(String name, double a, double b, double c) {
