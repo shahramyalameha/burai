@@ -107,18 +107,22 @@ public class CellBinder {
 
         try {
             if (atomicPositions.isCrystal()) {
-                cell.moveLattice(lattice, Cell.ATOMS_POSITION_WITH_LATTICE);
+                if (!cell.equalsLattice(lattice)) {
+                    cell.moveLattice(lattice, Cell.ATOMS_POSITION_WITH_LATTICE);
+                }
 
             } else if (atomicPositions.isAlat()) {
-                boolean cellMoved = cell.moveLattice(lattice, Cell.ATOMS_POSITION_SCALED);
-                if (cellMoved) {
-                    this.actionForAllAtoms(cell);
+                if (!cell.equalsLattice(lattice)) {
+                    List<Atom> atoms = this.input.getAtoms();
+                    cell.moveLattice(lattice, Cell.ATOMS_POSITION_SCALED, atoms);
+                    //this.actionForAllAtoms(cell);
                 }
 
             } else {
-                boolean cellMoved = cell.moveLattice(lattice, Cell.ATOMS_POSITION_LEFT);
-                if (cellMoved) {
-                    this.actionForAllAtoms(cell);
+                if (!cell.equalsLattice(lattice)) {
+                    List<Atom> atoms = this.input.getAtoms();
+                    cell.moveLattice(lattice, Cell.ATOMS_POSITION_LEFT, atoms);
+                    //this.actionForAllAtoms(cell);
                 }
             }
 

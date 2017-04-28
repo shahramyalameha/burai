@@ -279,14 +279,22 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         }
     }
 
+    public boolean equalsLattice(double lattice[][]) throws ZeroVolumCellException {
+        this.checkLattice(lattice);
+
+        return Matrix3D.equals(this.lattice, lattice, THR_LATTICE);
+    }
+
     public boolean moveLattice(double lattice[][]) throws ZeroVolumCellException {
-        return this.moveLattice(lattice, ATOMS_POSITION_WITH_LATTICE);
+        return this.moveLattice(lattice, ATOMS_POSITION_WITH_LATTICE, null);
     }
 
     public boolean moveLattice(double lattice[][], int atomsPosition) throws ZeroVolumCellException {
-        this.checkLattice(lattice);
+        return this.moveLattice(lattice, atomsPosition, null);
+    }
 
-        if (Matrix3D.equals(this.lattice, lattice, THR_LATTICE)) {
+    public boolean moveLattice(double lattice[][], int atomsPosition, List<Atom> refAtoms) throws ZeroVolumCellException {
+        if (this.equalsLattice(lattice)) {
             return false;
         }
 
@@ -305,7 +313,17 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         if (this.atoms != null) {
             if (atomsPosition == ATOMS_POSITION_WITH_LATTICE) {
                 Atom[] atomList = this.listAtoms(true);
-                for (Atom atom : atomList) {
+                boolean withRef = (refAtoms != null && atomList.length <= refAtoms.size());
+
+                for (int i = 0; i < atomList.length; i++) {
+                    Atom atom = null;
+                    if (withRef) {
+                        atom = refAtoms.get(i);
+                        atom = (atom == null) ? atomList[i] : atom;
+                    } else {
+                        atom = atomList[i];
+                    }
+
                     double[] position = null;
                     double x = atom.getX();
                     double y = atom.getY();
@@ -325,15 +343,41 @@ public class Cell extends Model<CellEvent, CellEventListener> {
                 double oldScale = this.normLattice[0];
                 double newScale = Matrix3D.norm(lattice[0]);
                 Atom[] atomList = this.listAtoms(true);
-                for (Atom atom : atomList) {
+                boolean withRef = (refAtoms != null && atomList.length <= refAtoms.size());
+
+                for (int i = 0; i < atomList.length; i++) {
+                    Atom atom = null;
+                    if (withRef) {
+                        atom = refAtoms.get(i);
+                        atom = (atom == null) ? atomList[i] : atom;
+                    } else {
+                        atom = atomList[i];
+                    }
+
                     double x = (newScale / oldScale) * atom.getX();
                     double y = (newScale / oldScale) * atom.getY();
                     double z = (newScale / oldScale) * atom.getZ();
-                    atom.moveTo(x, y, z);
+                    atomList[i].moveTo(x, y, z);
                 }
 
             } else if (atomsPosition == ATOMS_POSITION_LEFT) {
-                // NOP
+                if (refAtoms != null && !(refAtoms.isEmpty())) {
+                    Atom[] atomList = this.listAtoms(true);
+
+                    int natom = 0;
+                    if (atomList.length <= refAtoms.size()) {
+                        natom = atomList.length;
+                    }
+
+                    for (int i = 0; i < natom; i++) {
+                        Atom atom = refAtoms.get(i);
+                        atom = (atom == null) ? atomList[i] : atom;
+                        double x = atom.getX();
+                        double y = atom.getY();
+                        double z = atom.getZ();
+                        atomList[i].moveTo(x, y, z);
+                    }
+                }
             }
         }
 
