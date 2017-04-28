@@ -110,7 +110,7 @@ public class JmolCIFRead implements JmolAction {
             }
 
             int jmolIndex2 = atom.intProperty(KEY_JMOL_INDEX);
-            String label2 = label1 + jmolIndex2;
+            String label2 = label1 + "(" + jmolIndex2 + ")";
 
             double x = atom.getX();
             double y = atom.getY();
@@ -210,9 +210,16 @@ public class JmolCIFRead implements JmolAction {
             return false;
         }
 
-        viewer.script("load '" + cifFile.getPath() + "'");
+        try {
+            viewer.script("load '" + cifFile.getPath() + "'");
 
-        this.deleteCIF(cifFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+
+        } finally {
+            this.deleteCIF(cifFile);
+        }
 
         return true;
     }
@@ -282,8 +289,8 @@ public class JmolCIFRead implements JmolAction {
                 double z = this.atomCoord[i][2];
 
                 String line = "  ";
-                line = line + label1 + " ";
-                line = line + label2 + " ";
+                line = line + "'" + label1 + "' ";
+                line = line + "'" + label2 + "' ";
                 line = line + String.format(REAL_FORMAT, x) + " ";
                 line = line + String.format(REAL_FORMAT, y) + " ";
                 line = line + String.format(REAL_FORMAT, z) + " 1";

@@ -32,9 +32,14 @@ public class JmolBase extends JPanel {
     }
 
     private void setupJmolViewer() {
-        this.viewer.script("frank OFF");
-        this.viewer.script("background DimGray");
-        this.viewer.script("set displayCellParameters FALSE");
+        try {
+            this.viewer.script("frank OFF");
+            this.viewer.script("background DimGray");
+            this.viewer.script("set displayCellParameters FALSE");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public JmolViewer getJmolViewer() {

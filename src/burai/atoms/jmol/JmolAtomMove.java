@@ -10,13 +10,14 @@
 package burai.atoms.jmol;
 
 import org.jmol.api.JmolViewer;
+import org.jmol.modelset.AtomCollection;
 import org.jmol.viewer.Viewer;
 
 import burai.atoms.model.event.AtomEvent;
 
 public class JmolAtomMove implements JmolAction {
 
-    private static final double RMIN = 1.0e-6;
+    private static final double RMIN = 1.0e-4;
     private static final double RRMIN = RMIN * RMIN;
 
     private int index;
@@ -62,23 +63,20 @@ public class JmolAtomMove implements JmolAction {
 
         Viewer viewer_ = (Viewer) viewer;
 
-        if (viewer_.ms == null) {
+        String strData = "1;;" + Integer.toString(this.index + 1) + " ";
+        strData = strData + "A A ";
+        strData = strData + this.x + " ";
+        strData = strData + this.y + " ";
+        strData = strData + this.z + " ";
+
+        try {
+            viewer_.setAtomData(AtomCollection.TAINT_COORD, "", strData, true);
+            viewer_.refresh(3, "atom is moved #" + this.index);
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
-
-        if (viewer_.ms.at == null || viewer_.ms.at.length <= this.index) {
-            return false;
-        }
-
-        if (viewer_.ms.at[this.index] == null) {
-            return false;
-        }
-
-        viewer_.ms.at[this.index].x = this.x;
-        viewer_.ms.at[this.index].y = this.y;
-        viewer_.ms.at[this.index].z = this.z;
-        viewer_.refreshMeasures(true);
-        viewer_.refresh(3, "atom is moved #" + this.index);
 
         return true;
     }
