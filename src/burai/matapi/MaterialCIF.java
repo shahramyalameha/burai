@@ -16,37 +16,36 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
 import com.google.gson.Gson;
 
-public class MaterialIDs {
+public class MaterialCIF extends MaterialData {
 
-    private static final String MATERIALS_API_MIDS = "/mids";
+    private static final String MATERIALS_API_CIF = "/cif";
 
-    public static MaterialIDs getInstance(String formula) {
-        if (formula == null || formula.trim().isEmpty()) {
-            throw new IllegalArgumentException("formula is empty.");
+    public static MaterialCIF getInstance(String matID) {
+        if (matID == null || matID.trim().isEmpty()) {
+            throw new IllegalArgumentException("matID is empty.");
         }
 
-        MaterialIDs matIDs = null;
+        MaterialCIF matCif = null;
 
         try {
-            matIDs = readURL(formula.trim());
+            matCif = readURL(matID.trim());
         } catch (IOException e) {
             e.printStackTrace();
-            matIDs = null;
+            matCif = null;
         }
 
-        return matIDs;
+        return matCif;
     }
 
-    private static MaterialIDs readURL(String formula) throws IOException {
+    private static MaterialCIF readURL(String matID) throws IOException {
         Reader reader = null;
-        MaterialIDs matIDs = null;
+        MaterialCIF matCif = null;
 
         try {
-            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + formula + MATERIALS_API_MIDS);
+            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + matID + MATERIALS_API_CIF);
             URLConnection urlConnection = url.openConnection();
             if (urlConnection == null) {
                 throw new IOException("urlConnection is null.");
@@ -61,7 +60,7 @@ public class MaterialIDs {
             reader = new InputStreamReader(input);
 
             Gson gson = new Gson();
-            matIDs = gson.<MaterialIDs> fromJson(reader, MaterialIDs.class);
+            matCif = gson.<MaterialCIF> fromJson(reader, MaterialCIF.class);
 
         } catch (IOException e1) {
             throw e1;
@@ -79,28 +78,18 @@ public class MaterialIDs {
             }
         }
 
-        return matIDs;
+        return matCif;
     }
 
-    private List<String> response;
+    private String cif;
 
-    private MaterialIDs() {
-        this.response = null;
+    private MaterialCIF() {
+        super();
+        this.cif = null;
     }
 
-    public int numIDs() {
-        return this.response == null ? 0 : this.response.size();
-    }
-
-    public String getID(int index) throws IndexOutOfBoundsException {
-        if (this.response == null) {
-            return null;
-        }
-
-        if (index < 0 || this.response.size() <= index) {
-            throw new IndexOutOfBoundsException("incorrect index: " + index);
-        }
-
-        return this.response.get(index);
+    @Override
+    public String getCIF() {
+        return this.cif;
     }
 }

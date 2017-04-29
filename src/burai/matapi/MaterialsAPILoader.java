@@ -22,6 +22,8 @@ import burai.com.file.FileTools;
 
 public class MaterialsAPILoader {
 
+    protected static final String PROP_API_KEY = "material_api_key";
+
     private static final String[] DIRECTORY_IDS = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
     private static int directoryID = initDirectoryID();
@@ -103,7 +105,8 @@ public class MaterialsAPILoader {
 
         this.cifFiles = new ArrayList<File>();
 
-        this.matAPI = new MaterialsAPI(formula);
+        String apiKey = Environments.getProperty(PROP_API_KEY);
+        this.matAPI = new MaterialsAPI(formula, apiKey);
 
         this.loadCIFFiles();
     }
@@ -196,14 +199,14 @@ public class MaterialsAPILoader {
 
     private void loadCIFFiles() {
         Thread thread = new Thread(() -> {
-            this.preloadMaterialsData();
-            this.loadMaterialsData();
+            this.preloadMaterialsCIF();
+            this.loadMaterialsCIF();
         });
 
         thread.start();
     }
 
-    private void preloadMaterialsData() {
+    private void preloadMaterialsCIF() {
         int numIDs = this.matAPI.numMaterialIDs();
         for (int i = 0; i < numIDs; i++) {
             synchronized (this) {
@@ -226,7 +229,7 @@ public class MaterialsAPILoader {
         }
     }
 
-    private void loadMaterialsData() {
+    private void loadMaterialsCIF() {
         int numIDs = this.matAPI.numMaterialIDs();
         for (int i = 0; i < numIDs; i++) {
             String matID = this.matAPI.getMaterialID(i);

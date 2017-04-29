@@ -16,9 +16,11 @@ import burai.atoms.element.ElementUtil;
 
 public class MaterialsAPI {
 
-    protected static final String MATERIALS_API_URL = "http://www.materialsproject.org/rest/v1/materials/";
+    protected static final String MATERIALS_API_URL = "https://www.materialsproject.org/rest/v1/materials/";
 
     private static final String[] ELEMENTS = ElementUtil.listAllElements();
+
+    private String apiKey;
 
     private String formula;
 
@@ -27,6 +29,10 @@ public class MaterialsAPI {
     private Map<String, MaterialData> matDataMap;
 
     public MaterialsAPI(String formula) {
+        this(formula, null);
+    }
+
+    public MaterialsAPI(String formula, String apiKey) {
         if (formula == null || formula.trim().isEmpty()) {
             throw new IllegalArgumentException("formula is empty.");
         }
@@ -35,6 +41,8 @@ public class MaterialsAPI {
         if (this.formula == null || this.formula.trim().isEmpty()) {
             throw new IllegalArgumentException("formula is incorrect.");
         }
+
+        this.apiKey = apiKey;
 
         this.matIDs = MaterialIDs.getInstance(this.formula);
 
@@ -223,7 +231,7 @@ public class MaterialsAPI {
         }
 
         if (!this.matDataMap.containsKey(strMatID)) {
-            MaterialData matData = MaterialData.getInstance(strMatID);
+            MaterialData matData = MaterialData.getInstance(strMatID, this.apiKey);
             if (matData != null) {
                 this.matDataMap.put(strMatID, matData);
             }

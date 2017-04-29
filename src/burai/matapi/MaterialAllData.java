@@ -20,33 +20,37 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-public class MaterialIDs {
+public class MaterialAllData extends MaterialData {
 
-    private static final String MATERIALS_API_MIDS = "/mids";
+    private static final String MATERIALS_API_VASP = "/vasp/cif?API_KEY=";
 
-    public static MaterialIDs getInstance(String formula) {
-        if (formula == null || formula.trim().isEmpty()) {
-            throw new IllegalArgumentException("formula is empty.");
+    public static MaterialAllData getInstance(String matID, String apiKey) {
+        if (matID == null || matID.trim().isEmpty()) {
+            throw new IllegalArgumentException("matID is empty.");
         }
 
-        MaterialIDs matIDs = null;
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            throw new IllegalArgumentException("apiKey is empty.");
+        }
+
+        MaterialAllData matData = null;
 
         try {
-            matIDs = readURL(formula.trim());
+            matData = readURL(matID.trim(), apiKey.trim());
         } catch (IOException e) {
             e.printStackTrace();
-            matIDs = null;
+            matData = null;
         }
 
-        return matIDs;
+        return matData;
     }
 
-    private static MaterialIDs readURL(String formula) throws IOException {
+    private static MaterialAllData readURL(String matID, String apiKey) throws IOException {
         Reader reader = null;
-        MaterialIDs matIDs = null;
+        MaterialAllData matData = null;
 
         try {
-            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + formula + MATERIALS_API_MIDS);
+            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + matID + MATERIALS_API_VASP + apiKey);
             URLConnection urlConnection = url.openConnection();
             if (urlConnection == null) {
                 throw new IOException("urlConnection is null.");
@@ -61,7 +65,7 @@ public class MaterialIDs {
             reader = new InputStreamReader(input);
 
             Gson gson = new Gson();
-            matIDs = gson.<MaterialIDs> fromJson(reader, MaterialIDs.class);
+            matData = gson.<MaterialAllData> fromJson(reader, MaterialAllData.class);
 
         } catch (IOException e1) {
             throw e1;
@@ -79,28 +83,22 @@ public class MaterialIDs {
             }
         }
 
-        return matIDs;
+        return matData;
     }
 
-    private List<String> response;
+    private List<MaterialUnit> response;
 
-    private MaterialIDs() {
+    private MaterialAllData() {
         this.response = null;
     }
 
-    public int numIDs() {
-        return this.response == null ? 0 : this.response.size();
-    }
-
-    public String getID(int index) throws IndexOutOfBoundsException {
-        if (this.response == null) {
+    @Override
+    public String getCIF() {
+        if (this.response == null || this.response.isEmpty()) {
             return null;
         }
 
-        if (index < 0 || this.response.size() <= index) {
-            throw new IndexOutOfBoundsException("incorrect index: " + index);
-        }
-
-        return this.response.get(index);
+        MaterialUnit matUnit = this.response.get(0);
+        return matUnit == null ? null : matUnit.getCif();
     }
 }
