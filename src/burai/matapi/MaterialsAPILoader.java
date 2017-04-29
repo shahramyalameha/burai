@@ -22,7 +22,15 @@ import burai.com.file.FileTools;
 
 public class MaterialsAPILoader {
 
-    protected static final String PROP_API_KEY = "material_api_key";
+    private static final String PROP_API_KEY = "material_api_key";
+
+    public static String getApiKey() {
+        return Environments.getProperty(PROP_API_KEY);
+    }
+
+    public static void setApiKey(String apiKey) {
+        Environments.setProperty(PROP_API_KEY, apiKey);
+    }
 
     private static final String[] DIRECTORY_IDS = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -105,7 +113,7 @@ public class MaterialsAPILoader {
 
         this.cifFiles = new ArrayList<File>();
 
-        String apiKey = Environments.getProperty(PROP_API_KEY);
+        String apiKey = getApiKey();
         this.matAPI = new MaterialsAPI(formula, apiKey);
 
         this.loadCIFFiles();

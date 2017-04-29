@@ -40,6 +40,7 @@ import javafx.stage.WindowEvent;
 import burai.app.about.QEFXAboutDialog;
 import burai.app.explorer.QEFXExplorer;
 import burai.app.explorer.QEFXExplorerFacade;
+import burai.app.matapi.QEFXMatAPIDialog;
 import burai.app.onclose.QEFXSavingDialog;
 import burai.app.proxy.QEFXProxyDialog;
 import burai.app.tab.QEFXTabManager;
@@ -282,31 +283,8 @@ public class QEFXMainController implements Initializable {
                 SVGLibrary.getGraphic(SVGData.SEARCH, SEARCH_GRAPHIC_SIZE, null, SEARCH_GRAPHIC_CLASS));
 
         this.matApiButton.setOnAction(event -> {
-            String message1 = "";
-            message1 = message1 + "The Materials API allows you to search crystal structures.";
-            message1 = message1 + System.lineSeparator();
-            message1 = message1 + "               <https://www.materialsproject.org/docs/api>";
-
-            String message2 = "";
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + "Please input fllowing data (1 or 2), and press ENTER.";
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + "  1. List of elements separated with \"-\".";
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + "       e.g.  Li-Fe-O";
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + "  2. Chemical formula.";
-            message2 = message2 + System.lineSeparator();
-            message2 = message2 + "       e.g.  Fe2O3";
-            message2 = message2 + System.lineSeparator();
-
-            Alert alert = new Alert(AlertType.INFORMATION);
-            QEFXMain.initializeDialogOwner(alert);
-            alert.setHeaderText(message1);
-            alert.setContentText(message2);
-            alert.showAndWait();
+            QEFXMatAPIDialog dialog = new QEFXMatAPIDialog();
+            dialog.showAndSetProperties();
         });
     }
 
