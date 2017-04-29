@@ -60,6 +60,44 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         this.subScene.setOnMouseReleased(viewerEventManager.getMouseReleasedHandler());
         this.subScene.setOnKeyPressed(viewerEventManager.getKeyPressedHandler());
         this.subScene.setOnScroll(viewerEventManager.getScrollHandler());
+
+        this.initialRotation();
+    }
+
+    private void initialRotation() {
+        double[][] lattice = this.cell == null ? null : this.cell.copyLattice();
+        if (lattice == null) {
+            return;
+        }
+
+        double xMax = Math.max(Math.max(lattice[0][0], lattice[1][0]), lattice[2][0]);
+        if (xMax <= 0.0) {
+            return;
+        }
+
+        double yMax = Math.max(Math.max(lattice[0][1], lattice[1][1]), lattice[2][1]);
+        if (yMax <= 0.0) {
+            return;
+        }
+
+        double zMax = Math.max(Math.max(lattice[0][2], lattice[1][2]), lattice[2][2]);
+        if (zMax <= 0.0) {
+            return;
+        }
+
+        if (yMax >= xMax && yMax >= zMax) {
+            // y-axis is longest
+            // NOP
+
+        } else if (zMax >= xMax && zMax >= yMax) {
+            // z-axis is longest
+            this.appendCellRotation(-90.0, 1.0, 0.0, 0.0);
+
+        } else if (xMax >= yMax && xMax >= zMax) {
+            // x-axis is longest
+            this.appendCellRotation(90.0, 0.0, 0.0, 1.0);
+            this.appendCellRotation(180.0, 1.0, 0.0, 0.0);
+        }
     }
 
     @Override
@@ -270,6 +308,8 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         if (this.viewerXYZAxis != null) {
             this.viewerXYZAxis.initialize();
         }
+
+        this.initialRotation();
     }
 
     public void setCompassToCenter() {

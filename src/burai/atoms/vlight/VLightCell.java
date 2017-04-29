@@ -35,14 +35,15 @@ public class VLightCell extends VLightComponent<VisibleCell> {
         double[][] lattice = this.cell.copyLattice();
         double[] center = { 0.5, 0.5, 0.5 };
         double[] latticeCenter = Matrix3D.mult(center, lattice);
-        double rangeLattice = Matrix3D.norm(lattice[0]);
-        rangeLattice = Math.max(rangeLattice, Matrix3D.norm(lattice[1]));
-        rangeLattice = Math.max(rangeLattice, Matrix3D.norm(lattice[2]));
-        rangeLattice *= Math.sqrt(2.0);
+        double rangeLattice = Matrix3D.max(lattice);
+        if (rangeLattice <= 0.0) {
+            rangeLattice = 1.0;
+        }
+
         double size = this.atomsViewer.getSize();
         double rangeScene = size;
 
-        this.scale = 0.6 * rangeScene / rangeLattice;
+        this.scale = 0.42 * rangeScene / rangeLattice;
         this.centerX = 0.5 * size;
         this.centerY = 0.5 * size;
         this.centerZ = 0.0;

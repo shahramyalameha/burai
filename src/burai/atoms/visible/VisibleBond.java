@@ -21,8 +21,8 @@ import burai.atoms.model.event.BondEventListener;
 
 public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
-    private static final double CYLINDER_RADIUS = 0.040;
-    private static final double CYLINDER_BOLD_SCALE = 3.0;
+    private static final double CYLINDER_RADIUS = 0.10;
+    private static final double CYLINDER_BOLD_SCALE = 1.2;
     private static final int CYLINDER_DIV = 12;
 
     private boolean boldMode;

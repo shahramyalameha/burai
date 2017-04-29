@@ -59,6 +59,8 @@ public class AtomsVLight extends Group {
         this.createSceneRoot();
         this.createSubScene();
         this.getChildren().add(this.subScene);
+
+        this.initialRotation(cell);
     }
 
     private void createCamera(boolean parallel) {
@@ -85,6 +87,42 @@ public class AtomsVLight extends Group {
         this.subScene.setOnMousePressed(handler);
         this.subScene.setOnMouseDragged(handler);
         this.subScene.setOnMouseReleased(handler);
+    }
+
+    private void initialRotation(Cell cell) {
+        double[][] lattice = cell == null ? null : cell.copyLattice();
+        if (lattice == null) {
+            return;
+        }
+
+        double xMax = Math.max(Math.max(lattice[0][0], lattice[1][0]), lattice[2][0]);
+        if (xMax <= 0.0) {
+            return;
+        }
+
+        double yMax = Math.max(Math.max(lattice[0][1], lattice[1][1]), lattice[2][1]);
+        if (yMax <= 0.0) {
+            return;
+        }
+
+        double zMax = Math.max(Math.max(lattice[0][2], lattice[1][2]), lattice[2][2]);
+        if (zMax <= 0.0) {
+            return;
+        }
+
+        if (yMax >= xMax && yMax >= zMax) {
+            // y-axis is longest
+            // NOP
+
+        } else if (zMax >= xMax && zMax >= yMax) {
+            // z-axis is longest
+            this.appendRotation(-90.0, 1.0, 0.0, 0.0);
+
+        } else if (xMax >= yMax && xMax >= zMax) {
+            // x-axis is longest
+            this.appendRotation(90.0, 0.0, 0.0, 1.0);
+            this.appendRotation(180.0, 1.0, 0.0, 0.0);
+        }
     }
 
     public double getSize() {

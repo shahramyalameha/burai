@@ -9,12 +9,12 @@
 
 package burai.atoms.viewer;
 
-import burai.atoms.model.Cell;
-import burai.atoms.visible.VisibleCell;
-import burai.com.math.Matrix3D;
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import burai.atoms.model.Cell;
+import burai.atoms.visible.VisibleCell;
+import burai.com.math.Matrix3D;
 
 public class ViewerCell extends ViewerComponent<VisibleCell> {
 
@@ -44,11 +44,11 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
         double[][] lattice = this.cell.copyLattice();
         double[] center = { 0.5, 0.5, 0.5 };
         double[] latticeCenter = Matrix3D.mult(center, lattice);
-        double rangeLattice = 0.0;
-        rangeLattice += Matrix3D.norm2(lattice[0]);
-        rangeLattice += Matrix3D.norm2(lattice[1]);
-        rangeLattice += Matrix3D.norm2(lattice[2]);
-        rangeLattice = Math.sqrt(rangeLattice);
+        double rangeLattice = Matrix3D.max(lattice);
+        if (rangeLattice <= 0.0) {
+            rangeLattice = 1.0;
+        }
+
         double width = this.atomsViewer.getSceneWidth();
         double height = this.atomsViewer.getSceneHeight();
         double rangeScene = Math.min(width, height);
@@ -58,7 +58,7 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
         double centerYOld = this.centerY;
         double centerZOld = this.centerZ;
 
-        this.scale = 0.7 * rangeScene / rangeLattice;
+        this.scale = 0.6 * rangeScene / rangeLattice;
         this.centerX = 0.5 * width;
         this.centerY = 0.5 * height;
         this.centerZ = 0.0;

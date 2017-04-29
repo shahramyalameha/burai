@@ -9,8 +9,6 @@
 
 package burai.atoms.visible;
 
-import burai.atoms.model.Cell;
-import burai.com.math.Matrix3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -22,29 +20,16 @@ import javafx.scene.transform.Rotate;
 public class CompassPlane extends Group {
 
     private static final double CYLINDER_RADIUS = 0.02;
-    private static final double CYLINDER_HEIGHT_RATE = 1.25;
+    private static final double CYLINDER_HEIGHT = 7.5;
     private static final double SPHERE_RADIUS = 0.10;
 
-    private Cell cell;
-
-    public CompassPlane(Cell cell) {
+    public CompassPlane() {
         super();
-
-        if (cell == null) {
-            throw new IllegalArgumentException("cell is null.");
-        }
-
-        this.cell = cell;
-
         this.creatCompassPlane();
     }
 
-    private double getCylinderHeight() {
-        double[][] lattice = this.cell.copyLattice();
-        double xLattice = Matrix3D.norm(lattice[0]);
-        double yLattice = Matrix3D.norm(lattice[1]);
-        double zLattice = Matrix3D.norm(lattice[2]);
-        return CYLINDER_HEIGHT_RATE * Math.max(Math.max(xLattice, yLattice), zLattice);
+    public static double getHeight() {
+        return CYLINDER_HEIGHT;
     }
 
     private void creatCompassPlane() {
@@ -52,7 +37,7 @@ public class CompassPlane extends Group {
         material.setDiffuseColor(Color.BLACK);
         material.setSpecularColor(Color.GHOSTWHITE);
 
-        double height = this.getCylinderHeight();
+        double height = CYLINDER_HEIGHT;
         Cylinder cylinder = new Cylinder(CYLINDER_RADIUS, height);
         cylinder.setMaterial(material);
         cylinder.setRotationAxis(Rotate.X_AXIS);

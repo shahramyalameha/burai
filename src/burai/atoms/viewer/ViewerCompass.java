@@ -9,13 +9,12 @@
 
 package burai.atoms.viewer;
 
-import burai.atoms.visible.CompassPlane;
-import burai.atoms.visible.VisibleAtom;
-import burai.atoms.visible.VisibleCell;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import burai.atoms.visible.CompassPlane;
+import burai.atoms.visible.VisibleAtom;
 
 public class ViewerCompass extends ViewerComponent<CompassPlane> {
 
@@ -58,7 +57,16 @@ public class ViewerCompass extends ViewerComponent<CompassPlane> {
         double centerYOld = this.centerY;
         double centerZOld = this.centerZ;
 
-        this.scale = this.parent.scale;
+        double width = this.atomsViewer.getSceneWidth();
+        double height = this.atomsViewer.getSceneHeight();
+        double rangeScene = Math.min(width, height);
+
+        double rangeCompass = CompassPlane.getHeight();
+        if (rangeCompass <= 0.0) {
+            rangeCompass = 1.0;
+        }
+
+        this.scale = 0.6 * rangeScene / rangeCompass;
         this.centerX = this.parent.centerX;
         this.centerY = this.parent.centerY;
         this.centerZ = this.parent.centerZ;
@@ -95,12 +103,7 @@ public class ViewerCompass extends ViewerComponent<CompassPlane> {
 
     @Override
     protected CompassPlane createNode() {
-        VisibleCell visibleCell = this.parent.getNode();
-        if (visibleCell == null) {
-            return null;
-        }
-
-        CompassPlane compassPlane = new CompassPlane(visibleCell.getModel());
+        CompassPlane compassPlane = new CompassPlane();
         compassPlane.setVisible(false);
 
         return compassPlane;

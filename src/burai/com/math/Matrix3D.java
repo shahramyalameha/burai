@@ -277,6 +277,27 @@ public final class Matrix3D {
         return Math.sqrt(norm2(matrix));
     }
 
+    public static double max(double[] matrix) {
+        if (!checkMatrix(matrix)) {
+            return 0.0;
+        }
+
+        return Math.max(Math.max(matrix[0], matrix[1]), matrix[2]);
+    }
+
+    public static double max(double[][] matrix) {
+        if (!checkMatrix(matrix)) {
+            return 0.0;
+        }
+
+        double value = matrix[0][0];
+        for (int i = 0; i < 3; i++) {
+            value = Math.max(value, Math.max(Math.max(matrix[i][0], matrix[i][1]), matrix[i][2]));
+        }
+
+        return value;
+    }
+
     public static double[][] inverse(double[][] matrix) {
         if (!checkMatrix(matrix)) {
             return null;
