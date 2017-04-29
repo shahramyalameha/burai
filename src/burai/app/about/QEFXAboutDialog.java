@@ -115,7 +115,6 @@ public class QEFXAboutDialog extends Dialog<ButtonType> implements Initializable
         message = message + "or later version of runtime environment." + ls;
         message = message + ls;
         message = message + "The following external libraries are used:" + ls;
-        message = message + "  - Jmol  (GNU LGPL License 2.1, http://www.jmol.org/)" + ls;
         message = message + "  - exp4j (Apache License 2.0, http://www.objecthunter.net/exp4j/)" + ls;
         message = message + "  - Gson  (Apache License 2.0, https://github.com/google/gson)" + ls;
         message = message + ls;

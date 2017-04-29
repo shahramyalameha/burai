@@ -12,6 +12,5 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/burai/lib/gson-2.6.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/Jmol.jar" sourcepath="lib/Jmol-sources.jar"/>
 	<classpathentry kind="output" path="class"/>
 </classpath>
