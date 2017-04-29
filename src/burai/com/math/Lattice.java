@@ -17,12 +17,28 @@ public final class Lattice {
         // NOP
     }
 
-    public static double getA(double[][] cell) {
+    private static boolean checkCell(double[][] cell) {
         if (cell == null || cell.length < 3) {
-            return -1.0;
+            return false;
         }
 
         if (cell[0] == null || cell[0].length < 3) {
+            return false;
+        }
+
+        if (cell[1] == null || cell[1].length < 3) {
+            return false;
+        }
+
+        if (cell[2] == null || cell[2].length < 3) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static double getA(double[][] cell) {
+        if (!checkCell(cell)) {
             return -1.0;
         }
 
@@ -30,11 +46,7 @@ public final class Lattice {
     }
 
     public static double getB(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return -1.0;
-        }
-
-        if (cell[1] == null || cell[1].length < 3) {
+        if (!checkCell(cell)) {
             return -1.0;
         }
 
@@ -42,11 +54,7 @@ public final class Lattice {
     }
 
     public static double getC(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return -1.0;
-        }
-
-        if (cell[2] == null || cell[2].length < 3) {
+        if (!checkCell(cell)) {
             return -1.0;
         }
 
@@ -54,15 +62,7 @@ public final class Lattice {
     }
 
     public static double getCosAlpha(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return 1.0;
-        }
-
-        if (cell[1] == null || cell[1].length < 3) {
-            return 1.0;
-        }
-
-        if (cell[2] == null || cell[2].length < 3) {
+        if (!checkCell(cell)) {
             return 1.0;
         }
 
@@ -85,15 +85,7 @@ public final class Lattice {
     }
 
     public static double getCosBeta(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return 1.0;
-        }
-
-        if (cell[0] == null || cell[0].length < 3) {
-            return 1.0;
-        }
-
-        if (cell[2] == null || cell[2].length < 3) {
+        if (!checkCell(cell)) {
             return 1.0;
         }
 
@@ -116,15 +108,7 @@ public final class Lattice {
     }
 
     public static double getCosGamma(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return 1.0;
-        }
-
-        if (cell[0] == null || cell[0].length < 3) {
-            return 1.0;
-        }
-
-        if (cell[1] == null || cell[1].length < 3) {
+        if (!checkCell(cell)) {
             return 1.0;
         }
 
@@ -146,20 +130,140 @@ public final class Lattice {
         return Math.acos(Math.max(-1.0, Math.min(cosab, 1.0))) * 180.0 / Math.PI;
     }
 
+    public static double getXMax(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double x = 0.0;
+
+        if (cell[0][0] > 0.0) {
+            x += cell[0][0];
+        }
+
+        if (cell[1][0] > 0.0) {
+            x += cell[1][0];
+        }
+
+        if (cell[2][0] > 0.0) {
+            x += cell[2][0];
+        }
+
+        return x;
+    }
+
+    public static double getXMin(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double x = 0.0;
+
+        if (cell[0][0] < 0.0) {
+            x += cell[0][0];
+        }
+
+        if (cell[1][0] < 0.0) {
+            x += cell[1][0];
+        }
+
+        if (cell[2][0] < 0.0) {
+            x += cell[2][0];
+        }
+
+        return x;
+    }
+
+    public static double getYMax(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double y = 0.0;
+
+        if (cell[0][1] > 0.0) {
+            y += cell[0][1];
+        }
+
+        if (cell[1][1] > 0.0) {
+            y += cell[1][1];
+        }
+
+        if (cell[2][1] > 0.0) {
+            y += cell[2][1];
+        }
+
+        return y;
+    }
+
+    public static double getYMin(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double y = 0.0;
+
+        if (cell[0][1] < 0.0) {
+            y += cell[0][1];
+        }
+
+        if (cell[1][1] < 0.0) {
+            y += cell[1][1];
+        }
+
+        if (cell[2][1] < 0.0) {
+            y += cell[2][1];
+        }
+
+        return y;
+    }
+
+    public static double getZMax(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double z = 0.0;
+
+        if (cell[0][2] > 0.0) {
+            z += cell[0][2];
+        }
+
+        if (cell[1][2] > 0.0) {
+            z += cell[1][2];
+        }
+
+        if (cell[2][2] > 0.0) {
+            z += cell[2][2];
+        }
+
+        return z;
+    }
+
+    public static double getZMin(double[][] cell) {
+        if (!checkCell(cell)) {
+            return 0.0;
+        }
+
+        double z = 0.0;
+
+        if (cell[0][2] < 0.0) {
+            z += cell[0][2];
+        }
+
+        if (cell[1][2] < 0.0) {
+            z += cell[1][2];
+        }
+
+        if (cell[2][2] < 0.0) {
+            z += cell[2][2];
+        }
+
+        return z;
+    }
+
     public static int getBravais(double[][] cell) {
-        if (cell == null || cell.length < 3) {
-            return 0;
-        }
-
-        if (cell[0] == null || cell[0].length < 3) {
-            return 0;
-        }
-
-        if (cell[1] == null || cell[1].length < 3) {
-            return 0;
-        }
-
-        if (cell[2] == null || cell[2].length < 3) {
+        if (!checkCell(cell)) {
             return 0;
         }
 

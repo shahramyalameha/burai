@@ -21,6 +21,7 @@ import burai.atoms.viewer.logger.AtomsLogger;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
 import burai.atoms.visible.VisibleCell;
+import burai.com.math.Lattice;
 
 public class AtomsViewer extends AtomsViewerBase<Group> {
 
@@ -70,30 +71,30 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             return;
         }
 
-        double xMax = Math.max(Math.max(lattice[0][0], lattice[1][0]), lattice[2][0]);
-        if (xMax <= 0.0) {
+        double x = Lattice.getXMax(lattice) - Lattice.getXMin(lattice);
+        if (x <= 0.0) {
             return;
         }
 
-        double yMax = Math.max(Math.max(lattice[0][1], lattice[1][1]), lattice[2][1]);
-        if (yMax <= 0.0) {
+        double y = Lattice.getYMax(lattice) - Lattice.getYMin(lattice);
+        if (y <= 0.0) {
             return;
         }
 
-        double zMax = Math.max(Math.max(lattice[0][2], lattice[1][2]), lattice[2][2]);
-        if (zMax <= 0.0) {
+        double z = Lattice.getZMax(lattice) - Lattice.getZMin(lattice);
+        if (z <= 0.0) {
             return;
         }
 
-        if (yMax >= xMax && yMax >= zMax) {
+        if (y >= x && y >= z) {
             // y-axis is longest
             // NOP
 
-        } else if (zMax >= xMax && zMax >= yMax) {
+        } else if (z >= x && z >= y) {
             // z-axis is longest
             this.appendCellRotation(-90.0, 1.0, 0.0, 0.0);
 
-        } else if (xMax >= yMax && xMax >= zMax) {
+        } else if (x >= y && x >= z) {
             // x-axis is longest
             this.appendCellRotation(90.0, 0.0, 0.0, 1.0);
             this.appendCellRotation(180.0, 1.0, 0.0, 0.0);

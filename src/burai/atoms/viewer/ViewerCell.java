@@ -14,6 +14,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import burai.atoms.model.Cell;
 import burai.atoms.visible.VisibleCell;
+import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 
 public class ViewerCell extends ViewerComponent<VisibleCell> {
@@ -44,7 +45,14 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
         double[][] lattice = this.cell.copyLattice();
         double[] center = { 0.5, 0.5, 0.5 };
         double[] latticeCenter = Matrix3D.mult(center, lattice);
-        double rangeLattice = Matrix3D.max(lattice);
+
+        double xMax = Lattice.getXMax(lattice);
+        double xMin = Lattice.getXMin(lattice);
+        double yMax = Lattice.getYMax(lattice);
+        double yMin = Lattice.getYMin(lattice);
+        double zMax = Lattice.getZMax(lattice);
+        double zMin = Lattice.getZMin(lattice);
+        double rangeLattice = Math.max(Math.max(xMax - xMin, yMax - yMin), zMax - zMin);
         if (rangeLattice <= 0.0) {
             rangeLattice = 1.0;
         }
