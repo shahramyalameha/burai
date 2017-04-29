@@ -24,7 +24,7 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     public static final int ATOMS_POSITION_SCALED = 1;
     public static final int ATOMS_POSITION_LEFT = 2;
 
-    private static final int MAX_ATOMS_TO_RESOLVE = 64;
+    private static final int MAX_ATOMS_TO_RESOLVE = 2048;
 
     private static final double MIN_VOLUME = 1.0e-6;
 

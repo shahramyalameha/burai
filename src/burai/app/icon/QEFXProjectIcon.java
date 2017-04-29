@@ -49,6 +49,8 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
     private static final String[] BUFFER_ELEMENTS = new String[BUFFER_LENGTH];
     private static final int[] BUFFER_MULTS = new int[BUFFER_LENGTH];
 
+    private static final int MAX_ATOMS = 64;
+
     private double atomsSize;
 
     private Group atomsBase;
@@ -140,7 +142,7 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
             return null;
         }
 
-        if (this.isLightFigure || (!cell.isResolving())) {
+        if (this.isLightFigure || (cell.numAtoms(true) > MAX_ATOMS)) {
             this.isLightFigure = true;
             this.detachAtomsVLight();
             return this.getLightFigure(size);

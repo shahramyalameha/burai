@@ -21,8 +21,6 @@ public final class Environments {
 
     private static final String PROJECTS_NAME = ".burai";
 
-    private static final String JMOLDIR_NAME = ".jmoltmp";
-
     private static final String DOWNLOADS_NAME = ".download";
 
     private static final String PSEUDOS_NAME = ".pseudopot";
@@ -187,30 +185,6 @@ public final class Environments {
         }
 
         return false;
-    }
-
-    public static String getJmolDirName() {
-        return JMOLDIR_NAME;
-    }
-
-    public static String getJmolDirPath() {
-        File jmolFile = null;
-        String projPath = getProjectsPath();
-        if (projPath == null) {
-            jmolFile = new File(JMOLDIR_NAME);
-        } else {
-            jmolFile = new File(projPath, JMOLDIR_NAME);
-        }
-
-        try {
-            if (!jmolFile.isDirectory()) {
-                jmolFile.mkdirs();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return jmolFile.getPath();
     }
 
     public static String getDownloadsName() {
