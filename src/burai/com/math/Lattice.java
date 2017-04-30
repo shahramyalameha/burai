@@ -13,6 +13,13 @@ import burai.com.consts.Constants;
 
 public final class Lattice {
 
+    private static final double ROOT2 = Math.sqrt(2.0);
+    private static final double ROOT3 = Math.sqrt(3.0);
+
+    private static final double CELLDM_THRESHOLD = 1.0e-4;
+
+    private static final int[] IBRAV_LIST = { 1, 2, 3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14 };
+
     private Lattice() {
         // NOP
     }
@@ -262,6 +269,28 @@ public final class Lattice {
         return z;
     }
 
+    public static double[] getCellDm(double[][] cell) {
+        if (!checkCell(cell)) {
+            return null;
+        }
+
+        double[] celldm = new double[6];
+        double a = getA(cell);
+        double b = getB(cell);
+        double c = getC(cell);
+        double cosAlpha = getCosAlpha(cell);
+        double cosBeta = getCosBeta(cell);
+        double cosGamma = getCosGamma(cell);
+        celldm[0] = a / Constants.BOHR_RADIUS_ANGS;
+        celldm[1] = b / a;
+        celldm[2] = c / a;
+        celldm[3] = cosAlpha;
+        celldm[4] = cosBeta;
+        celldm[5] = cosGamma;
+
+        return celldm;
+    }
+
     public static int getBravais(double[][] cell) {
         if (!checkCell(cell)) {
             return 0;
@@ -281,8 +310,7 @@ public final class Lattice {
         celldm[4] = cosBeta;
         celldm[5] = cosGamma;
 
-        final int[] ibravList = { 1, 2, 3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14 };
-        for (int ibrav : ibravList) {
+        for (int ibrav : IBRAV_LIST) {
             double[][] cell2 = getCell(ibrav, celldm);
             if (cell2 != null && Matrix3D.equals(cell, cell2)) {
                 return ibrav;
@@ -290,6 +318,68 @@ public final class Lattice {
         }
 
         return 0;
+    }
+
+    public static double[][] getCell(double a, double b, double c, double alpha, double beta, double gamma) {
+        if (a <= 0.0) {
+            return null;
+        }
+        if (b <= 0.0) {
+            return null;
+        }
+        if (c <= 0.0) {
+            return null;
+        }
+        if (alpha <= 0.0 || 180.0 <= alpha) {
+            return null;
+        }
+        if (beta <= 0.0 || 180.0 <= beta) {
+            return null;
+        }
+        if (gamma <= 0.0 || 180.0 <= gamma) {
+            return null;
+        }
+
+        double[] celldm = new double[6];
+        double cosAlpha = Math.cos(alpha * Math.PI / 180.0);
+        double cosBeta = Math.cos(beta * Math.PI / 180.0);
+        double cosGamma = Math.cos(gamma * Math.PI / 180.0);
+        celldm[0] = a / Constants.BOHR_RADIUS_ANGS;
+        celldm[1] = b / a;
+        celldm[2] = c / a;
+        celldm[3] = cosAlpha;
+        celldm[4] = cosBeta;
+        celldm[5] = cosGamma;
+
+        return getCell(celldm);
+    }
+
+    public static double[][] getCell(double[] celldm) {
+        if (celldm == null || celldm.length < 6) {
+            return null;
+        }
+
+        for (int ibrav : IBRAV_LIST) {
+            double[][] cell = getCell(ibrav, celldm);
+            double[] celldm2 = getCellDm(cell);
+            if (celldm2 == null || celldm2.length < 6) {
+                continue;
+            }
+
+            boolean sameCell = true;
+            for (int i = 0; i < 6; i++) {
+                if (Math.abs(celldm[i] - celldm2[i]) > CELLDM_THRESHOLD) {
+                    sameCell = false;
+                    break;
+                }
+            }
+
+            if (sameCell) {
+                return cell;
+            }
+        }
+
+        return null;
     }
 
     public static double[][] getCell(int ibrav, double[] celldm) {
@@ -305,8 +395,6 @@ public final class Lattice {
 
         double term1;
         double term2;
-        double root2;
-        double root3;
 
         switch (ibrav) {
         case 1:
@@ -355,12 +443,10 @@ public final class Lattice {
             }
             term1 = Math.sqrt(1.0 + 2.0 * celldm[3]);
             term2 = Math.sqrt(1.0 - celldm[3]);
-            root2 = Math.sqrt(2.0);
-            root3 = Math.sqrt(3.0);
-            lattice[1][1] = root2 * celldm[0] * term2 / root3;
-            lattice[1][2] = celldm[0] * term1 / root3;
-            lattice[0][0] = celldm[0] * term2 / root2;
-            lattice[0][1] = -lattice[0][0] / root3;
+            lattice[1][1] = ROOT2 * celldm[0] * term2 / ROOT3;
+            lattice[1][2] = celldm[0] * term1 / ROOT3;
+            lattice[0][0] = celldm[0] * term2 / ROOT2;
+            lattice[0][1] = -lattice[0][0] / ROOT3;
             lattice[0][2] = lattice[1][2];
             lattice[2][0] = -lattice[0][0];
             lattice[2][1] = lattice[0][1];
@@ -612,6 +698,10 @@ public final class Lattice {
                 break;
             }
             term1 = Math.sqrt(1.0 - celldm[5] * celldm[5]);
+            if (term1 == 0.0) {
+                lattice = null;
+                break;
+            }
             term2 = 1.0 + 2.0 * celldm[3] * celldm[4] * celldm[5];
             term2 += -celldm[3] * celldm[3] - celldm[4] * celldm[4] - celldm[5] * celldm[5];
             if (term2 < 0.0) {
