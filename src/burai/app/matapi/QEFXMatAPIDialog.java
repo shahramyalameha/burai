@@ -155,6 +155,9 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
 
         if (this.cellToggle != null) {
             this.cellToggle.setDisable(!cellStatus);
+            if (!cellStatus) {
+                this.cellToggle.setSelected(false);
+            }
         }
     }
 
