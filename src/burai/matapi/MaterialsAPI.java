@@ -22,6 +22,8 @@ public class MaterialsAPI {
 
     private String apiKey;
 
+    private boolean primitiveCell;
+
     private String formula;
 
     private MaterialIDs matIDs;
@@ -29,10 +31,10 @@ public class MaterialsAPI {
     private Map<String, MaterialData> matDataMap;
 
     public MaterialsAPI(String formula) {
-        this(formula, null);
+        this(formula, null, false);
     }
 
-    public MaterialsAPI(String formula, String apiKey) {
+    public MaterialsAPI(String formula, String apiKey, boolean primitiveCell) {
         if (formula == null || formula.trim().isEmpty()) {
             throw new IllegalArgumentException("formula is empty.");
         }
@@ -43,6 +45,8 @@ public class MaterialsAPI {
         }
 
         this.apiKey = apiKey;
+
+        this.primitiveCell = primitiveCell;
 
         this.matIDs = MaterialIDs.getInstance(this.formula);
 
@@ -231,7 +235,18 @@ public class MaterialsAPI {
         }
 
         if (!this.matDataMap.containsKey(strMatID)) {
-            MaterialData matData = MaterialData.getInstance(strMatID, this.apiKey);
+            MaterialData matData = null;
+
+            if (this.primitiveCell) {
+                if (this.apiKey != null && (!this.apiKey.trim().isEmpty())) {
+                    matData = MaterialData.getInstance(strMatID, this.apiKey);
+                }
+            }
+
+            if (matData == null) {
+                matData = MaterialData.getInstance(strMatID);
+            }
+
             if (matData != null) {
                 this.matDataMap.put(strMatID, matData);
             }

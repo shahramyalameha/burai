@@ -24,12 +24,22 @@ public class MaterialsAPILoader {
 
     private static final String PROP_API_KEY = "material_api_key";
 
+    private static final String PROP_PRIMITIVE_CELL = "material_api_primitive_cell";
+
     public static String getApiKey() {
         return Environments.getProperty(PROP_API_KEY);
     }
 
     public static void setApiKey(String apiKey) {
         Environments.setProperty(PROP_API_KEY, apiKey);
+    }
+
+    public static boolean isPrimitiveCell() {
+        return Environments.getBoolProperty(PROP_PRIMITIVE_CELL);
+    }
+
+    public static void setPrimitiveCell(boolean primitiveCell) {
+        Environments.setProperty(PROP_PRIMITIVE_CELL, primitiveCell);
     }
 
     private static final String[] DIRECTORY_IDS = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -114,7 +124,8 @@ public class MaterialsAPILoader {
         this.cifFiles = new ArrayList<File>();
 
         String apiKey = getApiKey();
-        this.matAPI = new MaterialsAPI(formula, apiKey);
+        boolean primitiveCell = isPrimitiveCell();
+        this.matAPI = new MaterialsAPI(formula, apiKey, primitiveCell);
 
         this.loadCIFFiles();
     }

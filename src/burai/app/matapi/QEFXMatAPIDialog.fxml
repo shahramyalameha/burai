@@ -49,7 +49,7 @@
             <Separator prefHeight="30.0" BorderPane.alignment="CENTER" />
          </center>
          <left>
-            <Label styleClass="medium-text" text="User's data" BorderPane.alignment="CENTER">
+            <Label styleClass="medium-text" text="User's Data" BorderPane.alignment="CENTER">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
@@ -64,12 +64,18 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="435.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="API key">
+            <Label styleClass="italic-text" text="API Key">
                <padding>
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <TextField fx:id="apiKeyField" prefWidth="240.0" GridPane.columnIndex="1" />
+            <Label fx:id="cellLabel" styleClass="italic-text" text="Cell Type" GridPane.rowIndex="1">
+               <padding>
+                  <Insets left="35.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="apiKeyField" prefWidth="270.0" GridPane.columnIndex="1" />
+            <ToggleButton fx:id="cellToggle" mnemonicParsing="false" prefWidth="270.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" prefWidth="130.0" />
@@ -79,6 +85,7 @@
             <Insets left="10.0" right="20.0" />
          </padding>
          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>

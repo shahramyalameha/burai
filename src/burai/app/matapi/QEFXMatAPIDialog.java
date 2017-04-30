@@ -23,16 +23,32 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import burai.app.QEFXMain;
+import burai.com.graphic.ToggleGraphics;
 import burai.matapi.MaterialsAPILoader;
 
 public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializable {
+
+    private static final String TOGGLE_STYLE = "-fx-base: transparent";
+    private static final double GRAPHIC_WIDTH = 255.0;
+    private static final double GRAPHIC_HEIGHT = 24.0;
+    private static final String GRAPHIC_TEXT_PRIMITIVE = "Primitive";
+    private static final String GRAPHIC_TEXT_STANDARD = "Standard";
+    private static final String GRAPHIC_STYLE_PRIMITIVE = "toggle-graphic-on";
+    private static final String GRAPHIC_STYLE_STANDARD = "toggle-graphic-off";
 
     @FXML
     private Label usageLabel;
 
     @FXML
     private TextField apiKeyField;
+
+    @FXML
+    private Label cellLabel;
+
+    @FXML
+    private ToggleButton cellToggle;
 
     public QEFXMatAPIDialog() {
         super();
@@ -77,6 +93,7 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         this.setupUsageLabel();
         this.setupApiKeyField();
+        this.setupCellToggle();
     }
 
     private void setupUsageLabel() {
@@ -112,6 +129,65 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
         } else {
             this.apiKeyField.setText(apiKey);
         }
+
+        this.updateApiKeyField();
+
+        this.apiKeyField.textProperty().addListener(o -> {
+            this.updateApiKeyField();
+        });
+    }
+
+    private void updateApiKeyField() {
+        if (this.apiKeyField == null) {
+            return;
+        }
+
+        String text = this.apiKeyField.getText();
+
+        boolean cellStatus = true;
+        if (text == null || text.trim().isEmpty()) {
+            cellStatus = false;
+        }
+
+        if (this.cellLabel != null) {
+            this.cellLabel.setDisable(!cellStatus);
+        }
+
+        if (this.cellToggle != null) {
+            this.cellToggle.setDisable(!cellStatus);
+        }
+    }
+
+    private void setupCellToggle() {
+        if (this.cellToggle == null) {
+            return;
+        }
+
+        boolean primitiveCell = MaterialsAPILoader.isPrimitiveCell();
+        this.cellToggle.setSelected(primitiveCell);
+
+        this.cellToggle.setText("");
+        this.cellToggle.setStyle(TOGGLE_STYLE);
+
+        this.updateCellToggle();
+
+        this.cellToggle.selectedProperty().addListener(o -> {
+            this.updateCellToggle();
+        });
+    }
+
+    private void updateCellToggle() {
+        if (this.cellToggle == null) {
+            return;
+        }
+
+        if (this.cellToggle.isSelected()) {
+            this.cellToggle.setGraphic(ToggleGraphics.getGraphic(
+                    GRAPHIC_WIDTH, GRAPHIC_HEIGHT, true, GRAPHIC_TEXT_PRIMITIVE, GRAPHIC_STYLE_PRIMITIVE));
+        } else {
+            this.cellToggle.setGraphic(ToggleGraphics.getGraphic(
+                    GRAPHIC_WIDTH, GRAPHIC_HEIGHT, false, GRAPHIC_TEXT_STANDARD, GRAPHIC_STYLE_STANDARD));
+        }
     }
 
     public void showAndSetProperties() {
@@ -130,6 +206,9 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
         } else {
             MaterialsAPILoader.setApiKey(null);
         }
+
+        boolean primitiveCell = this.isPrimitiveCell();
+        MaterialsAPILoader.setPrimitiveCell(primitiveCell);
     }
 
     private String getApiKey() {
@@ -137,7 +216,15 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
             return null;
         }
 
-        String value = this.apiKeyField.getText();
-        return value == null ? null : value.trim();
+        String text = this.apiKeyField.getText();
+        return text == null ? null : text.trim();
+    }
+
+    private boolean isPrimitiveCell() {
+        if (this.cellToggle == null) {
+            return false;
+        }
+
+        return this.cellToggle.isSelected();
     }
 }

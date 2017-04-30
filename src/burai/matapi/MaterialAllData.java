@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 public class MaterialAllData extends MaterialData {
 
-    private static final String MATERIALS_API_VASP = "/vasp/cif?API_KEY=";
+    private static final String MATERIALS_API_VASP = "/vasp/cif";
 
     public static MaterialAllData getInstance(String matID, String apiKey) {
         if (matID == null || matID.trim().isEmpty()) {
@@ -50,11 +50,13 @@ public class MaterialAllData extends MaterialData {
         MaterialAllData matData = null;
 
         try {
-            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + matID + MATERIALS_API_VASP + apiKey);
+            URL url = new URL(MaterialsAPI.MATERIALS_API_URL + matID + MATERIALS_API_VASP);
             URLConnection urlConnection = url.openConnection();
             if (urlConnection == null) {
                 throw new IOException("urlConnection is null.");
             }
+
+            urlConnection.setRequestProperty("X-API-KEY", apiKey);
 
             InputStream input = urlConnection.getInputStream();
             input = input == null ? null : new BufferedInputStream(input);
