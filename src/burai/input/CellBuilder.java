@@ -107,9 +107,23 @@ public class CellBuilder {
             celldm[0] = a / Constants.BOHR_RADIUS_ANGS;
             celldm[1] = b / a;
             celldm[2] = c / a;
-            celldm[3] = cosAlpha;
-            celldm[4] = cosBeta;
-            celldm[5] = cosGamma;
+            if (ibrav == 14) {
+                celldm[3] = cosAlpha;
+                celldm[4] = cosBeta;
+                celldm[5] = cosGamma;
+            } else if (ibrav == -12 || ibrav == -13) {
+                celldm[3] = 0.0;
+                celldm[4] = cosBeta;
+                celldm[5] = 0.0;
+            } else if (Lattice.isCorrectBravais(ibrav)) {
+                celldm[3] = cosGamma;
+                celldm[4] = 0.0;
+                celldm[5] = 0.0;
+            } else {
+                celldm[3] = cosAlpha;
+                celldm[4] = cosBeta;
+                celldm[5] = cosGamma;
+            }
         }
 
         if (ibrav == 0) {

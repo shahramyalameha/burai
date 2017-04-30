@@ -24,7 +24,6 @@ import burai.app.project.editor.input.QEFXInputModelController;
 import burai.app.project.editor.input.items.QEFXComboInteger;
 import burai.atoms.model.Cell;
 import burai.com.consts.Constants;
-import burai.com.math.Matrix3D;
 import burai.input.QEInput;
 import burai.input.card.QECard;
 import burai.input.card.QECellParameters;
@@ -262,6 +261,12 @@ public class QEFXCellController extends QEFXInputModelController {
         });
     }
 
+    private int getIbrav() {
+        QENamelist nmlSystem = this.input.getNamelist(QEInput.NAMELIST_SYSTEM);
+        QEValue value = nmlSystem == null ? null : nmlSystem.getValue("ibrav");
+        return value == null ? 0 : value.getIntegerValue();
+    }
+
     private void setupAItem() {
         if (this.aField == null || this.aLabel == null || this.aButton == null || this.aUnit == null) {
             return;
@@ -273,9 +278,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isAEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.norm(lattice[0]);
-            return QEValueBase.getInstance("a", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("a", this.modelCell.getA(ibrav));
         });
 
         item.pullAllTriggers();
@@ -318,9 +322,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isBEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.norm(lattice[1]);
-            return QEValueBase.getInstance("b", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("b", this.modelCell.getB(ibrav));
         });
 
         item.pullAllTriggers();
@@ -350,9 +353,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isCEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.norm(lattice[2]);
-            return QEValueBase.getInstance("c", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("c", this.modelCell.getC(ibrav));
         });
 
         item.pullAllTriggers();
@@ -382,16 +384,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isAlphaEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.mult(lattice[1], lattice[2]);
-            double norm1 = Matrix3D.norm(lattice[1]);
-            double norm2 = Matrix3D.norm(lattice[2]);
-            if (norm1 > 0.0 && norm2 > 0.0) {
-                value /= norm1 * norm2;
-            } else {
-                value = 0.0;
-            }
-            return QEValueBase.getInstance("cosbc", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("cosbc", this.modelCell.getCosAlpha(ibrav));
         });
 
         item.pullAllTriggers();
@@ -420,16 +414,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isBetaEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.mult(lattice[0], lattice[2]);
-            double norm1 = Matrix3D.norm(lattice[0]);
-            double norm2 = Matrix3D.norm(lattice[2]);
-            if (norm1 > 0.0 && norm2 > 0.0) {
-                value /= norm1 * norm2;
-            } else {
-                value = 0.0;
-            }
-            return QEValueBase.getInstance("cosac", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("cosac", this.modelCell.getCosBeta(ibrav));
         });
 
         item.pullAllTriggers();
@@ -458,16 +444,8 @@ public class QEFXCellController extends QEFXInputModelController {
         item.addEnabledCondition((name, value) -> this.isGammaEnabled(name, value));
 
         item.setDefault(() -> {
-            double[][] lattice = this.modelCell.copyLattice();
-            double value = Matrix3D.mult(lattice[0], lattice[1]);
-            double norm1 = Matrix3D.norm(lattice[0]);
-            double norm2 = Matrix3D.norm(lattice[1]);
-            if (norm1 > 0.0 && norm2 > 0.0) {
-                value /= norm1 * norm2;
-            } else {
-                value = 0.0;
-            }
-            return QEValueBase.getInstance("cosab", value);
+            int ibrav = this.getIbrav();
+            return QEValueBase.getInstance("cosab", this.modelCell.getCosGamma(ibrav));
         });
 
         item.pullAllTriggers();

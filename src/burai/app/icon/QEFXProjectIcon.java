@@ -35,7 +35,6 @@ import burai.atoms.model.event.ModelEvent;
 import burai.atoms.vlight.AtomsVLight;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
-import burai.com.math.Matrix3D;
 import burai.project.Project;
 
 public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventListener, CellEventListener {
@@ -310,28 +309,22 @@ public class QEFXProjectIcon extends QEFXIconBase<Project> implements AtomEventL
 
         String caption = null;
 
-        double[][] lattice = cell.copyLattice();
-        double a = Matrix3D.norm(lattice[0]);
-        double b = Matrix3D.norm(lattice[1]);
-        double c = Matrix3D.norm(lattice[2]);
-        if (a > 0.0 && b > 0.0 && c > 0.0) {
-            double cosBC = Matrix3D.mult(lattice[1], lattice[2]) / b / c;
-            double cosAC = Matrix3D.mult(lattice[0], lattice[2]) / a / c;
-            double cosAB = Matrix3D.mult(lattice[0], lattice[1]) / a / b;
-            double alpha = Math.acos(Math.max(-1.0, Math.min(cosBC, 1.0))) * 180.0 / Math.PI;
-            double beta = Math.acos(Math.max(-1.0, Math.min(cosAC, 1.0))) * 180.0 / Math.PI;
-            double gamma = Math.acos(Math.max(-1.0, Math.min(cosAB, 1.0))) * 180.0 / Math.PI;
+        double a = cell.getA();
+        double b = cell.getB();
+        double c = cell.getC();
+        double alpha = cell.getAlpha();
+        double beta = cell.getBeta();
+        double gamma = cell.getGamma();
 
-            final String formatLength = "%6.3f";
-            final String formatAngle = "%6.2f";
-            caption = "Lattice: ";
-            caption = caption + "a =" + String.format(formatLength, a) + ", ";
-            caption = caption + "b =" + String.format(formatLength, b) + ", ";
-            caption = caption + "c =" + String.format(formatLength, c) + ", ";
-            caption = caption + "alpha =" + String.format(formatAngle, alpha) + ", ";
-            caption = caption + "beta =" + String.format(formatAngle, beta) + ", ";
-            caption = caption + "gamma =" + String.format(formatAngle, gamma);
-        }
+        final String formatLength = "%6.3f";
+        final String formatAngle = "%6.2f";
+        caption = "Lattice: ";
+        caption = caption + "a =" + String.format(formatLength, a) + ", ";
+        caption = caption + "b =" + String.format(formatLength, b) + ", ";
+        caption = caption + "c =" + String.format(formatLength, c) + ", ";
+        caption = caption + "alpha =" + String.format(formatAngle, alpha) + ", ";
+        caption = caption + "beta =" + String.format(formatAngle, beta) + ", ";
+        caption = caption + "gamma =" + String.format(formatAngle, gamma);
 
         return caption;
     }

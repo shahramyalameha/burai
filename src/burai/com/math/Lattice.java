@@ -16,7 +16,7 @@ public final class Lattice {
     private static final double ROOT2 = Math.sqrt(2.0);
     private static final double ROOT3 = Math.sqrt(3.0);
 
-    private static final double CELLDM_THRESHOLD = 1.0e-4;
+    private static final double CELL_THRESHOLD = 1.0e-6;
 
     private static final int[] IBRAV_LIST = { 1, 2, 3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14 };
 
@@ -270,6 +270,10 @@ public final class Lattice {
     }
 
     public static double[] getCellDm(double[][] cell) {
+        return getCellDm(0, cell);
+    }
+
+    public static double[] getCellDm(int ibrav, double[][] cell) {
         if (!checkCell(cell)) {
             return null;
         }
@@ -288,7 +292,73 @@ public final class Lattice {
         celldm[4] = cosBeta;
         celldm[5] = cosGamma;
 
-        return celldm;
+        if (isCorrectBravais(ibrav)) {
+            return convertCellDm(ibrav, celldm);
+        } else {
+            return celldm;
+        }
+    }
+
+    // return a, b, c, alpha, beta and gamma
+    public static double[] getLatticeConstants(double[][] cell, boolean asCos) {
+        return getLatticeConstants(0, cell, asCos);
+    }
+
+    // return a, b, c, alpha, beta and gamma
+    public static double[] getLatticeConstants(int ibrav, double[][] cell, boolean asCos) {
+        if (!checkCell(cell)) {
+            return null;
+        }
+
+        double[] celldm = getCellDm(ibrav, cell);
+        if (celldm == null || celldm.length < 6) {
+            return null;
+        }
+
+        double a = celldm[0] * Constants.BOHR_RADIUS_ANGS;
+        double b = a * celldm[1];
+        double c = a * celldm[2];
+
+        double cosAlpha = 0.0;
+        double cosBeta = 0.0;
+        double cosGamma = 0.0;
+        if (ibrav == 14) {
+            cosAlpha = celldm[3];
+            cosBeta = celldm[4];
+            cosGamma = celldm[5];
+        } else if (ibrav == -12 || ibrav == -13) {
+            cosAlpha = 0.0;
+            cosBeta = celldm[4];
+            cosGamma = 0.0;
+        } else if (isCorrectBravais(ibrav)) {
+            cosAlpha = 0.0;
+            cosBeta = 0.0;
+            cosGamma = celldm[3];
+        } else {
+            cosAlpha = celldm[3];
+            cosBeta = celldm[4];
+            cosGamma = celldm[5];
+        }
+
+        if (asCos) {
+            return new double[] { a, b, c, cosAlpha, cosBeta, cosGamma };
+        }
+
+        double alpha = Math.acos(Math.max(-1.0, Math.min(cosAlpha, 1.0))) * 180.0 / Math.PI;
+        double beta = Math.acos(Math.max(-1.0, Math.min(cosBeta, 1.0))) * 180.0 / Math.PI;
+        double gamma = Math.acos(Math.max(-1.0, Math.min(cosGamma, 1.0))) * 180.0 / Math.PI;
+
+        return new double[] { a, b, c, alpha, beta, gamma };
+    }
+
+    public static boolean isCorrectBravais(int ibrav) {
+        for (int ibrav2 : IBRAV_LIST) {
+            if (ibrav == ibrav2) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static int getBravais(double[][] cell) {
@@ -296,28 +366,52 @@ public final class Lattice {
             return 0;
         }
 
-        double[] celldm = new double[6];
-        double a = getA(cell);
-        double b = getB(cell);
-        double c = getC(cell);
-        double cosAlpha = getCosAlpha(cell);
-        double cosBeta = getCosBeta(cell);
-        double cosGamma = getCosGamma(cell);
-        celldm[0] = a / Constants.BOHR_RADIUS_ANGS;
-        celldm[1] = b / a;
-        celldm[2] = c / a;
-        celldm[3] = cosAlpha;
-        celldm[4] = cosBeta;
-        celldm[5] = cosGamma;
+        double[] celldm = getCellDm(cell);
+        if (celldm == null || celldm.length < 6) {
+            return 0;
+        }
 
         for (int ibrav : IBRAV_LIST) {
-            double[][] cell2 = getCell(ibrav, celldm);
-            if (cell2 != null && Matrix3D.equals(cell, cell2)) {
+            double[] celldm2 = convertCellDm(ibrav, celldm);
+            if (celldm == null || celldm.length < 6) {
+                continue;
+            }
+            double[][] cell2 = getCell(ibrav, celldm2);
+            if (cell2 != null && Matrix3D.equals(cell, cell2, CELL_THRESHOLD)) {
                 return ibrav;
             }
         }
 
         return 0;
+    }
+
+    private static double[][] getCell(double[] celldm) {
+        if (celldm == null || celldm.length < 6) {
+            return null;
+        }
+
+        for (int ibrav : IBRAV_LIST) {
+            double[] celldm1 = convertCellDm(ibrav, celldm);
+            double[][] cell = getCell(ibrav, celldm1);
+            double[] celldm2 = getCellDm(cell);
+            if (celldm2 == null || celldm2.length < 6) {
+                continue;
+            }
+
+            boolean sameCell = true;
+            for (int i = 0; i < 6; i++) {
+                if (Math.abs(celldm[i] - celldm2[i]) > CELL_THRESHOLD) {
+                    sameCell = false;
+                    break;
+                }
+            }
+
+            if (sameCell) {
+                return cell;
+            }
+        }
+
+        return null;
     }
 
     public static double[][] getCell(double a, double b, double c, double alpha, double beta, double gamma) {
@@ -354,32 +448,104 @@ public final class Lattice {
         return getCell(celldm);
     }
 
-    public static double[][] getCell(double[] celldm) {
+    private static double[] convertCellDm(int ibrav, double[] celldm) {
         if (celldm == null || celldm.length < 6) {
             return null;
         }
 
-        for (int ibrav : IBRAV_LIST) {
-            double[][] cell = getCell(ibrav, celldm);
-            double[] celldm2 = getCellDm(cell);
-            if (celldm2 == null || celldm2.length < 6) {
-                continue;
-            }
-
-            boolean sameCell = true;
-            for (int i = 0; i < 6; i++) {
-                if (Math.abs(celldm[i] - celldm2[i]) > CELLDM_THRESHOLD) {
-                    sameCell = false;
-                    break;
-                }
-            }
-
-            if (sameCell) {
-                return cell;
-            }
+        double[] celldm2 = new double[6];
+        celldm2[0] = celldm[0];
+        celldm2[1] = celldm[1];
+        celldm2[2] = celldm[2];
+        if (ibrav == 14) {
+            celldm2[3] = celldm[3];
+            celldm2[4] = celldm[4];
+            celldm2[5] = celldm[5];
+        } else if (ibrav == -12 || ibrav == -13) {
+            celldm2[3] = 0.0;
+            celldm2[4] = celldm[4];
+            celldm2[5] = 0.0;
+        } else if (isCorrectBravais(ibrav)) {
+            celldm2[3] = celldm[5];
+            celldm2[4] = 0.0;
+            celldm2[5] = 0.0;
+        } else {
+            celldm2[3] = celldm[3];
+            celldm2[4] = celldm[4];
+            celldm2[5] = celldm[5];
         }
 
-        return null;
+        switch (ibrav) {
+        //case 1:
+        //    break;
+
+        case 2:
+            celldm2[0] *= 2.0 / ROOT2;
+            break;
+
+        case 3:
+            celldm2[0] *= 2.0 / ROOT3;
+            break;
+
+        //case 4:
+        //    break;
+
+        case 5:
+            // TODO
+            break;
+
+        case -5:
+            // TODO
+            break;
+
+        //case 6:
+        //    break;
+
+        case 7:
+            // TODO
+            break;
+
+        //case 8:
+        //    break;
+
+        case 9:
+            // TODO
+            break;
+
+        case -9:
+            // TODO
+            break;
+
+        case 91:
+            // TODO
+            break;
+
+        case 10:
+            // TODO
+            break;
+
+        case 11:
+            // TODO
+            break;
+
+        //case 12:
+        //    break;
+
+        //case -12:
+        //    break;
+
+        case 13:
+            // TODO
+            break;
+
+        case -13:
+            break;
+
+        //case 14:
+        //    break;
+        }
+
+        return celldm2;
     }
 
     public static double[][] getCell(int ibrav, double[] celldm) {

@@ -141,28 +141,85 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         return Matrix3D.copy(this.lattice);
     }
 
+    private double getLatticeConstant(int ibrav, int i, boolean asCos) {
+        double[] lattConst = Lattice.getLatticeConstants(ibrav, this.lattice, asCos);
+        if (lattConst == null || lattConst.length < 6) {
+            return 0.0;
+        }
+
+        return lattConst[i];
+    }
+
     public double getA() {
         return Lattice.getA(this.lattice);
+    }
+
+    public double getA(int ibrav) {
+        return this.getLatticeConstant(ibrav, 0, true);
     }
 
     public double getB() {
         return Lattice.getB(this.lattice);
     }
 
+    public double getB(int ibrav) {
+        return this.getLatticeConstant(ibrav, 1, true);
+    }
+
     public double getC() {
         return Lattice.getC(this.lattice);
+    }
+
+    public double getC(int ibrav) {
+        return this.getLatticeConstant(ibrav, 2, true);
     }
 
     public double getAlpha() {
         return Lattice.getAlpha(this.lattice);
     }
 
+    public double getAlpha(int ibrav) {
+        return this.getLatticeConstant(ibrav, 3, false);
+    }
+
     public double getBeta() {
         return Lattice.getBeta(this.lattice);
     }
 
+    public double getBeta(int ibrav) {
+        return this.getLatticeConstant(ibrav, 4, false);
+    }
+
     public double getGamma() {
         return Lattice.getGamma(this.lattice);
+    }
+
+    public double getGamma(int ibrav) {
+        return this.getLatticeConstant(ibrav, 5, false);
+    }
+
+    public double getCosAlpha() {
+        return Lattice.getCosAlpha(this.lattice);
+    }
+
+    public double getCosAlpha(int ibrav) {
+        return this.getLatticeConstant(ibrav, 3, true);
+    }
+
+    public double getCosBeta() {
+        return Lattice.getCosBeta(this.lattice);
+    }
+
+    public double getCosBeta(int ibrav) {
+        return this.getLatticeConstant(ibrav, 4, true);
+    }
+
+    public double getCosGamma() {
+        return Lattice.getCosGamma(this.lattice);
+    }
+
+    public double getCosGamma(int ibrav) {
+        return this.getLatticeConstant(ibrav, 5, true);
     }
 
     private double[] convertToCartesianPosition(double a, double b, double c, double[][] lattice) {

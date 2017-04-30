@@ -12,6 +12,7 @@ package burai.input.correcter;
 import burai.atoms.element.ElementUtil;
 import burai.com.consts.Constants;
 import burai.com.env.Environments;
+import burai.com.math.Lattice;
 import burai.input.QEInput;
 import burai.input.namelist.QEValue;
 import burai.pseudo.PseudoLibrary;
@@ -49,7 +50,21 @@ public class QEGeometryInputCorrecter extends QEInputCorrecter {
         }
 
         double alat = 1.0;
+        int ibrav = 0;
+        boolean hasIbrav = false;
         QEValue value = null;
+
+        value = this.nmlSystem.getValue("ibrav");
+        if (value != null) {
+            ibrav = value.getIntegerValue();
+            if (ibrav == 0 || Lattice.isCorrectBravais(ibrav)) {
+                hasIbrav = true;
+            }
+        }
+
+        if (!hasIbrav) {
+            this.nmlSystem.setValue("ibrav = 0");
+        }
 
         value = this.nmlSystem.getValue("celldm(1)");
         if (value != null) {
@@ -82,25 +97,71 @@ public class QEGeometryInputCorrecter extends QEInputCorrecter {
 
         value = this.nmlSystem.getValue("celldm(4)");
         if (value != null) {
-            if (this.nmlSystem.getValue("cosbc") == null) {
-                this.nmlSystem.setValue("cosbc = " + value.getRealValue());
+            if (ibrav == 14) {
+                if (this.nmlSystem.getValue("cosbc") == null) {
+                    this.nmlSystem.setValue("cosbc = " + value.getRealValue());
+                }
+
+            } else if (ibrav == -12 || ibrav == -13) {
+                // NOP
+
+            } else if (Lattice.isCorrectBravais(ibrav)) {
+                if (this.nmlSystem.getValue("cosab") == null) {
+                    this.nmlSystem.setValue("cosab = " + value.getRealValue());
+                }
+
+            } else {
+                if (this.nmlSystem.getValue("cosbc") == null) {
+                    this.nmlSystem.setValue("cosbc = " + value.getRealValue());
+                }
             }
+
             this.nmlSystem.removeValue(value);
         }
 
         value = this.nmlSystem.getValue("celldm(5)");
         if (value != null) {
-            if (this.nmlSystem.getValue("cosac") == null) {
-                this.nmlSystem.setValue("cosac = " + value.getRealValue());
+            if (ibrav == 14) {
+                if (this.nmlSystem.getValue("cosac") == null) {
+                    this.nmlSystem.setValue("cosac = " + value.getRealValue());
+                }
+
+            } else if (ibrav == -12 || ibrav == -13) {
+                if (this.nmlSystem.getValue("cosac") == null) {
+                    this.nmlSystem.setValue("cosac = " + value.getRealValue());
+                }
+
+            } else if (Lattice.isCorrectBravais(ibrav)) {
+                // NOP
+
+            } else {
+                if (this.nmlSystem.getValue("cosac") == null) {
+                    this.nmlSystem.setValue("cosac = " + value.getRealValue());
+                }
             }
+
             this.nmlSystem.removeValue(value);
         }
 
         value = this.nmlSystem.getValue("celldm(6)");
         if (value != null) {
-            if (this.nmlSystem.getValue("cosab") == null) {
-                this.nmlSystem.setValue("cosab = " + value.getRealValue());
+            if (ibrav == 14) {
+                if (this.nmlSystem.getValue("cosab") == null) {
+                    this.nmlSystem.setValue("cosab = " + value.getRealValue());
+                }
+
+            } else if (ibrav == -12 || ibrav == -13) {
+                // NOP
+
+            } else if (Lattice.isCorrectBravais(ibrav)) {
+                // NOP
+
+            } else {
+                if (this.nmlSystem.getValue("cosab") == null) {
+                    this.nmlSystem.setValue("cosab = " + value.getRealValue());
+                }
             }
+
             this.nmlSystem.removeValue(value);
         }
     }
@@ -115,12 +176,21 @@ public class QEGeometryInputCorrecter extends QEInputCorrecter {
         }
 
         QEValue value = this.nmlSystem.getValue("ibrav");
-        if (value != null && value.getIntegerValue() != 0) {
+
+        if (value != null && Lattice.isCorrectBravais(value.getIntegerValue())) {
             double[][] lattice = this.input.getLattice();
-            this.cardCell.setAngstrom();
-            this.cardCell.setVector(1, lattice[0]);
-            this.cardCell.setVector(2, lattice[1]);
-            this.cardCell.setVector(3, lattice[2]);
+            if (lattice != null && lattice.length > 2) {
+                this.cardCell.setAngstrom();
+                if (lattice[0] != null && lattice[0].length > 2) {
+                    this.cardCell.setVector(1, lattice[0]);
+                }
+                if (lattice[1] != null && lattice[1].length > 2) {
+                    this.cardCell.setVector(2, lattice[1]);
+                }
+                if (lattice[2] != null && lattice[2].length > 2) {
+                    this.cardCell.setVector(3, lattice[2]);
+                }
+            }
         }
     }
 
@@ -137,7 +207,7 @@ public class QEGeometryInputCorrecter extends QEInputCorrecter {
                 PseudoPotential pseudoPot =
                         element == null ? null : PseudoLibrary.getInstance().getPseudoPotential(element);
                 String pseudoName = pseudoPot == null ? null : pseudoPot.getName();
-                if(pseudoName!= null) {
+                if (pseudoName != null) {
                     this.cardSpecies.setPseudoPotential(i, pseudoName);
                 }
             }

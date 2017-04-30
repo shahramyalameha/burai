@@ -128,12 +128,13 @@ public class QEGeometryInput extends QEInput {
             return;
         }
 
-        double a = Lattice.getA(lattice);
-        double b = Lattice.getB(lattice);
-        double c = Lattice.getC(lattice);
-        double cosbc = Lattice.getCosAlpha(lattice);
-        double cosac = Lattice.getCosBeta(lattice);
-        double cosab = Lattice.getCosGamma(lattice);
+        double[] lattConst = Lattice.getLatticeConstants(ibrav, lattice, true);
+        double a = lattConst[0];
+        double b = lattConst[1];
+        double c = lattConst[2];
+        double cosbc = lattConst[3];
+        double cosac = lattConst[4];
+        double cosab = lattConst[5];
 
         QENamelist nmlSystem = this.namelists.get(NAMELIST_SYSTEM);
         if (nmlSystem != null) {
