@@ -624,13 +624,17 @@ public final class Environments {
     }
 
     public static String getProperty(String key) {
+        return getProperty(key, null);
+    }
+
+    public static String getProperty(String key, String def) {
         if (key == null) {
-            return null;
+            return def;
         }
 
         String key2 = key.trim();
         if (key2.isEmpty()) {
-            return null;
+            return def;
         }
 
         EnvProperties envProperties = getEnvProperties();
@@ -638,47 +642,59 @@ public final class Environments {
             return envProperties.getProperty(key2);
         }
 
-        return null;
+        return def;
     }
 
     public static boolean getBoolProperty(String key) {
+        return getBoolProperty(key, false);
+    }
+
+    public static boolean getBoolProperty(String key, boolean def) {
         String value = getProperty(key);
         if (value == null) {
-            return false;
+            return def;
         }
 
         return Boolean.parseBoolean(value);
     }
 
     public static int getIntProperty(String key) {
+        return getIntProperty(key, 0);
+    }
+
+    public static int getIntProperty(String key, int def) {
         String value = getProperty(key);
         if (value == null) {
-            return 0;
+            return def;
         }
 
-        int i = 0;
+        int i = def;
 
         try {
             i = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            i = 0;
+            i = def;
         }
 
         return i;
     }
 
     public static double getDoubleProperty(String key) {
+        return getDoubleProperty(key, 0.0);
+    }
+
+    public static double getDoubleProperty(String key, double def) {
         String value = getProperty(key);
         if (value == null) {
-            return 0;
+            return def;
         }
 
-        double x = 0.0;
+        double x = def;
 
         try {
             x = Calculator.expr(value);
         } catch (NumberFormatException e) {
-            x = 0.0;
+            x = def;
         }
 
         return x;

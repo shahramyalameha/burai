@@ -33,6 +33,7 @@ import burai.app.icon.QEFXProjectIcon;
 import burai.app.icon.QEFXUPFIcon;
 import burai.app.icon.QEFXWebIcon;
 import burai.app.icon.web.WebEngineWrapper;
+import burai.com.env.Environments;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.com.life.Life;
@@ -42,6 +43,8 @@ import burai.project.Project;
 public class BodySetupper extends ExplorerSetupper {
 
     private static final double GRAPHIC_SIZE = 20.0;
+
+    private static final String PROP_EXPLORER_TYPE = "explorer_mode";
 
     private static final int EXPLORER_TYPE_LIST = 0;
     private static final int EXPLORER_TYPE_SMALL_TILES = 1;
@@ -66,7 +69,8 @@ public class BodySetupper extends ExplorerSetupper {
 
         this.menuButton = null;
 
-        this.explorerType = EXPLORER_TYPE_MEDIUM_TILES;
+        this.explorerType = Environments.getIntProperty(PROP_EXPLORER_TYPE, EXPLORER_TYPE_MEDIUM_TILES);
+
         this.explorerBody = null;
 
         this.clippedIcon = null;
@@ -155,6 +159,8 @@ public class BodySetupper extends ExplorerSetupper {
             this.menuButton.setText(" Large");
             this.menuButton.setGraphic(SVGLibrary.getGraphic(SVGData.TILES, GRAPHIC_SIZE));
         }
+
+        Environments.setProperty(PROP_EXPLORER_TYPE, this.explorerType);
     }
 
     protected void updateExplorerBody() {
