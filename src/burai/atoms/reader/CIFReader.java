@@ -22,6 +22,7 @@ import burai.atoms.reader.cif.CIFLoopValue;
 import burai.atoms.reader.cif.CIFSingleValue;
 import burai.atoms.reader.cif.CIFSymmetricOperator;
 import burai.atoms.reader.cif.IncorrectCIFSymmetricException;
+import burai.com.math.Lattice;
 
 public class CIFReader extends AtomsReader {
 
@@ -255,27 +256,19 @@ public class CIFReader extends AtomsReader {
             throw new RuntimeException("cannot construct lattice vector from CIF file.");
         }
 
-        double cosAlpha = Math.cos((Math.PI / 180.0) * alpha);
-        double cosBeta = Math.cos((Math.PI / 180.0) * beta);
-        double cosGamma = Math.cos((Math.PI / 180.0) * gamma);
-        double sinGamma = Math.sin((Math.PI / 180.0) * gamma);
-
-        if (sinGamma == 0.0) {
-            throw new RuntimeException("sin(gamma) is zero, in reading CIF file.");
+        double[][] lattice2 = Lattice.getCell(a, b, c, alpha, beta, gamma);
+        if (lattice2 == null || lattice2.length < 3) {
+            throw new RuntimeException("incorrect lattice, in reading CIF file.");
         }
 
-        lattice[0][0] = a;
-        lattice[0][1] = 0.0;
-        lattice[0][2] = 0.0;
-
-        lattice[1][0] = b * cosGamma;
-        lattice[1][1] = b * sinGamma;
-        lattice[1][2] = 0.0;
-
-        lattice[2][0] = c * cosBeta;
-        lattice[2][1] = c * (cosAlpha - cosBeta * cosGamma) / sinGamma;
-        lattice[2][2] = c * Math.sqrt(1.0 + 2.0 * cosAlpha * cosBeta * cosGamma
-                - cosAlpha * cosAlpha - cosBeta * cosBeta - cosGamma * cosGamma) / sinGamma;
+        for (int i = 0; i < 3; i++) {
+            if (lattice2[i] == null || lattice2[i].length < 3) {
+                throw new RuntimeException("incorrect lattice, in reading CIF file. (#" + i + ")");
+            }
+            for (int j = 0; j < 3; j++) {
+                lattice[i][j] = lattice2[i][j];
+            }
+        }
     }
 
     private void createAtoms(List<String> atomNames, List<double[]> atomCoords) throws RuntimeException {
