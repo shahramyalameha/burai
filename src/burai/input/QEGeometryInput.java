@@ -160,12 +160,12 @@ public class QEGeometryInput extends QEInput {
 
             case 5:
                 nmlSystem.setValue("a = " + a);
-                nmlSystem.setValue("cosbc = " + cosbc);
+                nmlSystem.setValue("cosab = " + cosab);
                 break;
 
             case -5:
                 nmlSystem.setValue("a = " + a);
-                nmlSystem.setValue("cosbc = " + cosbc);
+                nmlSystem.setValue("cosab = " + cosab);
                 break;
 
             case 6:
@@ -218,7 +218,7 @@ public class QEGeometryInput extends QEInput {
                 nmlSystem.setValue("a = " + a);
                 nmlSystem.setValue("b = " + b);
                 nmlSystem.setValue("c = " + c);
-                nmlSystem.setValue("cosbc = " + cosbc);
+                nmlSystem.setValue("cosab = " + cosab);
                 break;
 
             case -12:
@@ -232,7 +232,7 @@ public class QEGeometryInput extends QEInput {
                 nmlSystem.setValue("a = " + a);
                 nmlSystem.setValue("b = " + b);
                 nmlSystem.setValue("c = " + c);
-                nmlSystem.setValue("cosbc = " + cosbc);
+                nmlSystem.setValue("cosab = " + cosab);
                 break;
 
             case -13:

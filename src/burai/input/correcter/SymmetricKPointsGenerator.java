@@ -60,17 +60,17 @@ public class SymmetricKPointsGenerator {
         QEValue aValue = this.nmlSystem.getValue("a");
         QEValue bValue = this.nmlSystem.getValue("b");
         QEValue cValue = this.nmlSystem.getValue("c");
-        QEValue cosbcValue = this.nmlSystem.getValue("cosbc");
+        QEValue cosabValue = this.nmlSystem.getValue("cosab");
 
         int ibrav = ibravValue == null ? 0 : ibravValue.getIntegerValue();
         double a = aValue == null ? 0.0 : aValue.getRealValue();
         double b = bValue == null ? 0.0 : bValue.getRealValue();
         double c = cValue == null ? 0.0 : cValue.getRealValue();
-        double cosBC = cosbcValue == null ? 0.0 : cosbcValue.getRealValue();
+        double cosAB = cosabValue == null ? 0.0 : cosabValue.getRealValue();
         double celldm1 = a;
         double celldm2 = a == 0.0 ? 1.0 : b / a;
         double celldm3 = a == 0.0 ? 1.0 : c / a;
-        double celldm4 = cosBC;
+        double celldm4 = ibrav == 5 ? cosAB : 0.0;
 
         int ibz = 0;
 

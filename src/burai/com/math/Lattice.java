@@ -373,7 +373,7 @@ public final class Lattice {
 
         for (int ibrav : IBRAV_LIST) {
             double[] celldm2 = convertCellDm(ibrav, celldm);
-            if (celldm == null || celldm.length < 6) {
+            if (celldm2 == null || celldm2.length < 6) {
                 continue;
             }
             double[][] cell2 = getCell(ibrav, celldm2);

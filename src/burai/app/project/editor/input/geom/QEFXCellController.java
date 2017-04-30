@@ -335,8 +335,8 @@ public class QEFXCellController extends QEFXInputModelController {
                 return false;
             }
             int i = value.getIntegerValue();
-            return i == 8 || i == 9 || i == -9 || i == 10 || i == 11 ||
-                    i == 12 || i == -12 || i == 13 || i == 14;
+            return i == 8 || i == 9 || i == -9 || i == 91 || i == 10 || i == 11 ||
+                    i == 12 || i == -12 || i == 13 || i == -13 || i == 14;
         }
 
         return true;
@@ -366,8 +366,8 @@ public class QEFXCellController extends QEFXInputModelController {
                 return false;
             }
             int i = value.getIntegerValue();
-            return i == 4 || i == 6 || i == 7 || i == 8 || i == 9 || i == -9 ||
-                    i == 10 || i == 11 || i == 12 || i == -12 || i == 13 || i == 14;
+            return i == 4 || i == 6 || i == 7 || i == 8 || i == 9 || i == -9 || i == 91 ||
+                    i == 10 || i == 11 || i == 12 || i == -12 || i == 13 || i == -13 || i == 14;
         }
 
         return true;
@@ -397,7 +397,7 @@ public class QEFXCellController extends QEFXInputModelController {
                 return false;
             }
             int i = value.getIntegerValue();
-            return i == 5 || i == -5 || i == 12 || i == 13 || i == 14;
+            return i == 14;
         }
 
         return true;
@@ -427,7 +427,7 @@ public class QEFXCellController extends QEFXInputModelController {
                 return false;
             }
             int i = value.getIntegerValue();
-            return i == -12 || i == 14;
+            return i == -12 || i == -13 || i == 14;
         }
 
         return true;
@@ -457,7 +457,7 @@ public class QEFXCellController extends QEFXInputModelController {
                 return false;
             }
             int i = value.getIntegerValue();
-            return i == 14;
+            return i == 5 || i == -5 || i == 12 || i == 13 || i == 14;
         }
 
         return true;
