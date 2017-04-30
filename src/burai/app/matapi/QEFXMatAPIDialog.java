@@ -66,7 +66,7 @@ public class QEFXMatAPIDialog extends Dialog<ButtonType> implements Initializabl
         this.setTitle("Materials API");
         dialogPane.setHeaderText(header);
         dialogPane.getButtonTypes().clear();
-        dialogPane.getButtonTypes().addAll(ButtonType.OK);
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Node node = null;
         try {

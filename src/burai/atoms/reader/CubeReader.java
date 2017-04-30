@@ -75,9 +75,9 @@ public class CubeReader extends AtomsReader {
         double[] aVector = new double[3];
         try {
             int numVector = Math.abs(Integer.parseInt(subLines[0]));
-            aVector[0] = numVector * this.toDouble(subLines[1]) - origin[1];
-            aVector[1] = numVector * this.toDouble(subLines[2]) - origin[2];
-            aVector[2] = numVector * this.toDouble(subLines[3]) - origin[3];
+            aVector[0] = numVector * this.toDouble(subLines[1]) - origin[0];
+            aVector[1] = numVector * this.toDouble(subLines[2]) - origin[1];
+            aVector[2] = numVector * this.toDouble(subLines[3]) - origin[2];
         } catch (NumberFormatException e) {
             throw new IOException("cannot read a-vector from a CUBE file.");
         }
@@ -86,9 +86,9 @@ public class CubeReader extends AtomsReader {
         double[] bVector = new double[3];
         try {
             int numVector = Math.abs(Integer.parseInt(subLines[0]));
-            bVector[0] = numVector * this.toDouble(subLines[1]) - origin[1];
-            bVector[1] = numVector * this.toDouble(subLines[2]) - origin[2];
-            bVector[2] = numVector * this.toDouble(subLines[3]) - origin[3];
+            bVector[0] = numVector * this.toDouble(subLines[1]) - origin[0];
+            bVector[1] = numVector * this.toDouble(subLines[2]) - origin[1];
+            bVector[2] = numVector * this.toDouble(subLines[3]) - origin[2];
         } catch (NumberFormatException e) {
             throw new IOException("cannot read b-vector from a CUBE file.");
         }
@@ -97,9 +97,9 @@ public class CubeReader extends AtomsReader {
         double[] cVector = new double[3];
         try {
             int numVector = Math.abs(Integer.parseInt(subLines[0]));
-            cVector[0] = numVector * this.toDouble(subLines[1]) - origin[1];
-            cVector[1] = numVector * this.toDouble(subLines[2]) - origin[2];
-            cVector[2] = numVector * this.toDouble(subLines[3]) - origin[3];
+            cVector[0] = numVector * this.toDouble(subLines[1]) - origin[0];
+            cVector[1] = numVector * this.toDouble(subLines[2]) - origin[1];
+            cVector[2] = numVector * this.toDouble(subLines[3]) - origin[2];
         } catch (NumberFormatException e) {
             throw new IOException("cannot read c-vector from a CUBE file.");
         }
@@ -114,9 +114,9 @@ public class CubeReader extends AtomsReader {
             try {
                 int atomNum = Math.abs(Integer.parseInt(subLines[0]));
                 name[i] = ElementUtil.toElementName(atomNum);
-                coord[i][0] = this.toDouble(subLines[2]);
-                coord[i][1] = this.toDouble(subLines[3]);
-                coord[i][2] = this.toDouble(subLines[4]);
+                coord[i][0] = this.toDouble(subLines[2]) - origin[0];
+                coord[i][1] = this.toDouble(subLines[3]) - origin[1];
+                coord[i][2] = this.toDouble(subLines[4]) - origin[2];
             } catch (NumberFormatException e) {
                 throw new IOException("cannot read atomic coordinate from a CUBE file.");
             }
