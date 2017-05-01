@@ -17,9 +17,9 @@ import burai.atoms.model.event.ModelEvent;
 
 public class AtomsResolver implements AtomEventListener, CellEventListener {
 
-    private static final double THR_DENSITY = 1.0;
+    private static final double THR_DENSITY = 0.25;
 
-    private static final double THR_NORM_LATTICE = 0.5;
+    private static final double THR_NORM_LATTICE = 1.00;
 
     private static final double DELTA_ON_LATTICE = 0.25;
 

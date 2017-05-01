@@ -11,6 +11,7 @@ package burai.atoms.model;
 
 import java.util.List;
 
+import javafx.application.Platform;
 import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
@@ -21,7 +22,9 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final double BOND_SCALE1 = 0.50;
 
-    private static final double BOND_SCALE2 = 1.15;
+    private static final double BOND_SCALE2 = 1.10;
+
+    private static final long PRE_TIME_TO_RESOLVE = 150L;
 
     private Cell cell;
 
@@ -56,17 +59,35 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
     }
 
     protected void resolve() {
-        this.removeNotUsedBonds();
+        Thread thread = new Thread(() -> {
+            synchronized (this) {
+                try {
+                    this.wait(PRE_TIME_TO_RESOLVE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-        List<Atom> atoms = this.cell.getAtoms();
-        if (atoms == null || atoms.isEmpty()) {
-            return;
-        }
+            this.postToResolve();
+        });
 
-        for (int i = 0; i < atoms.size(); i++) {
-            Atom atom = atoms.get(i);
-            this.resolve(atom, i);
-        }
+        thread.start();
+    }
+
+    private void postToResolve() {
+        Platform.runLater(() -> {
+            this.removeNotUsedBonds();
+
+            List<Atom> atoms = this.cell.getAtoms();
+            if (atoms == null || atoms.isEmpty()) {
+                return;
+            }
+
+            for (int i = 0; i < atoms.size(); i++) {
+                Atom atom = atoms.get(i);
+                this.resolve(atom, i);
+            }
+        });
     }
 
     protected void resolve(Atom atom) {
