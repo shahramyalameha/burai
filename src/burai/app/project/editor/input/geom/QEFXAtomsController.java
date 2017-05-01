@@ -181,62 +181,70 @@ public class QEFXAtomsController extends QEFXInputModelController {
             return;
         }
 
-        double[][] matrixOld = null;
-        double[][] matrixNew = null;
-        double[][] matrixEff = null;
+        atomicPositions.stopListeners();
 
-        this.busyUnitCombo = true;
+        try {
 
-        matrixOld = this.input.getAngstromMatrix();
+            double[][] matrixOld = null;
+            double[][] matrixNew = null;
+            double[][] matrixEff = null;
 
-        String value = this.unitCombo.getValue();
-        if (UNIT_ALAT.equals(value)) {
-            atomicPositions.setAlat();
-        } else if (UNIT_BOHR.equals(value)) {
-            atomicPositions.setBohr();
-        } else if (UNIT_ANGSTROM.equals(value)) {
-            atomicPositions.setAngstrom();
-        } else if (UNIT_CRYSTAL.equals(value)) {
-            atomicPositions.setCrystal();
-        }
+            this.busyUnitCombo = true;
 
-        matrixNew = this.input.getAngstromInverse();
-        matrixEff = null;
-        if (matrixOld != null && matrixNew != null) {
-            matrixEff = Matrix3D.mult(matrixNew, matrixOld);
-        }
+            matrixOld = this.input.getAngstromMatrix();
 
-        this.busyUnitCombo = false;
-
-        if (matrixEff == null) {
-            return;
-        }
-
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        QEFXMain.initializeDialogOwner(alert);
-        alert.setHeaderText("Convert atomic positions ?");
-        alert.getButtonTypes().clear();
-        alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-        Optional<ButtonType> optButtonType = alert.showAndWait();
-        if (optButtonType == null || !optButtonType.isPresent()) {
-            return;
-        }
-        if (optButtonType.get() != ButtonType.YES) {
-            return;
-        }
-
-        this.modelCell.stopResolving();
-
-        int numAtoms = atomicPositions.numPositions();
-        for (int i = 0; i < numAtoms; i++) {
-            double[] position = atomicPositions.getPosition(i);
-            if (position != null && position.length > 2) {
-                position = Matrix3D.mult(matrixEff, position);
-                atomicPositions.setPosition(i, position);
+            String value = this.unitCombo.getValue();
+            if (UNIT_ALAT.equals(value)) {
+                atomicPositions.setAlat();
+            } else if (UNIT_BOHR.equals(value)) {
+                atomicPositions.setBohr();
+            } else if (UNIT_ANGSTROM.equals(value)) {
+                atomicPositions.setAngstrom();
+            } else if (UNIT_CRYSTAL.equals(value)) {
+                atomicPositions.setCrystal();
             }
-        }
 
-        this.modelCell.restartResolving();
+            matrixNew = this.input.getAngstromInverse();
+            matrixEff = null;
+            if (matrixOld != null && matrixNew != null) {
+                matrixEff = Matrix3D.mult(matrixNew, matrixOld);
+            }
+
+            this.busyUnitCombo = false;
+
+            if (matrixEff == null) {
+                return;
+            }
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            QEFXMain.initializeDialogOwner(alert);
+            alert.setHeaderText("Convert atomic positions ?");
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            Optional<ButtonType> optButtonType = alert.showAndWait();
+            if (optButtonType == null || !optButtonType.isPresent()) {
+                return;
+            }
+            if (optButtonType.get() != ButtonType.YES) {
+                return;
+            }
+
+            //this.modelCell.stopResolving();
+
+            int numAtoms = atomicPositions.numPositions();
+            for (int i = 0; i < numAtoms; i++) {
+                double[] position = atomicPositions.getPosition(i);
+                if (position != null && position.length > 2) {
+                    position = Matrix3D.mult(matrixEff, position);
+                    atomicPositions.setPosition(i, position);
+                }
+            }
+
+            //this.modelCell.restartResolving();
+
+        } finally {
+            atomicPositions.restartListeners();
+        }
     }
 
     private void setupPlusButton() {

@@ -269,6 +269,7 @@ public class QEFXLatticeVector {
             double unitNew = 1.0;
 
             QECellParameters cellParameters = (QECellParameters) card;
+            cellParameters.stopListeners();
 
             this.busyScreen = true;
 
@@ -301,12 +302,14 @@ public class QEFXLatticeVector {
                 double[] vector1 = cellParameters.getVector1();
                 double[] vector2 = cellParameters.getVector2();
                 double[] vector3 = cellParameters.getVector3();
-                cellParameters.stopListeners();
+                // cellParameters.stopListeners();
                 cellParameters.setVector(1, Matrix3D.mult(unitOld / unitNew, vector1));
                 cellParameters.setVector(2, Matrix3D.mult(unitOld / unitNew, vector2));
                 cellParameters.setVector(3, Matrix3D.mult(unitOld / unitNew, vector3));
-                cellParameters.restartListeners();
+                // cellParameters.restartListeners();
             }
+
+            cellParameters.restartListeners();
         });
     }
 
