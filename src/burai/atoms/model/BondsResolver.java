@@ -26,8 +26,6 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final double BOND_SCALE2 = 1.10;
 
-    private static final long PRE_TIME_TO_RESOLVE = 150L;
-
     private Cell cell;
 
     boolean auto;
@@ -61,22 +59,6 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
     }
 
     protected void resolve() {
-        Thread thread = new Thread(() -> {
-            synchronized (this) {
-                try {
-                    this.wait(PRE_TIME_TO_RESOLVE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            this.postToResolve();
-        });
-
-        thread.start();
-    }
-
-    private void postToResolve() {
         Platform.runLater(() -> {
             this.removeNotUsedBonds();
 
