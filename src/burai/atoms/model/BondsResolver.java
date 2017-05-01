@@ -20,6 +20,8 @@ import burai.atoms.model.event.ModelEvent;
 
 public class BondsResolver implements AtomEventListener, CellEventListener {
 
+    private static final double THR_DENSITY = 0.50;
+
     private static final double BOND_SCALE1 = 0.50;
 
     private static final double BOND_SCALE2 = 1.10;
@@ -102,6 +104,13 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
     private void resolve(Atom atom1, int maxAtom) {
         if (atom1 == null) {
             throw new IllegalArgumentException("atom1 is null.");
+        }
+
+        int natom = this.cell.numAtoms();
+        double volume = this.cell.getVolume();
+        double density = ((double) natom) / volume;
+        if (density > THR_DENSITY) {
+            return;
         }
 
         List<Atom> atoms = this.cell.getAtoms();
