@@ -503,8 +503,8 @@ public abstract class QEFXExplorerBody {
         }
 
         String fileName = fileElement.getName();
-        if (fileName == null || fileName.trim().isEmpty()) {
-            // TODO
+        if (fileName != null && (!fileName.trim().isEmpty())) {
+            // NOP; this function is used only if #Calculating
         }
     }
 

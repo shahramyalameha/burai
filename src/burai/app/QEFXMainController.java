@@ -9,6 +9,7 @@
 
 package burai.app;
 
+import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -31,8 +33,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -40,6 +45,9 @@ import javafx.stage.WindowEvent;
 import burai.app.about.QEFXAboutDialog;
 import burai.app.explorer.QEFXExplorer;
 import burai.app.explorer.QEFXExplorerFacade;
+import burai.app.icon.QEFXIcon;
+import burai.app.icon.QEFXProjectIcon;
+import burai.app.icon.QEFXWebIcon;
 import burai.app.matapi.QEFXMatAPIDialog;
 import burai.app.onclose.QEFXSavingDialog;
 import burai.app.proxy.QEFXProxyDialog;
@@ -55,6 +63,8 @@ import burai.run.RunningManager;
 import burai.ver.Version;
 
 public class QEFXMainController implements Initializable {
+
+    private static final long SLEEP_TIME_TO_DROP_FILES = 850L;
 
     private static final double TOPMENU_GRAPHIC_SIZE = 16.0;
     private static final String TOPMENU_GRAPHIC_CLASS = "picblack-button";
@@ -72,6 +82,9 @@ public class QEFXMainController implements Initializable {
     private QEFXExplorerFacade explorerFacade;
 
     private Queue<HomeTabSelected> onHomeTabSelectedQueue;
+
+    @FXML
+    private BorderPane basePane;
 
     @FXML
     private Menu topMenu;
@@ -130,12 +143,85 @@ public class QEFXMainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.setupBasePane();
         this.setupTopMenu();
         this.setupMenuItems();
         this.setupTabPane();
         this.setupHomeTab();
         this.setupMatApiButton();
         this.setupMatApiField();
+    }
+
+    private void setupBasePane() {
+        if (this.basePane == null) {
+            return;
+        }
+
+        this.basePane.setOnDragOver(event -> {
+            Dragboard board = event == null ? null : event.getDragboard();
+            if (board == null) {
+                return;
+            }
+
+            if (board.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+        });
+
+        this.basePane.setOnDragDropped(event -> {
+            Dragboard board = event == null ? null : event.getDragboard();
+            if (board == null) {
+                return;
+            }
+
+            if (!board.hasFiles()) {
+                event.setDropCompleted(false);
+                return;
+            }
+
+            List<File> files = board.getFiles();
+            if (files != null) {
+                Thread thread = new Thread(() -> {
+                    for (File file : files) {
+                        this.showDroppedFile(file);
+
+                        synchronized (files) {
+                            try {
+                                files.wait(SLEEP_TIME_TO_DROP_FILES);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                thread.start();
+            }
+
+            event.setDropCompleted(true);
+        });
+    }
+
+    private void showDroppedFile(File file) {
+        QEFXIcon icon = file == null ? null : QEFXIcon.getInstance(file);
+        if (icon == null) {
+            return;
+        }
+
+        Platform.runLater(() -> {
+            if (icon != null && icon instanceof QEFXProjectIcon) {
+                Project project = ((QEFXProjectIcon) icon).getContent();
+                if (project != null) {
+                    this.showProject(project);
+                }
+
+            } else if (icon != null && icon instanceof QEFXWebIcon) {
+                String url = ((QEFXWebIcon) icon).getInitialURL();
+                if (url != null && !(url.trim().isEmpty())) {
+                    this.showWebPage(url);
+                }
+            }
+        });
     }
 
     private void setupTopMenu() {
