@@ -17,7 +17,11 @@ import burai.atoms.model.event.ModelEvent;
 
 public class AtomsResolver implements AtomEventListener, CellEventListener {
 
-    private static final double DELTA_ON_CELL = 0.25;
+    private static final double THR_DENSITY = 1.0;
+
+    private static final double THR_NORM_LATTICE = 0.5;
+
+    private static final double DELTA_ON_LATTICE = 0.25;
 
     private Cell cell;
 
@@ -118,6 +122,17 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
     }
 
     private Atom[] listAtomsOnCell(Atom atom) {
+        int natom = this.cell.numAtoms();
+        if (natom < 1) {
+            return null;
+        }
+
+        double volume = this.cell.getVolume();
+        double density = ((double) natom) / volume;
+        if (density > THR_DENSITY) {
+            return null;
+        }
+
         double[] position = null;
         double[] normLattice = this.cell.getNormLattice();
 
@@ -134,30 +149,40 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
         double c = position[2];
 
         double[] deltaA = null;
-        if (normLattice[0] * Math.abs(a) < DELTA_ON_CELL) {
-            deltaA = new double[] { 0.0, 1.0 };
-        } else if (normLattice[0] * Math.abs(a - 1.0) < DELTA_ON_CELL) {
-            deltaA = new double[] { 0.0, -1.0 };
-        } else {
-            deltaA = new double[] { 0.0 };
+        if (normLattice[0] > THR_NORM_LATTICE) {
+            if (normLattice[0] * Math.abs(a) < DELTA_ON_LATTICE) {
+                deltaA = new double[] { 0.0, 1.0 };
+            } else if (normLattice[0] * Math.abs(a - 1.0) < DELTA_ON_LATTICE) {
+                deltaA = new double[] { 0.0, -1.0 };
+            } else {
+                deltaA = new double[] { 0.0 };
+            }
         }
 
         double[] deltaB = null;
-        if (normLattice[1] * Math.abs(b) < DELTA_ON_CELL) {
-            deltaB = new double[] { 0.0, 1.0 };
-        } else if (normLattice[1] * Math.abs(b - 1.0) < DELTA_ON_CELL) {
-            deltaB = new double[] { 0.0, -1.0 };
-        } else {
-            deltaB = new double[] { 0.0 };
+        if (normLattice[1] > THR_NORM_LATTICE) {
+            if (normLattice[1] * Math.abs(b) < DELTA_ON_LATTICE) {
+                deltaB = new double[] { 0.0, 1.0 };
+            } else if (normLattice[1] * Math.abs(b - 1.0) < DELTA_ON_LATTICE) {
+                deltaB = new double[] { 0.0, -1.0 };
+            } else {
+                deltaB = new double[] { 0.0 };
+            }
         }
 
         double[] deltaC = null;
-        if (normLattice[2] * Math.abs(c) < DELTA_ON_CELL) {
-            deltaC = new double[] { 0.0, 1.0 };
-        } else if (normLattice[2] * Math.abs(c - 1.0) < DELTA_ON_CELL) {
-            deltaC = new double[] { 0.0, -1.0 };
-        } else {
-            deltaC = new double[] { 0.0 };
+        if (normLattice[2] > THR_NORM_LATTICE) {
+            if (normLattice[2] * Math.abs(c) < DELTA_ON_LATTICE) {
+                deltaC = new double[] { 0.0, 1.0 };
+            } else if (normLattice[2] * Math.abs(c - 1.0) < DELTA_ON_LATTICE) {
+                deltaC = new double[] { 0.0, -1.0 };
+            } else {
+                deltaC = new double[] { 0.0 };
+            }
+        }
+
+        if (deltaA == null || deltaB == null || deltaC == null) {
+            return null;
         }
 
         int numArray = deltaA.length * deltaB.length * deltaC.length - 1;
