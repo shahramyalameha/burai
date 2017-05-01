@@ -24,7 +24,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final double BOND_SCALE1 = 0.50;
 
-    private static final double BOND_SCALE2 = 1.10;
+    private static final double BOND_SCALE2 = 1.15;
 
     private Cell cell;
 
@@ -88,9 +88,9 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             throw new IllegalArgumentException("atom1 is null.");
         }
 
-        int natom = this.cell.numAtoms();
+        double ratom = (double) this.cell.numAtoms();
         double volume = this.cell.getVolume();
-        double density = ((double) natom) / volume;
+        double density = ratom / volume;
         if (density > THR_DENSITY) {
             return;
         }
@@ -123,10 +123,12 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             double rrmax = BOND_SCALE2 * BOND_SCALE2 * rrcov;
 
             Bond bond = this.cell.pickBond(atom1, atom2);
+
             if (rrmin <= rr && rr <= rrmax) {
                 if (bond == null) {
                     this.cell.addBond(new Bond(atom1, atom2));
                 }
+
             } else {
                 if (bond != null) {
                     this.cell.removeBond(bond);

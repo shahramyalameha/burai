@@ -305,6 +305,14 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         return this.bonds;
     }
 
+    public int numBonds() {
+        if (this.bonds == null || this.bonds.isEmpty()) {
+            return 0;
+        }
+
+        return this.bonds.size();
+    }
+
     public Bond[] listBonds() {
         if (this.bonds == null) {
             return null;
