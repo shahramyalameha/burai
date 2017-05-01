@@ -7,11 +7,16 @@ Figure 1 shows the window layout of BURAI.
 
 .. image:: img/imgWindowStructure_window_all.png
 
+Figure 1. The window layout of BURAI
+
 1. Menu bar
 
 menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, and proxy server setting.
 
 .. image:: img/imgWindowStructure_menubar.png
+   :scale: 50 %
+   :alt: alternate text
+   :align: left
 
 
 2. Material Project API
@@ -32,7 +37,9 @@ Initial setting
 if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
 .. image:: img/imgWindowStructure_proxyServer.png
-
+   :scale: 50 %
+   :alt: alternate text
+   :align: left
 
 
 
