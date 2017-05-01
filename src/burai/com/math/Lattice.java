@@ -269,10 +269,16 @@ public final class Lattice {
         return z;
     }
 
+    /*
+     * celldm of primitive cell
+     */
     public static double[] getCellDm(double[][] cell) {
         return getCellDm(0, cell);
     }
 
+    /*
+     * celldm of primitive cell (ibrav = 0) or standard cell (ibrav > 0)
+     */
     public static double[] getCellDm(int ibrav, double[][] cell) {
         if (!checkCell(cell)) {
             return null;
@@ -299,12 +305,16 @@ public final class Lattice {
         }
     }
 
-    // return a, b, c, alpha, beta and gamma
+    /*
+     * a, b, c, alpha, beta, gamma of primitive cell
+     */
     public static double[] getLatticeConstants(double[][] cell, boolean asCos) {
         return getLatticeConstants(0, cell, asCos);
     }
 
-    // return a, b, c, alpha, beta and gamma
+    /*
+     * a, b, c, alpha, beta, gamma of primitive cell (ibrav = 0) or standard cell (ibrav > 0)
+     */
     public static double[] getLatticeConstants(int ibrav, double[][] cell, boolean asCos) {
         if (!checkCell(cell)) {
             return null;
@@ -351,6 +361,9 @@ public final class Lattice {
         return new double[] { a, b, c, alpha, beta, gamma };
     }
 
+    /*
+     * check available value of ibrav
+     */
     public static boolean isCorrectBravais(int ibrav) {
         for (int ibrav2 : IBRAV_LIST) {
             if (ibrav == ibrav2) {
@@ -361,23 +374,30 @@ public final class Lattice {
         return false;
     }
 
+    /*
+     * detect ibrav from lattice vectors
+     */
     public static int getBravais(double[][] cell) {
         if (!checkCell(cell)) {
             return 0;
         }
 
-        double[] celldm = getCellDm(cell);
-        if (celldm == null || celldm.length < 6) {
+        // lattice vector -> primitive celldm
+        double[] celldmPrim = getCellDm(cell);
+        if (celldmPrim == null || celldmPrim.length < 6) {
             return 0;
         }
 
         for (int ibrav : IBRAV_LIST) {
-            double[] celldm2 = convertCellDm(ibrav, celldm);
-            if (celldm2 == null || celldm2.length < 6) {
+            // primitive celldm -> standard celldm
+            double[] celldmStd = convertCellDm(ibrav, celldmPrim);
+            if (celldmStd == null || celldmStd.length < 6) {
                 continue;
             }
-            double[][] cell2 = getCell(ibrav, celldm2);
-            if (cell2 != null && Matrix3D.equals(cell, cell2, CELL_THRESHOLD)) {
+
+            // standard celldm -> lattice vectors
+            double[][] cell_ = getCell(ibrav, celldmStd);
+            if (cell_ != null && Matrix3D.equals(cell, cell_, CELL_THRESHOLD)) {
                 return ibrav;
             }
         }
@@ -385,22 +405,37 @@ public final class Lattice {
         return 0;
     }
 
-    private static double[][] getCell(double[] celldm) {
-        if (celldm == null || celldm.length < 6) {
+    /*
+     * detect lattice vectors from primitive celldm
+     */
+    private static double[][] getCell(double[] celldmPrim) {
+        // primitive celldm
+        if (celldmPrim == null || celldmPrim.length < 6) {
             return null;
         }
 
         for (int ibrav : IBRAV_LIST) {
-            double[] celldm1 = convertCellDm(ibrav, celldm);
-            double[][] cell = getCell(ibrav, celldm1);
-            double[] celldm2 = getCellDm(cell);
-            if (celldm2 == null || celldm2.length < 6) {
+            // primitive celldm -> standard celldm
+            double[] celldmStd = convertCellDm(ibrav, celldmPrim);
+            if (celldmStd == null || celldmStd.length < 6) {
+                continue;
+            }
+
+            // standard celldm -> lattice vectors
+            double[][] cell = getCell(ibrav, celldmStd);
+            if (cell == null) {
+                continue;
+            }
+
+            // lattice vectors -> primitive celldm
+            double[] celldmPrim_ = getCellDm(cell);
+            if (celldmPrim_ == null || celldmPrim_.length < 6) {
                 continue;
             }
 
             boolean sameCell = true;
             for (int i = 0; i < 6; i++) {
-                if (Math.abs(celldm[i] - celldm2[i]) > CELL_THRESHOLD) {
+                if (Math.abs(celldmPrim[i] - celldmPrim_[i]) > CELL_THRESHOLD) {
                     sameCell = false;
                     break;
                 }
@@ -414,6 +449,9 @@ public final class Lattice {
         return null;
     }
 
+    /*
+     * detect lattice vectors from primitive a, b, c, alpha, beta, gamma
+     */
     public static double[][] getCell(double a, double b, double c, double alpha, double beta, double gamma) {
         if (a <= 0.0) {
             return null;
@@ -434,6 +472,7 @@ public final class Lattice {
             return null;
         }
 
+        // primitive celldm
         double[] celldm = new double[6];
         double cosAlpha = Math.cos(alpha * Math.PI / 180.0);
         double cosBeta = Math.cos(beta * Math.PI / 180.0);
@@ -445,110 +484,223 @@ public final class Lattice {
         celldm[4] = cosBeta;
         celldm[5] = cosGamma;
 
+        // primitive celldm -> lattice vectors
         return getCell(celldm);
     }
 
-    private static double[] convertCellDm(int ibrav, double[] celldm) {
-        if (celldm == null || celldm.length < 6) {
+    /*
+     * convert celldm: primitive cell -> standard cell
+     */
+    private static double[] convertCellDm(int ibrav, double[] celldmPrim) {
+        if (celldmPrim == null || celldmPrim.length < 6) {
             return null;
         }
 
-        double[] celldm2 = new double[6];
-        celldm2[0] = celldm[0];
-        celldm2[1] = celldm[1];
-        celldm2[2] = celldm[2];
-        if (ibrav == 14) {
-            celldm2[3] = celldm[3];
-            celldm2[4] = celldm[4];
-            celldm2[5] = celldm[5];
-        } else if (ibrav == -12 || ibrav == -13) {
-            celldm2[3] = 0.0;
-            celldm2[4] = celldm[4];
-            celldm2[5] = 0.0;
-        } else if (isCorrectBravais(ibrav)) {
-            celldm2[3] = celldm[5];
-            celldm2[4] = 0.0;
-            celldm2[5] = 0.0;
-        } else {
-            celldm2[3] = celldm[3];
-            celldm2[4] = celldm[4];
-            celldm2[5] = celldm[5];
+        double[] celldmStd = new double[6];
+        for (int i = 0; i < 6; i++) {
+            celldmStd[i] = 0.0;
         }
 
         switch (ibrav) {
-        //case 1:
-        //    break;
+        case 1:
+            celldmStd[0] = celldmPrim[0];
+            break;
 
         case 2:
-            celldm2[0] *= 2.0 / ROOT2;
+            celldmStd[0] = (2.0 / ROOT2) * celldmPrim[0];
             break;
 
         case 3:
-            celldm2[0] *= 2.0 / ROOT3;
+            celldmStd[0] = (2.0 / ROOT3) * celldmPrim[0];
             break;
 
-        //case 4:
-        //    break;
+        case 4:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[2] = celldmPrim[2];
+            break;
 
         case 5:
-            // TODO
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[3] = celldmPrim[5];
             break;
 
         case -5:
-            // TODO
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[3] = celldmPrim[5];
             break;
 
-        //case 6:
-        //    break;
+        case 6:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[2] = celldmPrim[2];
+            break;
 
         case 7:
-            // TODO
+            if (celldmPrim[0] <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+            if (celldmPrim[5] <= 0.0 || 1.0 <= celldmPrim[5]) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = ROOT2 * celldmPrim[0] * Math.sqrt(1.0 - celldmPrim[5]);
+            celldmStd[2] = 2.0 * celldmPrim[0] * Math.sqrt(celldmPrim[5]) / celldmStd[0];
             break;
 
-        //case 8:
-        //    break;
+        case 8:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = celldmPrim[1];
+            celldmStd[2] = celldmPrim[2];
+            break;
 
         case 9:
-            // TODO
+            if (celldmPrim[0] <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+            if (Math.abs(celldmPrim[5]) >= 1.0) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = ROOT2 * celldmPrim[0] * Math.sqrt(1 - celldmPrim[5]);
+            celldmStd[1] = Math.sqrt(4.0 * celldmPrim[0] * celldmPrim[0] - celldmStd[0] * celldmStd[0]) / celldmStd[0];
+            celldmStd[2] = celldmPrim[2] * celldmPrim[0] / celldmStd[0];
             break;
 
         case -9:
-            // TODO
+            if (celldmPrim[0] <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+            if (Math.abs(celldmPrim[5]) >= 1.0) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = ROOT2 * celldmPrim[0] * Math.sqrt(1 + celldmPrim[5]);
+            celldmStd[1] = Math.sqrt(4.0 * celldmPrim[0] * celldmPrim[0] - celldmStd[0] * celldmStd[0]) / celldmStd[0];
+            celldmStd[2] = celldmPrim[2] * celldmPrim[0] / celldmStd[0];
             break;
 
         case 91:
-            // TODO
+            if (Math.abs(celldmPrim[3]) >= 1.0) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = ROOT2 * celldmPrim[1] * Math.sqrt(1 + celldmPrim[3]);
+            celldmStd[2] = Math.sqrt(4.0 * celldmPrim[1] * celldmPrim[1] - celldmStd[1] * celldmStd[1]);
             break;
 
         case 10:
-            // TODO
+            double ap = celldmPrim[0];
+            double bp = celldmPrim[1] * ap;
+            double cp = celldmPrim[2] * ap;
+            double asSqr = ap * ap + bp * bp - cp * cp;
+            double bsSqr = bp * bp + cp * cp - ap * ap;
+            double csSqr = ap * ap + cp * cp - bp * bp;
+            if (asSqr <= 0.0 || bsSqr <= 0.0 || csSqr <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+
+            double as = ROOT2 * Math.sqrt(asSqr);
+            double bs = ROOT2 * Math.sqrt(bsSqr);
+            double cs = ROOT2 * Math.sqrt(csSqr);
+            celldmStd[0] = as;
+            celldmStd[1] = bs / as;
+            celldmStd[2] = cs / as;
             break;
 
         case 11:
-            // TODO
+            double rr = 4.0 * celldmPrim[0] * celldmPrim[0];
+            double x1 = rr * celldmPrim[3];
+            double x2 = rr * celldmPrim[4];
+            double x3 = rr * celldmPrim[5];
+            double aa = 0.5 * (x1 - x2);
+            double bb = 0.5 * (x2 - x3);
+            double cc = 0.5 * (x3 + x1);
+            if (aa <= 0.0 || bb <= 0.0 || cc <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+
+            double a = Math.sqrt(aa);
+            double b = Math.sqrt(bb);
+            double c = Math.sqrt(cc);
+            celldmStd[0] = a;
+            celldmStd[1] = b / a;
+            celldmStd[2] = c / a;
             break;
 
-        //case 12:
-        //    break;
+        case 12:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = celldmPrim[1];
+            celldmStd[2] = celldmPrim[2];
+            celldmStd[3] = celldmPrim[5];
+            break;
 
-        //case -12:
-        //    break;
+        case -12:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = celldmPrim[1];
+            celldmStd[2] = celldmPrim[2];
+            celldmStd[4] = celldmPrim[4];
+            break;
 
         case 13:
-            // TODO
+            if (celldmPrim[0] <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+            if (Math.abs(celldmPrim[4]) >= 1.0) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = ROOT2 * celldmPrim[0] * Math.sqrt(1 + celldmPrim[4]);
+            celldmStd[1] = celldmPrim[1] * celldmPrim[0] / celldmStd[0];
+            celldmStd[2] = Math.sqrt(4.0 * celldmPrim[0] * celldmPrim[0] - celldmStd[0] * celldmStd[0]) / celldmStd[0];
+            celldmStd[3] = celldmPrim[5] * Math.sqrt(1.0 + celldmStd[2] * celldmStd[2]);
             break;
 
         case -13:
-            // TODO
+            if (celldmPrim[0] <= 0.0) {
+                celldmStd = null;
+                break;
+            }
+            if (Math.abs(celldmPrim[5]) >= 1.0) {
+                celldmStd = null;
+                break;
+            }
+            celldmStd[0] = ROOT2 * celldmPrim[0] * Math.sqrt(1 + celldmPrim[5]);
+            celldmStd[1] = Math.sqrt(4.0 * celldmPrim[0] * celldmPrim[0] - celldmStd[0] * celldmStd[0]) / celldmStd[0];
+            celldmStd[2] = celldmPrim[2] * celldmPrim[0] / celldmStd[0];
+            celldmStd[4] = celldmPrim[4] * Math.sqrt(1.0 + celldmStd[1] * celldmStd[1]);
             break;
 
-        //case 14:
-        //    break;
+        case 14:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = celldmPrim[1];
+            celldmStd[2] = celldmPrim[2];
+            celldmStd[3] = celldmPrim[3];
+            celldmStd[4] = celldmPrim[4];
+            celldmStd[5] = celldmPrim[5];
+            break;
+
+        default:
+            celldmStd[0] = celldmPrim[0];
+            celldmStd[1] = celldmPrim[1];
+            celldmStd[2] = celldmPrim[2];
+            celldmStd[3] = celldmPrim[3];
+            celldmStd[4] = celldmPrim[4];
+            celldmStd[5] = celldmPrim[5];
+            break;
         }
 
-        return celldm2;
+        return celldmStd;
     }
 
+    /*
+     * create lattice vectors from standard celldm
+     */
     public static double[][] getCell(int ibrav, double[] celldm) {
         if (celldm == null || celldm.length < 6) {
             return null;
