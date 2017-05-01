@@ -37,7 +37,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'burai_manual'
+project = u'burai'
 copyright = u'2017, burai_team'
 
 # The version info for the project you're documenting, acts as replacement for
