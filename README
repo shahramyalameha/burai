@@ -1,10 +1,10 @@
 This is the BURAI software package,
 which is a GUI system of Quantum ESPRESSO <http://www.quantum-espresso.org>.
 
-Copyright (C) 2016 Satomichi Nishihara <nisihara.burai@gmail.com>.
+Copyright (C) 2016 BURAI-team <nisihara.burai@gmail.com>.
 
 This system is developed as a JavaFX application, and requires JRE1.8
-or later version of runtime enviroment.
+or later version of runtime environment.
 
 The following external libraries are used.
   - exp4j (Apache License 2.0, http://www.objecthunter.net/exp4j/)
