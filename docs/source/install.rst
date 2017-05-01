@@ -16,6 +16,7 @@ Setting software
 if you will use in parallel by using MPI, you should install MPI.
 
 2. BURAI
+
 You get the compressed BURAI file from `the download page <http://nisihara.wixsite.com/burai>`_ , 
 then you unzip the file in the directory which you like.
 The unzipped directory has BURAI.exe. Single or Double clicking on BURAI.exe starts BURAI system.
