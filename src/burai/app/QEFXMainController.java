@@ -93,6 +93,9 @@ public class QEFXMainController implements Initializable {
     private MenuItem aboutMItem;
 
     @FXML
+    private MenuItem docsMItem;
+
+    @FXML
     private MenuItem qeMItem;
 
     @FXML
@@ -249,6 +252,12 @@ public class QEFXMainController implements Initializable {
             this.aboutMItem.setOnAction(event -> {
                 QEFXAboutDialog dialog = new QEFXAboutDialog();
                 dialog.showAndWait();
+            });
+        }
+
+        if (this.docsMItem != null) {
+            this.docsMItem.setOnAction(event -> {
+                this.showWebPage(Environments.getDocumentsWebsite());
             });
         }
 

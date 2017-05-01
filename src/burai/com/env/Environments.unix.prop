@@ -1,6 +1,7 @@
 version             = 1.2
 maximum_recents     = 64
 default_website     = https://www.google.com
+documents_website   = http://burai.readthedocs.io/en/latest/
 espresso_website    = http://www.quantum-espresso.org
 pseudos_website     = http://www.quantum-espresso.org/pseudopotentials/
 man_pwscf_website   = http://www.quantum-espresso.org/wp-content/uploads/Doc/INPUT_PW.html

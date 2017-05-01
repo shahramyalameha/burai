@@ -284,6 +284,10 @@ public final class Environments {
         return matapiFile.getPath();
     }
 
+    public static String getDocumentsWebsite() {
+        return getProperty("documents_website");
+    }
+
     public static String getEspressoWebsite() {
         return getProperty("espresso_website");
     }

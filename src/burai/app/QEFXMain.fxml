@@ -42,6 +42,7 @@
                 <Menu fx:id="topMenu" mnemonicParsing="false" styleClass="picblack-button" text="Menu">
                   <items>
                         <MenuItem fx:id="aboutMItem" mnemonicParsing="false" text="About BURAI" />
+                        <MenuItem fx:id="docsMItem" mnemonicParsing="false" text="Documents" />
                         <Menu mnemonicParsing="false" text="Links (Web)">
                            <items>
                               <MenuItem fx:id="qeMItem" mnemonicParsing="false" text="Quantum ESPRESSO" />
