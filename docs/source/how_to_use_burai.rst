@@ -6,7 +6,7 @@ Window layout
 Figure 1 shows the window layout of BURAI.
 
 .. |windowstructure| image:: ../img/imgWindowStructure_window_all.png
-   :scale: 100%
+   :scale: 100
 .. |windowstructuretitle| Figure 1. The window layout of BURAI 
 
 ========= 
@@ -130,29 +130,27 @@ Also, the searched material lists are shown in several method (List, small tiles
 
 1. List
 
-.. image:: ../img/imgMarerialProject_search.png
+.. image:: ../img/imgMaterialProject_list.png
    :scale: 100 %
    :align: left
    
 2. Small tiles  
  
-.. image:: ../img/imgMarerialProject_search.png
+.. image:: ../img/imgMaterialProject_smallTiles.png
    :scale: 100 %
    :align: left
 
 3. Medium tiles
     
-.. image:: ../img/imgMarerialProject_search.png
+.. image:: ../img/imgMaterialProject_mediumTiles.png
    :scale: 100 %
    :align: left
 
 4. Large tiles   
 
-
 .. image:: ../img/imgMaterialProject_largeTiles.png
    :scale: 100 %
    :align: left
-
 
 
 ** if you stop searching, you enter space and push the return key in Material project bar.
@@ -162,14 +160,53 @@ Also, the searched material lists are shown in several method (List, small tiles
 Web
 ---
 
+This system can be used as the internet explore.
+
 1. Operating method
 ^^^^^^^^^^^^^^^^^^^
+
+When you search something at the internet, you select "Web" in this system control.
+
+.. image:: ../img/imgWeb_default.png
+   :scale: 100 %
+   :align: left
+   
+
+Google URL have been resisted at bookmark as default.
+
+.. image:: ../img/imgWeb_default.png
+   :scale: 100 %
+   :align: left
 
 2. link menu
 ^^^^^^^^^^^^
 
 3. getting crystal structure database
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On this system, you search the crystal structure which you want to calculate, and you can easily use the model. In short, everything operation is able to be done on BURAI system.
+
+Figures show the getting crystal data, and using as model.
+
+The first step is searching the crystal data on web.
+
+.. image:: ../img/imgWeb_searchNaCl00.png
+   :scale: 100 %
+   :align: left
+
+The second step is clicking the crystal data link. 
+The moment you click the link of cif format, the window appears.
+The window include crystal model and informations.
+   
+.. image:: ../img/imgWeb_searchNaCl01.png
+   :scale: 100 %
+   :align: left
+
+Finally, you click the model of the window, then the crystal structure is appeared in quantum ESPRESSO inoput window.
+   
+.. image:: ../img/imgWeb_searchNaCl02.png
+   :scale: 100 %
+   :align: left
 
 4. getting pseudopotential
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
