@@ -9,18 +9,28 @@
 
 package burai.app.explorer;
 
+import java.io.File;
+
 import javafx.scene.control.Button;
 import burai.app.explorer.body.QEFXExplorerBody;
 import burai.com.env.Environments;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.matapi.MaterialsAPILoader;
 
 public class ButtonsSetupper extends ExplorerSetupper {
 
     private static final double GRAPHIC_SIZE = 20.0;
 
+    private boolean hasSearched;
+
     protected ButtonsSetupper(QEFXExplorerController controller) {
         super(controller);
+        this.hasSearched = false;
+    }
+
+    protected void toBeSearched() {
+        this.hasSearched = true;
     }
 
     protected void setupRecentButton(Button recentButton) {
@@ -75,7 +85,29 @@ public class ButtonsSetupper extends ExplorerSetupper {
         }
 
         searchedButton.setOnAction(event -> {
-            this.controller.getLocationField().setText(QEFXExplorerBody.CODE_SEARCHED);
+            String searchedPath = null;
+            if (!this.hasSearched) {
+                searchedPath = MaterialsAPILoader.getLastDirectory();
+                searchedPath = searchedPath == null ? null : searchedPath.trim();
+            }
+
+            boolean existsSearched = false;
+            if (searchedPath != null && (!searchedPath.isEmpty())) {
+                try {
+                    if (new File(searchedPath).isDirectory()) {
+                        existsSearched = true;
+                    }
+                } catch (Exception e) {
+                    existsSearched = false;
+                }
+            }
+
+            if (existsSearched) {
+                this.controller.getLocationField().setText(searchedPath);
+            } else {
+                this.controller.getLocationField().setText(QEFXExplorerBody.CODE_SEARCHED);
+            }
+
             this.controller.updateExplorerBody();
         });
     }

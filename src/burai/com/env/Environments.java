@@ -720,6 +720,10 @@ public final class Environments {
         }
     }
 
+    public static void setProperty(String key, File file) {
+        setProperty(key, file == null ? null : file.getPath());
+    }
+
     public static void setProperty(String key, boolean b) {
         setProperty(key, Boolean.toString(b));
     }
@@ -730,5 +734,9 @@ public final class Environments {
 
     public static void setProperty(String key, double d) {
         setProperty(key, Double.toString(d));
+    }
+
+    public static void removeProperty(String key) {
+        setProperty(key, (String) null);
     }
 }

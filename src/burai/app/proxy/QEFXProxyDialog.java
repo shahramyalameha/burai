@@ -166,25 +166,25 @@ public class QEFXProxyDialog extends Dialog<ButtonType> implements Initializable
         if (hostStr != null && (!hostStr.isEmpty())) {
             Environments.setProperty(ProxyServer.PROP_KEY_HOST, hostStr);
         } else {
-            Environments.setProperty(ProxyServer.PROP_KEY_HOST, null);
+            Environments.removeProperty(ProxyServer.PROP_KEY_HOST);
         }
 
         if (portStr != null && (!portStr.isEmpty())) {
             Environments.setProperty(ProxyServer.PROP_KEY_PORT, portStr);
         } else {
-            Environments.setProperty(ProxyServer.PROP_KEY_PORT, null);
+            Environments.removeProperty(ProxyServer.PROP_KEY_PORT);
         }
 
         if (userStr != null && (!userStr.isEmpty())) {
             Environments.setProperty(ProxyServer.PROP_KEY_USER, userStr);
         } else {
-            Environments.setProperty(ProxyServer.PROP_KEY_USER, null);
+            Environments.removeProperty(ProxyServer.PROP_KEY_USER);
         }
 
         if (passSaved && passStr != null && (!passStr.isEmpty())) {
             Environments.setProperty(ProxyServer.PROP_KEY_PASSWORD, passStr);
         } else {
-            Environments.setProperty(ProxyServer.PROP_KEY_PASSWORD, null);
+            Environments.removeProperty(ProxyServer.PROP_KEY_PASSWORD);
         }
 
         Environments.setProperty(ProxyServer.PROP_KEY_SAVEPASSWORD, passSaved);

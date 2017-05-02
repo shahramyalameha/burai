@@ -16,13 +16,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import burai.ver.Version;
 
@@ -48,7 +45,7 @@ public final class EnvProperties {
         this.filePathUser = null;
     }
 
-    protected void setUserFile(String filePath) {
+    protected synchronized void setUserFile(String filePath) {
         if (filePath == null) {
             return;
         }
@@ -98,7 +95,7 @@ public final class EnvProperties {
         }
     }
 
-    protected String getProperty(String key) {
+    protected synchronized String getProperty(String key) {
         if (key == null) {
             return null;
         }
@@ -120,7 +117,7 @@ public final class EnvProperties {
         return null;
     }
 
-    protected void setProperty(String key, String value) {
+    protected synchronized void setProperty(String key, String value) {
         if (key == null) {
             return;
         }
@@ -209,7 +206,7 @@ public final class EnvProperties {
             return;
         }
 
-        BufferedReader reader = null;
+        Reader reader = null;
 
         try {
             reader = new BufferedReader(new FileReader(filePath.trim()));
@@ -263,36 +260,11 @@ public final class EnvProperties {
             return;
         }
 
-        Set<Object> keySet = properties.keySet();
-        if (keySet == null || keySet.isEmpty()) {
-            return;
-        }
-
-        List<String> keyList = new ArrayList<String>();
-        for (Object key : keySet) {
-            if (key != null) {
-                keyList.add(key.toString());
-            }
-        }
-
-        if (keyList.isEmpty()) {
-            return;
-        }
-
-        Collections.sort(keyList);
-
-        PrintWriter writer = null;
+        Writer writer = null;
 
         try {
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(filePath.trim())));
-
-            for (String key : keyList) {
-                String value = properties.getProperty(key);
-                value = value == null ? null : value.trim();
-                if (value != null && (!value.isEmpty())) {
-                    writer.println(key + " = " + value);
-                }
-            }
+            writer = new BufferedWriter(new FileWriter(filePath.trim()));
+            properties.store(writer, "This is properties of BURAI");
 
         } catch (IOException e) {
             throw e;

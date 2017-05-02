@@ -15,7 +15,7 @@ public class MaterialsAPIHolder {
 
     private static MaterialsAPIHolder instance = null;
 
-    public static MaterialsAPIHolder getInstance() {
+    protected static MaterialsAPIHolder getInstance() {
         if (instance == null) {
             instance = new MaterialsAPIHolder();
         }
@@ -31,11 +31,11 @@ public class MaterialsAPIHolder {
         Life.getInstance().addOnDead(() -> this.deleteLoader());
     }
 
-    public synchronized void setLoader(MaterialsAPILoader loader) {
+    protected synchronized void setLoader(MaterialsAPILoader loader) {
         this.loader = loader;
     }
 
-    public synchronized void deleteLoader() {
+    protected synchronized void deleteLoader() {
         if (this.loader != null) {
             if (this.loader.isAlive()) {
                 this.loader.setToBeDead();

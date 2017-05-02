@@ -152,6 +152,7 @@ public class QEFXExplorerController extends QEFXAppController {
     }
 
     protected void setMaterialsAPILoader(MaterialsAPILoader matApiLoader) {
+        this.buttonsSetupper.toBeSearched();
         this.bodySetupper.setMaterialsAPILoader(matApiLoader);
     }
 }

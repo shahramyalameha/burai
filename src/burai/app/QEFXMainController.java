@@ -56,7 +56,6 @@ import burai.com.env.Environments;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.com.life.Life;
-import burai.matapi.MaterialsAPIHolder;
 import burai.matapi.MaterialsAPILoader;
 import burai.project.Project;
 import burai.run.RunningManager;
@@ -397,7 +396,7 @@ public class QEFXMainController implements Initializable {
             String text = this.matApiField.getText();
             text = text == null ? null : text.trim();
             if (text == null || text.isEmpty()) {
-                MaterialsAPIHolder.getInstance().deleteLoader();
+                MaterialsAPILoader.deleteLoader();
                 return;
             }
 

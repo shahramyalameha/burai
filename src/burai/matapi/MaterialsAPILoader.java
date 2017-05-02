@@ -26,6 +26,8 @@ public class MaterialsAPILoader {
 
     private static final String PROP_PRIMITIVE_CELL = "material_api_primitive_cell";
 
+    private static final String PROP_LAST_DIRECTORY = "material_api_directory";
+
     public static String getApiKey() {
         return Environments.getProperty(PROP_API_KEY);
     }
@@ -40,6 +42,18 @@ public class MaterialsAPILoader {
 
     public static void setPrimitiveCell(boolean primitiveCell) {
         Environments.setProperty(PROP_PRIMITIVE_CELL, primitiveCell);
+    }
+
+    public static String getLastDirectory() {
+        return Environments.getProperty(PROP_LAST_DIRECTORY);
+    }
+
+    private static void setLastDirectory(File directory) {
+        Environments.setProperty(PROP_LAST_DIRECTORY, directory);
+    }
+
+    public static void deleteLoader() {
+        MaterialsAPIHolder.getInstance().deleteLoader();
     }
 
     private static final String[] DIRECTORY_IDS = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -191,6 +205,7 @@ public class MaterialsAPILoader {
         }
 
         this.directory = new File(dirPath);
+        setLastDirectory(this.directory);
     }
 
     private void cleanDirectory() {
