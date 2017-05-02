@@ -5,9 +5,14 @@ Window layout
 -------------
 Figure 1 shows the window layout of BURAI.
 
+======= 
 .. image:: ../img/imgWindowStructure_window_all.png
+======= 
+Figure 1. The window layout of BURAI   
+======= 
 
-Figure 1. The window layout of BURAI
+
+
 
 1. Menu bar
 ^^^^^^^^^^^
