@@ -264,7 +264,7 @@ public final class EnvProperties {
 
         try {
             writer = new BufferedWriter(new FileWriter(filePath.trim()));
-            properties.store(writer, "This is properties of BURAI");
+            properties.store(writer, "These are properties of BURAI");
 
         } catch (IOException e) {
             throw e;
