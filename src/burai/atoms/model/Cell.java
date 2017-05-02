@@ -513,14 +513,6 @@ public class Cell extends Model<CellEvent, CellEventListener> {
             return this.atoms.indexOf(atom);
         }
 
-        //int natom = this.atoms == null ? 0 : this.atoms.size();
-        //for (int i = 0; i < natom; i++) {
-        //    Atom atom2 = this.atoms.get(i);
-        //    if (atom == atom2) {
-        //        return i;
-        //    }
-        //}
-
         return -1;
     }
 
@@ -560,8 +552,8 @@ public class Cell extends Model<CellEvent, CellEventListener> {
             boolean auto1 = this.bondsResolver.isAuto();
             boolean auto2 = this.isResolving();
             if (auto1 && (!auto2)) {
+                this.removeAllBonds();
                 this.bondsResolver.setAuto(false);
-                //this.removeAllBonds();
             }
         }
 
