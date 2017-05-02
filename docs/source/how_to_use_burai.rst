@@ -10,6 +10,7 @@ Figure 1 shows the window layout of BURAI.
 Figure 1. The window layout of BURAI
 
 1. Menu bar
+^^^^^^^^^^^
 
 menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, and proxy server setting.
 
@@ -20,10 +21,12 @@ menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, 
 
 
 2. Material Project API
+^^^^^^^^^^^^^^^^^^^^^^^
 
 BURAI can get crystal structure form `Material Project <https://materialsproject.org/>`_ by using its API.
 
 3. Home tab
+^^^^^^^^^^^
 
 The Home tab include the explore that consists of menu list and controlor. 
 
@@ -38,7 +41,6 @@ if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
 .. image:: img/imgWindowStructure_proxyServer.png
    :scale: 50 %
-   :alt: alternate text
    :align: left
 
 
@@ -78,7 +80,7 @@ The folder or calculated data are shown by
 3. Supporting file format
 
 This system is supporting at `CIF <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
- XYZ <https://en.wikipedia.org/wiki/XYZ_file_format>`_,, and Quantum ESPRESSO input file.
+ `XYZ <https://en.wikipedia.org/wiki/XYZ_file_format>`_,, and Quantum ESPRESSO input file.
 Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
 which you want to calculate.
 
