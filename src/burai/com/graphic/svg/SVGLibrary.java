@@ -53,6 +53,7 @@ public final class SVGLibrary {
         MAXIMIZE(SVGItemMaximize.WIDTH, SVGItemMaximize.HEIGHT, SVGItemMaximize.CONTENT),
         MENU(SVGItemMenu.WIDTH, SVGItemMenu.HEIGHT, SVGItemMenu.CONTENT),
         MINIMIZE(SVGItemMinimize.WIDTH, SVGItemMinimize.HEIGHT, SVGItemMinimize.CONTENT),
+        MODELER(SVGItemModeler.WIDTH, SVGItemModeler.HEIGHT, SVGItemModeler.CONTENT),
         MOVIE(SVGItemMovie.WIDTH, SVGItemMovie.HEIGHT, SVGItemMovie.CONTENT),
         PLUS(SVGItemPlus.WIDTH, SVGItemPlus.HEIGHT, SVGItemPlus.CONTENT),
         RESULT(SVGItemResult.WIDTH, SVGItemResult.HEIGHT, SVGItemResult.CONTENT),

@@ -15,6 +15,7 @@ public class ViewerItemSet {
 
     private ViewerItem atomsViewerItem;
     private ViewerItem inputFileItem;
+    private ViewerItem modelerItem;
     private ViewerItem saveFileItem;
     private ViewerItem saveAsFileItem;
     private ViewerItem screenShotItem;
@@ -24,6 +25,7 @@ public class ViewerItemSet {
     public ViewerItemSet() {
         this.atomsViewerItem = new ViewerItem(SVGData.ATOMS, "Show atoms");
         this.inputFileItem = new ViewerItem(SVGData.INPUTFILE, "Input-file");
+        this.modelerItem = new ViewerItem(SVGData.MODELER, "Modeler");
         this.saveFileItem = new ViewerItem(SVGData.SAVE, "Save");
         this.saveAsFileItem = new ViewerItem(SVGData.SAVE, "Save as ...");
         this.screenShotItem = new ViewerItem(SVGData.CAMERA, "Screen-shot");
@@ -35,6 +37,7 @@ public class ViewerItemSet {
         return new ViewerItem[] {
                 this.atomsViewerItem,
                 this.inputFileItem,
+                this.modelerItem,
                 this.saveFileItem,
                 this.saveAsFileItem,
                 this.screenShotItem,
@@ -49,6 +52,10 @@ public class ViewerItemSet {
 
     public ViewerItem getInputFileItem() {
         return this.inputFileItem;
+    }
+
+    public ViewerItem getModelerItem() {
+        return this.modelerItem;
     }
 
     public ViewerItem getSaveFileItem() {

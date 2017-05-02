@@ -107,6 +107,9 @@ public class ViewerActions extends ProjectActions<Node> {
             } else if (item == this.itemSet.getInputFileItem()) {
                 this.actions.put(item, controller2 -> this.actionInputFile(controller2));
 
+            } else if (item == this.itemSet.getModelerItem()) {
+                this.actions.put(item, controller2 -> this.actionModeler(controller2));
+
             } else if (item == this.itemSet.getSaveFileItem()) {
                 this.actions.put(item, controller2 -> this.actionSaveFile(controller2));
 
@@ -154,6 +157,16 @@ public class ViewerActions extends ProjectActions<Node> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void actionModeler(QEFXProjectController controller) {
+        if (controller == null) {
+            return;
+        }
+
+        /*
+         * TODO
+         */
     }
 
     private boolean actionSaveFile(QEFXProjectController controller) {
