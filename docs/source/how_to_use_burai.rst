@@ -19,11 +19,16 @@ menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, 
    :alt: alternate text
    :align: left
 
+| 
+| 
 
 2. Material Project API
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 BURAI can get crystal structure form `Material Project <https://materialsproject.org/>`_ by using its API.
+
+| 
+| 
 
 3. Home tab
 ^^^^^^^^^^^
@@ -32,6 +37,8 @@ The Home tab include the explore that consists of menu list and controlor.
 
 .. image:: img/imgWindowStructure_hometab.png
 
+| Figure X, home tab
+| 
 
 Initial setting
 ---------------
@@ -43,7 +50,7 @@ if you use under the proxy system, you have to set up at "Proxy server" of menu.
    :scale: 50 %
    :align: left
 
-
+| 
 
 File explorer
 -------------
@@ -53,6 +60,7 @@ the directory like another os's file explorer.
 
 
 1. Operating
+^^^^^^^^^^^^
 
 You can control this system by using left menu. Figure XX shows the left menu list.
 
@@ -64,8 +72,12 @@ You can control this system by using left menu. Figure XX shows the left menu li
    
 Figure X. The left menu list of BURAI
 
+| 
+| 
+| 
 
 2. File system
+^^^^^^^^^^^^^^
 
 The folder or calculated data are shown by 
 
@@ -76,20 +88,25 @@ The folder or calculated data are shown by
    :alt: alternate text
    :align: left
 
+| 
+| 
 
 3. Supporting file format
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This system is supporting at `CIF <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
- `XYZ <https://en.wikipedia.org/wiki/XYZ_file_format>`_,, and Quantum ESPRESSO input file.
+This system is supporting at `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
+ `XYZ format<https://en.wikipedia.org/wiki/XYZ_file_format>`_, and Quantum ESPRESSO input file.
 Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
 which you want to calculate.
 
-(add drag-and-drop image)
+add drag-and-drop image
+| 
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
    :alt: alternate text
    :align: left
-
+| 
+| 
 
 
 
