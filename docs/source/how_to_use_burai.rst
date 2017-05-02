@@ -25,7 +25,7 @@ BURAI can get crystal structure form `Material Project <https://materialsproject
 
 3. Home tab
 
-The Home tab include the explore that consists of menu list and controler. 
+The Home tab include the explore that consists of menu list and controlor. 
 
 .. image:: img/imgWindowStructure_hometab.png
 
@@ -45,6 +45,49 @@ if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
 File explorer
 -------------
+
+The file explore of this system consist of getting from crystal database, keeping calculated data, and moving
+the directory like another os's file explorer.
+
+
+1. Operating
+
+You can control this system by using left menu. Figure XX shows the left menu list.
+
+(add file system image)
+.. image:: img/imgWindowStructure_leftmenu.png
+   :scale: 50 %
+   :alt: alternate text
+   :align: left
+   
+Figure X. The left menu list of BURAI
+
+
+2. File system
+
+The folder or calculated data are shown by 
+
+
+(add file system image)
+.. image:: img/imgWindowStructure_menubar.png
+   :scale: 50 %
+   :alt: alternate text
+   :align: left
+
+
+3. Supporting file format
+
+This system is supporting at `CIF <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
+ XYZ <https://en.wikipedia.org/wiki/XYZ_file_format>`_,, and Quantum ESPRESSO input file.
+Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
+which you want to calculate.
+
+(add drag-and-drop image)
+.. image:: img/imgWindowStructure_menubar.png
+   :scale: 50 %
+   :alt: alternate text
+   :align: left
+
 
 
 
