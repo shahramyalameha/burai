@@ -208,10 +208,25 @@ Finally, you click the model of the window, then the crystal structure is appear
    :scale: 100 %
    :align: left
 
+
 4. getting pseudopotential
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+When you use the pseudopotential, which is not resisted in BURAI, you download it form a pseudopotential site, and you can use it.
 
+.. image:: ../img/imgWeb_searchPP00.png
+   :scale: 100 %
+   :align: left
+   
+
+.. image:: ../img/imgWeb_searchPP02.png
+   :scale: 100 %
+   :align: left
+   
+.. image:: ../img/imgWeb_searchPP03.png
+   :scale: 100 %
+   :align: left
+   
 
 
 
