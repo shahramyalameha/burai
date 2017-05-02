@@ -19,8 +19,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import burai.app.QEFXAppController;
 import burai.app.project.QEFXProjectController;
+import burai.com.graphic.svg.SVGLibrary;
+import burai.com.graphic.svg.SVGLibrary.SVGData;
 
 public class QEFXModelerEditorController extends QEFXAppController {
+
+    private static final double GRAPHIC_SIZE = 20.0;
+    private static final String GRAPHIC_CLASS = "piclight-button";
+
+    protected QEFXProjectController projectController;
+
+    @FXML
+    private Button screenButton;
 
     @FXML
     private Button superButton;
@@ -57,10 +67,13 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     public QEFXModelerEditorController(QEFXProjectController projectController) {
         super(projectController == null ? null : projectController.getMainController());
+        this.projectController = projectController;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.setupScreenButton();
+
         this.setupSuperButton();
         this.setupScaleField1();
         this.setupScaleField2();
@@ -70,6 +83,21 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupMillerField1();
         this.setupMillerField2();
         this.setupMillerField3();
+    }
+
+    private void setupScreenButton() {
+        if (this.screenButton == null) {
+            return;
+        }
+
+        this.screenButton.setText("");
+        this.screenButton.setGraphic(SVGLibrary.getGraphic(SVGData.CAMERA, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+
+        this.screenButton.setOnAction(event -> {
+            if (this.projectController != null) {
+                this.projectController.sceenShot();
+            }
+        });
     }
 
     private void setupSuperButton() {
