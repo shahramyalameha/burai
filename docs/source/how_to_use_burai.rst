@@ -137,7 +137,7 @@ Also, the searched material lists are shown in several method (List, small tiles
    :align: left
 
 4. Large tiles   
-.. image:: ../../img/imgMaterialProject_largeTiles.png
+.. image:: ../img/imgMaterialProject_largeTiles.png
    :scale: 100 %
    :align: left
 
