@@ -9,22 +9,17 @@
 
 package burai.app.project.viewer.modeler;
 
-import javafx.scene.layout.BorderPane;
+import java.io.IOException;
+
 import burai.app.project.QEFXProjectController;
-import burai.atoms.model.Cell;
-import burai.atoms.viewer.AtomsViewer;
-import burai.atoms.viewer.AtomsViewerInterface;
+import burai.app.project.editor.modeler.QEFXModelerEditor;
 import burai.project.Project;
 
 public class ModelerAction {
 
-    private static final double ATOMS_VIEWER_SIZE = 400.0;
-
     private Project project;
 
     private QEFXProjectController controller;
-
-    private AtomsViewerInterface atomsViewer;
 
     public ModelerAction(Project project, QEFXProjectController controller) {
         if (project == null) {
@@ -37,39 +32,38 @@ public class ModelerAction {
 
         this.project = project;
         this.controller = controller;
-        this.initializeAtomsViewer();
-    }
-
-    private void initializeAtomsViewer() {
-        Cell cell = this.project.getCell();
-        if (cell == null) {
-            return;
-        }
-
-        this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
-
-        final BorderPane projectPane;
-        if (this.controller != null) {
-            projectPane = this.controller.getProjectPane();
-        } else {
-            projectPane = null;
-        }
-
-        if (projectPane != null) {
-            this.atomsViewer.addExclusiveNode(() -> {
-                return projectPane.getRight();
-            });
-            this.atomsViewer.addExclusiveNode(() -> {
-                return projectPane.getBottom();
-            });
-        }
     }
 
     public QEFXProjectController getController() {
         return this.controller;
     }
 
-    public void showAtoms() {
-        this.controller.setViewerPane(this.atomsViewer);
+    public void showModeler() {
+        this.initializeModeler();
+        //this.controller.setResultExplorerMode();
+    }
+
+    private void initializeModeler() {
+        //this.controller.setResultExplorerMode(controller2 -> {
+        //    this.explorer.reload();
+        //    this.fileTree.reload();
+        //});
+
+        this.controller.clearStackedsOnViewerPane();
+
+        //Node explorerNode = this.explorer.getNode();
+        //if (explorerNode != null) {
+        //    this.controller.stackOnViewerPane(explorerNode);
+        //}
+
+        QEFXModelerEditor modelerEditor = null;
+        try {
+            modelerEditor = new QEFXModelerEditor(this.controller);
+        } catch (IOException e) {
+            // TODO 自動生成された catch ブロック
+            e.printStackTrace();
+        }
+
+        this.controller.setEditorPane(modelerEditor.getNode());
     }
 }

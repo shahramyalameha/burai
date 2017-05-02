@@ -13,16 +13,14 @@ import java.io.IOException;
 
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
-import burai.app.project.editor.result.QEFXResultEditor;
-import burai.app.project.viewer.result.graph.QEFXGraphViewer;
 import burai.com.keys.PriorKeyEvent;
 
-public class QEFXModelerEditor extends QEFXResultEditor<QEFXModelerEditorController> {
+public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorController> {
 
-    public QEFXModelerEditor(QEFXProjectController projectController, QEFXGraphViewer<?> viewer) throws IOException {
-        super("QEFXGraphEditor.fxml",
-                new QEFXModelerEditorController(projectController, viewer == null ? null : viewer.getController()));
+    public QEFXModelerEditor(QEFXProjectController projectController) throws IOException {
+        super("QEFXModelerEditor.fxml", new QEFXModelerEditorController(projectController));
 
         if (this.node != null) {
             this.setupKeys(this.node);
@@ -43,9 +41,11 @@ public class QEFXModelerEditor extends QEFXResultEditor<QEFXModelerEditorControl
                 return;
             }
 
-            if (KeyCode.F5.equals(event.getCode())) {
-                // F5
-                this.controller.reload();
+            if (event.isControlDown() && KeyCode.Z.equals(event.getCode())) {
+                // Ctrl+Z
+                /*
+                 * TODO
+                 */
             }
         });
     }

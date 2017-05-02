@@ -19,6 +19,7 @@ import burai.app.project.ProjectActions;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.atoms.AtomsAction;
 import burai.app.project.viewer.inputfile.QEFXInputFile;
+import burai.app.project.viewer.modeler.ModelerAction;
 import burai.app.project.viewer.result.ResultAction;
 import burai.app.project.viewer.run.QEFXRunDialog;
 import burai.app.project.viewer.run.RunAction;
@@ -167,6 +168,8 @@ public class ViewerActions extends ProjectActions<Node> {
         /*
          * TODO
          */
+        new ModelerAction(this.project, controller).showModeler();
+        ;
     }
 
     private boolean actionSaveFile(QEFXProjectController controller) {
