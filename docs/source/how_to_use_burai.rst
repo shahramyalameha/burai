@@ -162,7 +162,7 @@ Web
 
 This system can be used as the internet explore.
 
-1. Operating method
+1. Operation
 ^^^^^^^^^^^^^^^^^^^
 
 When you search something at the internet, you select "Web" in this system control.
@@ -219,11 +219,11 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
    :align: left
    
 
-.. image:: ../img/imgWeb_searchPP02.png
+.. image:: ../img/imgWeb_searchPP01.png
    :scale: 100 %
    :align: left
    
-.. image:: ../img/imgWeb_searchPP03.png
+.. image:: ../img/imgWeb_searchPP02.png
    :scale: 100 %
    :align: left
    
