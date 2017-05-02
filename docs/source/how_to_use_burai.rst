@@ -5,8 +5,16 @@ Window layout
 -------------
 Figure 1 shows the window layout of BURAI.
 
-======= 
-.. image:: ../img/imgWindowStructure_window_all.png
+.. |imgWindowStructureWindow| image:: ../img/imgWindowStructure_window_all.png
+   :scale: 100%
+.. |imgWindowStructureWindowTitle| Figure 1. The window layout of BURAI 
+
+========= 
+ |imgWindowStructureWindow|
+---------
+ |imgWindowStructureWindowTitle| 
+=========
+
 ======= 
 Figure 1. The window layout of BURAI   
 ======= 
