@@ -47,8 +47,8 @@ Initial setting
 if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
 .. image:: img/imgWindowStructure_proxyServer.png
-   :scale: 50 %
-   :align: left
+   :scale: 80 %
+   :align: center
 
 | 
 
@@ -66,9 +66,8 @@ You can control this system by using left menu. Figure XX shows the left menu li
 
 (add file system image)
 .. image:: img/imgWindowStructure_leftmenu.png
-   :scale: 50 %
-   :alt: alternate text
-   :align: left
+   :scale: 80 %
+   :align: center
    
 Figure X. The left menu list of BURAI
 
@@ -85,7 +84,6 @@ The folder or calculated data are shown by
 (add file system image)
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
-   :alt: alternate text
    :align: left
 
 | 
@@ -94,8 +92,10 @@ The folder or calculated data are shown by
 3. Supporting file format
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This system is supporting at `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
- `XYZ format<https://en.wikipedia.org/wiki/XYZ_file_format>`_, and Quantum ESPRESSO input file.
+This system is supporting at 
+ `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
+ `XYZ format <https://en.wikipedia.org/wiki/XYZ_file_format>`_, 
+ and Quantum ESPRESSO input file.
 Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
 which you want to calculate.
 
@@ -103,7 +103,6 @@ add drag-and-drop image
 | 
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
-   :alt: alternate text
    :align: left
 | 
 | 
@@ -118,10 +117,19 @@ Material project API
 
 Web
 ---
-.Operating method
-.link menu
-.getting crystal structure database
-.getting pseudopotential
+
+1. Operating method
+^^^^^^^^^^^^^^^^^^^
+
+2. link menu
+^^^^^^^^^^^^
+
+3. getting crystal structure database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+4. getting pseudopotential
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 
 
