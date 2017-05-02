@@ -15,8 +15,8 @@ Figure 1. The window layout of BURAI
 menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, and proxy server setting.
 
 .. image:: img/imgWindowStructure_menubar.png
-   :scale: 50 %
-   :align: left
+   :scale: 80 %
+   :align: center
 
 | 
 | 
@@ -84,7 +84,7 @@ The folder or calculated data are shown by
 add file system image
 
 .. image:: img/imgWindowStructure_menubar.png
-   :scale: 50 %
+   :scale: 80 %
    :align: left
 
 | 
@@ -111,6 +111,39 @@ add drag-and-drop image
 Material project API
 --------------------
 
+This system can get crystal structures by using the Material projects API.
+
+For example, if you want to calculate the Fe-Cr system, you enter "Fe Cr" in the Material projects API bar as indicated in the figure XX.
+
+.. image:: img/imgMaterialProject_search.png
+   :scale: 100 %
+   :align: left
+
+Also, the searched material lists are shown in several method (List, small tiles, medium tiles, and large tiles).
+
+1. List
+.. image:: img/imgMarerialProject_search.png
+   :scale: 100 %
+   :align: left
+   
+2. Small tiles   
+.. image:: img/imgMarerialProject_search.png
+   :scale: 100 %
+   :align: left
+
+3. Medium tiles    
+.. image:: ../../img/imgMarerialProject_search.png
+   :scale: 100 %
+   :align: left
+
+4. Large tiles   
+.. image:: ../../img/imgMaterialProject_largeTiles.png
+   :scale: 100 %
+   :align: left
+
+
+
+** if you stop searching, you enter space and push the return key in Material project bar.
 
 
 
