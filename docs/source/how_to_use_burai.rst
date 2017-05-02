@@ -5,21 +5,15 @@ Window layout
 -------------
 Figure 1 shows the window layout of BURAI.
 
-.. |imgWindowStructureWindow| image:: ../img/imgWindowStructure_window_all.png
+.. |windowstructure| image:: ../img/imgWindowStructure_window_all.png
    :scale: 100%
-.. |imgWindowStructureWindowTitle| Figure 1. The window layout of BURAI 
+.. |windowstructuretitle| Figure 1. The window layout of BURAI 
 
 ========= 
- |imgWindowStructureWindow|
+ |windowstructure|
 ---------
- |imgWindowStructureWindowTitle| 
+ |windowstructuretitle| 
 =========
-
-======= 
-Figure 1. The window layout of BURAI   
-======= 
-
-
 
 
 1. Menu bar
