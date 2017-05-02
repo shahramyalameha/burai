@@ -16,7 +16,6 @@ menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, 
 
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
-   :alt: alternate text
    :align: left
 
 | 
@@ -64,7 +63,8 @@ the directory like another os's file explorer.
 
 You can control this system by using left menu. Figure XX shows the left menu list.
 
-(add file system image)
+add file system image
+
 .. image:: img/imgWindowStructure_leftmenu.png
    :scale: 80 %
    :align: center
@@ -81,7 +81,8 @@ Figure X. The left menu list of BURAI
 The folder or calculated data are shown by 
 
 
-(add file system image)
+add file system image
+
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
    :align: left
@@ -92,15 +93,13 @@ The folder or calculated data are shown by
 3. Supporting file format
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This system is supporting at 
- `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_,
- `XYZ format <https://en.wikipedia.org/wiki/XYZ_file_format>`_, 
- and Quantum ESPRESSO input file.
+This system is supporting at `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_, `XYZ format <https://en.wikipedia.org/wiki/XYZ_file_format>`_, and Quantum ESPRESSO input file.
 Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
 which you want to calculate.
 
 add drag-and-drop image
-| 
+
+
 .. image:: img/imgWindowStructure_menubar.png
    :scale: 50 %
    :align: left
