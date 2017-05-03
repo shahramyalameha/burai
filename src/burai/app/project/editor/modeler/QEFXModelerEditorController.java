@@ -107,9 +107,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupScaleField(this.scaleField3);
 
         this.setupSlabButton();
-        this.setupMillerField(this.millerField1, 0);
-        this.setupMillerField(this.millerField2, 0);
-        this.setupMillerField(this.millerField3, 1);
+        this.setupMillerField(this.millerField1);
+        this.setupMillerField(this.millerField2);
+        this.setupMillerField(this.millerField3);
     }
 
     private void setupScreenButton() {
@@ -181,8 +181,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
+        this.superButton.setDisable(true);
         this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
-
         this.superButton.setGraphic(
                 SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
 
@@ -199,10 +199,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
             int n1 = this.getScaleValue(this.scaleField1);
             int n2 = this.getScaleValue(this.scaleField2);
             int n3 = this.getScaleValue(this.scaleField3);
-            if ((n1 * n2 * n3) > 1) {
-                this.modeler.buildSuperCell(n1, n2, n3);
-            }
+            this.modeler.buildSuperCell(n1, n2, n3);
         });
+    }
+
+    private boolean isAvailSuper() {
+        int n1 = this.getScaleValue(this.scaleField1);
+        int n2 = this.getScaleValue(this.scaleField2);
+        int n3 = this.getScaleValue(this.scaleField3);
+        return (n1 * n2 * n3) > 1;
     }
 
     private void setupScaleField(TextField textField) {
@@ -210,7 +215,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
-        textField.setText("1");
+        textField.setText("");
         textField.setStyle("");
 
         textField.textProperty().addListener(o -> {
@@ -219,6 +224,10 @@ public class QEFXModelerEditorController extends QEFXAppController {
                 textField.setStyle("");
             } else {
                 textField.setStyle(ERROR_STYLE);
+            }
+
+            if (this.superButton != null) {
+                this.superButton.setDisable(!this.isAvailSuper());
             }
         });
     }
@@ -229,8 +238,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         String text = textField.getText();
+        text = text == null ? null : text.trim();
         if (text == null || text.isEmpty()) {
-            return 0;
+            return 1;
         }
 
         int value = 0;
@@ -249,8 +259,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
+        this.slabButton.setDisable(true);
         this.slabButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
-
         this.slabButton.setGraphic(
                 SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
 
@@ -264,72 +274,49 @@ public class QEFXModelerEditorController extends QEFXAppController {
                 return;
             }
 
-            int m1 = this.getMillerValue(this.millerField1);
-            int m2 = this.getMillerValue(this.millerField2);
-            int m3 = this.getMillerValue(this.millerField3);
-            if (m1 != 0 || m2 != 0 || m3 != 0) {
-                this.modeler.buildSlabModel(m1, m2, m3);
-            }
+            Integer M1 = this.getMillerValue(this.millerField1);
+            Integer M2 = this.getMillerValue(this.millerField2);
+            Integer M3 = this.getMillerValue(this.millerField3);
+            int m1 = M1 == null ? 0 : M1.intValue();
+            int m2 = M2 == null ? 0 : M2.intValue();
+            int m3 = M3 == null ? 0 : M3.intValue();
+            this.modeler.buildSlabModel(m1, m2, m3);
         });
     }
 
-    private void setupMillerField(TextField textField, int initValue) {
+    private boolean isAvailSlab() {
+        Integer M1 = this.getMillerValue(this.millerField1);
+        Integer M2 = this.getMillerValue(this.millerField2);
+        Integer M3 = this.getMillerValue(this.millerField3);
+        if (M1 != null && M2 != null && M3 != null) {
+            int m1 = M1.intValue();
+            int m2 = M2.intValue();
+            int m3 = M3.intValue();
+            return (m1 != 0 || m2 != 0 || m3 != 0);
+        }
+
+        return false;
+    }
+
+    private void setupMillerField(TextField textField) {
         if (textField == null) {
             return;
         }
 
-        textField.setText(Integer.toString(initValue));
+        textField.setText("");
         textField.setStyle("");
 
         textField.textProperty().addListener(o -> {
-            Integer value = this.getMillerValue(textField);
-            if (value != null) {
-                textField.setStyle("");
-            } else {
-                textField.setStyle(ERROR_STYLE);
-                return;
+            if (textField != null) {
+                if (this.checkMillerValue(textField)) {
+                    textField.setStyle("");
+                } else {
+                    textField.setStyle(ERROR_STYLE);
+                }
             }
 
-            Integer M1 = this.getMillerValue(this.millerField1);
-            if (M1 == null) {
-                return;
-            }
-
-            Integer M2 = this.getMillerValue(this.millerField2);
-            if (M2 == null) {
-                return;
-            }
-
-            Integer M3 = this.getMillerValue(this.millerField3);
-            if (M3 == null) {
-                return;
-            }
-
-            int m1 = M1.intValue();
-            int m2 = M2.intValue();
-            int m3 = M3.intValue();
-
-            if (m1 != 0 || m2 != 0 || m3 != 0) {
-                if (this.millerField1 != null) {
-                    this.millerField1.setStyle("");
-                }
-                if (this.millerField2 != null) {
-                    this.millerField2.setStyle("");
-                }
-                if (this.millerField3 != null) {
-                    this.millerField3.setStyle("");
-                }
-
-            } else {
-                if (this.millerField1 != null) {
-                    this.millerField1.setStyle(ERROR_STYLE);
-                }
-                if (this.millerField2 != null) {
-                    this.millerField2.setStyle(ERROR_STYLE);
-                }
-                if (this.millerField3 != null) {
-                    this.millerField3.setStyle(ERROR_STYLE);
-                }
+            if (this.slabButton != null) {
+                this.slabButton.setDisable(!this.isAvailSlab());
             }
         });
     }
@@ -340,6 +327,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         String text = textField.getText();
+        text = text == null ? null : text.trim();
         if (text == null || text.isEmpty()) {
             return null;
         }
@@ -353,5 +341,25 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         return value;
+    }
+
+    private boolean checkMillerValue(TextField textField) {
+        if (textField == null) {
+            return false;
+        }
+
+        String text = textField.getText();
+        text = text == null ? null : text.trim();
+        if (text == null || text.isEmpty()) {
+            return true;
+        }
+
+        try {
+            Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return true;
     }
 }
