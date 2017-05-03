@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Satomichi Nishihara
+ * Copyright (C) 2017 Satomichi Nishihara
  *
  * This file is distributed under the terms of the
  * GNU General Public License. See the file `LICENSE'
@@ -13,24 +13,29 @@ import java.io.IOException;
 
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.modeler.QEFXModelerEditor;
+import burai.atoms.model.Cell;
 import burai.project.Project;
 
 public class ModelerAction {
 
-    private Project project;
+    private Modeler modeler;
 
     private QEFXProjectController controller;
 
     public ModelerAction(Project project, QEFXProjectController controller) {
-        if (project == null) {
-            throw new IllegalArgumentException("project is null.");
+        this(project == null ? null : project.getCell(), controller);
+    }
+
+    public ModelerAction(Cell cell, QEFXProjectController controller) {
+        if (cell == null) {
+            throw new IllegalArgumentException("cell is null.");
         }
 
         if (controller == null) {
             throw new IllegalArgumentException("controller is null.");
         }
 
-        this.project = project;
+        this.modeler = new Modeler(cell);
         this.controller = controller;
     }
 
@@ -64,6 +69,7 @@ public class ModelerAction {
             e.printStackTrace();
         }
 
+        this.controller.setViewerPane(null);
         this.controller.setEditorPane(modelerEditor.getNode());
     }
 }

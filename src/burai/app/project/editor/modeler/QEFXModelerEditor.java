@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Satomichi Nishihara
+ * Copyright (C) 2017 Satomichi Nishihara
  *
  * This file is distributed under the terms of the
  * GNU General Public License. See the file `LICENSE'

@@ -34,6 +34,8 @@ public class ViewerActions extends ProjectActions<Node> {
 
     private AtomsAction atomsAction;
 
+    private ModelerAction modelerAction;
+
     private ResultAction resultAction;
 
     public ViewerActions(Project project, QEFXProjectController controller) {
@@ -165,11 +167,13 @@ public class ViewerActions extends ProjectActions<Node> {
             return;
         }
 
-        /*
-         * TODO
-         */
-        new ModelerAction(this.project, controller).showModeler();
-        ;
+        if (this.modelerAction == null || controller != this.modelerAction.getController()) {
+            this.modelerAction = new ModelerAction(this.project, controller);
+        }
+
+        if (this.modelerAction != null) {
+            this.modelerAction.showModeler();
+        }
     }
 
     private boolean actionSaveFile(QEFXProjectController controller) {
