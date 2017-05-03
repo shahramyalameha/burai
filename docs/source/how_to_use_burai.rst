@@ -21,26 +21,26 @@ menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, 
    :scale: 80 %
    :align: center
 
-| 
-| 
+|
+|
 
 2. Material Project API
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 BURAI can get crystal structure form `Material Project <https://materialsproject.org/>`_ by using its API.
 
-| 
-| 
+|
+|
 
 3. Home tab
 ^^^^^^^^^^^
 
-The Home tab include the explore that consists of menu list and controlor. 
+The Home tab include the explore that consists of menu list and controlor.
 
 .. image:: ../img/imgWindowStructure_hometab.png
 
 | Figure X, home tab
-| 
+|
 
 Initial setting
 ---------------
@@ -52,7 +52,7 @@ if you use under the proxy system, you have to set up at "Proxy server" of menu.
    :scale: 80 %
    :align: center
 
-| 
+|
 
 File explorer
 -------------
@@ -71,17 +71,17 @@ add file system image
 .. image:: ../img/imgWindowStructure_leftmenu.png
    :scale: 80 %
    :align: center
-   
+
 Figure X. The left menu list of BURAI
 
-| 
-| 
-| 
+|
+|
+|
 
 2. File system
 ^^^^^^^^^^^^^^
 
-The folder or calculated data are shown by 
+The folder or calculated data are shown by
 
 
 add file system image
@@ -90,14 +90,14 @@ add file system image
    :scale: 80 %
    :align: center
 
-| 
-| 
+|
+|
 
 3. Supporting file format
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This system is supporting at `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_, `XYZ format <https://en.wikipedia.org/wiki/XYZ_file_format>`_, and Quantum ESPRESSO input file.
-Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file 
+Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop these file
 which you want to calculate.
 
 add drag-and-drop image
@@ -106,8 +106,8 @@ add drag-and-drop image
 .. image:: ../img/imgWindowStructure_menubar.png
    :scale: 80 %
    :align: center
-| 
-| 
+|
+|
 
 
 
@@ -129,20 +129,20 @@ Also, the searched material lists are shown in several method (List, small tiles
 .. image:: ../img/imgMaterialProject_list.png
    :scale: 100 %
    :align: center
-   
-2. Small tiles  
- 
+
+2. Small tiles
+
 .. image:: ../img/imgMaterialProject_smallTiles.png
    :scale: 100 %
    :align: center
 
 3. Medium tiles
-    
+
 .. image:: ../img/imgMaterialProject_mediumTiles.png
    :scale: 100 %
    :align: center
 
-4. Large tiles   
+4. Large tiles
 
 .. image:: ../img/imgMaterialProject_largeTiles.png
    :scale: 100 %
@@ -166,7 +166,7 @@ When you search something at the internet, you select "Web" in this system contr
 .. image:: ../img/imgWeb_default.png
    :scale: 100 %
    :align: center
-   
+
 
 Google URL have been resisted at bookmark as default.
 
@@ -190,16 +190,16 @@ The first step is searching the crystal data on web.
    :scale: 100 %
    :align: center
 
-The second step is clicking the crystal data link. 
+The second step is clicking the crystal data link.
 The moment you click the link of cif format, the window appears.
 The window include crystal model and informations.
-   
+
 .. image:: ../img/imgWeb_searchNaCl01.png
    :scale: 100 %
    :align: center
 
 Finally, you click the model of the window, then the crystal structure is appeared in quantum ESPRESSO inoput window.
-   
+
 .. image:: ../img/imgWeb_searchNaCl02.png
    :scale: 100 %
    :align: center
@@ -213,22 +213,23 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
 .. image:: ../img/imgWeb_searchPP00.png
    :scale: 100 %
    :align: center
-   
+
 
 .. image:: ../img/imgWeb_searchPP01.png
    :scale: 100 %
    :align: center
-   
+
 .. image:: ../img/imgWeb_searchPP02.png
    :scale: 100 %
    :align: center
-   
+
 
 
 
 Create QE project
 -----------------
-.
+
+:ref:`SCF<createqe_scf>` として任意のテキストでも参照できます。
 
 
 
