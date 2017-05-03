@@ -1,0 +1,30 @@
+/*
+ * Copyright (C) 2017 Satomichi Nishihara
+ *
+ * This file is distributed under the terms of the
+ * GNU General Public License. See the file `LICENSE'
+ * in the root directory of the present distribution,
+ * or http://www.gnu.org/copyleft/gpl.txt .
+ */
+
+package burai.app.project.viewer.modeler;
+
+import burai.atoms.model.Cell;
+
+public class SuperCellBuilder {
+
+    private Cell cell;
+
+    protected SuperCellBuilder(Cell cell) {
+        if (cell == null) {
+            throw new IllegalArgumentException("cell is null.");
+        }
+
+        this.cell = cell;
+    }
+
+    protected void build(int na, int nb, int nc) {
+        // TODO
+    }
+
+}

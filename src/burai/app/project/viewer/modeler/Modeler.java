@@ -62,6 +62,20 @@ public class Modeler {
         }
     }
 
+    public void buildSuperCell(int na, int nb, int nc) {
+        SuperCellBuilder builder = this.dstCell == null ? null : new SuperCellBuilder(this.dstCell);
+        if (builder != null) {
+            builder.build(na, nb, nc);
+        }
+    }
+
+    public void buildSlabModel(int i, int j, int k) {
+        SlabModelBuilder builder = this.dstCell == null ? null : new SlabModelBuilder(this.dstCell);
+        if (builder != null) {
+            builder.build(i, j, k);
+        }
+    }
+
     private void copyCellForward() {
         if (this.dstCell != null) {
             this.dstCell.removeAllAtoms();

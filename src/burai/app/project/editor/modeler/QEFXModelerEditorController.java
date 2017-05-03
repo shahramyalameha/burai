@@ -20,6 +20,7 @@ import javafx.scene.control.ToggleButton;
 import burai.app.QEFXAppController;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
+import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
@@ -30,6 +31,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     private static final double BUILD_GRAPHIC_SIZE = 20.0;
     private static final String BUILD_GRAPHIC_CLASS = "piclight-button";
+
+    private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
 
     private QEFXProjectController projectController;
 
@@ -99,14 +102,14 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupUndoButton();
 
         this.setupSuperButton();
-        this.setupScaleField1();
-        this.setupScaleField2();
-        this.setupScaleField3();
+        this.setupScaleField(this.scaleField1);
+        this.setupScaleField(this.scaleField2);
+        this.setupScaleField(this.scaleField3);
 
         this.setupSlabButton();
-        this.setupMillerField1();
-        this.setupMillerField2();
-        this.setupMillerField3();
+        this.setupMillerField(this.millerField1, 0);
+        this.setupMillerField(this.millerField2, 0);
+        this.setupMillerField(this.millerField3, 1);
     }
 
     private void setupScreenButton() {
@@ -188,28 +191,57 @@ public class QEFXModelerEditorController extends QEFXAppController {
             this.superButton.setText(text + " ");
         }
 
-        // TODO
+        this.superButton.setOnAction(event -> {
+            if (this.modeler == null) {
+                return;
+            }
+
+            int n1 = this.getScaleValue(this.scaleField1);
+            int n2 = this.getScaleValue(this.scaleField2);
+            int n3 = this.getScaleValue(this.scaleField3);
+            if ((n1 * n2 * n3) > 1) {
+                this.modeler.buildSuperCell(n1, n2, n3);
+            }
+        });
     }
 
-    private void setupScaleField1() {
-        if (this.scaleField1 == null) {
+    private void setupScaleField(TextField textField) {
+        if (textField == null) {
             return;
         }
-        // TODO
+
+        textField.setText("1");
+        textField.setStyle("");
+
+        textField.textProperty().addListener(o -> {
+            int value = this.getScaleValue(textField);
+            if (value > 0) {
+                textField.setStyle("");
+            } else {
+                textField.setStyle(ERROR_STYLE);
+            }
+        });
     }
 
-    private void setupScaleField2() {
-        if (this.scaleField2 == null) {
-            return;
+    private int getScaleValue(TextField textField) {
+        if (textField == null) {
+            return 0;
         }
-        // TODO
-    }
 
-    private void setupScaleField3() {
-        if (this.scaleField3 == null) {
-            return;
+        String text = textField.getText();
+        if (text == null || text.isEmpty()) {
+            return 0;
         }
-        // TODO
+
+        int value = 0;
+
+        try {
+            value = Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+
+        return value;
     }
 
     private void setupSlabButton() {
@@ -227,28 +259,99 @@ public class QEFXModelerEditorController extends QEFXAppController {
             this.slabButton.setText(text + " ");
         }
 
-        // TODO
+        this.slabButton.setOnAction(event -> {
+            if (this.modeler == null) {
+                return;
+            }
+
+            int m1 = this.getMillerValue(this.millerField1);
+            int m2 = this.getMillerValue(this.millerField2);
+            int m3 = this.getMillerValue(this.millerField3);
+            if (m1 != 0 || m2 != 0 || m3 != 0) {
+                this.modeler.buildSlabModel(m1, m2, m3);
+            }
+        });
     }
 
-    private void setupMillerField1() {
-        if (this.millerField1 == null) {
+    private void setupMillerField(TextField textField, int initValue) {
+        if (textField == null) {
             return;
         }
-        // TODO
+
+        textField.setText(Integer.toString(initValue));
+        textField.setStyle("");
+
+        textField.textProperty().addListener(o -> {
+            Integer value = this.getMillerValue(textField);
+            if (value != null) {
+                textField.setStyle("");
+            } else {
+                textField.setStyle(ERROR_STYLE);
+                return;
+            }
+
+            Integer M1 = this.getMillerValue(this.millerField1);
+            if (M1 == null) {
+                return;
+            }
+
+            Integer M2 = this.getMillerValue(this.millerField2);
+            if (M2 == null) {
+                return;
+            }
+
+            Integer M3 = this.getMillerValue(this.millerField3);
+            if (M3 == null) {
+                return;
+            }
+
+            int m1 = M1.intValue();
+            int m2 = M2.intValue();
+            int m3 = M3.intValue();
+
+            if (m1 != 0 || m2 != 0 || m3 != 0) {
+                if (this.millerField1 != null) {
+                    this.millerField1.setStyle("");
+                }
+                if (this.millerField2 != null) {
+                    this.millerField2.setStyle("");
+                }
+                if (this.millerField3 != null) {
+                    this.millerField3.setStyle("");
+                }
+
+            } else {
+                if (this.millerField1 != null) {
+                    this.millerField1.setStyle(ERROR_STYLE);
+                }
+                if (this.millerField2 != null) {
+                    this.millerField2.setStyle(ERROR_STYLE);
+                }
+                if (this.millerField3 != null) {
+                    this.millerField3.setStyle(ERROR_STYLE);
+                }
+            }
+        });
     }
 
-    private void setupMillerField2() {
-        if (this.millerField2 == null) {
-            return;
+    private Integer getMillerValue(TextField textField) {
+        if (textField == null) {
+            return null;
         }
-        // TODO
-    }
 
-    private void setupMillerField3() {
-        if (this.millerField3 == null) {
-            return;
+        String text = textField.getText();
+        if (text == null || text.isEmpty()) {
+            return null;
         }
-        // TODO
-    }
 
+        int value = 0;
+
+        try {
+            value = Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        return value;
+    }
 }
