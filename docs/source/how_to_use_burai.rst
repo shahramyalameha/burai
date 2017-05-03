@@ -229,7 +229,7 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
 Create QE project
 -----------------
 
-:ref:`SCF<createqe_scf>` として任意のテキストでも参照できます。
+:doc:`createqe_scf`
 
 
 
