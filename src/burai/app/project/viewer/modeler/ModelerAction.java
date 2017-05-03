@@ -65,9 +65,13 @@ public class ModelerAction {
     }
 
     private void initializeModeler() {
-        this.modeler = new Modeler(this.cell);
+        if (this.modeler == null) {
+            this.modeler = new Modeler(this.cell);
+        }
 
-        this.atomsViewer = this.createAtomsViewer();
+        if (this.atomsViewer == null) {
+            this.atomsViewer = this.createAtomsViewer();
+        }
 
         QEFXModelerEditor modelerEditor = null;
         try {
@@ -95,7 +99,12 @@ public class ModelerAction {
 
     private AtomsViewer createAtomsViewer() {
         Cell cell = this.modeler == null ? null : this.modeler.getCell();
+        if (cell == null) {
+            return null;
+        }
+
         AtomsViewer atomsViewer = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
+        this.modeler.setAtomsViewer(atomsViewer);
 
         final BorderPane projectPane;
         if (this.controller != null) {

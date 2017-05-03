@@ -25,8 +25,11 @@ import burai.com.graphic.svg.SVGLibrary.SVGData;
 
 public class QEFXModelerEditorController extends QEFXAppController {
 
-    private static final double GRAPHIC_SIZE = 20.0;
-    private static final String GRAPHIC_CLASS = "piclight-button";
+    private static final double CTRL_GRAPHIC_SIZE = 20.0;
+    private static final String CTRL_GRAPHIC_CLASS = "piclight-button";
+
+    private static final double BUILD_GRAPHIC_SIZE = 20.0;
+    private static final String BUILD_GRAPHIC_CLASS = "piclight-button";
 
     private QEFXProjectController projectController;
 
@@ -34,6 +37,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     @FXML
     private Button screenButton;
+
+    @FXML
+    private Button reflectButton;
+
+    @FXML
+    private Button initButton;
+
+    @FXML
+    private Button undoButton;
 
     @FXML
     private Button superButton;
@@ -82,6 +94,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.setupScreenButton();
+        this.setupReflectButton();
+        this.setupInitButton();
+        this.setupUndoButton();
 
         this.setupSuperButton();
         this.setupScaleField1();
@@ -100,7 +115,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         this.screenButton.setText("");
-        this.screenButton.setGraphic(SVGLibrary.getGraphic(SVGData.CAMERA, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+        this.screenButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.CAMERA, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
 
         this.screenButton.setOnAction(event -> {
             if (this.projectController != null) {
@@ -109,10 +125,69 @@ public class QEFXModelerEditorController extends QEFXAppController {
         });
     }
 
+    private void setupReflectButton() {
+        if (this.reflectButton == null) {
+            return;
+        }
+
+        this.reflectButton.setText("");
+        this.reflectButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.OUT, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
+
+        this.reflectButton.setOnAction(event -> {
+            if (this.modeler != null) {
+                this.modeler.reflect();
+            }
+        });
+    }
+
+    private void setupInitButton() {
+        if (this.initButton == null) {
+            return;
+        }
+
+        this.initButton.setText("");
+        this.initButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.INTO, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
+
+        this.initButton.setOnAction(event -> {
+            if (this.modeler != null) {
+                this.modeler.initialize();
+            }
+        });
+    }
+
+    private void setupUndoButton() {
+        if (this.undoButton == null) {
+            return;
+        }
+
+        this.undoButton.setText("");
+        this.undoButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.UNDO, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
+
+        this.undoButton.setOnAction(event -> {
+            if (this.modeler != null) {
+                this.modeler.undo();
+            }
+        });
+    }
+
     private void setupSuperButton() {
         if (this.superButton == null) {
             return;
         }
+
+        this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
+
+        this.superButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
+
+        String text = this.superButton.getText();
+        if (text != null) {
+            this.superButton.setText(text + " ");
+        }
+
         // TODO
     }
 
@@ -141,6 +216,17 @@ public class QEFXModelerEditorController extends QEFXAppController {
         if (this.slabButton == null) {
             return;
         }
+
+        this.slabButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
+
+        this.slabButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
+
+        String text = this.slabButton.getText();
+        if (text != null) {
+            this.slabButton.setText(text + " ");
+        }
+
         // TODO
     }
 

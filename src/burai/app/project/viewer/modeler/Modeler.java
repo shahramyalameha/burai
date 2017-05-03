@@ -13,12 +13,15 @@ import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.viewer.AtomsViewer;
 import burai.com.math.Matrix3D;
 
 public class Modeler {
 
     private Cell srcCell;
     private Cell dstCell;
+
+    private AtomsViewer atomsViewer;
 
     public Modeler(Cell srcCell) {
         if (srcCell == null) {
@@ -27,14 +30,39 @@ public class Modeler {
 
         this.srcCell = srcCell;
         this.dstCell = null;
-        this.initializeDstCell();
+
+        this.atomsViewer = null;
+
+        this.copyCellForward();
     }
 
     public Cell getCell() {
         return this.dstCell;
     }
 
-    private void initializeDstCell() {
+    protected void setAtomsViewer(AtomsViewer atomsViewer) {
+        this.atomsViewer = atomsViewer;
+    }
+
+    public void initialize() {
+        this.copyCellForward();
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
+        }
+    }
+
+    public void reflect() {
+        this.copyCellBackward();
+    }
+
+    public void undo() {
+        if (this.atomsViewer != null) {
+            this.atomsViewer.restoreCell();
+        }
+    }
+
+    private void copyCellForward() {
         if (this.dstCell != null) {
             this.dstCell.removeAllAtoms();
             this.dstCell.stopResolving();
@@ -72,33 +100,82 @@ public class Modeler {
 
         // setup atoms
         Atom[] atoms = this.srcCell.listAtoms(true);
-        if (atoms == null) {
-            return;
-        }
+        if (atoms != null) {
+            for (Atom atom : atoms) {
+                if (atom == null) {
+                    continue;
+                }
 
-        for (Atom atom : atoms) {
-            if (atom == null) {
-                continue;
-            }
+                String name = atom.getName();
+                double x = atom.getX();
+                double y = atom.getY();
+                double z = atom.getZ();
+                boolean xFixed = atom.booleanProperty(AtomProperty.FIXED_X);
+                boolean yFixed = atom.booleanProperty(AtomProperty.FIXED_Y);
+                boolean zFixed = atom.booleanProperty(AtomProperty.FIXED_Z);
 
-            String name = atom.getName();
-            double x = atom.getX();
-            double y = atom.getY();
-            double z = atom.getZ();
-            boolean xFixed = atom.booleanProperty(AtomProperty.FIXED_X);
-            boolean yFixed = atom.booleanProperty(AtomProperty.FIXED_Y);
-            boolean zFixed = atom.booleanProperty(AtomProperty.FIXED_Z);
-
-            if (name != null && !name.isEmpty()) {
-                Atom atom_ = new Atom(name, x, y, z);
-                atom_.setProperty(AtomProperty.FIXED_X, xFixed);
-                atom_.setProperty(AtomProperty.FIXED_Y, yFixed);
-                atom_.setProperty(AtomProperty.FIXED_Z, zFixed);
-                this.dstCell.addAtom(atom_);
+                if (name != null && !name.isEmpty()) {
+                    Atom atom_ = new Atom(name, x, y, z);
+                    atom_.setProperty(AtomProperty.FIXED_X, xFixed);
+                    atom_.setProperty(AtomProperty.FIXED_Y, yFixed);
+                    atom_.setProperty(AtomProperty.FIXED_Z, zFixed);
+                    this.dstCell.addAtom(atom_);
+                }
             }
         }
 
         this.dstCell.restartResolving();
     }
 
+    private void copyCellBackward() {
+        if (this.dstCell == null) {
+            return;
+        }
+
+        this.srcCell.removeAllAtoms();
+        this.srcCell.stopResolving();
+
+        // setup lattice
+        double[][] lattice = this.dstCell.copyLattice();
+        if (lattice == null || lattice.length < 3) {
+            lattice = Matrix3D.unit();
+        }
+
+        try {
+            this.srcCell.moveLattice(lattice);
+
+        } catch (ZeroVolumCellException e) {
+            e.printStackTrace();
+            this.srcCell.restartResolving();
+            return;
+        }
+
+        // setup atoms
+        Atom[] atoms = this.dstCell.listAtoms(true);
+        if (atoms != null) {
+            for (Atom atom : atoms) {
+                if (atom == null) {
+                    continue;
+                }
+
+                String name = atom.getName();
+                double x = atom.getX();
+                double y = atom.getY();
+                double z = atom.getZ();
+                boolean xFixed = atom.booleanProperty(AtomProperty.FIXED_X);
+                boolean yFixed = atom.booleanProperty(AtomProperty.FIXED_Y);
+                boolean zFixed = atom.booleanProperty(AtomProperty.FIXED_Z);
+
+                if (name != null && !name.isEmpty()) {
+                    Atom atom_ = new Atom(name, x, y, z);
+                    atom_.setProperty(AtomProperty.FIXED_X, xFixed);
+                    atom_.setProperty(AtomProperty.FIXED_Y, yFixed);
+                    atom_.setProperty(AtomProperty.FIXED_Z, zFixed);
+                    this.srcCell.addAtom(atom_);
+                }
+            }
+        }
+
+        this.srcCell.restartResolving();
+    }
 }
