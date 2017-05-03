@@ -5,15 +5,11 @@ Window layout
 -------------
 Figure 1 shows the window layout of BURAI.
 
-.. |windowstructure| image:: ../img/imgWindowStructure_window_all.png
-   :scale: 100
-.. |windowstructuretitle| Figure 1. The window layout of BURAI 
+.. image:: ../img/imgWindowStructure_window_all.png
+   :scale: 100 %
+   :align: left
 
-========= 
- |windowstructure|
----------
- |windowstructuretitle| 
-=========
+Figure 1. The window layout of BURAI
 
 
 1. Menu bar
@@ -92,7 +88,7 @@ add file system image
 
 .. image:: ../img/imgWindowStructure_menubar.png
    :scale: 80 %
-   :align: left
+   :align: center
 
 | 
 | 
@@ -109,7 +105,7 @@ add drag-and-drop image
 
 .. image:: ../img/imgWindowStructure_menubar.png
    :scale: 80 %
-   :align: left
+   :align: center
 | 
 | 
 
@@ -124,7 +120,7 @@ For example, if you want to calculate the Fe-Cr system, you enter "Fe Cr" in the
 
 .. image:: ../img/imgMaterialProject_search.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 Also, the searched material lists are shown in several method (List, small tiles, medium tiles, and large tiles).
 
@@ -132,25 +128,25 @@ Also, the searched material lists are shown in several method (List, small tiles
 
 .. image:: ../img/imgMaterialProject_list.png
    :scale: 100 %
-   :align: left
+   :align: center
    
 2. Small tiles  
  
 .. image:: ../img/imgMaterialProject_smallTiles.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 3. Medium tiles
     
 .. image:: ../img/imgMaterialProject_mediumTiles.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 4. Large tiles   
 
 .. image:: ../img/imgMaterialProject_largeTiles.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 
 ** if you stop searching, you enter space and push the return key in Material project bar.
@@ -169,14 +165,14 @@ When you search something at the internet, you select "Web" in this system contr
 
 .. image:: ../img/imgWeb_default.png
    :scale: 100 %
-   :align: left
+   :align: center
    
 
 Google URL have been resisted at bookmark as default.
 
 .. image:: ../img/imgWeb_default.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 2. link menu
 ^^^^^^^^^^^^
@@ -192,7 +188,7 @@ The first step is searching the crystal data on web.
 
 .. image:: ../img/imgWeb_searchNaCl00.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 The second step is clicking the crystal data link. 
 The moment you click the link of cif format, the window appears.
@@ -200,13 +196,13 @@ The window include crystal model and informations.
    
 .. image:: ../img/imgWeb_searchNaCl01.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 Finally, you click the model of the window, then the crystal structure is appeared in quantum ESPRESSO inoput window.
    
 .. image:: ../img/imgWeb_searchNaCl02.png
    :scale: 100 %
-   :align: left
+   :align: center
 
 
 4. getting pseudopotential
@@ -216,16 +212,16 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
 
 .. image:: ../img/imgWeb_searchPP00.png
    :scale: 100 %
-   :align: left
+   :align: center
    
 
 .. image:: ../img/imgWeb_searchPP01.png
    :scale: 100 %
-   :align: left
+   :align: center
    
 .. image:: ../img/imgWeb_searchPP02.png
    :scale: 100 %
-   :align: left
+   :align: center
    
 
 
