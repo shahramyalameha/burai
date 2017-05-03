@@ -23,8 +23,9 @@ public class SlabModelBuilder {
         this.cell = cell;
     }
 
-    protected void build(int i, int j, int k) {
+    protected boolean build(int i, int j, int k) {
         // TODO
+        return false;
     }
 
 }

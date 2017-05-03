@@ -18,6 +18,8 @@ import burai.com.math.Matrix3D;
 
 public class Modeler {
 
+    protected static final int MAX_NUM_ATOMS = 1024;
+
     private Cell srcCell;
     private Cell dstCell;
 
@@ -62,18 +64,22 @@ public class Modeler {
         }
     }
 
-    public void buildSuperCell(int na, int nb, int nc) {
+    public boolean buildSuperCell(int na, int nb, int nc) {
         SuperCellBuilder builder = this.dstCell == null ? null : new SuperCellBuilder(this.dstCell);
         if (builder != null) {
-            builder.build(na, nb, nc);
+            return builder.build(na, nb, nc);
         }
+
+        return false;
     }
 
-    public void buildSlabModel(int i, int j, int k) {
+    public boolean buildSlabModel(int i, int j, int k) {
         SlabModelBuilder builder = this.dstCell == null ? null : new SlabModelBuilder(this.dstCell);
         if (builder != null) {
-            builder.build(i, j, k);
+            return builder.build(i, j, k);
         }
+
+        return false;
     }
 
     private void copyCellForward() {

@@ -205,8 +205,20 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     private boolean isAvailSuper() {
         int n1 = this.getScaleValue(this.scaleField1);
+        if (n1 < 1) {
+            return false;
+        }
+
         int n2 = this.getScaleValue(this.scaleField2);
+        if (n2 < 1) {
+            return false;
+        }
+
         int n3 = this.getScaleValue(this.scaleField3);
+        if (n3 < 1) {
+            return false;
+        }
+
         return (n1 * n2 * n3) > 1;
     }
 
