@@ -20,6 +20,10 @@ public class AtomsAction {
 
     private static final double ATOMS_VIEWER_SIZE = 400.0;
 
+    public static double getAtomsViewerSize() {
+        return ATOMS_VIEWER_SIZE;
+    }
+
     private Project project;
 
     private QEFXProjectController controller;
@@ -37,7 +41,22 @@ public class AtomsAction {
 
         this.project = project;
         this.controller = controller;
-        this.initializeAtomsViewer();
+
+        this.atomsViewer = null;
+    }
+
+    public QEFXProjectController getController() {
+        return this.controller;
+    }
+
+    public void showAtoms() {
+        if (this.atomsViewer == null) {
+            this.initializeAtomsViewer();
+        }
+
+        if (this.atomsViewer != null) {
+            this.controller.setViewerPane(this.atomsViewer);
+        }
     }
 
     private void initializeAtomsViewer() {
@@ -63,13 +82,5 @@ public class AtomsAction {
                 return projectPane.getBottom();
             });
         }
-    }
-
-    public QEFXProjectController getController() {
-        return this.controller;
-    }
-
-    public void showAtoms() {
-        this.controller.setViewerPane(this.atomsViewer);
     }
 }

@@ -15,12 +15,13 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.modeler.Modeler;
 import burai.com.keys.PriorKeyEvent;
 
 public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorController> {
 
-    public QEFXModelerEditor(QEFXProjectController projectController) throws IOException {
-        super("QEFXModelerEditor.fxml", new QEFXModelerEditorController(projectController));
+    public QEFXModelerEditor(QEFXProjectController projectController, Modeler modeler) throws IOException {
+        super("QEFXModelerEditor.fxml", new QEFXModelerEditorController(projectController, modeler));
 
         if (this.node != null) {
             this.setupKeys(this.node);
@@ -42,7 +43,7 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
             }
 
             if (event.isControlDown() && KeyCode.Z.equals(event.getCode())) {
-                // Ctrl+Z
+                // Ctrl + Z
                 /*
                  * TODO
                  */

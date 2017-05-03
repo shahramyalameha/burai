@@ -11,16 +11,25 @@ package burai.app.project.viewer.modeler;
 
 import java.io.IOException;
 
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.modeler.QEFXModelerEditor;
+import burai.app.project.viewer.atoms.AtomsAction;
 import burai.atoms.model.Cell;
+import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.project.Project;
 
 public class ModelerAction {
 
-    private Modeler modeler;
+    private Cell cell;
 
     private QEFXProjectController controller;
+
+    private Modeler modeler;
+
+    private AtomsViewerInterface atomsViewer;
 
     public ModelerAction(Project project, QEFXProjectController controller) {
         this(project == null ? null : project.getCell(), controller);
@@ -35,8 +44,11 @@ public class ModelerAction {
             throw new IllegalArgumentException("controller is null.");
         }
 
-        this.modeler = new Modeler(cell);
+        this.cell = cell;
         this.controller = controller;
+
+        this.modeler = null;
+        this.atomsViewer = null;
     }
 
     public QEFXProjectController getController() {
@@ -44,32 +56,63 @@ public class ModelerAction {
     }
 
     public void showModeler() {
-        this.initializeModeler();
-        //this.controller.setResultExplorerMode();
+        if (this.modeler == null || this.atomsViewer == null) {
+            this.initializeModeler();
+            return;
+        }
+
+        this.controller.setModelerMode();
     }
 
     private void initializeModeler() {
-        //this.controller.setResultExplorerMode(controller2 -> {
-        //    this.explorer.reload();
-        //    this.fileTree.reload();
-        //});
+        this.modeler = new Modeler(this.cell);
 
-        this.controller.clearStackedsOnViewerPane();
-
-        //Node explorerNode = this.explorer.getNode();
-        //if (explorerNode != null) {
-        //    this.controller.stackOnViewerPane(explorerNode);
-        //}
+        this.atomsViewer = this.createAtomsViewer();
 
         QEFXModelerEditor modelerEditor = null;
         try {
-            modelerEditor = new QEFXModelerEditor(this.controller);
+            modelerEditor = new QEFXModelerEditor(this.controller, this.modeler);
         } catch (IOException e) {
-            // TODO 自動生成された catch ブロック
+            modelerEditor = null;
             e.printStackTrace();
         }
 
-        this.controller.setViewerPane(null);
-        this.controller.setEditorPane(modelerEditor.getNode());
+        if (this.atomsViewer != null && modelerEditor != null) {
+            this.controller.setModelerMode();
+
+            this.controller.clearStackedsOnViewerPane();
+
+            if (this.atomsViewer != null) {
+                this.controller.setViewerPane(this.atomsViewer);
+            }
+
+            Node editorNode = modelerEditor.getNode();
+            if (editorNode != null) {
+                this.controller.setEditorPane(editorNode);
+            }
+        }
+    }
+
+    private AtomsViewer createAtomsViewer() {
+        Cell cell = this.modeler == null ? null : this.modeler.getCell();
+        AtomsViewer atomsViewer = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
+
+        final BorderPane projectPane;
+        if (this.controller != null) {
+            projectPane = this.controller.getProjectPane();
+        } else {
+            projectPane = null;
+        }
+
+        if (projectPane != null) {
+            atomsViewer.addExclusiveNode(() -> {
+                return projectPane.getRight();
+            });
+            atomsViewer.addExclusiveNode(() -> {
+                return projectPane.getBottom();
+            });
+        }
+
+        return atomsViewer;
     }
 }

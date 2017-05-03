@@ -26,7 +26,12 @@ public class Modeler {
         }
 
         this.srcCell = srcCell;
+        this.dstCell = null;
         this.initializeDstCell();
+    }
+
+    public Cell getCell() {
+        return this.dstCell;
     }
 
     private void initializeDstCell() {

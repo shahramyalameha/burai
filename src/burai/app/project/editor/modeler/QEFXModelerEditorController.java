@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import burai.app.QEFXAppController;
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.modeler.Modeler;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
@@ -27,7 +28,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
     private static final double GRAPHIC_SIZE = 20.0;
     private static final String GRAPHIC_CLASS = "piclight-button";
 
-    protected QEFXProjectController projectController;
+    private QEFXProjectController projectController;
+
+    private Modeler modeler;
 
     @FXML
     private Button screenButton;
@@ -65,9 +68,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
     @FXML
     private ComboBox<Integer> typeCombo;
 
-    public QEFXModelerEditorController(QEFXProjectController projectController) {
+    public QEFXModelerEditorController(QEFXProjectController projectController, Modeler modeler) {
         super(projectController == null ? null : projectController.getMainController());
+
+        if (modeler == null) {
+            throw new IllegalArgumentException("modeler is null.");
+        }
+
         this.projectController = projectController;
+        this.modeler = modeler;
     }
 
     @Override
