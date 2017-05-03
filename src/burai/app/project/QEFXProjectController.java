@@ -49,9 +49,12 @@ public class QEFXProjectController extends QEFXAppController {
     private static final double FAN_WIDTH = 140.0;
     private static final double FAN_OFFSET = 10.0;
 
-    private static final int RESULT_MODE_NULL = 0;
-    private static final int RESULT_MODE_EXPLORER = 1;
-    private static final int RESULT_MODE_VIEWER = 2;
+    private static final int MODE_NORMAL = 0;
+    private static final int MODE_RESULT_EXPLORER = 1;
+    private static final int MODE_RESULT_VIEWER = 2;
+    private static final int MODE_MODELER = 3;
+    private static final int MODE_MODELER_SLAB1 = 4;
+    private static final int MODE_MODELER_SLAB2 = 5;
 
     @FXML
     private Pane backPane;
@@ -93,7 +96,7 @@ public class QEFXProjectController extends QEFXAppController {
 
     private ProjectAction detachAction;
 
-    private int resultMode;
+    private int projectMode;
 
     private Map<Integer, ProjectAnsatz> projectAnsatzMap;
 
@@ -117,7 +120,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.shownAction = null;
         this.detachAction = null;
 
-        this.resultMode = RESULT_MODE_NULL;
+        this.projectMode = MODE_NORMAL;
         this.projectAnsatzMap = null;
         this.restoredActionMap = null;
     }
@@ -373,16 +376,32 @@ public class QEFXProjectController extends QEFXAppController {
 
         this.viewerButton.setText("");
         this.viewerButton.setGraphic(SVGLibrary.getGraphic(SVGData.MENU, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+
         this.viewerButton.setOnAction(event -> {
-            switch (this.resultMode) {
-            case RESULT_MODE_NULL:
+            switch (this.projectMode) {
+            case MODE_NORMAL:
+                // show menu in normal mode
                 this.viewerMenu.showMenu();
                 break;
-            case RESULT_MODE_EXPLORER:
-                this.resetResultMode();
+            case MODE_RESULT_EXPLORER:
+                // shift result-explorer -> normal
+                this.setNormalMode();
                 break;
-            case RESULT_MODE_VIEWER:
+            case MODE_RESULT_VIEWER:
+                // shift result-viewer -> result-explorer
                 this.setResultExplorerMode();
+                break;
+            case MODE_MODELER:
+                // shift modeler -> normal
+                this.setNormalMode();
+                break;
+            case MODE_MODELER_SLAB1:
+                // shift modeler-slab1 -> modeler
+                this.setModelerMode();
+                break;
+            case MODE_MODELER_SLAB2:
+                // shift modeler-slab2 -> modeler-slab1
+                this.setModelerSlab1Mode();
                 break;
             }
         });
@@ -395,8 +414,11 @@ public class QEFXProjectController extends QEFXAppController {
 
         this.editorButton.setText("");
         this.editorButton.setGraphic(SVGLibrary.getGraphic(SVGData.CONTROL, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+
         this.editorButton.setOnAction(event -> {
-            this.editorMenu.showMenu();
+            if (this.projectMode == MODE_NORMAL) {
+                this.editorMenu.showMenu();
+            }
         });
     }
 
@@ -428,18 +450,6 @@ public class QEFXProjectController extends QEFXAppController {
         this.editorActions = editorActions;
     }
 
-    public boolean saveFile() {
-        return this.viewerActions.saveFile();
-    }
-
-    public void sceenShot() {
-        this.viewerActions.screenShot();
-    }
-
-    public void sceenShot(Node subject) {
-        this.viewerActions.screenShot(subject);
-    }
-
     public void toBeShown() {
         if (this.shownAction != null) {
             this.shownAction.actionOnProject(this);
@@ -460,13 +470,36 @@ public class QEFXProjectController extends QEFXAppController {
         this.detachAction = action;
     }
 
-    public void resetResultMode() {
-        this.resetResultMode(null);
+    public boolean saveFile() {
+        return this.viewerActions.saveFile();
     }
 
-    public void resetResultMode(ProjectAction restoredAction) {
+    public void sceenShot() {
+        this.viewerActions.screenShot();
+    }
+
+    public void sceenShot(Node subject) {
+        this.viewerActions.screenShot(subject);
+    }
+
+    /*
+     * ====================================================================
+     *                        Control Project-Mode
+     * ====================================================================
+     */
+
+    // Normal mode
+    public boolean isNormalMode() {
+        return this.projectMode == MODE_NORMAL;
+    }
+
+    public void setNormalMode() {
+        this.setNormalMode(null);
+    }
+
+    public void setNormalMode(ProjectAction restoredAction) {
         this.storeProjectAnsatz();
-        this.resultMode = RESULT_MODE_NULL;
+        this.projectMode = MODE_NORMAL;
         if (this.restoreProjectAnsatz(restoredAction)) {
             return;
         }
@@ -483,8 +516,9 @@ public class QEFXProjectController extends QEFXAppController {
         }
     }
 
+    // Result-Explorer mode
     public boolean isResultExplorerMode() {
-        return this.resultMode == RESULT_MODE_EXPLORER;
+        return this.projectMode == MODE_RESULT_EXPLORER;
     }
 
     public void setResultExplorerMode() {
@@ -492,27 +526,12 @@ public class QEFXProjectController extends QEFXAppController {
     }
 
     public void setResultExplorerMode(ProjectAction restoredAction) {
-        this.storeProjectAnsatz();
-        this.resultMode = RESULT_MODE_EXPLORER;
-        if (this.restoreProjectAnsatz(restoredAction)) {
-            return;
-        }
-
-        if (this.viewerButton != null) {
-            this.viewerButton.setGraphic(
-                    SVGLibrary.getGraphic(SVGData.ARROW_LEFT, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
-        }
-
-        if (this.editorButton != null) {
-            this.editorButton.setDisable(true);
-            this.editorButton.setGraphic(null);
-        }
-
-        this.setEditorText("");
+        this.setAbnormalMode(MODE_RESULT_EXPLORER, restoredAction);
     }
 
+    // Result-Viewer mode
     public boolean isResultViewerMode() {
-        return this.resultMode == RESULT_MODE_VIEWER;
+        return this.projectMode == MODE_RESULT_VIEWER;
     }
 
     public void setResultViewerMode() {
@@ -520,8 +539,51 @@ public class QEFXProjectController extends QEFXAppController {
     }
 
     public void setResultViewerMode(ProjectAction restoredAction) {
+        this.setAbnormalMode(MODE_RESULT_VIEWER, restoredAction);
+    }
+
+    // Modeler mode
+    public boolean isModelerMode() {
+        return this.projectMode == MODE_MODELER;
+    }
+
+    public void setModelerMode() {
+        this.setModelerMode(null);
+    }
+
+    public void setModelerMode(ProjectAction restoredAction) {
+        this.setAbnormalMode(MODE_MODELER, restoredAction);
+    }
+
+    // Modeler-Slab1 mode
+    public boolean isModelerSlab1Mode() {
+        return this.projectMode == MODE_MODELER_SLAB1;
+    }
+
+    public void setModelerSlab1Mode() {
+        this.setModelerSlab1Mode(null);
+    }
+
+    public void setModelerSlab1Mode(ProjectAction restoredAction) {
+        this.setAbnormalMode(MODE_MODELER_SLAB1, restoredAction);
+    }
+
+    // Modeler-Slab2 mode
+    public boolean isModelerSlab2Mode() {
+        return this.projectMode == MODE_MODELER_SLAB2;
+    }
+
+    public void setModelerSlab2Mode() {
+        this.setModelerSlab2Mode(null);
+    }
+
+    public void setModelerSlab2Mode(ProjectAction restoredAction) {
+        this.setAbnormalMode(MODE_MODELER_SLAB2, restoredAction);
+    }
+
+    private void setAbnormalMode(int projectMode, ProjectAction restoredAction) {
         this.storeProjectAnsatz();
-        this.resultMode = RESULT_MODE_VIEWER;
+        this.projectMode = projectMode;
         if (this.restoreProjectAnsatz(restoredAction)) {
             return;
         }
@@ -544,11 +606,11 @@ public class QEFXProjectController extends QEFXAppController {
             this.projectAnsatzMap = new HashMap<Integer, ProjectAnsatz>();
         }
 
-        if (!this.projectAnsatzMap.containsKey(this.resultMode)) {
-            this.projectAnsatzMap.put(this.resultMode, new ProjectAnsatz());
+        if (!this.projectAnsatzMap.containsKey(this.projectMode)) {
+            this.projectAnsatzMap.put(this.projectMode, new ProjectAnsatz());
         }
 
-        return this.projectAnsatzMap.get(this.resultMode);
+        return this.projectAnsatzMap.get(this.projectMode);
     }
 
     private ProjectAnsatz getProjectAnsatzIfPossible() {
@@ -556,11 +618,11 @@ public class QEFXProjectController extends QEFXAppController {
             return null;
         }
 
-        if (!this.projectAnsatzMap.containsKey(this.resultMode)) {
+        if (!this.projectAnsatzMap.containsKey(this.projectMode)) {
             return null;
         }
 
-        return this.projectAnsatzMap.get(this.resultMode);
+        return this.projectAnsatzMap.get(this.projectMode);
     }
 
     private List<Node> listViewerPaneNodes() {
@@ -636,7 +698,7 @@ public class QEFXProjectController extends QEFXAppController {
             if (this.restoredActionMap == null) {
                 this.restoredActionMap = new HashMap<Integer, ProjectAction>();
             }
-            this.restoredActionMap.put(this.resultMode, restoredAction);
+            this.restoredActionMap.put(this.projectMode, restoredAction);
         }
 
         ProjectAnsatz projectAnsatz = this.getProjectAnsatzIfPossible();
@@ -670,7 +732,7 @@ public class QEFXProjectController extends QEFXAppController {
 
             ProjectAction restoredAction2 = null;
             if (this.restoredActionMap != null) {
-                restoredAction2 = this.restoredActionMap.get(this.resultMode);
+                restoredAction2 = this.restoredActionMap.get(this.projectMode);
             }
             if (restoredAction2 != null) {
                 restoredAction2.actionOnProject(this);
