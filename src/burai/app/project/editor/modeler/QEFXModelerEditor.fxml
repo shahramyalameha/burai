@@ -55,15 +55,15 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
-                  <Label text="Screen-shot" GridPane.columnIndex="1" />
-                  <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Initialize Model" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Undo [Ctrl+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Button fx:id="redoButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
+                  <Label text="Screen-shot" GridPane.columnIndex="1" />
+                  <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Initialize Model" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="Undo [Ctrl+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Redo [Ctrl+Shift+Z]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
                <columnConstraints>

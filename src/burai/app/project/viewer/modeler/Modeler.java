@@ -82,7 +82,7 @@ public class Modeler {
 
         boolean status = builder.build(na, nb, nc);
 
-        if (this.atomsViewer != null) {
+        if (status && this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
         }
 
@@ -101,7 +101,7 @@ public class Modeler {
 
         boolean status = builder.build(i, j, k);
 
-        if (this.atomsViewer != null) {
+        if (status && this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
         }
 

@@ -31,6 +31,12 @@ public class SuperCellBuilder {
             return false;
         }
 
+        int natom = this.cell.numAtoms(true);
+        natom *= (na * nb * nc);
+        if (natom >= Modeler.MAX_NUM_ATOMS) {
+            return false;
+        }
+
         Atom[] atoms = this.cell.listAtoms(true);
         this.cell.removeAllAtoms();
         this.cell.stopResolving();
@@ -66,8 +72,6 @@ public class SuperCellBuilder {
                 return true;
             }
 
-            int numAtom = 0;
-
             for (int ia = 0; ia < na; ia++) {
                 double ra = (double) ia;
                 for (int ib = 0; ib < nb; ib++) {
@@ -88,11 +92,6 @@ public class SuperCellBuilder {
                             double y = atom.getY() + ty;
                             double z = atom.getZ() + tz;
                             this.cell.addAtom(new Atom(name, x, y, z));
-
-                            numAtom++;
-                            if (numAtom > Modeler.MAX_NUM_ATOMS) {
-                                return false;
-                            }
                         }
                     }
                 }
