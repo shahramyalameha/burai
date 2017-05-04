@@ -43,6 +43,7 @@ public final class SVGLibrary {
         EXPORT(SVGItemExport.WIDTH, SVGItemExport.HEIGHT, SVGItemExport.CONTENT),
         FILE(SVGItemFile.WIDTH, SVGItemFile.HEIGHT, SVGItemFile.CONTENT),
         FOLDER(SVGItemFolder.WIDTH, SVGItemFolder.HEIGHT, SVGItemFolder.CONTENT),
+        GEAR(SVGItemGear.WIDTH, SVGItemGear.HEIGHT, SVGItemGear.CONTENT),
         HEART(SVGItemHeart.WIDTH, SVGItemHeart.HEIGHT, SVGItemHeart.CONTENT),
         HELP(SVGItemHeart.WIDTH, SVGItemHeart.HEIGHT, SVGItemHeart.CONTENT),
         HOME(SVGItemHome.WIDTH, SVGItemHome.HEIGHT, SVGItemHome.CONTENT),

@@ -211,7 +211,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.superButton.setDisable(true);
         this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
         this.superButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.GEAR, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
 
         String text = this.superButton.getText();
         if (text != null) {
@@ -305,7 +305,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.slabButton.setDisable(true);
         this.slabButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
         this.slabButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.MODELER, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.GEAR, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
 
         String text = this.slabButton.getText();
         if (text != null) {
