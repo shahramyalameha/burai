@@ -148,6 +148,10 @@ public class QEFXModelerEditorController extends QEFXAppController {
             if (this.modeler != null) {
                 this.modeler.reflect();
             }
+
+            if (this.projectController != null) {
+                this.projectController.setNormalMode();
+            }
         });
     }
 
