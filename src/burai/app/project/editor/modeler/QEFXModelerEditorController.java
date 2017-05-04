@@ -414,7 +414,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         Alert alert = new Alert(AlertType.ERROR);
         QEFXMain.initializeDialogOwner(alert);
         alert.setHeaderText("Error has occurred in modering.");
-        alert.setContentText("Atoms may be too much.");
+        alert.setContentText("Atoms are too much.");
         alert.showAndWait();
     }
 }
