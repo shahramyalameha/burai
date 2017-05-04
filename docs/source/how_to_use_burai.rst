@@ -6,7 +6,7 @@ Window layout
 Figure 1 shows the window layout of BURAI.
 
 .. image:: ../img/imgWindowStructure_window_all.png
-   :scale: 80 %
+   :scale: 70 %
    :align: left
 
 Figure 1. The window layout of BURAI
@@ -45,9 +45,9 @@ The Home tab includes the explore that consists of menu list and controlor.
 Initial setting
 ---------------
 
-.. note:: This is a note admonition.
+.. note:: if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
-	if you use under the proxy system, you have to set up at "Proxy server" of menu.
+	
 
 
 .. image:: ../img/imgWindowStructure_proxyServer.png
