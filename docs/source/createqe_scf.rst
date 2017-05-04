@@ -38,11 +38,11 @@ creeate job scf
    :align: center
 
 
-   .. image:: ../img/imgCreateJob_SCF07.png
+.. image:: ../img/imgCreateJob_SCF07.png
    :scale: 80 %
    :align: center
 
 
-   .. image:: ../img/imgCreateJob_SCF08.png
+.. image:: ../img/imgCreateJob_SCF08.png
    :scale: 80 %
    :align: center

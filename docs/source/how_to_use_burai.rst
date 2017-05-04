@@ -47,7 +47,7 @@ Initial setting
 
 .. note:: if you use under the proxy system, you have to set up at "Proxy server" of menu.
 
-	
+
 
 
 .. image:: ../img/imgWindowStructure_proxyServer.png
@@ -235,6 +235,11 @@ This chapter explain the calculation of scf, optimize, DOS, band, and MD by usin
 
 
 :doc:`createqe_scf`
+
+:doc:`createqe_optimize`
+
+
+
 
 
 
