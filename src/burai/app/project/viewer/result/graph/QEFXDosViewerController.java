@@ -316,14 +316,16 @@ public class QEFXDosViewerController extends QEFXGraphViewerController {
                 energy -= fermi;
 
                 double dos1 = dosData.getDosUp(i);
+                Data<Number, Number> data1 = new Data<Number, Number>(energy, dos1);
                 synchronized (dataList1) {
-                    dataList1.add(new Data<Number, Number>(energy, dos1));
+                    dataList1.add(data1);
                 }
 
                 if (spinPolarized) {
                     double dos2 = -dosData.getDosDown(i);
+                    Data<Number, Number> data2 = new Data<Number, Number>(energy, dos2);
                     synchronized (dataList2) {
-                        dataList2.add(new Data<Number, Number>(energy, dos2));
+                        dataList2.add(data2);
                     }
                 }
 

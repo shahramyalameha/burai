@@ -12,9 +12,13 @@ package burai.app.project.viewer.modeler;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.com.env.Environments;
 import burai.com.math.Matrix3D;
+import burai.com.parallel.Parallel;
 
 public class SuperCellBuilder {
+
+    private static final int NUM_THREADS = Math.max(1, Environments.getNumCUPs() - 1);
 
     private Cell cell;
 
@@ -31,9 +35,9 @@ public class SuperCellBuilder {
             return false;
         }
 
+        int nt = na * nb * nc;
         int natom = this.cell.numAtoms(true);
-        natom *= (na * nb * nc);
-        if (natom >= Modeler.MAX_NUM_ATOMS) {
+        if ((nt * natom) >= Modeler.MAX_NUM_ATOMS) {
             return false;
         }
 
@@ -68,31 +72,64 @@ public class SuperCellBuilder {
             }
 
             // fill with atoms
-            if (atoms == null || atoms.length < 1) {
+            if (atoms == null || atoms.length < natom) {
                 return true;
             }
 
-            for (int ia = 0; ia < na; ia++) {
+            Atom[][] atomsBuffer = new Atom[nt][];
+
+            Integer[] indexes = new Integer[nt];
+            for (int it = 0; it < indexes.length; it++) {
+                indexes[it] = it;
+            }
+
+            Parallel<Integer, Object> parallel = new Parallel<Integer, Object>(indexes);
+            parallel.setNumThreads(NUM_THREADS);
+            parallel.forEach(it -> {
+
+                int it0 = it;
+                int ia = it0 / (nb * nc);
+                it0 -= ia * (nb * nc);
+                int ib = it0 / nc;
+                it0 -= ib * nc;
+                int ic = it0;
+
                 double ra = (double) ia;
-                for (int ib = 0; ib < nb; ib++) {
-                    double rb = (double) ib;
-                    for (int ic = 0; ic < nc; ic++) {
-                        double rc = (double) ic;
+                double rb = (double) ib;
+                double rc = (double) ic;
+                double tx = ra * lattice[0][0] + rb * lattice[1][0] + rc * lattice[2][0];
+                double ty = ra * lattice[0][1] + rb * lattice[1][1] + rc * lattice[2][1];
+                double tz = ra * lattice[0][2] + rb * lattice[1][2] + rc * lattice[2][2];
 
-                        double tx = ra * lattice[0][0] + rb * lattice[1][0] + rc * lattice[2][0];
-                        double ty = ra * lattice[0][1] + rb * lattice[1][1] + rc * lattice[2][1];
-                        double tz = ra * lattice[0][2] + rb * lattice[1][2] + rc * lattice[2][2];
+                Atom[] atoms_ = new Atom[natom];
+                for (int i = 0; i < natom; i++) {
+                    Atom atom = atoms[i];
+                    if (atom == null) {
+                        atoms_[i] = null;
+                    } else {
+                        String name = atom.getName();
+                        double x = atom.getX() + tx;
+                        double y = atom.getY() + ty;
+                        double z = atom.getZ() + tz;
+                        atoms_[i] = new Atom(name, x, y, z);
+                    }
+                }
 
-                        for (Atom atom : atoms) {
-                            if (atom == null) {
-                                continue;
-                            }
-                            String name = atom.getName();
-                            double x = atom.getX() + tx;
-                            double y = atom.getY() + ty;
-                            double z = atom.getZ() + tz;
-                            this.cell.addAtom(new Atom(name, x, y, z));
-                        }
+                synchronized (atomsBuffer) {
+                    atomsBuffer[it] = atoms_;
+                }
+
+                return null;
+            });
+
+            for (int it = 0; it < nt; it++) {
+                if (atomsBuffer[it] == null || atomsBuffer[it].length < natom) {
+                    continue;
+                }
+                for (int i = 0; i < natom; i++) {
+                    Atom atom = atomsBuffer[it][i];
+                    if (atom != null) {
+                        this.cell.addAtom(atom);
                     }
                 }
             }

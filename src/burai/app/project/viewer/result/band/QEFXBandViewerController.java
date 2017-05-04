@@ -409,8 +409,9 @@ public class QEFXBandViewerController extends QEFXGraphViewerController {
             parallel.forEach(i -> {
                 double coord = bandData1.getCoordinate(i);
                 double energy = bandData2.getEnergy(i) * Constants.RYTOEV - fermi;
+                Data<Number, Number> data = new Data<Number, Number>(coord, energy);
                 synchronized (dataList) {
-                    dataList[i] = new Data<Number, Number>(coord, energy);
+                    dataList[i] = data;
                 }
                 return null;
             });
