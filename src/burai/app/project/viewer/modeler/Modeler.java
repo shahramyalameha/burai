@@ -21,12 +21,13 @@ public class Modeler {
 
     protected static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
 
+    private static final double RMIN = 1.0e-4;
+    private static final double RRMIN = RMIN * RMIN;
+
     private Cell srcCell;
     private Cell dstCell;
 
     private AtomsViewer atomsViewer;
-
-    private boolean toReflect;
 
     public Modeler(Cell srcCell) {
         if (srcCell == null) {
@@ -37,8 +38,6 @@ public class Modeler {
         this.dstCell = null;
 
         this.atomsViewer = null;
-
-        this.toReflect = false;
 
         this.copyCellForward();
     }
@@ -51,23 +50,20 @@ public class Modeler {
         this.atomsViewer = atomsViewer;
     }
 
-    protected boolean isToReflect() {
-        return this.toReflect;
-    }
-
     public void initialize() {
+        if (this.atomsViewer != null) {
+            this.atomsViewer.storeCell();
+        }
+
         this.copyCellForward();
 
         if (this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
         }
-
-        this.toReflect = false;
     }
 
     public void reflect() {
         this.copyCellBackward();
-        this.toReflect = false;
     }
 
     public void undo() {
@@ -98,10 +94,6 @@ public class Modeler {
             this.atomsViewer.setCellToCenter();
         }
 
-        if (status) {
-            this.toReflect = true;
-        }
-
         return status;
     }
 
@@ -121,11 +113,65 @@ public class Modeler {
             this.atomsViewer.setCellToCenter();
         }
 
-        if (status) {
-            this.toReflect = true;
+        return status;
+    }
+
+    public boolean isToReflect() {
+        if (this.srcCell == null || this.dstCell == null) {
+            return false;
         }
 
-        return status;
+        double[][] srcLattice = this.srcCell.copyLattice();
+        double[][] dstLattice = this.srcCell.copyLattice();
+        if (!Matrix3D.equals(srcLattice, dstLattice)) {
+            return true;
+        }
+
+        int srcNAtom = this.srcCell.numAtoms(true);
+        int dstNAtom = this.dstCell.numAtoms(true);
+        if (srcNAtom != dstNAtom) {
+            return true;
+        }
+
+        Atom[] srcAtoms = this.srcCell.listAtoms(true);
+        Atom[] dstAtoms = this.dstCell.listAtoms(true);
+        if (srcAtoms == null || dstAtoms == null) {
+            return false;
+        }
+
+        int natom = srcAtoms.length;
+        for (int i = 0; i < natom; i++) {
+            Atom atom1 = srcAtoms[i];
+            Atom atom2 = dstAtoms[i];
+            if (atom1 == null || atom2 == null) {
+                return false;
+            }
+
+            String name1 = atom1.getName();
+            String name2 = atom2.getName();
+            if (name1 == null || name2 == null) {
+                return false;
+            }
+            if (!name1.equals(name2)) {
+                return true;
+            }
+
+            double x1 = atom1.getX();
+            double y1 = atom1.getY();
+            double z1 = atom1.getZ();
+            double x2 = atom2.getX();
+            double y2 = atom2.getY();
+            double z2 = atom2.getZ();
+            double dx = x1 - x2;
+            double dy = y1 - y2;
+            double dz = z1 - z2;
+            double rr = dx * dx + dy * dy + dz * dz;
+            if (rr > RRMIN) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void copyCellForward() {
