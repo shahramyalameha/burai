@@ -63,7 +63,7 @@ import burai.ver.Version;
 
 public class QEFXMainController implements Initializable {
 
-    private static final long SLEEP_TIME_TO_DROP_FILES = 850L;
+    private static final long SLEEP_TIME_TO_DROP_FILES = 650L;
 
     private static final double TOPMENU_GRAPHIC_SIZE = 16.0;
     private static final String TOPMENU_GRAPHIC_CLASS = "picblack-button";
