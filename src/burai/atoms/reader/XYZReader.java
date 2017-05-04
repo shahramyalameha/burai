@@ -99,9 +99,13 @@ public class XYZReader extends AtomsReader {
             throw new IOException(e);
         }
 
+        cell.stopResolving();
+
         for (int i = 0; i < numAtoms; i++) {
             cell.addAtom(new Atom(name[i], coord[i][0], coord[i][1], coord[i][2]));
         }
+
+        cell.restartResolving();
 
         return cell;
     }

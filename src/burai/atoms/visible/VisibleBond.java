@@ -16,6 +16,7 @@ import javafx.scene.shape.Cylinder;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Bond;
+import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.BondEvent;
 import burai.atoms.model.event.BondEventListener;
 
@@ -24,6 +25,9 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
     private static final double CYLINDER_RADIUS = 0.10;
     private static final double CYLINDER_BOLD_SCALE = 1.2;
     private static final int CYLINDER_DIV = 12;
+
+    private static final double RMIN = 5.0e-3;
+    private static final double RRMIN = RMIN * RMIN;
 
     private boolean boldMode;
 
@@ -112,12 +116,36 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
     @Override
     public void onLinkedAtomRenamed(BondEvent event) {
+        AtomEvent atomEvent = event == null ? null : event.getAtomEvent();
+        if (atomEvent == null) {
+            return;
+        }
+
+        String name1 = atomEvent.getOldName();
+        String name2 = atomEvent.getName();
+        if (name1 != null && name1.equals(name2)) {
+            return;
+        }
+
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();
     }
 
     @Override
     public void onLinkedAtomMoved(BondEvent event) {
+        AtomEvent atomEvent = event == null ? null : event.getAtomEvent();
+        if (atomEvent == null) {
+            return;
+        }
+
+        double dx = atomEvent.getDeltaX();
+        double dy = atomEvent.getDeltaY();
+        double dz = atomEvent.getDeltaZ();
+        double rr = dx * dx + dy * dy + dz * dz;
+        if (rr < RRMIN) {
+            return;
+        }
+
         this.updateXYZOfCylinder();
     }
 

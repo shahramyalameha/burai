@@ -231,6 +231,10 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onLatticeMoved(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -244,6 +248,10 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomAdded(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -274,6 +282,10 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomRemoved(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -312,6 +324,10 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomMoved(AtomEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (!this.auto) {
             return;
         }

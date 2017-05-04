@@ -74,9 +74,13 @@ public class CellBuilder {
             return null;
         }
 
+        cell.stopResolving();
+
         for (Atom atom : atoms) {
             cell.addAtom(atom);
         }
+
+        cell.restartResolving();
 
         return cell;
     }

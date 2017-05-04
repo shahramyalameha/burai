@@ -27,6 +27,9 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
 
     private static final double LATTICE_DELTA = 1.0e-6;
 
+    private static final double ATOMPOS_DELTA = 1.0e-6;
+    private static final double ATOMPOS_DELTA2 = ATOMPOS_DELTA * ATOMPOS_DELTA;
+
     private QEGeometryInput input;
 
     public QEInputBinder(QEGeometryInput input) {
@@ -326,6 +329,12 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
             return;
         }
 
+        String name1 = event.getOldName();
+        String name2 = event.getName();
+        if (name1 != null && name1.equals(name2)) {
+            return;
+        }
+
         atom.setProperty(QEGeometryInput.MODEL_BUSY, true);
 
         QECard card = this.input.getCard(QEAtomicPositions.CARD_NAME);
@@ -357,6 +366,14 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
         Atom atom = (Atom) source;
 
         if (atom.isSlaveAtom()) {
+            return;
+        }
+
+        double dx = event.getDeltaX();
+        double dy = event.getDeltaY();
+        double dz = event.getDeltaZ();
+        double rr = dx * dx + dy * dy + dz * dz;
+        if (rr < ATOMPOS_DELTA2) {
             return;
         }
 
@@ -404,10 +421,19 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
             QEAtomicPositions atomicPositions = (QEAtomicPositions) card;
             int index = atom.intProperty(AtomProperty.INPUT_INDEX);
             if (0 <= index || index < atomicPositions.numPositions()) {
+                boolean[] mobile1 = atomicPositions.getMobile(index);
+                if (mobile1 == null || mobile1.length < 3) {
+                    mobile1 = new boolean[] { true, true, true };
+                }
+
                 boolean mobileX = !atom.booleanProperty(AtomProperty.FIXED_X);
                 boolean mobileY = !atom.booleanProperty(AtomProperty.FIXED_Y);
                 boolean mobileZ = !atom.booleanProperty(AtomProperty.FIXED_Z);
-                atomicPositions.setMobile(index, new boolean[] { mobileX, mobileY, mobileZ });
+                boolean[] mobile2 = { mobileX, mobileY, mobileZ };
+
+                if (mobile1[0] != mobile2[0] || mobile1[1] != mobile2[1] || mobile1[2] != mobile2[2]) {
+                    atomicPositions.setMobile(index, mobile2);
+                }
             }
         }
 

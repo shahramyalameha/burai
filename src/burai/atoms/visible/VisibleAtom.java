@@ -25,6 +25,9 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
     private static final double RADIUS_SCALE = 0.5;
     private static final double RADIUS_BOLD_SCALE = 1.4;
 
+    private static final double RMIN = 5.0e-3;
+    private static final double RRMIN = RMIN * RMIN;
+
     private boolean boldMode;
 
     private AtomicSphere atomSphere;
@@ -101,12 +104,34 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
 
     @Override
     public void onAtomRenamed(AtomEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        String name1 = event.getOldName();
+        String name2 = event.getName();
+        if (name1 != null && name1.equals(name2)) {
+            return;
+        }
+
         this.updateRadiusOfSphere();
         this.updateColorOfSphere();
     }
 
     @Override
     public void onAtomMoved(AtomEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        double dx = event.getDeltaX();
+        double dy = event.getDeltaY();
+        double dz = event.getDeltaZ();
+        double rr = dx * dx + dy * dy + dz * dz;
+        if (rr < RRMIN) {
+            return;
+        }
+
         this.updateXYZOfSphere();
     }
 

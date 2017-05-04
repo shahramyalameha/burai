@@ -631,11 +631,15 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     }
 
     protected Bond pickBond(Atom atom1, Atom atom2) {
-        if (this.bonds == null || this.bonds.isEmpty()) {
+        return this.pickBond(atom1, atom2, this.bonds);
+    }
+
+    protected Bond pickBond(Atom atom1, Atom atom2, List<Bond> bonds) {
+        if (bonds == null || bonds.isEmpty()) {
             return null;
         }
 
-        for (Bond bond : this.bonds) {
+        for (Bond bond : bonds) {
             Atom refAtom1 = bond.getAtom1();
             Atom refAtom2 = bond.getAtom2();
             if (refAtom1 == atom1 && refAtom2 == atom2) {
@@ -647,6 +651,24 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         }
 
         return null;
+    }
+
+    protected List<Bond> pickBonds(Atom atom1) {
+        if (this.bonds == null || this.bonds.isEmpty()) {
+            return null;
+        }
+
+        List<Bond> bonds = new ArrayList<Bond>();
+
+        for (Bond bond : this.bonds) {
+            Atom refAtom1 = bond.getAtom1();
+            Atom refAtom2 = bond.getAtom2();
+            if (refAtom1 == atom1 || refAtom2 == atom1) {
+                bonds.add(bond);
+            }
+        }
+
+        return bonds;
     }
 
     protected boolean addBond(Bond bond) {

@@ -219,6 +219,8 @@ public class CIFReader extends AtomsReader {
             throw new IOException(e);
         }
 
+        cell.stopResolving();
+
         int numAtoms = atomNames.size();
         for (int i = 0; i < numAtoms; i++) {
             String name = atomNames.get(i);
@@ -233,6 +235,8 @@ public class CIFReader extends AtomsReader {
                 cell.addAtom(name, coord[0], coord[1], coord[2]);
             }
         }
+
+        cell.restartResolving();
 
         return cell;
     }

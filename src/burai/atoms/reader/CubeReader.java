@@ -142,12 +142,16 @@ public class CubeReader extends AtomsReader {
             throw new IOException(e);
         }
 
+        cell.stopResolving();
+
         for (int i = 0; i < numAtoms; i++) {
             double x = Constants.BOHR_RADIUS_ANGS * coord[i][0];
             double y = Constants.BOHR_RADIUS_ANGS * coord[i][1];
             double z = Constants.BOHR_RADIUS_ANGS * coord[i][2];
             cell.addAtom(new Atom(name[i], x, y, z));
         }
+
+        cell.restartResolving();
 
         return cell;
     }

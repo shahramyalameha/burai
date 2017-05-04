@@ -26,6 +26,10 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final double BOND_SCALE2 = 1.15;
 
+    private static final double THR_ATOM_MOTION = 1.0e-3;
+
+    private static final double THR_ATOM_MOTION2 = THR_ATOM_MOTION * THR_ATOM_MOTION;
+
     private Cell cell;
 
     boolean auto;
@@ -67,9 +71,16 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
                 return;
             }
 
-            for (int i = 0; i < atoms.size(); i++) {
+            if (!this.isAbleToResolve()) {
+                return;
+            }
+
+            int natom = atoms.size();
+            int nband = this.cell.numBonds();
+
+            for (int i = 0; i < natom; i++) {
                 Atom atom = atoms.get(i);
-                this.resolve(atom, i);
+                this.resolve(atom, i, atoms, nband == 0);
             }
         });
     }
@@ -80,23 +91,36 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        this.resolve(atom, atoms.size());
+        if (this.isAbleToResolve()) {
+            this.resolve(atom, atoms.size(), atoms, false);
+        }
     }
 
-    private void resolve(Atom atom1, int maxAtom) {
-        if (atom1 == null) {
-            throw new IllegalArgumentException("atom1 is null.");
-        }
-
+    private boolean isAbleToResolve() {
         double ratom = (double) this.cell.numAtoms();
         double volume = this.cell.getVolume();
+        if (volume <= 0.0) {
+            return false;
+        }
+
         double density = ratom / volume;
         if (density > THR_DENSITY) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void resolve(Atom atom1, int maxAtom, List<Atom> atoms, boolean fromBeginning) {
+        if (atom1 == null) {
             return;
         }
 
-        List<Atom> atoms = this.cell.getAtoms();
-        if (atoms == null || atoms.isEmpty()) {
+        if (maxAtom < 1) {
+            return;
+        }
+
+        if (atoms == null || atoms.size() < maxAtom) {
             return;
         }
 
@@ -104,6 +128,11 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
         double y1 = atom1.getY();
         double z1 = atom1.getZ();
         double rcov1 = atom1.getRadius();
+
+        List<Bond> bonds = null;
+        if (!fromBeginning) {
+            bonds = this.cell.pickBonds(atom1);
+        }
 
         for (int i = 0; i < maxAtom; i++) {
             Atom atom2 = atoms.get(i);
@@ -122,7 +151,11 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             double rrmin = BOND_SCALE1 * BOND_SCALE1 * rrcov;
             double rrmax = BOND_SCALE2 * BOND_SCALE2 * rrcov;
 
-            Bond bond = this.cell.pickBond(atom1, atom2);
+            Bond bond = null;
+            if (!fromBeginning) {
+                //bond = this.cell.pickBond(atom1, atom2);
+                bond = this.cell.pickBond(atom1, atom2, bonds);
+            }
 
             if (rrmin <= rr && rr <= rrmax) {
                 if (bond == null) {
@@ -207,6 +240,10 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onLatticeMoved(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -220,6 +257,10 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomAdded(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -240,6 +281,10 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomRemoved(CellEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (this.cell != event.getSource()) {
             return;
         }
@@ -268,7 +313,17 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomRenamed(AtomEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (!this.auto) {
+            return;
+        }
+
+        String name1 = event.getOldName();
+        String name2 = event.getName();
+        if (name1 != null && name1.equals(name2)) {
             return;
         }
 
@@ -283,7 +338,19 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     @Override
     public void onAtomMoved(AtomEvent event) {
+        if (event == null) {
+            return;
+        }
+
         if (!this.auto) {
+            return;
+        }
+
+        double dx = event.getDeltaX();
+        double dy = event.getDeltaY();
+        double dz = event.getDeltaZ();
+        double rr = dx * dx + dy * dy + dz * dz;
+        if (rr < THR_ATOM_MOTION2) {
             return;
         }
 
