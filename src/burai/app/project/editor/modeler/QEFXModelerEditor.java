@@ -24,6 +24,10 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
         super("QEFXModelerEditor.fxml", new QEFXModelerEditorController(projectController, modeler));
 
         if (this.node != null) {
+            this.node.setOnMouseReleased(event -> this.node.requestFocus());
+        }
+
+        if (this.node != null) {
             this.setupKeys(this.node, modeler);
         }
     }
