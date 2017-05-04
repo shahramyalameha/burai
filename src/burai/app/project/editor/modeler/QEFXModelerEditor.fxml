@@ -59,6 +59,12 @@
                   <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Initialize Model" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Undo [Ctrl+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="redoButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets left="8.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label text="Redo [Ctrl+Shift+Z]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />
@@ -72,9 +78,10 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="4.0" />
                </VBox.margin>
             </GridPane>
             <BorderPane prefWidth="395.0">

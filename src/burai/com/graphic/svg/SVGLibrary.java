@@ -58,6 +58,7 @@ public final class SVGLibrary {
         MOVIE(SVGItemMovie.WIDTH, SVGItemMovie.HEIGHT, SVGItemMovie.CONTENT),
         OUT(SVGItemOut.WIDTH, SVGItemOut.HEIGHT, SVGItemOut.CONTENT),
         PLUS(SVGItemPlus.WIDTH, SVGItemPlus.HEIGHT, SVGItemPlus.CONTENT),
+        REDO(SVGItemUndo.WIDTH, SVGItemUndo.HEIGHT, 180.0, SVGItemUndo.CONTENT),
         RESULT(SVGItemResult.WIDTH, SVGItemResult.HEIGHT, SVGItemResult.CONTENT),
         RUN(SVGItemRun.WIDTH, SVGItemRun.HEIGHT, SVGItemRun.CONTENT),
         SAVE(SVGItemSave.WIDTH, SVGItemSave.HEIGHT, SVGItemSave.CONTENT),

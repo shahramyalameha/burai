@@ -64,22 +64,48 @@ public class Modeler {
         }
     }
 
+    public void redo() {
+        if (this.atomsViewer != null) {
+            this.atomsViewer.subRestoreCell();
+        }
+    }
+
     public boolean buildSuperCell(int na, int nb, int nc) {
         SuperCellBuilder builder = this.dstCell == null ? null : new SuperCellBuilder(this.dstCell);
-        if (builder != null) {
-            return builder.build(na, nb, nc);
+        if (builder == null) {
+            return false;
         }
 
-        return false;
+        if (this.atomsViewer != null) {
+            this.atomsViewer.storeCell();
+        }
+
+        boolean status = builder.build(na, nb, nc);
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
+        }
+
+        return status;
     }
 
     public boolean buildSlabModel(int i, int j, int k) {
         SlabModelBuilder builder = this.dstCell == null ? null : new SlabModelBuilder(this.dstCell);
-        if (builder != null) {
-            return builder.build(i, j, k);
+        if (builder == null) {
+            return false;
         }
 
-        return false;
+        if (this.atomsViewer != null) {
+            this.atomsViewer.storeCell();
+        }
+
+        boolean status = builder.build(i, j, k);
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
+        }
+
+        return status;
     }
 
     private void copyCellForward() {

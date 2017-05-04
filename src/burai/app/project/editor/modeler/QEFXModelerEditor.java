@@ -24,11 +24,11 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
         super("QEFXModelerEditor.fxml", new QEFXModelerEditorController(projectController, modeler));
 
         if (this.node != null) {
-            this.setupKeys(this.node);
+            this.setupKeys(this.node, modeler);
         }
     }
 
-    private void setupKeys(Node node) {
+    private void setupKeys(Node node, Modeler modeler) {
         if (node == null) {
             return;
         }
@@ -43,10 +43,18 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
             }
 
             if (event.isControlDown() && KeyCode.Z.equals(event.getCode())) {
-                // Ctrl + Z
-                /*
-                 * TODO
-                 */
+                if (!event.isShiftDown()) {
+                    // Ctrl + Z
+                    if (modeler != null) {
+                        modeler.undo();
+                    }
+
+                } else {
+                    // Ctrl + Shift + Z
+                    if (modeler != null) {
+                        modeler.redo();
+                    }
+                }
             }
         });
     }

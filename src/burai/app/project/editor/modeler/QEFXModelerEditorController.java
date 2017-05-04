@@ -13,11 +13,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import burai.app.QEFXAppController;
+import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
 import burai.com.consts.ConstantStyles;
@@ -49,6 +52,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     @FXML
     private Button undoButton;
+
+    @FXML
+    private Button redoButton;
 
     @FXML
     private Button superButton;
@@ -100,6 +106,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupReflectButton();
         this.setupInitButton();
         this.setupUndoButton();
+        this.setupRedoButton();
 
         this.setupSuperButton();
         this.setupScaleField(this.scaleField1);
@@ -176,6 +183,22 @@ public class QEFXModelerEditorController extends QEFXAppController {
         });
     }
 
+    private void setupRedoButton() {
+        if (this.redoButton == null) {
+            return;
+        }
+
+        this.redoButton.setText("");
+        this.redoButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.REDO, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
+
+        this.redoButton.setOnAction(event -> {
+            if (this.modeler != null) {
+                this.modeler.redo();
+            }
+        });
+    }
+
     private void setupSuperButton() {
         if (this.superButton == null) {
             return;
@@ -199,7 +222,11 @@ public class QEFXModelerEditorController extends QEFXAppController {
             int n1 = this.getScaleValue(this.scaleField1);
             int n2 = this.getScaleValue(this.scaleField2);
             int n3 = this.getScaleValue(this.scaleField3);
-            this.modeler.buildSuperCell(n1, n2, n3);
+            boolean status = this.modeler.buildSuperCell(n1, n2, n3);
+
+            if (!status) {
+                this.showErrorDialog();
+            }
         });
     }
 
@@ -292,7 +319,11 @@ public class QEFXModelerEditorController extends QEFXAppController {
             int m1 = M1 == null ? 0 : M1.intValue();
             int m2 = M2 == null ? 0 : M2.intValue();
             int m3 = M3 == null ? 0 : M3.intValue();
-            this.modeler.buildSlabModel(m1, m2, m3);
+            boolean status = this.modeler.buildSlabModel(m1, m2, m3);
+
+            if (!status) {
+                this.showErrorDialog();
+            }
         });
     }
 
@@ -373,5 +404,13 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         return true;
+    }
+
+    private void showErrorDialog() {
+        Alert alert = new Alert(AlertType.ERROR);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Error has occurred in modering.");
+        alert.setContentText("Atoms may be too much.");
+        alert.showAndWait();
     }
 }
