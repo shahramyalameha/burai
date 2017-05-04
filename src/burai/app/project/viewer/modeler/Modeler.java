@@ -61,6 +61,8 @@ public class Modeler {
         if (this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
         }
+
+        this.toReflect = false;
     }
 
     public void reflect() {
