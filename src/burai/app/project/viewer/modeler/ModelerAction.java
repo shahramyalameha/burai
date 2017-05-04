@@ -10,14 +10,19 @@
 package burai.app.project.viewer.modeler;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.modeler.QEFXModelerEditor;
 import burai.app.project.viewer.atoms.AtomsAction;
@@ -94,6 +99,12 @@ public class ModelerAction {
 
         if (this.atomsViewer != null && modelerEditor != null) {
             this.controller.setModelerMode();
+            this.controller.setOnModeBacked(controller2 -> {
+                if (this.modeler != null && this.modeler.isToReflect()) {
+                    this.showReflectDialog();
+                }
+                return true;
+            });
 
             this.controller.clearStackedsOnViewerPane();
 
@@ -155,5 +166,22 @@ public class ModelerAction {
         Group group = new Group(pane);
         StackPane.setAlignment(group, Pos.BOTTOM_LEFT);
         return group;
+    }
+
+    private void showReflectDialog() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Reflect this model upon the input-file ?");
+        Optional<ButtonType> optButtonType = alert.showAndWait();
+        if (optButtonType == null || (!optButtonType.isPresent())) {
+            return;
+        }
+        if (!ButtonType.OK.equals(optButtonType.get())) {
+            return;
+        }
+
+        if (this.modeler != null) {
+            this.modeler.reflect();
+        }
     }
 }

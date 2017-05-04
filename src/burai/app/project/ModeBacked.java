@@ -7,10 +7,11 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.com.consts;
+package burai.app.project;
 
-public interface ConstantAtoms {
+@FunctionalInterface
+public interface ModeBacked {
 
-    public static final int MAX_NUM_ATOMS = 2048;
+    public abstract boolean onModeBacked(QEFXProjectController controller);
 
 }

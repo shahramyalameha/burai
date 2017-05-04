@@ -57,7 +57,7 @@ public class QEFXProjectController extends QEFXAppController {
     private static final int MODE_MODELER_SLAB2 = 5;
 
     @FXML
-    private Pane backPane;
+    private Pane basePane;
 
     @FXML
     private BorderPane projectPane;
@@ -102,6 +102,8 @@ public class QEFXProjectController extends QEFXAppController {
 
     private Map<Integer, ProjectAction> restoredActionMap;
 
+    private Map<Integer, ModeBacked> backedActionMap;
+
     public QEFXProjectController(QEFXMainController mainController) {
         super(mainController);
 
@@ -123,6 +125,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.projectMode = MODE_NORMAL;
         this.projectAnsatzMap = null;
         this.restoredActionMap = null;
+        this.backedActionMap = null;
     }
 
     @Override
@@ -300,8 +303,8 @@ public class QEFXProjectController extends QEFXAppController {
         });
 
         this.viewerMenu.setOnMenuShowing(() -> {
-            if (this.backPane != null) {
-                this.backPane.getChildren().add(this.viewerMenu);
+            if (this.basePane != null) {
+                this.basePane.getChildren().add(this.viewerMenu);
                 this.disableProjectPane();
             }
         });
@@ -318,17 +321,17 @@ public class QEFXProjectController extends QEFXAppController {
         });
 
         this.editorMenu.setOnMenuShowing(() -> {
-            if (this.backPane != null) {
-                this.backPane.getChildren().add(this.editorMenu);
+            if (this.basePane != null) {
+                this.basePane.getChildren().add(this.editorMenu);
                 this.disableProjectPane();
             }
         });
     }
 
     private void setupResizing() {
-        if (this.backPane != null) {
-            this.backPane.widthProperty().addListener(o -> this.resizeBackPane());
-            this.backPane.heightProperty().addListener(o -> this.resizeBackPane());
+        if (this.basePane != null) {
+            this.basePane.widthProperty().addListener(o -> this.resizeBasePane());
+            this.basePane.heightProperty().addListener(o -> this.resizeBasePane());
         }
 
         if (this.viewerPane != null) {
@@ -337,13 +340,13 @@ public class QEFXProjectController extends QEFXAppController {
         }
     }
 
-    private void resizeBackPane() {
-        if (this.backPane == null) {
+    private void resizeBasePane() {
+        if (this.basePane == null) {
             return;
         }
 
-        double width = this.backPane.getWidth();
-        double height = this.backPane.getHeight();
+        double width = this.basePane.getWidth();
+        double height = this.basePane.getHeight();
         if (width <= 0.0 || height <= 0.0) {
             return;
         }
@@ -355,16 +358,16 @@ public class QEFXProjectController extends QEFXAppController {
     }
 
     private void resizeViewerPane() {
-        if (this.backPane == null || this.viewerPane == null) {
+        if (this.basePane == null || this.viewerPane == null) {
             return;
         }
 
         double xViewer = 0.0;
         double yViewer = this.viewerPane.getHeight();
         Point2D pointViewer = this.viewerPane.localToScreen(xViewer, yViewer);
-        Point2D pointBack = this.backPane.screenToLocal(pointViewer);
-        double xRoll = pointBack.getX();
-        double yRoll = pointBack.getY();
+        Point2D pointBase = this.basePane.screenToLocal(pointViewer);
+        double xRoll = pointBase.getX();
+        double yRoll = pointBase.getY();
         this.viewerMenu.setLayoutX(xRoll);
         this.viewerMenu.setLayoutY(yRoll);
     }
@@ -378,6 +381,19 @@ public class QEFXProjectController extends QEFXAppController {
         this.viewerButton.setGraphic(SVGLibrary.getGraphic(SVGData.MENU, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.viewerButton.setOnAction(event -> {
+            if (this.projectMode != MODE_NORMAL) {
+                ModeBacked backedAction = null;
+                if (this.backedActionMap != null) {
+                    backedAction = this.backedActionMap.get(this.projectMode);
+                }
+                if (backedAction != null) {
+                    boolean status = backedAction.onModeBacked(this);
+                    if (!status) {
+                        return;
+                    }
+                }
+            }
+
             switch (this.projectMode) {
             case MODE_NORMAL:
                 // show menu in normal mode
@@ -742,5 +758,19 @@ public class QEFXProjectController extends QEFXAppController {
         }
 
         return false;
+    }
+
+    public void setOnModeBacked(ModeBacked backedAction) {
+        if (backedAction != null) {
+            if (this.backedActionMap == null) {
+                this.backedActionMap = new HashMap<Integer, ModeBacked>();
+            }
+            this.backedActionMap.put(this.projectMode, backedAction);
+
+        } else {
+            if (this.backedActionMap != null) {
+                this.backedActionMap.remove(this.projectMode);
+            }
+        }
     }
 }

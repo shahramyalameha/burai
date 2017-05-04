@@ -26,6 +26,8 @@ public class Modeler {
 
     private AtomsViewer atomsViewer;
 
+    private boolean toReflect;
+
     public Modeler(Cell srcCell) {
         if (srcCell == null) {
             throw new IllegalArgumentException("srcCell is null.");
@@ -35,6 +37,8 @@ public class Modeler {
         this.dstCell = null;
 
         this.atomsViewer = null;
+
+        this.toReflect = false;
 
         this.copyCellForward();
     }
@@ -47,6 +51,10 @@ public class Modeler {
         this.atomsViewer = atomsViewer;
     }
 
+    protected boolean isToReflect() {
+        return this.toReflect;
+    }
+
     public void initialize() {
         this.copyCellForward();
 
@@ -57,6 +65,7 @@ public class Modeler {
 
     public void reflect() {
         this.copyCellBackward();
+        this.toReflect = false;
     }
 
     public void undo() {
@@ -87,6 +96,10 @@ public class Modeler {
             this.atomsViewer.setCellToCenter();
         }
 
+        if (status) {
+            this.toReflect = true;
+        }
+
         return status;
     }
 
@@ -104,6 +117,10 @@ public class Modeler {
 
         if (status && this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
+        }
+
+        if (status) {
+            this.toReflect = true;
         }
 
         return status;
