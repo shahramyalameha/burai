@@ -6,7 +6,7 @@ Window layout
 Figure 1 shows the window layout of BURAI.
 
 .. image:: ../img/imgWindowStructure_window_all.png
-   :scale: 100 %
+   :scale: 80 %
    :align: left
 
 Figure 1. The window layout of BURAI
@@ -15,7 +15,7 @@ Figure 1. The window layout of BURAI
 1. Menu bar
 ^^^^^^^^^^^
 
-menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, and proxy server setting.
+menu bar includes the links of Quantum ESPRESSO solver's manual and BURAI's one, and proxy server setting.
 
 .. image:: ../img/imgWindowStructure_menubar.png
    :scale: 80 %
@@ -27,7 +27,7 @@ menu bar include the links of Quantum ESPRESSO solver's manual and BURAI's one, 
 2. Material Project API
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-BURAI can get crystal structure form `Material Project <https://materialsproject.org/>`_ by using its API.
+BURAI can get crystal structure by using `Material projects API <https://materialsproject.org/>`_ .
 
 |
 |
@@ -35,7 +35,7 @@ BURAI can get crystal structure form `Material Project <https://materialsproject
 3. Home tab
 ^^^^^^^^^^^
 
-The Home tab include the explore that consists of menu list and controlor.
+The Home tab includes the explore that consists of menu list and controlor.
 
 .. image:: ../img/imgWindowStructure_hometab.png
 
@@ -45,8 +45,10 @@ The Home tab include the explore that consists of menu list and controlor.
 Initial setting
 ---------------
 
+.. note:: This is a note admonition.
 
-if you use under the proxy system, you have to set up at "Proxy server" of menu.
+	if you use under the proxy system, you have to set up at "Proxy server" of menu.
+
 
 .. image:: ../img/imgWindowStructure_proxyServer.png
    :scale: 80 %
@@ -57,7 +59,7 @@ if you use under the proxy system, you have to set up at "Proxy server" of menu.
 File explorer
 -------------
 
-The file explore of this system consist of getting from crystal database, keeping calculated data, and moving
+The file explore of this system consists of getting from crystal database, keeping calculated data, and moving
 the directory like another os's file explorer.
 
 
@@ -119,7 +121,7 @@ This system can get crystal structures by using the Material projects API.
 For example, if you want to calculate the Fe-Cr system, you enter "Fe Cr" in the Material projects API bar as indicated in the figure XX.
 
 .. image:: ../img/imgMaterialProject_search.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 Also, the searched material lists are shown in several method (List, small tiles, medium tiles, and large tiles).
@@ -127,25 +129,25 @@ Also, the searched material lists are shown in several method (List, small tiles
 1. List
 
 .. image:: ../img/imgMaterialProject_list.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 2. Small tiles
 
 .. image:: ../img/imgMaterialProject_smallTiles.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 3. Medium tiles
 
 .. image:: ../img/imgMaterialProject_mediumTiles.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 4. Large tiles
 
 .. image:: ../img/imgMaterialProject_largeTiles.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 
@@ -164,14 +166,14 @@ This system can be used as the internet explore.
 When you search something at the internet, you select "Web" in this system control.
 
 .. image:: ../img/imgWeb_default.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 
 Google URL have been resisted at bookmark as default.
 
 .. image:: ../img/imgWeb_default.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 2. link menu
@@ -187,7 +189,7 @@ Figures show the getting crystal data, and using as model.
 The first step is searching the crystal data on web.
 
 .. image:: ../img/imgWeb_searchNaCl00.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 The second step is clicking the crystal data link.
@@ -195,13 +197,13 @@ The moment you click the link of cif format, the window appears.
 The window include crystal model and informations.
 
 .. image:: ../img/imgWeb_searchNaCl01.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 Finally, you click the model of the window, then the crystal structure is appeared in quantum ESPRESSO inoput window.
 
 .. image:: ../img/imgWeb_searchNaCl02.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 
@@ -211,16 +213,16 @@ Finally, you click the model of the window, then the crystal structure is appear
 When you use the pseudopotential, which is not resisted in BURAI, you download it form a pseudopotential site, and you can use it.
 
 .. image:: ../img/imgWeb_searchPP00.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 
 .. image:: ../img/imgWeb_searchPP01.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 .. image:: ../img/imgWeb_searchPP02.png
-   :scale: 100 %
+   :scale: 80 %
    :align: center
 
 
@@ -228,6 +230,9 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
 
 Create QE project
 -----------------
+
+This chapter explain the calculation of scf, optimize, DOS, band, and MD by using BURAI.
+
 
 :doc:`createqe_scf`
 
