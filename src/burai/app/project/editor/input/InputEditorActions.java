@@ -152,14 +152,14 @@ public class InputEditorActions extends EditorActions {
                     return;
                 }
 
-                controller2.setEditorText(item);
-                controller2.setEditorPane(component.getNode());
-                component.notifyEditorOpened();
-
                 if (this.project != null) {
                     this.project.resolveQEInputs();
                     this.project.setInputMode(inputMode);
                 }
+
+                controller2.setEditorText(item);
+                controller2.setEditorPane(component.getNode());
+                component.notifyEditorOpened();
             });
         }
     }

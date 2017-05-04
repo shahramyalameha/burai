@@ -363,9 +363,10 @@ public class QEFXBandController extends QEFXInputController {
                 kpoints = generator.getKPoints();
             }
 
+            cardKPoints.clear();
+            cardKPoints.setTpibaB();
+
             if (kpoints != null && (!kpoints.isEmpty())) {
-                cardKPoints.clear();
-                cardKPoints.setTpibaB();
                 for (QEKPoint kpoint : kpoints) {
                     if (kpoint != null) {
                         cardKPoints.addKPoint(kpoint);
