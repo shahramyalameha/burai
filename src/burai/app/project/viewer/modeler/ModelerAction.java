@@ -11,17 +11,28 @@ package burai.app.project.viewer.modeler;
 
 import java.io.IOException;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.modeler.QEFXModelerEditor;
 import burai.app.project.viewer.atoms.AtomsAction;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
+import burai.com.graphic.svg.SVGLibrary;
+import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.project.Project;
 
 public class ModelerAction {
+
+    private static final double INSETS_SIZE = 6.0;
+    private static final double GRAPHIC_SIZE = 72.0;
+    private static final String GRAPHIC_CLASS = "icon-modeler";
 
     private Cell cell;
 
@@ -90,6 +101,11 @@ public class ModelerAction {
                 this.controller.setViewerPane(this.atomsViewer);
             }
 
+            Node modelerGraphic = this.createModelerGraphic();
+            if (modelerGraphic != null) {
+                this.controller.stackOnViewerPane(modelerGraphic);
+            }
+
             Node editorNode = modelerEditor.getNode();
             if (editorNode != null) {
                 this.controller.setEditorPane(editorNode);
@@ -123,5 +139,21 @@ public class ModelerAction {
         }
 
         return atomsViewer;
+    }
+
+    private Node createModelerGraphic() {
+        Node figure = SVGLibrary.getGraphic(SVGData.TOOL, GRAPHIC_SIZE, null, GRAPHIC_CLASS);
+        StackPane.setMargin(figure, new Insets(INSETS_SIZE));
+
+        Label label = new Label("Modeler");
+        label.getStyleClass().add(GRAPHIC_CLASS);
+
+        StackPane pane = new StackPane();
+        pane.getChildren().add(figure);
+        pane.getChildren().add(label);
+
+        Group group = new Group(pane);
+        StackPane.setAlignment(group, Pos.BOTTOM_LEFT);
+        return group;
     }
 }

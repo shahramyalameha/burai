@@ -15,6 +15,7 @@ import java.util.List;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.com.consts.ConstantAtoms;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 
@@ -24,7 +25,7 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     public static final int ATOMS_POSITION_SCALED = 1;
     public static final int ATOMS_POSITION_LEFT = 2;
 
-    private static final int MAX_ATOMS_TO_RESOLVE = 2048;
+    private static final int MAX_ATOMS_TO_RESOLVE = ConstantAtoms.MAX_NUM_ATOMS;
 
     private static final double MIN_VOLUME = 1.0e-6;
 

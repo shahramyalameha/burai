@@ -9,7 +9,7 @@
 
 package burai.com.graphic.svg;
 
-public interface SVGItemModeler {
+public interface SVGItemTool {
 
     public static final double WIDTH = 26.769;
 

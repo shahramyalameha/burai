@@ -14,11 +14,12 @@ import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.atoms.viewer.AtomsViewer;
+import burai.com.consts.ConstantAtoms;
 import burai.com.math.Matrix3D;
 
 public class Modeler {
 
-    protected static final int MAX_NUM_ATOMS = 1024;
+    protected static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
 
     private Cell srcCell;
     private Cell dstCell;
