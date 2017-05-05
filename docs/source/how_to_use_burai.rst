@@ -7,7 +7,7 @@ Figure 1 shows the window layout of BURAI.
 
 .. image:: ../img/imgWindowStructure_window_all.png
    :scale: 70 %
-   :align: left
+   :align: center
 
 Figure 1. The window layout of BURAI
 
@@ -151,7 +151,7 @@ Also, the searched material lists are shown in several method (List, small tiles
    :align: center
 
 
-** if you stop searching, you enter space and push the return key in Material project bar.
+.. note:: if you stop searching, you enter space and push the return key in Material project bar.
 
 
 
@@ -232,6 +232,13 @@ Create QE project
 -----------------
 
 This chapter explain the calculation of scf, optimize, DOS, band, and MD by using BURAI.
+These calculation are selected from the following menu in this system.
+
+
+.. image:: ../img/imgCreateJob_menu.png
+   :scale: 80 %
+   :align: center
+
 
 
 :doc:`createqe_scf`
