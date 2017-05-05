@@ -33,11 +33,16 @@ public class Bond extends Model<BondEvent, BondEventListener> {
         this.atom1 = atom1;
         this.atom2 = atom2;
 
-        if (!this.atom1.addBond(this)) {
-            throw new IllegalArgumentException("atom1 does not accept the bond.");
+        synchronized (this.atom1) { // for resolve#BondsResolver
+            if (!this.atom1.addBond(this)) {
+                throw new IllegalArgumentException("atom1 does not accept the bond.");
+            }
         }
-        if (!this.atom2.addBond(this)) {
-            throw new IllegalArgumentException("atom2 does not accept the bond.");
+
+        synchronized (this.atom2) { // for resolve#BondsResolver
+            if (!this.atom2.addBond(this)) {
+                throw new IllegalArgumentException("atom2 does not accept the bond.");
+            }
         }
     }
 

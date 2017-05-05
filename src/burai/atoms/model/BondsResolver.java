@@ -9,6 +9,7 @@
 
 package burai.atoms.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -17,6 +18,8 @@ import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
+import burai.com.env.Environments;
+import burai.com.parallel.Parallel;
 
 public class BondsResolver implements AtomEventListener, CellEventListener {
 
@@ -29,6 +32,10 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
     private static final double THR_ATOM_MOTION = 1.0e-3;
 
     private static final double THR_ATOM_MOTION2 = THR_ATOM_MOTION * THR_ATOM_MOTION;
+
+    private static final int NUM_THREADS = Math.max(1, Environments.getNumCUPs() - 1);
+
+    private static final int NUM_ATOMS_TO_PARALLEL = 128;
 
     private Cell cell;
 
@@ -76,11 +83,70 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             }
 
             int natom = atoms.size();
-            int nband = this.cell.numBonds();
+            int nbond = this.cell.numBonds();
 
-            for (int i = 0; i < natom; i++) {
-                Atom atom = atoms.get(i);
-                this.resolve(atom, i, atoms, nband == 0);
+            List<Bond> bondsToAdd = new ArrayList<Bond>();
+            List<Bond> bondsToRemove = new ArrayList<Bond>();
+
+            if (NUM_THREADS < 2 || natom <= NUM_ATOMS_TO_PARALLEL) {
+                for (int i = 0; i < natom; i++) {
+                    Atom atom = atoms.get(i);
+                    List<List<Bond>> bondsList = this.resolve(atom, i, atoms, nbond == 0);
+                    if (bondsList == null || bondsList.size() < 2) {
+                        continue;
+                    }
+
+                    List<Bond> bondsToAdd_ = bondsList.get(0);
+                    if (bondsToAdd_ != null && !(bondsToAdd_.isEmpty())) {
+                        bondsToAdd.addAll(bondsToAdd_);
+                    }
+
+                    List<Bond> bondsToRemove_ = bondsList.get(1);
+                    if (bondsToRemove_ != null && !(bondsToRemove_.isEmpty())) {
+                        bondsToRemove.addAll(bondsToRemove_);
+                    }
+                }
+
+            } else {
+                Integer[] iatom = new Integer[natom];
+                for (int i = 0; i < iatom.length; i++) {
+                    iatom[i] = i;
+                }
+
+                Parallel<Integer, Object> parallel = new Parallel<Integer, Object>(iatom);
+                parallel.setNumThreads(NUM_THREADS);
+                parallel.forEach(i -> {
+
+                    Atom atom = atoms.get(i);
+                    List<List<Bond>> bondsList = this.resolve(atom, i, atoms, nbond == 0);
+                    if (bondsList == null || bondsList.size() < 2) {
+                        return null;
+                    }
+
+                    List<Bond> bondsToAdd_ = bondsList.get(0);
+                    if (bondsToAdd_ != null && !(bondsToAdd_.isEmpty())) {
+                        synchronized (bondsToAdd) {
+                            bondsToAdd.addAll(bondsToAdd_);
+                        }
+                    }
+
+                    List<Bond> bondsToRemove_ = bondsList.get(1);
+                    if (bondsToRemove_ != null && !(bondsToRemove_.isEmpty())) {
+                        synchronized (bondsToRemove) {
+                            bondsToRemove.addAll(bondsToRemove_);
+                        }
+                    }
+
+                    return null;
+                });
+            }
+
+            for (Bond bond : bondsToAdd) {
+                this.cell.addBond(bond);
+            }
+
+            for (Bond bond : bondsToRemove) {
+                this.cell.removeBond(bond);
             }
         });
     }
@@ -91,8 +157,27 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        if (this.isAbleToResolve()) {
-            this.resolve(atom, atoms.size(), atoms, false);
+        if (!this.isAbleToResolve()) {
+            return;
+        }
+
+        List<List<Bond>> bondsList = this.resolve(atom, atoms.size(), atoms, false);
+        if (bondsList == null || bondsList.size() < 2) {
+            return;
+        }
+
+        List<Bond> bondsToAdd = bondsList.get(0);
+        if (bondsToAdd != null) {
+            for (Bond bond : bondsToAdd) {
+                this.cell.addBond(bond);
+            }
+        }
+
+        List<Bond> bondsToRemove = bondsList.get(1);
+        if (bondsToRemove != null) {
+            for (Bond bond : bondsToRemove) {
+                this.cell.removeBond(bond);
+            }
         }
     }
 
@@ -111,17 +196,17 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
         }
     }
 
-    private void resolve(Atom atom1, int maxAtom, List<Atom> atoms, boolean fromBeginning) {
+    private List<List<Bond>> resolve(Atom atom1, int maxAtom, List<Atom> atoms, boolean fromBeginning) {
         if (atom1 == null) {
-            return;
+            return null;
         }
 
         if (maxAtom < 1) {
-            return;
+            return null;
         }
 
         if (atoms == null || atoms.size() < maxAtom) {
-            return;
+            return null;
         }
 
         double x1 = atom1.getX();
@@ -133,6 +218,9 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
         if (!fromBeginning) {
             bonds = this.cell.pickBonds(atom1);
         }
+
+        List<Bond> bondsToAdd = null;
+        List<Bond> bondsToRemove = null;
 
         for (int i = 0; i < maxAtom; i++) {
             Atom atom2 = atoms.get(i);
@@ -153,21 +241,31 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
             Bond bond = null;
             if (!fromBeginning) {
-                //bond = this.cell.pickBond(atom1, atom2);
                 bond = this.cell.pickBond(atom1, atom2, bonds);
             }
 
             if (rrmin <= rr && rr <= rrmax) {
                 if (bond == null) {
-                    this.cell.addBond(new Bond(atom1, atom2));
+                    if (bondsToAdd == null) {
+                        bondsToAdd = new ArrayList<Bond>();
+                    }
+                    bondsToAdd.add(new Bond(atom1, atom2));
                 }
 
             } else {
                 if (bond != null) {
-                    this.cell.removeBond(bond);
+                    if (bondsToRemove == null) {
+                        bondsToRemove = new ArrayList<Bond>();
+                    }
+                    bondsToRemove.add(bond);
                 }
             }
         }
+
+        List<List<Bond>> bondsList = new ArrayList<List<Bond>>();
+        bondsList.add(bondsToAdd);
+        bondsList.add(bondsToRemove);
+        return bondsList;
     }
 
     private void removeAllBondsLinkedWith(Atom atom) {
