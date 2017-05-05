@@ -17,6 +17,7 @@ import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
+import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 import burai.input.card.QEAtomicPositions;
 import burai.input.card.QECard;
@@ -113,6 +114,187 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
         return true;
     }
 
+    protected void setLattice(double[][] lattice) {
+        if (lattice == null || lattice.length < 3) {
+            return;
+        }
+        for (int i = 0; i < 3; i++) {
+            if (lattice[i] == null || lattice[i].length < 3) {
+                return;
+            }
+        }
+
+        QENamelist nmlSystem = this.input.getNamelist(QEInput.NAMELIST_SYSTEM);
+        if (nmlSystem != null) {
+            nmlSystem.removeValue("a");
+            nmlSystem.removeValue("b");
+            nmlSystem.removeValue("c");
+            nmlSystem.removeValue("cosbc");
+            nmlSystem.removeValue("cosac");
+            nmlSystem.removeValue("cosab");
+            nmlSystem.removeValue("celldm(1)");
+            nmlSystem.removeValue("celldm(2)");
+            nmlSystem.removeValue("celldm(3)");
+            nmlSystem.removeValue("celldm(4)");
+            nmlSystem.removeValue("celldm(5)");
+            nmlSystem.removeValue("celldm(6)");
+        }
+
+        int ibrav = Lattice.getBravais(lattice);
+
+        if (ibrav == 0) {
+            if (nmlSystem != null) {
+                nmlSystem.setValue("ibrav = 0");
+            }
+        } else {
+            if (nmlSystem != null) {
+                this.setBravaisParameters(ibrav, lattice, nmlSystem);
+            }
+        }
+
+        QECard card = this.input.getCard(QECellParameters.CARD_NAME);
+        if (card != null && card instanceof QECellParameters) {
+            QECellParameters cellParameters = (QECellParameters) card;
+            cellParameters.setAngstrom();
+            cellParameters.setVector(1, lattice[0]);
+            cellParameters.setVector(2, lattice[1]);
+            cellParameters.setVector(3, lattice[2]);
+        }
+    }
+
+    private void setBravaisParameters(int ibrav, double[][] lattice, QENamelist nmlSystem) {
+        double[] lattConst = Lattice.getLatticeConstants(ibrav, lattice, true);
+        double a = lattConst[0];
+        double b = lattConst[1];
+        double c = lattConst[2];
+        double cosbc = lattConst[3];
+        double cosac = lattConst[4];
+        double cosab = lattConst[5];
+
+        nmlSystem.setValue("ibrav = " + ibrav);
+
+        switch (ibrav) {
+        case 1:
+            nmlSystem.setValue("a = " + a);
+            break;
+
+        case 2:
+            nmlSystem.setValue("a = " + a);
+            break;
+
+        case 3:
+            nmlSystem.setValue("a = " + a);
+            break;
+
+        case 4:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 5:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+
+        case -5:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+
+        case 6:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 7:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 8:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 9:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case -9:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 91:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 10:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 11:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            break;
+
+        case 12:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+
+        case -12:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosac = " + cosac);
+            break;
+
+        case 13:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+
+        case -13:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosac = " + cosac);
+            break;
+
+        case 14:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosbc = " + cosbc);
+            nmlSystem.setValue("cosac = " + cosac);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+
+        default:
+            nmlSystem.setValue("a = " + a);
+            nmlSystem.setValue("b = " + b);
+            nmlSystem.setValue("c = " + c);
+            nmlSystem.setValue("cosbc = " + cosbc);
+            nmlSystem.setValue("cosac = " + cosac);
+            nmlSystem.setValue("cosab = " + cosab);
+            break;
+        }
+    }
+
     @Override
     public void onLatticeMoved(CellEvent event) {
         if (this.input.isBusyWithActions()) {
@@ -136,31 +318,7 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
 
         cell.setProperty(QEGeometryInput.MODEL_BUSY, true);
 
-        QENamelist nmlSystem = this.input.getNamelist(QEInput.NAMELIST_SYSTEM);
-        if (nmlSystem != null) {
-            nmlSystem.setValue("ibrav = 0");
-            nmlSystem.removeValue("a");
-            nmlSystem.removeValue("b");
-            nmlSystem.removeValue("c");
-            nmlSystem.removeValue("cosbc");
-            nmlSystem.removeValue("cosac");
-            nmlSystem.removeValue("cosab");
-            nmlSystem.removeValue("celldm(1)");
-            nmlSystem.removeValue("celldm(2)");
-            nmlSystem.removeValue("celldm(3)");
-            nmlSystem.removeValue("celldm(4)");
-            nmlSystem.removeValue("celldm(5)");
-            nmlSystem.removeValue("celldm(6)");
-        }
-
-        QECard card = this.input.getCard(QECellParameters.CARD_NAME);
-        if (card != null && card instanceof QECellParameters) {
-            QECellParameters cellParameters = (QECellParameters) card;
-            cellParameters.setAngstrom();
-            cellParameters.setVector(1, lattice[0]);
-            cellParameters.setVector(2, lattice[1]);
-            cellParameters.setVector(3, lattice[2]);
-        }
+        this.setLattice(lattice);
 
         cell.setProperty(QEGeometryInput.MODEL_BUSY, false);
     }
