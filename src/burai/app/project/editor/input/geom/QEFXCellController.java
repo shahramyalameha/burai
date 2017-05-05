@@ -24,6 +24,7 @@ import burai.app.project.editor.input.QEFXInputModelController;
 import burai.app.project.editor.input.items.QEFXComboInteger;
 import burai.atoms.model.Cell;
 import burai.com.consts.Constants;
+import burai.com.math.Lattice;
 import burai.input.QEInput;
 import burai.input.card.QECard;
 import burai.input.card.QECellParameters;
@@ -242,7 +243,15 @@ public class QEFXCellController extends QEFXInputModelController {
         }
 
         if (this.ibravButton != null) {
-            item.setDefault(0, this.ibravButton);
+            item.setDefault(() -> {
+                double[][] lattice = this.modelCell.copyLattice();
+                int ibrav = 0;
+                if (lattice != null && lattice.length > 2) {
+                    ibrav = Lattice.getBravais(lattice);
+                }
+                return QEValueBase.getInstance("ibrav", ibrav);
+
+            }, this.ibravButton);
         }
 
         item.addItems(IBRAV_TEXTS);
