@@ -89,6 +89,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             List<Bond> bondsToRemove = new ArrayList<Bond>();
 
             if (NUM_THREADS < 2 || natom <= NUM_ATOMS_TO_PARALLEL) {
+                // serial calculation
                 for (int i = 0; i < natom; i++) {
                     Atom atom = atoms.get(i);
                     List<List<Bond>> bondsList = this.resolve(atom, i, atoms, nbond == 0);
@@ -108,6 +109,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
                 }
 
             } else {
+                // parallel calculation
                 Integer[] iatom = new Integer[natom];
                 for (int i = 0; i < iatom.length; i++) {
                     iatom[i] = i;
