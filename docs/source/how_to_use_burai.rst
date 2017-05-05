@@ -228,22 +228,51 @@ When you use the pseudopotential, which is not resisted in BURAI, you download i
 
 
 
-Create QE project
------------------
+QE project
+----------
 
-This chapter explain the calculation of scf, optimize, DOS, band, and MD by using BURAI.
-These calculation are selected from the following menu in this system.
+1. creating project
+^^^^^^^^^^^^^^^^^^^
+
+This chapter explain the calculations of scf, optimize, DOS, band, and MD by using BURAI.
+These calculations are selected from the following menu in this system.
 
 
 .. image:: ../img/imgCreateJob_menu.png
-   :scale: 80 %
+   :scale: 50 %
    :align: center
 
 
+The following links explain the each calculation.
 
 :doc:`createqe_scf`
 
 :doc:`createqe_optimize`
+
+2. operating model
+^^^^^^^^^^^^^^^^^^^
+
+This system can replace, remove, and move the atom. This chapter explain these operations. 
+Firstly, we introduce the operation of replace the atom. The first step is selecting the atom which you want to replace by a mouse click. Then, the menu appears. You select “Rename selected atoms”
+
+.. image:: ../img/imgCreateJob_ReplaceAtom01.png
+   :scale: 70 %
+   :align: center
+   
+The periodic table appears, and you select element which you want to replace.
+
+.. image:: ../img/imgCreateJob_ReplaceAtom02.png
+   :scale: 70 %
+   :align: center
+   
+You can replace the atom.
+
+.. image:: ../img/imgCreateJob_ReplaceAtom03.png
+   :scale: 70 %
+   :align: center
+
+
+
 
 
 
