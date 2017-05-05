@@ -115,22 +115,22 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         List<double[]> rotations = new ArrayList<double[]>();
 
         if (y >= x && y >= z) {
-            if (z >= x) {
-                // y > z > x
-                rotations.add(new double[] { -90.0, 0.0, 1.0, 0.0 });
-            } else {
+            if (x >= z) {
                 // y > x > z
                 // NOP
+            } else {
+                // y > z > x
+                rotations.add(new double[] { -90.0, 0.0, 1.0, 0.0 });
             }
 
         } else if (z >= x && z >= y) {
-            if (y >= x) {
+            if (x >= y) {
+                // z > x > y
+                rotations.add(new double[] { -90.0, 1.0, 0.0, 0.0 });
+            } else {
                 // z > y > x
                 rotations.add(new double[] { -90.0, 1.0, 0.0, 0.0 });
                 rotations.add(new double[] { 90.0, 0.0, 1.0, 0.0 });
-            } else {
-                // z > x > y
-                rotations.add(new double[] { -90.0, 1.0, 0.0, 0.0 });
             }
 
         } else if (x >= y && x >= z) {
