@@ -172,11 +172,14 @@ public class ModelerAction {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         QEFXMain.initializeDialogOwner(alert);
         alert.setHeaderText("Reflect this model upon the input-file ?");
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
         Optional<ButtonType> optButtonType = alert.showAndWait();
         if (optButtonType == null || (!optButtonType.isPresent())) {
             return;
         }
-        if (!ButtonType.OK.equals(optButtonType.get())) {
+        if (!ButtonType.YES.equals(optButtonType.get())) {
             return;
         }
 
