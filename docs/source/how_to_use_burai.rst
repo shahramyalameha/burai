@@ -368,4 +368,24 @@ The button set the appropriate volume to the input bar.
 .. image:: ../img/imgCreateJob_ClacCondtion04.png
    :scale: 70 %
    :align: center
-    
+
+4. built-in text editor
+^^^^^^^^^^^^^^^^^^^^^^^
+
+This system has text editor. If you change directly input file, you should use the built-in text editor.
+
+.. image:: ../img/imgCreateJob_EditInput00.png
+   :scale: 70 %
+   :align: center
+
+.. image:: ../img/imgCreateJob_EditInput01.png
+   :scale: 70 %
+   :align: center
+
+.. image:: ../img/imgCreateJob_EditInput02.png
+   :scale: 70 %
+   :align: center
+   
+.. image:: ../img/imgCreateJob_EditInput03.png
+   :scale: 70 %
+   :align: center
