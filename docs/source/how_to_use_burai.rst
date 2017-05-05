@@ -254,7 +254,7 @@ The following links explain the each calculation.
 
 This system can replace, delete, and move the atom. This chapter explain these operations. 
 Firstly, we introduce the operation of replace the atom. 
-The first step is selecting the atom which you want to replace by a mouse click. Then, the menu appears. You select “Rename selected atoms”
+The first step is selecting the atom which you want to replace. Then, the menu appears. You select “Rename selected atoms”
 
 .. image:: ../img/imgCreateJob_ReplaceAtom01.png
    :scale: 70 %
@@ -274,7 +274,7 @@ You can replace the atom.
 
 
 Secondly, we introduce the operation of delete the atom.
-The first step is selecting the atom which you want to delete by a mouse click. Then, the menu appears. You select “Delete selected atoms”
+The first step is selecting the atom which you want to delete. Then, the menu appears. You select “Delete selected atoms”
 
 .. image:: ../img/imgCreateJob_DeleteAtom00.png
    :scale: 70 %
@@ -292,5 +292,14 @@ You select “OK”, and you can delete the atom.
    :scale: 70 %
    :align: center
    
-   
 
+Finally, we explain the operation that selected atom is moved. 
+The first step is selecting the atom which you want to move. Then, the menu appears. You select “Move selected atoms”
+
+.. image:: ../img/imgCreateJob_MoveAtom00.png
+   :scale: 70 %
+   :align: center
+   
+   
+   
+   
