@@ -300,6 +300,20 @@ The first step is selecting the atom which you want to move. Then, the menu appe
    :scale: 70 %
    :align: center
    
+The green plane surface appears on the model. The plane surface means the area that the selected atom can move. 
+
+.. image:: ../img/imgCreateJob_MoveAtom01.png
+   :scale: 70 %
+   :align: center
+
+You decide the area, and you move the atom.
+
+.. image:: ../img/imgCreateJob_MoveAtom02.png
+   :scale: 70 %
+   :align: center  
    
+.. image:: ../img/imgCreateJob_MoveAtom03.png
+   :scale: 70 %
+   :align: center 
    
    
