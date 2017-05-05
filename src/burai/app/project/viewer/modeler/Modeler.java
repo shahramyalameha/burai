@@ -121,6 +121,9 @@ public class Modeler {
             return false;
         }
 
+        // if srcCell is same as dstCell -> not to be reflected
+        // if srcCell is different from dstCell -> to be reflected
+
         double[][] srcLattice = this.srcCell.copyLattice();
         double[][] dstLattice = this.srcCell.copyLattice();
         if (!Matrix3D.equals(srcLattice, dstLattice)) {
