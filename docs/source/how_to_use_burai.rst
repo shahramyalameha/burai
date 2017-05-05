@@ -252,7 +252,7 @@ The following links explain the each calculation.
 2. operating model
 ^^^^^^^^^^^^^^^^^^^
 
-This system can replace, delete, and move the atom. This chapter explain these operations. 
+This system can replace, delete, move, and add the atom. This chapter explain these operations. 
 Firstly, we introduce the operation of replace the atom. 
 The first step is selecting the atom which you want to replace. Then, the menu appears. You select “Rename selected atoms”
 
@@ -293,7 +293,7 @@ You select “OK”, and you can delete the atom.
    :align: center
    
 
-Finally, we explain the operation that selected atom is moved. 
+Thirdly, we explain the operation that selected atom is moved. 
 The first step is selecting the atom which you want to move. Then, the menu appears. You select “Move selected atoms”
 
 .. image:: ../img/imgCreateJob_MoveAtom00.png
@@ -316,4 +316,24 @@ You decide the area, and you move the atom.
    :scale: 70 %
    :align: center 
    
+Finally, we introduce the operation of put the atom.
+The first step is clicking the area which you want to put the atom, then menu window appears. You select “Put an atom”
+
+.. image:: ../img/imgCreateJob_PutAtom00.png
+   :scale: 70 %
+   :align: center 
+
+The periodic table appears, and you select element which you want to add in the area.
+   
+.. image:: ../img/imgCreateJob_PutAtom01.png
+   :scale: 70 %
+   :align: center 
+
+After you select the element, you can put the atom.
+   
+.. image:: ../img/imgCreateJob_PutAtom02.png
+   :scale: 70 %
+   :align: center  
+
+
    
