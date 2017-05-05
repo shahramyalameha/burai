@@ -252,8 +252,9 @@ The following links explain the each calculation.
 2. operating model
 ^^^^^^^^^^^^^^^^^^^
 
-This system can replace, remove, and move the atom. This chapter explain these operations. 
-Firstly, we introduce the operation of replace the atom. The first step is selecting the atom which you want to replace by a mouse click. Then, the menu appears. You select “Rename selected atoms”
+This system can replace, delete, and move the atom. This chapter explain these operations. 
+Firstly, we introduce the operation of replace the atom. 
+The first step is selecting the atom which you want to replace by a mouse click. Then, the menu appears. You select “Rename selected atoms”
 
 .. image:: ../img/imgCreateJob_ReplaceAtom01.png
    :scale: 70 %
@@ -272,10 +273,24 @@ You can replace the atom.
    :align: center
 
 
+Secondly, we introduce the operation of delete the atom.
+The first step is selecting the atom which you want to delete by a mouse click. Then, the menu appears. You select “Delete selected atoms”
 
+.. image:: ../img/imgCreateJob_DeleteAtom00.png
+   :scale: 70 %
+   :align: center
 
+The confirmation screen appears. 
 
+.. image:: ../img/imgCreateJob_DeleteAtom01.png
+   :scale: 70 %
+   :align: center
+   
+You select “OK”, and you can delete the atom.
 
-
-
+.. image:: ../img/imgCreateJob_DeleteAtom02.png
+   :scale: 70 %
+   :align: center
+   
+   
 
