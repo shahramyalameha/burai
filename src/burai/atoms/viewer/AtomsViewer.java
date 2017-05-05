@@ -71,34 +71,82 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             return;
         }
 
+        List<double[]> rotations = getInitialRotation(lattice);
+        if (rotations == null || rotations.isEmpty()) {
+            return;
+        }
+
+        for (double[] rotation : rotations) {
+            if (rotation != null && rotation.length > 3) {
+                double angle = rotation[0];
+                double axisX = rotation[1];
+                double axisY = rotation[2];
+                double axisZ = rotation[3];
+                this.appendCellRotation(angle, axisX, axisY, axisZ);
+            }
+        }
+    }
+
+    public static List<double[]> getInitialRotation(double[][] lattice) {
+        if (lattice == null || lattice.length < 3) {
+            return null;
+        }
+        for (int i = 0; i < 3; i++) {
+            if (lattice[i] == null || lattice[i].length < 3) {
+                return null;
+            }
+        }
+
         double x = Lattice.getXMax(lattice) - Lattice.getXMin(lattice);
         if (x <= 0.0) {
-            return;
+            return null;
         }
 
         double y = Lattice.getYMax(lattice) - Lattice.getYMin(lattice);
         if (y <= 0.0) {
-            return;
+            return null;
         }
 
         double z = Lattice.getZMax(lattice) - Lattice.getZMin(lattice);
         if (z <= 0.0) {
-            return;
+            return null;
         }
+
+        List<double[]> rotations = new ArrayList<double[]>();
 
         if (y >= x && y >= z) {
-            // y-axis is longest
-            // NOP
+            if (z >= x) {
+                // y > z > x
+                rotations.add(new double[] { -90.0, 0.0, 1.0, 0.0 });
+            } else {
+                // y > x > z
+                // NOP
+            }
 
         } else if (z >= x && z >= y) {
-            // z-axis is longest
-            this.appendCellRotation(-90.0, 1.0, 0.0, 0.0);
+            if (y >= x) {
+                // z > y > x
+                rotations.add(new double[] { -90.0, 1.0, 0.0, 0.0 });
+                rotations.add(new double[] { 90.0, 0.0, 1.0, 0.0 });
+            } else {
+                // z > x > y
+                rotations.add(new double[] { -90.0, 1.0, 0.0, 0.0 });
+            }
 
         } else if (x >= y && x >= z) {
-            // x-axis is longest
-            this.appendCellRotation(90.0, 0.0, 0.0, 1.0);
-            this.appendCellRotation(180.0, 1.0, 0.0, 0.0);
+            if (y >= z) {
+                // x > y > z
+                rotations.add(new double[] { 90.0, 0.0, 0.0, 1.0 });
+                rotations.add(new double[] { 180.0, 1.0, 0.0, 0.0 });
+            } else {
+                // x > z > y
+                rotations.add(new double[] { 90.0, 0.0, 0.0, 1.0 });
+                rotations.add(new double[] { 180.0, 1.0, 0.0, 0.0 });
+                rotations.add(new double[] { 90.0, 0.0, 1.0, 0.0 });
+            }
         }
+
+        return rotations;
     }
 
     @Override

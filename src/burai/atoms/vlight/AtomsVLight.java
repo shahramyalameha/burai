@@ -9,6 +9,8 @@
 
 package burai.atoms.vlight;
 
+import java.util.List;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.DepthTest;
@@ -19,7 +21,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import burai.atoms.model.Cell;
-import burai.com.math.Lattice;
+import burai.atoms.viewer.AtomsViewer;
 
 public class AtomsVLight extends Group {
 
@@ -96,33 +98,19 @@ public class AtomsVLight extends Group {
             return;
         }
 
-        double x = Lattice.getXMax(lattice) - Lattice.getXMin(lattice);
-        if (x <= 0.0) {
+        List<double[]> rotations = AtomsViewer.getInitialRotation(lattice);
+        if (rotations == null || rotations.isEmpty()) {
             return;
         }
 
-        double y = Lattice.getYMax(lattice) - Lattice.getYMin(lattice);
-        if (y <= 0.0) {
-            return;
-        }
-
-        double z = Lattice.getZMax(lattice) - Lattice.getZMin(lattice);
-        if (z <= 0.0) {
-            return;
-        }
-
-        if (y >= x && y >= z) {
-            // y-axis is longest
-            // NOP
-
-        } else if (z >= x && z >= y) {
-            // z-axis is longest
-            this.appendRotation(-90.0, 1.0, 0.0, 0.0);
-
-        } else if (x >= y && x >= z) {
-            // x-axis is longest
-            this.appendRotation(90.0, 0.0, 0.0, 1.0);
-            this.appendRotation(180.0, 1.0, 0.0, 0.0);
+        for (double[] rotation : rotations) {
+            if (rotation != null && rotation.length > 3) {
+                double angle = rotation[0];
+                double axisX = rotation[1];
+                double axisY = rotation[2];
+                double axisZ = rotation[3];
+                this.appendRotation(angle, axisX, axisY, axisZ);
+            }
         }
     }
 
