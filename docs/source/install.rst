@@ -1,9 +1,8 @@
 Install
 =======
 
-Download Quantum ESPRESSO
--------------------------
-| 
+Download 
+--------
 1. Quantum ESPRESSO
 ^^^^^^^^^^^^^^^^^^^
 

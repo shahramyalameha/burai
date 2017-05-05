@@ -335,5 +335,37 @@ After you select the element, you can put the atom.
    :scale: 70 %
    :align: center  
 
+3. setting  calculation condition
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This chapter explain setting the input in this system. Other chapter explain the input of each calculation. This chapter focuses input bar of this system. 
+
+.. image:: ../img/imgCreateJob_ClacCondtion00.png
+   :scale: 70 %
+   :align: center 
+
+When input bar is set an appropriate volume, the color of input bar is white. 
+
+.. image:: ../img/imgCreateJob_ClacCondtion03.png
+   :scale: 70 %
+   :align: center
+
+When input bar is set a bad volume, the color of input bar is red.
+
+.. image:: ../img/imgCreateJob_ClacCondtion02.png
+   :scale: 70 %
+   :align: center
    
+In the case that the set volume is not good, the color of input bar is yellow.
+
+.. image:: ../img/imgCreateJob_ClacCondtion01.png
+   :scale: 70 %
+   :align: center
+   
+If you don't understand the appropriate volume, you should put the green appropriate button.
+The button set the appropriate volume to the input bar.
+
+.. image:: ../img/imgCreateJob_ClacCondtion04.png
+   :scale: 70 %
+   :align: center
+    
