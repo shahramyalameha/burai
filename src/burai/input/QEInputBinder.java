@@ -186,6 +186,10 @@ public class QEInputBinder implements AtomEventListener, CellEventListener {
             nmlSystem.setValue("a = " + a);
             break;
 
+        case -3:
+            nmlSystem.setValue("a = " + a);
+            break;
+
         case 4:
             nmlSystem.setValue("a = " + a);
             nmlSystem.setValue("c = " + c);

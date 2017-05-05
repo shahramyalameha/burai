@@ -34,8 +34,8 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label fx:id="ibravLabel" text="P.P. Type" />
-            <Label fx:id="aLabel" text="XC Functional" GridPane.rowIndex="1" />
+            <Label text="P.P. Type" />
+            <Label text="XC Functional" GridPane.rowIndex="1" />
             <ComboBox fx:id="ppTypeCombo" prefWidth="200.0" GridPane.columnIndex="1" />
             <ComboBox prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xcFuncCombo" />
          </children>

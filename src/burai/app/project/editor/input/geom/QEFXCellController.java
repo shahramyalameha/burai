@@ -39,6 +39,7 @@ public class QEFXCellController extends QEFXInputModelController {
             "Cubic P (sc)",
             "Cubic F (fcc)",
             "Cubic I (bcc)",
+            //"Cubic I (bcc), more symmetric",
             "Hexagonal and Trigonal P",
             "Trigonal R, 3fold axis c",
             "Trigonal R, 3fold axis 111",
@@ -56,6 +57,7 @@ public class QEFXCellController extends QEFXInputModelController {
     };
 
     private static final int[] IBRAV_INDEXES = {
+            //0, 1, 2, 3, -3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14
             0, 1, 2, 3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14
     };
 

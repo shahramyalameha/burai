@@ -18,6 +18,7 @@ public final class Lattice {
 
     private static final double CELL_THRESHOLD = 1.0e-6;
 
+    //private static final int[] IBRAV_LIST = { 1, 2, 3, -3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14 };
     private static final int[] IBRAV_LIST = { 1, 2, 3, 4, 5, -5, 6, 7, 8, 9, -9, 10, 11, 12, -12, 13, 14 };
 
     private Lattice() {
@@ -514,6 +515,10 @@ public final class Lattice {
             celldmStd[0] = (2.0 / ROOT3) * celldmPrim[0];
             break;
 
+        case -3:
+            celldmStd[0] = (2.0 / ROOT3) * celldmPrim[0];
+            break;
+
         case 4:
             celldmStd[0] = celldmPrim[0];
             celldmStd[2] = celldmPrim[2];
@@ -739,9 +744,21 @@ public final class Lattice {
                 lattice[1][i] = term1;
                 lattice[2][i] = term1;
             }
-            lattice[1][0] = -term1;
-            lattice[2][0] = -term1;
-            lattice[2][1] = -term1;
+            lattice[1][0] *= -1.0;
+            lattice[2][0] *= -1.0;
+            lattice[2][1] *= -1.0;
+            break;
+
+        case -3:
+            term1 = 0.5 * celldm[0];
+            for (int i = 0; i < 3; i++) {
+                lattice[0][i] = term1;
+                lattice[1][i] = term1;
+                lattice[2][i] = term1;
+            }
+            lattice[0][0] *= -1.0;
+            lattice[1][1] *= -1.0;
+            lattice[2][2] *= -1.0;
             break;
 
         case 4:
