@@ -17,6 +17,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import burai.app.QEFXMain;
 import burai.com.file.FileTools;
 import burai.input.QEInput;
 import burai.project.Project;
@@ -208,6 +212,7 @@ public class RunningNode implements Runnable {
         this.deleteLogFiles(directory);
 
         int iCommand = 0;
+        ProcessBuilder builder = null;
         boolean errOccurred = false;
 
         for (int i = 0; i < commandList.size(); i++) {
@@ -270,7 +275,7 @@ public class RunningNode implements Runnable {
                 continue;
             }
 
-            ProcessBuilder builder = new ProcessBuilder();
+            builder = new ProcessBuilder();
             builder.directory(directory);
             builder.command(command);
             builder.environment().put("OMP_NUM_THREADS", Integer.toString(numThreads2));
@@ -313,6 +318,9 @@ public class RunningNode implements Runnable {
 
         if (!errOccurred) {
             type2.setProjectStatus(this.project);
+
+        } else {
+            this.showErrorDialog(builder);
         }
     }
 
@@ -432,6 +440,59 @@ public class RunningNode implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void showErrorDialog(ProcessBuilder buider) {
+        File dirFile = buider == null ? null : buider.directory();
+        String dirStr = dirFile == null ? null : dirFile.getPath();
+
+        if (dirStr != null) {
+            dirStr = dirStr.trim();
+        }
+
+        final String message1;
+        if (dirStr == null || dirStr.isEmpty()) {
+            message1 = "Error in running the project.";
+        } else {
+            message1 = "Error in running the project: " + dirStr;
+        }
+
+        String cmdStr = null;
+        List<String> cmdList = buider == null ? null : buider.command();
+        if (cmdList != null) {
+            for (String cmd : cmdList) {
+                if (cmd != null) {
+                    cmd = cmd.trim();
+                }
+                if (cmd == null || cmd.isEmpty()) {
+                    continue;
+                }
+                if (cmdStr == null) {
+                    cmdStr = cmd;
+                } else {
+                    cmdStr = cmdStr + " " + cmd;
+                }
+            }
+        }
+
+        if (cmdStr != null) {
+            cmdStr = cmdStr.trim();
+        }
+
+        final String message2;
+        if (cmdStr == null || cmdStr.isEmpty()) {
+            message2 = "Cannot execute command.";
+        } else {
+            message2 = "Cannot execute: " + cmdStr;
+        }
+
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.ERROR);
+            QEFXMain.initializeDialogOwner(alert);
+            alert.setHeaderText(message1);
+            alert.setContentText(message2);
+            alert.showAndWait();
+        });
     }
 
     @Override
