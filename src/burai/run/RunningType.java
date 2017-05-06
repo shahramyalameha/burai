@@ -9,9 +9,11 @@
 
 package burai.run;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import burai.app.path.QEPath;
 import burai.com.env.Environments;
 import burai.input.QEInput;
 import burai.input.card.QECard;
@@ -298,22 +300,60 @@ public enum RunningType {
         }
 
         String strMain = Environments.getProperty(propKey);
+        strMain = strMain == null ? null : strMain.trim();
+
         if (strMain == null) {
             return null;
         }
 
         String strMPI = numProc < 2 ? null : Environments.getProperty(PROP_KEY_MPIRUN);
+        strMPI = strMPI == null ? null : strMPI.trim();
+
+        String strAll = strMain;
         if (strMPI != null) {
-            strMain = strMPI + " " + strMain;
+            strAll = strMPI + " " + strAll;
         }
 
-        String[] command = strMain.trim().split("\\s+");
+        String[] command = strAll.trim().split("\\s+");
         if (command != null) {
             for (int i = 0; i < command.length; i++) {
+                if (command[i] == null || command[i].isEmpty()) {
+                    continue;
+                }
+
                 if (VAR_PROC.equals(command[i])) {
                     command[i] = Integer.toString(numProc);
+
                 } else if (VAR_INPUT.equals(command[i])) {
                     command[i] = fileName;
+
+                } else if (strMain != null && strMain.startsWith(command[i])) {
+                    String path = QEPath.getPath();
+                    if (path == null || path.isEmpty()) {
+                        continue;
+                    }
+                    File file = new File(path, command[i]);
+                    try {
+                        if (file.isFile()) {
+                            command[i] = file.getPath();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else if (strMPI != null && strMPI.startsWith(command[i])) {
+                    String path = QEPath.getMPIPath();
+                    if (path == null || path.isEmpty()) {
+                        continue;
+                    }
+                    File file = new File(path, command[i]);
+                    try {
+                        if (file.isFile()) {
+                            command[i] = file.getPath();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -459,7 +459,14 @@ public class RunningNode implements Runnable {
 
         String qePath = QEPath.getPath();
         String mpiPath = QEPath.getMPIPath();
+
         String orgPath = builder.environment().get("PATH");
+        if (orgPath == null) {
+            orgPath = builder.environment().get("Path");
+        }
+        if (orgPath == null) {
+            orgPath = builder.environment().get("path");
+        }
 
         String path = null;
 
@@ -477,6 +484,8 @@ public class RunningNode implements Runnable {
 
         if (path != null && !(path.isEmpty())) {
             builder.environment().put("PATH", path);
+            builder.environment().put("Path", path);
+            builder.environment().put("path", path);
         }
     }
 
