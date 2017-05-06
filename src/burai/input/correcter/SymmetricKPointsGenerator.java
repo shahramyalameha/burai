@@ -80,12 +80,14 @@ public class SymmetricKPointsGenerator {
         } else if (ibrav == 2) {
             ibz = 2;
 
+            //} else if (ibrav == 3 || ibrav == -3) {
         } else if (ibrav == 3) {
             ibz = 3;
 
         } else if (ibrav == 4) {
             ibz = 13;
 
+            //} else if (ibrav == 5 || ibrav == -5) {
         } else if (ibrav == 5) {
             if (celldm4 > 0.0) {
                 ibz = 14;
