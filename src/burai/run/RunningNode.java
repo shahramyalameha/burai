@@ -21,6 +21,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import burai.app.QEFXMain;
+import burai.app.path.QEPath;
+import burai.com.env.Environments;
 import burai.com.file.FileTools;
 import burai.input.QEInput;
 import burai.project.Project;
@@ -278,9 +280,10 @@ public class RunningNode implements Runnable {
             builder = new ProcessBuilder();
             builder.directory(directory);
             builder.command(command);
-            builder.environment().put("OMP_NUM_THREADS", Integer.toString(numThreads2));
             builder.redirectOutput(logFile);
             builder.redirectError(errFile);
+            builder.environment().put("OMP_NUM_THREADS", Integer.toString(numThreads2));
+            this.setPathToBuilder(builder);
 
             try {
                 synchronized (this) {
@@ -439,6 +442,41 @@ public class RunningNode implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void setPathToBuilder(ProcessBuilder builder) {
+        if (builder == null) {
+            return;
+        }
+
+        String delim = null;
+        if (Environments.isWindows()) {
+            delim = ";";
+        } else {
+            delim = ":";
+        }
+
+        String qePath = QEPath.getPath();
+        String mpiPath = QEPath.getMPIPath();
+        String orgPath = builder.environment().get("PATH");
+
+        String path = null;
+
+        if (qePath != null && !(qePath.isEmpty())) {
+            path = path == null ? qePath : (path + delim + qePath);
+        }
+
+        if (mpiPath != null && !(mpiPath.isEmpty())) {
+            path = path == null ? mpiPath : (path + delim + mpiPath);
+        }
+
+        if (orgPath != null && !(orgPath.isEmpty())) {
+            path = path == null ? orgPath : (path + delim + orgPath);
+        }
+
+        if (path != null && !(path.isEmpty())) {
+            builder.environment().put("PATH", path);
         }
     }
 

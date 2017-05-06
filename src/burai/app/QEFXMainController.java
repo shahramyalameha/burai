@@ -50,6 +50,7 @@ import burai.app.icon.QEFXProjectIcon;
 import burai.app.icon.QEFXWebIcon;
 import burai.app.matapi.QEFXMatAPIDialog;
 import burai.app.onclose.QEFXSavingDialog;
+import burai.app.path.QEFXPathDialog;
 import burai.app.proxy.QEFXProxyDialog;
 import burai.app.tab.QEFXTabManager;
 import burai.com.env.Environments;
@@ -111,6 +112,9 @@ public class QEFXMainController implements Initializable {
 
     @FXML
     private MenuItem manBandMItem;
+
+    @FXML
+    private MenuItem pathMItem;
 
     @FXML
     private MenuItem proxyMItem;
@@ -293,6 +297,13 @@ public class QEFXMainController implements Initializable {
         if (this.manBandMItem != null) {
             this.manBandMItem.setOnAction(event -> {
                 this.showWebPage(Environments.getManBandsWebsite());
+            });
+        }
+
+        if (this.pathMItem != null) {
+            this.pathMItem.setOnAction(event -> {
+                QEFXPathDialog dialog = new QEFXPathDialog(this);
+                dialog.showAndSetProperties();
             });
         }
 

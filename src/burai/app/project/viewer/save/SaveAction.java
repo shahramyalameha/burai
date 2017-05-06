@@ -76,9 +76,17 @@ public class SaveAction {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save project");
+
         String projPath = Environments.getProjectsPath();
         if (projPath != null) {
-            fileChooser.setInitialDirectory(new File(projPath));
+            File projDir = new File(projPath);
+            try {
+                if (projDir.isDirectory()) {
+                    fileChooser.setInitialDirectory(projDir);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         Stage stage = this.controller.getStage();
