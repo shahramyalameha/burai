@@ -26,15 +26,15 @@ Next, users have to click the crystal data link.
 The moment users click the link, The window which includesthe  crystal model and information, appears on this system.
 Users click the model of the window, then the crystal structure is shown in this system.
 
-.. image:: ../img/imgWeb_searchNaCl00.png
+.. image:: ../../img/imgWeb_searchNaCl00.png
    :scale: 30 %
    :align: center
 
-.. image:: ../img/imgWeb_searchNaCl01.png
+.. image:: ../../img/imgWeb_searchNaCl01.png
    :scale: 30 %
    :align: center
 
-.. image:: ../img/imgWeb_searchNaCl02.png
+.. image:: ../../img/imgWeb_searchNaCl02.png
    :scale: 30 %
    :align: center
 
