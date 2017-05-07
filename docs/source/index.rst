@@ -18,7 +18,7 @@ Contents:
    :maxdepth: 2
 
    install
-   how_to_use_burai
+   usage
 
 Indices and tables
 ==================
