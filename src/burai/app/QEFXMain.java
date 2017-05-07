@@ -9,7 +9,11 @@
 
 package burai.app;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.List;
 
@@ -25,6 +29,7 @@ import burai.app.icon.web.WebEngineFactory;
 import burai.app.proxy.ProxyServer;
 import burai.com.env.Environments;
 import burai.com.file.FileTools;
+import burai.com.life.Life;
 import burai.pseudo.PseudoLibrary;
 
 public class QEFXMain extends Application {
@@ -42,6 +47,10 @@ public class QEFXMain extends Application {
             "QEFXAppViewer.css",
             "QEFXAppResult.css"
     };
+
+    private static final String OUT_LOG_NAME = "outLog.txt";
+
+    private static final String ERR_LOG_NAME = "errLog.txt";
 
     public static void initializeStyleSheets(List<String> stylesheets) {
         if (stylesheets != null) {
@@ -114,13 +123,13 @@ public class QEFXMain extends Application {
     }
 
     private void copyExamples() {
-        String projectPath = Environments.getProjectsPath();
-        if (projectPath == null || projectPath.isEmpty()) {
+        String projectsPath = Environments.getProjectsPath();
+        if (projectsPath == null || projectsPath.isEmpty()) {
             return;
         }
 
         File srcFile = new File("examples");
-        File dstFile = new File(projectPath, "Examples");
+        File dstFile = new File(projectsPath, "Examples");
         FileTools.copyAllFiles(srcFile, dstFile, false);
     }
 
@@ -162,6 +171,59 @@ public class QEFXMain extends Application {
     }
 
     public static void main(String[] args) {
+        setLogFiles();
         launch(args);
+    }
+
+    private static void setLogFiles() {
+        String projectsPath = Environments.getProjectsPath();
+        if (projectsPath == null || projectsPath.isEmpty()) {
+            return;
+        }
+
+        PrintStream outStream = null;
+        PrintStream errStream = null;
+
+        try {
+            File outFile = new File(projectsPath, OUT_LOG_NAME);
+            outStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(outFile)));
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+        }
+
+        try {
+            File errFile = new File(projectsPath, ERR_LOG_NAME);
+            errStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(errFile)));
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+        }
+
+        if (outStream != null) {
+            try {
+                System.setOut(outStream);
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+        }
+
+        if (outStream != null) {
+            try {
+                System.setErr(errStream);
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+        }
+
+        PrintStream outStream_ = outStream;
+        PrintStream errStream_ = errStream;
+
+        Life.getInstance().addOnDead(() -> {
+            if (outStream_ != null) {
+                outStream_.close();
+            }
+            if (errStream_ != null) {
+                errStream_.close();
+            }
+        });
     }
 }
