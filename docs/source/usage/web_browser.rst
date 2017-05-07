@@ -19,7 +19,7 @@ Some Links
 Getting Crystal Structures
 --------------------------
 
-On this system, users search the crystal structure which users want to calculate, and you can easily use as the model.
+On this system, users search the crystal structure which users want to calculate, and users can easily use as the model.
 This chapter introduces the getting the crystal data from some web site.
 Firstly, users search the crystal data from this system web explorer.
 Next, users have to click the crystal data link.
@@ -38,6 +38,24 @@ Users click the model of the window, then the crystal structure is shown in this
    :scale: 30 %
    :align: center
 
-Getting Pseudopotentials
+Getting
 ------------------------
+
+Users can download and get pseudopotentials like Getting Crystal Structures.
+This chapter introduces the getting the pseudopotential from some web site.
+
+
+.. image:: ../../img/imgWeb_searchPP00.png
+   :scale: 30 %
+   :align: center
+
+
+.. image:: ../../img/imgWeb_searchPP01.png
+   :scale: 30 %
+   :align: center
+
+.. image:: ../../img/imgWeb_searchPP02.png
+   :scale: 30 %
+   :align: center
+
 
