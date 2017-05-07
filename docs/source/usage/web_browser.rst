@@ -38,7 +38,7 @@ Users click the model of the window, then the crystal structure is shown in this
    :scale: 30 %
    :align: center
 
-Getting
+Getting Pseudopotentials
 ------------------------
 
 Users can download and get pseudopotentials like Getting Crystal Structures.
