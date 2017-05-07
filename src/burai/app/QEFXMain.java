@@ -96,7 +96,11 @@ public class QEFXMain extends Application {
 
     @Override
     public void init() {
-        if (!Environments.existsProjectsPath()) {
+        if (Environments.existsProjectsPath()) {
+            this.setLogFiles();
+
+        } else {
+            this.setLogFiles();
             this.copyPseudos();
             this.copyExamples();
         }
@@ -133,49 +137,7 @@ public class QEFXMain extends Application {
         FileTools.copyAllFiles(srcFile, dstFile, false);
     }
 
-    @Override
-    public void start(Stage stage) {
-        try {
-            // initial operation
-            mainStage = stage;
-            WebEngineFactory.getInstance().touchAllWebEngines();
-
-            // create QEFXMainController
-            QEFXMainController controller = new QEFXMainController();
-
-            // create Root (load FXML)
-            FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("QEFXMain.fxml"));
-            fxmlLoader.setController(controller);
-            Parent root = fxmlLoader.load();
-
-            // create Scene
-            Scene scene = new Scene(root);
-            setUserAgentStylesheet(STYLESHEET_MODENA);
-            initializeStyleSheets(scene.getStylesheets());
-            mainStage.setScene(scene);
-
-            // setup QEFXMainController
-            controller.setStage(mainStage);
-            controller.setMaximized(Environments.isWindows());
-            controller.setFullScreen(false);
-            controller.setResizable(true);
-            controller.setExplorer(new QEFXExplorer(controller));
-
-            // show Stage
-            initializeTitleBarIcon(mainStage);
-            mainStage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        setLogFiles();
-        launch(args);
-    }
-
-    private static void setLogFiles() {
+    private void setLogFiles() {
         String projectsPath = Environments.getProjectsPath();
         if (projectsPath == null || projectsPath.isEmpty()) {
             return;
@@ -225,5 +187,46 @@ public class QEFXMain extends Application {
                 errStream_.close();
             }
         });
+    }
+
+    @Override
+    public void start(Stage stage) {
+        try {
+            // initial operation
+            mainStage = stage;
+            WebEngineFactory.getInstance().touchAllWebEngines();
+
+            // create QEFXMainController
+            QEFXMainController controller = new QEFXMainController();
+
+            // create Root (load FXML)
+            FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("QEFXMain.fxml"));
+            fxmlLoader.setController(controller);
+            Parent root = fxmlLoader.load();
+
+            // create Scene
+            Scene scene = new Scene(root);
+            setUserAgentStylesheet(STYLESHEET_MODENA);
+            initializeStyleSheets(scene.getStylesheets());
+            mainStage.setScene(scene);
+
+            // setup QEFXMainController
+            controller.setStage(mainStage);
+            controller.setMaximized(Environments.isWindows());
+            controller.setFullScreen(false);
+            controller.setResizable(true);
+            controller.setExplorer(new QEFXExplorer(controller));
+
+            // show Stage
+            initializeTitleBarIcon(mainStage);
+            mainStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
