@@ -7,13 +7,12 @@ This system's window consists of the menu, searching crystal structure bar, and 
    :scale: 30 %
    :align: center
 
-
-.. csv-table:: Frozen Delights!
-    :header: "Treat", "Quantity", "Description"
+|
+.. csv-table:: Layout of BURAI's window
+    :header: "No.", "Name", "Details"
     :widths: 15, 10, 30
 
-    "Albatross", 2.99, "On a stick!"
-    "Crunchy Frog", 1.49, "If we took the bones out, it wouldn't be
-    crunchy, now would it?"
-    "Gannet Ripple", 1.99, "On a stick!"
+    "1", "menu", "Initial setting, QE manual links, and proxy server setting are included."
+    "2", "Materials API", "A crystal structure is searched by using Materials project API."
+    "3", "home tab", "Management of Quantum ESPRESSO projects, Controller of that projects, Web"
 
