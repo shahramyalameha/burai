@@ -3,3 +3,4 @@
 /release/
 /bin/*.jar
 /bin/*.exe
+/docs/build

@@ -1,1 +1,0 @@
-Search.setIndex({desctypes:{},terms:{index:0,search:0,welcom:0,burai_manu:0,modul:0,indic:0,content:0,tabl:0,instal:[0,1],document:0,page:0},titles:["Welcome to burai_manual&#8217;s documentation!","Install"],modules:{},descrefs:{},filenames:["index","install"]})
