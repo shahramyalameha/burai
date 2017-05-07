@@ -153,7 +153,7 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
             }
 
             String initPath = this.getButtonText(button);
-            File initDir = initPath == null ? null : new File(initPath).getParentFile();
+            File initDir = initPath == null ? null : new File(initPath);
             if (initDir != null) {
                 try {
                     if (initDir.isDirectory()) {
