@@ -264,6 +264,10 @@ public abstract class QEInput {
 
     @Override
     public String toString() {
+        return this.toString(true);
+    }
+
+    public String toString(boolean withAtomicPositions) {
         String str = "";
 
         String[] keyNamelists = listNamelistKeys();
@@ -278,12 +282,18 @@ public abstract class QEInput {
         for (String keyCard : keyCards) {
             QECard card = this.cards.get(keyCard);
             if (card != null) {
+
                 boolean toShow = false;
                 if (card instanceof QECellParameters) {
                     QENamelist nmlSystem = this.namelists.get(NAMELIST_SYSTEM);
                     if (nmlSystem != null) {
                         QEValue value = nmlSystem.getValue("ibrav");
                         toShow = value != null && value.getIntegerValue() == 0;
+                    }
+
+                } else if (card instanceof QEAtomicPositions) {
+                    if (withAtomicPositions) {
+                        toShow = true;
                     }
 
                 } else {

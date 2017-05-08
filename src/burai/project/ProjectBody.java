@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import burai.atoms.model.Cell;
 import burai.atoms.reader.AtomsReader;
@@ -42,6 +44,14 @@ public class ProjectBody extends Project {
     private static final String FILE_NAME_DOS = "espresso.dos.in";
     private static final String FILE_NAME_BAND = "espresso.band.in";
 
+    private static final String MARK_KEY_GEOM_HEAD = "[geometry0]";
+    private static final String MARK_KEY_GEOM_ALL = "[geometry1]";
+    private static final String MARK_KEY_GEOM_SCF = "[scf]";
+    private static final String MARK_KEY_GEOM_OPT = "[optimiz]";
+    private static final String MARK_KEY_GEOM_MD = "[md]";
+    private static final String MARK_KEY_GEOM_DOS = "[dos]";
+    private static final String MARK_KEY_GEOM_BAND = "[band]";
+
     private String prefixName;
     private String inpFileName;
     private String logFileName;
@@ -58,7 +68,7 @@ public class ProjectBody extends Project {
 
     private ProjectProperty property;
 
-    private String mapQEInputs;
+    private Map<String, String> markMap;
 
     protected ProjectBody(String rootFilePath, String directoryPath) throws IOException {
         super(rootFilePath, directoryPath);
@@ -77,7 +87,7 @@ public class ProjectBody extends Project {
 
         this.property = null;
 
-        this.mapQEInputs = null;
+        this.markMap = null;
 
         if (this.getRootFilePath() != null) {
             this.buildFromRootFile();
@@ -472,61 +482,121 @@ public class ProjectBody extends Project {
 
     @Override
     public void markQEInputs() {
+        if (this.markMap == null) {
+            this.markMap = new HashMap<String, String>();
+        } else {
+            this.markMap.clear();
+        }
+
         QEInput input = null;
-        this.mapQEInputs = "";
 
         input = this.getQEInputGeometry();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[geometry]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_HEAD, input.toString(false));
+            this.markMap.put(MARK_KEY_GEOM_ALL, input.toString(true));
         }
 
         input = this.getQEInputScf();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[scf]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_SCF, input.toString(false));
         }
 
         input = this.getQEInputOptimiz();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[optimiz]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_OPT, input.toString(false));
         }
 
         input = this.getQEInputMd();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[md]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_MD, input.toString(false));
         }
 
         input = this.getQEInputDos();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[dos]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_DOS, input.toString(false));
         }
 
         input = this.getQEInputBand();
         if (input != null) {
-            this.mapQEInputs = this.mapQEInputs + "[band]" + System.lineSeparator();
-            this.mapQEInputs = this.mapQEInputs + input.toString() + System.lineSeparator();
+            this.markMap.put(MARK_KEY_GEOM_BAND, input.toString(false));
         }
     }
 
     @Override
     public boolean isQEInputChanged() {
-        String mapQEInputsOld = this.mapQEInputs;
-        this.markQEInputs();
-        String mapQEInputsNew = this.mapQEInputs;
+        QEInput input = null;
+        String markNew = null;
+        String markOld = null;
 
-        boolean changed = false;
-        if (mapQEInputsOld == null) {
-            changed = (mapQEInputsOld != mapQEInputsNew);
-        } else {
-            changed = (!mapQEInputsOld.equals(mapQEInputsNew));
+        input = this.getQEInputGeometry();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_HEAD);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+
+            markNew = input.toString(true);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_ALL);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
         }
 
-        this.mapQEInputs = mapQEInputsOld;
-        return changed;
+        input = this.getQEInputScf();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_SCF);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        input = this.getQEInputOptimiz();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_OPT);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        input = this.getQEInputMd();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_MD);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        input = this.getQEInputDos();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_DOS);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        input = this.getQEInputBand();
+        if (input != null) {
+            markNew = input.toString(false);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_BAND);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean equalsString(String str1, String str2) {
+        if (str1 == null) {
+            return str1 == str2;
+        } else {
+            return str1.equals(str2);
+        }
     }
 
     @Override
