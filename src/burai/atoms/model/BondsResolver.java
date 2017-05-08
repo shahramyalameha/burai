@@ -35,6 +35,8 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final int NUM_THREADS = Math.max(1, Environments.getNumCUPs() - 1);
 
+    private static final int NUM_ATOMS_TO_ASYNC = 16;
+
     private static final int NUM_ATOMS_TO_PARALLEL = 64;
 
     private static final int DIM_BONDS = 6;
@@ -73,7 +75,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     protected void resolve() {
         int natom = this.cell.numAtoms();
-        if (natom <= NUM_ATOMS_TO_PARALLEL) {
+        if (natom <= NUM_ATOMS_TO_ASYNC) {
             this.resolveAll();
 
         } else {
