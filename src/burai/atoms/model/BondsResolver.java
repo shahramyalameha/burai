@@ -35,7 +35,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final int NUM_THREADS = Math.max(1, Environments.getNumCUPs() - 1);
 
-    private static final int NUM_ATOMS_TO_PARALLEL = 128;
+    private static final int NUM_ATOMS_TO_PARALLEL = 64;
 
     private static final int DIM_BONDS = 6;
 
@@ -72,35 +72,86 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
     }
 
     protected void resolve() {
-        Platform.runLater(() -> {
-            this.removeNotUsedBonds();
+        int natom = this.cell.numAtoms();
+        if (natom <= NUM_ATOMS_TO_PARALLEL) {
+            this.resolveAll();
 
-            List<Atom> atoms = this.cell.getAtoms();
-            if (atoms == null || atoms.isEmpty()) {
-                return;
-            }
+        } else {
+            Platform.runLater(() -> {
+                this.resolveAll();
+            });
+        }
+    }
 
-            if (!this.isAbleToResolve()) {
-                return;
-            }
+    private void resolveAll() {
 
-            int natom = atoms.size();
-            int nbond = this.cell.numBonds();
+        this.removeNotUsedBonds();
 
-            List<Bond> bondsToAdd = new ArrayList<Bond>();
-            List<Bond> bondsToRemove = new ArrayList<Bond>();
+        List<Atom> atoms = this.cell.getAtoms();
+        if (atoms == null || atoms.isEmpty()) {
+            return;
+        }
 
-            if (NUM_THREADS < 2 || natom <= NUM_ATOMS_TO_PARALLEL) {
-                // serial calculation
-                for (int i = 0; i < natom; i++) {
-                    Atom atom = atoms.get(i);
-                    Bond[][] bondsBuffer = this.resolve(atom, i, atoms, nbond == 0);
-                    if (bondsBuffer == null || bondsBuffer.length < 2) {
-                        continue;
+        if (!this.isAbleToResolve()) {
+            return;
+        }
+
+        int natom = atoms.size();
+        int nbond = this.cell.numBonds();
+
+        List<Bond> bondsToAdd = new ArrayList<Bond>();
+        List<Bond> bondsToRemove = new ArrayList<Bond>();
+
+        if (NUM_THREADS < 2 || natom <= NUM_ATOMS_TO_PARALLEL) {
+            // serial calculation
+            for (int i = 0; i < natom; i++) {
+                Atom atom = atoms.get(i);
+                Bond[][] bondsBuffer = this.resolve(atom, i, atoms, nbond == 0);
+                if (bondsBuffer == null || bondsBuffer.length < 2) {
+                    continue;
+                }
+
+                Bond[] bondsToAdd_ = bondsBuffer[0];
+                if (bondsToAdd_ != null && bondsToAdd_.length > 0) {
+                    for (Bond bond : bondsToAdd_) {
+                        if (bond == null) {
+                            break;
+                        }
+                        bondsToAdd.add(bond);
                     }
+                }
 
-                    Bond[] bondsToAdd_ = bondsBuffer[0];
-                    if (bondsToAdd_ != null && bondsToAdd_.length > 0) {
+                Bond[] bondsToRemove_ = bondsBuffer[1];
+                if (bondsToRemove_ != null && bondsToRemove_.length > 0) {
+                    for (Bond bond : bondsToRemove_) {
+                        if (bond == null) {
+                            break;
+                        }
+                        bondsToRemove.add(bond);
+                    }
+                }
+            }
+
+        } else {
+            // parallel calculation
+            Integer[] iatom = new Integer[natom];
+            for (int i = 0; i < iatom.length; i++) {
+                iatom[i] = i;
+            }
+
+            Parallel<Integer, Object> parallel = new Parallel<Integer, Object>(iatom);
+            parallel.setNumThreads(NUM_THREADS);
+            parallel.forEach(i -> {
+
+                Atom atom = atoms.get(i);
+                Bond[][] bondsBuffer = this.resolve(atom, i, atoms, nbond == 0);
+                if (bondsBuffer == null || bondsBuffer.length < 2) {
+                    return null;
+                }
+
+                Bond[] bondsToAdd_ = bondsBuffer[0];
+                if (bondsToAdd_ != null && bondsToAdd_.length > 0) {
+                    synchronized (bondsToAdd) {
                         for (Bond bond : bondsToAdd_) {
                             if (bond == null) {
                                 break;
@@ -108,9 +159,11 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
                             bondsToAdd.add(bond);
                         }
                     }
+                }
 
-                    Bond[] bondsToRemove_ = bondsBuffer[1];
-                    if (bondsToRemove_ != null && bondsToRemove_.length > 0) {
+                Bond[] bondsToRemove_ = bondsBuffer[1];
+                if (bondsToRemove_ != null && bondsToRemove_.length > 0) {
+                    synchronized (bondsToRemove) {
                         for (Bond bond : bondsToRemove_) {
                             if (bond == null) {
                                 break;
@@ -120,59 +173,17 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
                     }
                 }
 
-            } else {
-                // parallel calculation
-                Integer[] iatom = new Integer[natom];
-                for (int i = 0; i < iatom.length; i++) {
-                    iatom[i] = i;
-                }
+                return null;
+            });
+        }
 
-                Parallel<Integer, Object> parallel = new Parallel<Integer, Object>(iatom);
-                parallel.setNumThreads(NUM_THREADS);
-                parallel.forEach(i -> {
+        for (Bond bond : bondsToAdd) {
+            this.cell.addBond(bond);
+        }
 
-                    Atom atom = atoms.get(i);
-                    Bond[][] bondsBuffer = this.resolve(atom, i, atoms, nbond == 0);
-                    if (bondsBuffer == null || bondsBuffer.length < 2) {
-                        return null;
-                    }
-
-                    Bond[] bondsToAdd_ = bondsBuffer[0];
-                    if (bondsToAdd_ != null && bondsToAdd_.length > 0) {
-                        synchronized (bondsToAdd) {
-                            for (Bond bond : bondsToAdd_) {
-                                if (bond == null) {
-                                    break;
-                                }
-                                bondsToAdd.add(bond);
-                            }
-                        }
-                    }
-
-                    Bond[] bondsToRemove_ = bondsBuffer[1];
-                    if (bondsToRemove_ != null && bondsToRemove_.length > 0) {
-                        synchronized (bondsToRemove) {
-                            for (Bond bond : bondsToRemove_) {
-                                if (bond == null) {
-                                    break;
-                                }
-                                bondsToRemove.add(bond);
-                            }
-                        }
-                    }
-
-                    return null;
-                });
-            }
-
-            for (Bond bond : bondsToAdd) {
-                this.cell.addBond(bond);
-            }
-
-            for (Bond bond : bondsToRemove) {
-                this.cell.removeBond(bond);
-            }
-        });
+        for (Bond bond : bondsToRemove) {
+            this.cell.removeBond(bond);
+        }
     }
 
     protected void resolve(Atom atom) {
