@@ -493,7 +493,6 @@ public class ProjectBody extends Project {
         input = this.getQEInputGeometry();
         if (input != null) {
             this.markMap.put(MARK_KEY_GEOM_HEAD, input.toString(false));
-            this.markMap.put(MARK_KEY_GEOM_ALL, input.toString(true));
         }
 
         input = this.getQEInputScf();
@@ -520,6 +519,13 @@ public class ProjectBody extends Project {
         if (input != null) {
             this.markMap.put(MARK_KEY_GEOM_BAND, input.toString(false));
         }
+
+        // with ATOMIC_POSITIONS
+        input = this.getQEInputGeometry();
+        if (input != null) {
+            this.markMap.put(MARK_KEY_GEOM_ALL, input.toString(true));
+        }
+
     }
 
     @Override
@@ -532,12 +538,6 @@ public class ProjectBody extends Project {
         if (input != null) {
             markNew = input.toString(false);
             markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_HEAD);
-            if (!this.equalsString(markNew, markOld)) {
-                return true;
-            }
-
-            markNew = input.toString(true);
-            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_ALL);
             if (!this.equalsString(markNew, markOld)) {
                 return true;
             }
@@ -583,6 +583,16 @@ public class ProjectBody extends Project {
         if (input != null) {
             markNew = input.toString(false);
             markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_BAND);
+            if (!this.equalsString(markNew, markOld)) {
+                return true;
+            }
+        }
+
+        // with ATOMIC_POSITIONS
+        input = this.getQEInputGeometry();
+        if (input != null) {
+            markNew = input.toString(true);
+            markOld = this.markMap == null ? null : this.markMap.get(MARK_KEY_GEOM_ALL);
             if (!this.equalsString(markNew, markOld)) {
                 return true;
             }
