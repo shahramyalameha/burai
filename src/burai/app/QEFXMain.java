@@ -9,10 +9,7 @@
 
 package burai.app;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.List;
@@ -48,9 +45,8 @@ public class QEFXMain extends Application {
             "QEFXAppResult.css"
     };
 
-    private static final String OUT_LOG_NAME = "outLog.txt";
-
-    private static final String ERR_LOG_NAME = "errLog.txt";
+    private static final String OUT_LOG_NAME = "_logOut.txt";
+    private static final String ERR_LOG_NAME = "_logErr.txt";
 
     public static void initializeStyleSheets(List<String> stylesheets) {
         if (stylesheets != null) {
@@ -148,23 +144,20 @@ public class QEFXMain extends Application {
 
         try {
             File outFile = new File(projectsPath, OUT_LOG_NAME);
-            outStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(outFile)));
-        } catch (FileNotFoundException e) {
-            //e.printStackTrace();
+            outStream = new PrintStream(outFile); // not buffered to flush always
+        } catch (Exception e) {
         }
 
         try {
             File errFile = new File(projectsPath, ERR_LOG_NAME);
-            errStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(errFile)));
-        } catch (FileNotFoundException e) {
-            //e.printStackTrace();
+            errStream = new PrintStream(errFile); // not buffered to flush always
+        } catch (Exception e) {
         }
 
         if (outStream != null) {
             try {
                 System.setOut(outStream);
             } catch (Exception e) {
-                //e.printStackTrace();
             }
         }
 
@@ -172,7 +165,6 @@ public class QEFXMain extends Application {
             try {
                 System.setErr(errStream);
             } catch (Exception e) {
-                //e.printStackTrace();
             }
         }
 
