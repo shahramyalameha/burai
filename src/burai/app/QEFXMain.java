@@ -48,6 +48,8 @@ public class QEFXMain extends Application {
     private static final String OUT_LOG_NAME = "_logOut.txt";
     private static final String ERR_LOG_NAME = "_logErr.txt";
 
+    private static final long SLEEP_TIME_FOR_INIT_FILES = 750L;
+
     public static void initializeStyleSheets(List<String> stylesheets) {
         if (stylesheets != null) {
             stylesheets.clear();
@@ -213,9 +215,46 @@ public class QEFXMain extends Application {
             initializeTitleBarIcon(mainStage);
             mainStage.show();
 
+            // files from command-line arguments
+            this.showInitialFiles(controller);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showInitialFiles(QEFXMainController controller) {
+        if (controller == null) {
+            return;
+        }
+
+        Parameters parameters = this.getParameters();
+        if (parameters == null) {
+            return;
+        }
+
+        List<String> strList = parameters.getRaw();
+        if (strList == null || strList.isEmpty()) {
+            return;
+        }
+
+        Thread thread = new Thread(() -> {
+            for (String str : strList) {
+                if (str != null && !(str.isEmpty())) {
+                    controller.showFile(str);
+                }
+
+                synchronized (strList) {
+                    try {
+                        strList.wait(SLEEP_TIME_FOR_INIT_FILES);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        thread.start();
     }
 
     public static void main(String[] args) {

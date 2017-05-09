@@ -45,6 +45,7 @@ import javafx.stage.WindowEvent;
 import burai.app.about.QEFXAboutDialog;
 import burai.app.explorer.QEFXExplorer;
 import burai.app.explorer.QEFXExplorerFacade;
+import burai.app.icon.QEFXFolderIcon;
 import burai.app.icon.QEFXIcon;
 import burai.app.icon.QEFXProjectIcon;
 import burai.app.icon.QEFXWebIcon;
@@ -189,7 +190,9 @@ public class QEFXMainController implements Initializable {
             if (files != null) {
                 Thread thread = new Thread(() -> {
                     for (File file : files) {
-                        this.showDroppedFile(file);
+                        if (file != null) {
+                            this.showFile(file);
+                        }
 
                         synchronized (files) {
                             try {
@@ -205,28 +208,6 @@ public class QEFXMainController implements Initializable {
             }
 
             event.setDropCompleted(true);
-        });
-    }
-
-    private void showDroppedFile(File file) {
-        QEFXIcon icon = file == null ? null : QEFXIcon.getInstance(file);
-        if (icon == null) {
-            return;
-        }
-
-        Platform.runLater(() -> {
-            if (icon != null && icon instanceof QEFXProjectIcon) {
-                Project project = ((QEFXProjectIcon) icon).getContent();
-                if (project != null) {
-                    this.showProject(project);
-                }
-
-            } else if (icon != null && icon instanceof QEFXWebIcon) {
-                String url = ((QEFXWebIcon) icon).getInitialURL();
-                if (url != null && !(url.trim().isEmpty())) {
-                    this.showWebPage(url);
-                }
-            }
         });
     }
 
@@ -660,5 +641,73 @@ public class QEFXMainController implements Initializable {
         }
 
         return null;
+    }
+
+    public void showFile(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return;
+        }
+
+        this.showFile(new File(path));
+    }
+
+    public void showFile(File file) {
+        if (file == null) {
+            return;
+        }
+
+        try {
+            if (!file.exists()) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        QEFXIcon icon = QEFXIcon.getInstance(file);
+        if (icon == null) {
+            return;
+        }
+
+        Platform.runLater(() -> {
+            if (icon instanceof QEFXProjectIcon) {
+                Project project = ((QEFXProjectIcon) icon).getContent();
+                if (project != null) {
+                    this.showProject(project);
+                }
+
+            } else if (icon instanceof QEFXWebIcon) {
+                String url = ((QEFXWebIcon) icon).getInitialURL();
+                if (url != null && !(url.trim().isEmpty())) {
+                    this.showWebPage(url);
+                }
+
+            } else if (icon instanceof QEFXFolderIcon) {
+                String dirPath = ((QEFXFolderIcon) icon).getContent();
+                if (dirPath == null) {
+                    return;
+                }
+                dirPath = dirPath.trim();
+                if (dirPath.isEmpty()) {
+                    return;
+                }
+
+                File dirFile = new File(dirPath);
+                try {
+                    if (!dirFile.isDirectory()) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                if (this.explorerFacade != null) {
+                    this.explorerFacade.setLocation(dirFile.getPath());
+                    this.showHome();
+                }
+            }
+        });
     }
 }
