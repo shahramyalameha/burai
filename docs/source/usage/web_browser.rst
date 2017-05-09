@@ -4,7 +4,7 @@ Web Browser
 Usage
 -----
 
-Users can use BURAI as the internet explore, too.
+Users can handle BURAI as the internet explore, too.
 When users search something at the internet, users should select "Web" in this system control.
 Google URL have been resisted at bookmark as default.
 
@@ -15,6 +15,22 @@ Google URL have been resisted at bookmark as default.
 
 Some Links
 ----------
+Users can add URL address to the favarite links of BURAI.
+if you add to the favarite links of BURAI, you should push the heart mark of BURAI.
+Then, The URL is added.
+
+.. image:: ../../img/imgWeb_FavariteURL00.png
+   :scale: 30 %
+   :align: center
+|
+.. image:: ../../img/imgWeb_FavariteURL01.png
+   :scale: 30 %
+   :align: center
+|
+.. image:: ../../img/imgWeb_FavariteURL02.png
+   :scale: 30 %
+   :align: center
+
 
 Getting Crystal Structures
 --------------------------
