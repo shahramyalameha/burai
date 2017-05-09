@@ -19,11 +19,11 @@ Some Links
 Getting Crystal Structures
 --------------------------
 
-On this system, users search the crystal structure which users want to calculate, and users can easily use as the model.
+On this system, users search the crystal structure which users want to calculate, and users can easily handle as the model.
 This chapter introduces the getting the crystal data from some web site.
 Firstly, users search the crystal data from this system web explorer.
 Next, users have to click the crystal data link.
-The moment users click the link, The window which includesthe  crystal model and information, appears on this system.
+The moment users click the link, The window which includes the  crystal model and information, appears on this system.
 Users click the model of the window, then the crystal structure is shown in this system.
 
 .. image:: ../../img/imgWeb_searchNaCl00.png
