@@ -100,7 +100,7 @@ public class QEFXProjectController extends QEFXAppController {
 
     private Map<Integer, ProjectAnsatz> projectAnsatzMap;
 
-    private Map<Integer, ProjectAction> restoredActionMap;
+    private Map<Integer, ModeRestored> restoredActionMap;
 
     private Map<Integer, ModeBacked> backedActionMap;
 
@@ -513,7 +513,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.setNormalMode(null);
     }
 
-    public void setNormalMode(ProjectAction restoredAction) {
+    public void setNormalMode(ModeRestored restoredAction) {
         this.storeProjectAnsatz();
         this.projectMode = MODE_NORMAL;
         if (this.restoreProjectAnsatz(restoredAction)) {
@@ -541,7 +541,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.setResultExplorerMode(null);
     }
 
-    public void setResultExplorerMode(ProjectAction restoredAction) {
+    public void setResultExplorerMode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_RESULT_EXPLORER, restoredAction);
     }
 
@@ -554,7 +554,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.setResultViewerMode(null);
     }
 
-    public void setResultViewerMode(ProjectAction restoredAction) {
+    public void setResultViewerMode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_RESULT_VIEWER, restoredAction);
     }
 
@@ -567,7 +567,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.setModelerMode(null);
     }
 
-    public void setModelerMode(ProjectAction restoredAction) {
+    public void setModelerMode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_MODELER, restoredAction);
     }
 
@@ -580,7 +580,7 @@ public class QEFXProjectController extends QEFXAppController {
         this.setModelerSlab1Mode(null);
     }
 
-    public void setModelerSlab1Mode(ProjectAction restoredAction) {
+    public void setModelerSlab1Mode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_MODELER_SLAB1, restoredAction);
     }
 
@@ -593,11 +593,11 @@ public class QEFXProjectController extends QEFXAppController {
         this.setModelerSlab2Mode(null);
     }
 
-    public void setModelerSlab2Mode(ProjectAction restoredAction) {
+    public void setModelerSlab2Mode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_MODELER_SLAB2, restoredAction);
     }
 
-    private void setAbnormalMode(int projectMode, ProjectAction restoredAction) {
+    private void setAbnormalMode(int projectMode, ModeRestored restoredAction) {
         this.storeProjectAnsatz();
         this.projectMode = projectMode;
         if (this.restoreProjectAnsatz(restoredAction)) {
@@ -709,10 +709,10 @@ public class QEFXProjectController extends QEFXAppController {
         return false;
     }
 
-    private boolean restoreProjectAnsatz(ProjectAction restoredAction) {
+    private boolean restoreProjectAnsatz(ModeRestored restoredAction) {
         if (restoredAction != null) {
             if (this.restoredActionMap == null) {
-                this.restoredActionMap = new HashMap<Integer, ProjectAction>();
+                this.restoredActionMap = new HashMap<Integer, ModeRestored>();
             }
             this.restoredActionMap.put(this.projectMode, restoredAction);
         }
@@ -746,12 +746,12 @@ public class QEFXProjectController extends QEFXAppController {
                 this.editorLabel.setText(editorMenuText);
             }
 
-            ProjectAction restoredAction2 = null;
+            ModeRestored restoredAction2 = null;
             if (this.restoredActionMap != null) {
                 restoredAction2 = this.restoredActionMap.get(this.projectMode);
             }
             if (restoredAction2 != null) {
-                restoredAction2.actionOnProject(this);
+                restoredAction2.onModeRestored(this);
             }
 
             return true;
