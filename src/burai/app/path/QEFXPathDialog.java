@@ -220,13 +220,13 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
         String mpiPath = this.getButtonText(this.mpiButton);
 
         if (qePath == null || qePath.isEmpty()) {
-            QEPath.setPath(null);
+            QEPath.setPath((String) null);
         } else {
             QEPath.setPath(qePath);
         }
 
         if (mpiPath == null || mpiPath.isEmpty()) {
-            QEPath.setMPIPath(null);
+            QEPath.setMPIPath((String) null);
         } else {
             QEPath.setMPIPath(mpiPath);
         }

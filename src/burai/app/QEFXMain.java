@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import burai.app.explorer.QEFXExplorer;
 import burai.app.icon.web.WebEngineFactory;
+import burai.app.path.QEPath;
 import burai.app.proxy.ProxyServer;
 import burai.com.env.Environments;
 import burai.com.file.FileTools;
@@ -103,6 +104,8 @@ public class QEFXMain extends Application {
             this.copyExamples();
         }
 
+        this.setBinaryPath();
+
         PseudoLibrary.getInstance().touch();
 
         ProxyServer.initProxyServer();
@@ -133,6 +136,24 @@ public class QEFXMain extends Application {
         File srcFile = new File("examples");
         File dstFile = new File(projectsPath, "Examples");
         FileTools.copyAllFiles(srcFile, dstFile, false);
+    }
+
+    private void setBinaryPath() {
+        if (!Environments.isWindows()) {
+            return;
+        }
+
+        File dirFile = new File("exec");
+
+        String qePath = QEPath.getPath();
+        if (qePath == null || qePath.trim().isEmpty()) {
+            QEPath.setPath(new File(dirFile, "qe"));
+        }
+
+        String mpiPath = QEPath.getMPIPath();
+        if (mpiPath == null || mpiPath.trim().isEmpty()) {
+            QEPath.setMPIPath(new File(dirFile, "mpi"));
+        }
     }
 
     private void setLogFiles() {

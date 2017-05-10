@@ -9,6 +9,8 @@
 
 package burai.app.path;
 
+import java.io.File;
+
 import burai.com.env.Environments;
 
 public final class QEPath {
@@ -28,7 +30,11 @@ public final class QEPath {
         return Environments.getProperty(PROP_MPI_PATH);
     }
 
-    protected static void setPath(String path) {
+    public static void setPath(File file) {
+        setPath(file == null ? null : file.getAbsolutePath());
+    }
+
+    public static void setPath(String path) {
         if (path == null || path.trim().isEmpty()) {
             Environments.removeProperty(PROP_QE_PATH);
         } else {
@@ -36,7 +42,11 @@ public final class QEPath {
         }
     }
 
-    protected static void setMPIPath(String path) {
+    public static void setMPIPath(File file) {
+        setMPIPath(file == null ? null : file.getAbsolutePath());
+    }
+
+    public static void setMPIPath(String path) {
         if (path == null || path.trim().isEmpty()) {
             Environments.removeProperty(PROP_MPI_PATH);
         } else {
