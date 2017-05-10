@@ -29,11 +29,14 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import burai.app.QEFXMain;
 import burai.app.QEFXMainController;
+import burai.com.consts.ConstantStyles;
 import burai.com.env.Environments;
 
 public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable {
 
-    private static final String DEFAULT_MESSAGE = "Select Directory";
+    private static final String DEFAULT_TEXT = "Select Directory";
+
+    public static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
 
     private QEFXMainController controller;
 
@@ -138,11 +141,10 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
         }
 
         if (path != null) {
-            button.setText(path);
-            button.setTooltip(new Tooltip(path));
-        } else {
-            button.setText(DEFAULT_MESSAGE);
+            path = path.trim();
         }
+
+        this.updateButtonPath(button, path);
 
         button.setOnAction(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
@@ -175,11 +177,34 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
                 dirPath = dirPath.trim();
             }
 
-            if (dirPath != null && !(dirPath.isEmpty())) {
-                button.setText(dirPath);
-                button.setTooltip(new Tooltip(dirPath));
-            }
+            this.updateButtonPath(button, dirPath);
         });
+    }
+
+    private void updateButtonPath(Button button, String path) {
+        if (button == null) {
+            return;
+        }
+
+        if (path == null || path.isEmpty()) {
+            button.setText(DEFAULT_TEXT);
+            button.setStyle("");
+            return;
+        }
+
+        button.setText(path);
+        button.setTooltip(new Tooltip(path));
+
+        try {
+            File file = new File(path);
+            if (file.isDirectory()) {
+                button.setStyle("");
+            } else {
+                button.setStyle(ERROR_STYLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void showAndSetProperties() {
@@ -213,7 +238,7 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
         }
 
         String value = button.getText();
-        if (DEFAULT_MESSAGE.equals(value)) {
+        if (DEFAULT_TEXT.equals(value)) {
             value = null;
         }
 
