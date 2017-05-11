@@ -180,7 +180,7 @@ public class GeometryParser extends LogParser {
             line = line.trim();
             if (line.startsWith("celldm(1)=")) {
                 String strAlat = null;
-                String[] subLines = line.split("\\s+");
+                String[] subLines = line.replace('=', ' ').split("\\s+");
                 if (subLines != null && subLines.length > 1) {
                     strAlat = subLines[1];
                 }
@@ -384,7 +384,7 @@ public class GeometryParser extends LogParser {
          */
         while ((line = reader.readLine()) != null) {
             line = line.trim();
-            if (line.startsWith("Forces acting on atoms (Ry/au):")) {
+            if (line.startsWith("Forces acting on atoms")) {
                 reader.readLine();
                 break;
             }
@@ -470,7 +470,7 @@ public class GeometryParser extends LogParser {
             }
         }
 
-        if (line != null && line.startsWith("entering subroutine stress")) {
+        if (line != null && line.startsWith("Computing stress")) {
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.startsWith("total   stress")) {
