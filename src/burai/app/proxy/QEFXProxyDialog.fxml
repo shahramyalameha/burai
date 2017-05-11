@@ -28,12 +28,12 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="Host Name">
+            <Label text="Host Name">
                <padding>
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <Label styleClass="italic-text" text="Port" GridPane.rowIndex="1">
+            <Label text="Port" GridPane.rowIndex="1">
                <padding>
                   <Insets left="35.0" />
                </padding>
@@ -73,12 +73,12 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="User Name">
+            <Label text="User Name">
                <padding>
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <Label styleClass="italic-text" text="Password" GridPane.rowIndex="1">
+            <Label text="Password" GridPane.rowIndex="1">
                <padding>
                   <Insets left="35.0" />
                </padding>

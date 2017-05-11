@@ -24,6 +24,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -31,6 +32,7 @@ import burai.app.QEFXMain;
 import burai.app.QEFXMainController;
 import burai.com.consts.ConstantStyles;
 import burai.com.env.Environments;
+import burai.run.RunningCommand.RunningCommandType;
 
 public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable {
 
@@ -51,6 +53,9 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
 
     @FXML
     private Button mpiButton;
+
+    @FXML
+    private TextField mpiField;
 
     public QEFXPathDialog(QEFXMainController controller) {
         super();
@@ -98,6 +103,7 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
         this.setupButton(this.qeButton, false);
         this.setupMpiLabel();
         this.setupButton(this.mpiButton, true);
+        this.setupMpiField();
     }
 
     private void setupQeLabel() {
@@ -126,6 +132,23 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
                 this.mpiLabel.setText(text);
             }
         }
+    }
+
+    private void setupMpiField() {
+        if (this.mpiField == null) {
+            return;
+        }
+
+        String text = this.mpiField.getPromptText();
+        if (text != null) {
+            if (Environments.isWindows()) {
+                text = text.replaceAll("mpirun", "mpiexec.exe");
+                this.mpiField.setPromptText(text);
+            }
+        }
+
+        String command = RunningCommandType.MPIRUN.getCommand();
+        this.mpiField.setText(command == null ? "" : command);
     }
 
     private void setupButton(Button button, boolean isMPI) {
@@ -219,6 +242,9 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
         String qePath = this.getButtonText(this.qeButton);
         String mpiPath = this.getButtonText(this.mpiButton);
 
+        String mpiCommand = this.mpiField == null ? null : this.mpiField.getText();
+        mpiCommand = mpiCommand == null ? null : mpiCommand.trim();
+
         if (qePath == null || qePath.isEmpty()) {
             QEPath.setPath((String) null);
         } else {
@@ -229,6 +255,12 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
             QEPath.setMPIPath((String) null);
         } else {
             QEPath.setMPIPath(mpiPath);
+        }
+
+        if (mpiCommand == null || mpiCommand.isEmpty()) {
+            RunningCommandType.MPIRUN.setCommand(null);
+        } else {
+            RunningCommandType.MPIRUN.setCommand(mpiCommand);
         }
     }
 

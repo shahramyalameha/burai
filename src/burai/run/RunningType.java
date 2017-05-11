@@ -9,11 +9,9 @@
 
 package burai.run;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import burai.app.path.QEPath;
 import burai.com.env.Environments;
 import burai.input.QEInput;
 import burai.input.card.QECard;
@@ -25,6 +23,7 @@ import burai.project.Project;
 import burai.project.property.ProjectBandPaths;
 import burai.project.property.ProjectProperty;
 import burai.project.property.ProjectStatus;
+import burai.run.RunningCommand.RunningCommandType;
 import burai.run.parser.BandPathParser;
 import burai.run.parser.FermiParser;
 import burai.run.parser.GeometryParser;
@@ -38,15 +37,6 @@ public enum RunningType {
     MD("MD", Project.INPUT_MODE_MD),
     DOS("DOS", Project.INPUT_MODE_DOS),
     BAND("Band", Project.INPUT_MODE_BAND);
-
-    private static final String VAR_PROC = "$NP";
-    private static final String VAR_INPUT = "$IN";
-
-    private static final String PROP_KEY_MPIRUN = "command_mpirun";
-    private static final String PROP_KEY_PWSCF = "command_pwscf";
-    private static final String PROP_KEY_DOS = "command_dos";
-    private static final String PROP_KEY_PROJWFC = "command_projwfc";
-    private static final String PROP_KEY_BAND = "command_band";
 
     private String label;
 
@@ -221,7 +211,7 @@ public enum RunningType {
         case Project.INPUT_MODE_OPTIMIZ:
         case Project.INPUT_MODE_MD:
             // pw.x
-            command = this.createCommand(PROP_KEY_PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -230,25 +220,25 @@ public enum RunningType {
 
         case Project.INPUT_MODE_DOS:
             // pw.x (scf)
-            command = this.createCommand(PROP_KEY_PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // pw.x (nscf)
-            command = this.createCommand(PROP_KEY_PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // dos.x
-            command = this.createCommand(PROP_KEY_DOS, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.DOS, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // projwfc.x
-            command = this.createCommand(PROP_KEY_PROJWFC, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PROJWFC, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -257,25 +247,25 @@ public enum RunningType {
 
         case Project.INPUT_MODE_BAND:
             // pw.x (scf)
-            command = this.createCommand(PROP_KEY_PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // pw.x (bands)
-            command = this.createCommand(PROP_KEY_PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // bands.x (up spin)
-            command = this.createCommand(PROP_KEY_BAND, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // bands.x (down spin)
-            command = this.createCommand(PROP_KEY_BAND, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -290,75 +280,23 @@ public enum RunningType {
         return commandList;
     }
 
-    private String[] createCommand(String propKey, String fileName, int numProc) {
-        if (propKey == null) {
+    private String[] createCommand(RunningCommandType commandType, String fileName, int numProc) {
+        if (commandType == null) {
             return null;
         }
 
-        if (fileName == null) {
+        if (fileName == null || fileName.isEmpty()) {
             return null;
         }
 
-        String strMain = Environments.getProperty(propKey);
-        strMain = strMain == null ? null : strMain.trim();
-
-        if (strMain == null) {
+        if (numProc < 1) {
             return null;
         }
 
-        String strMPI = numProc < 2 ? null : Environments.getProperty(PROP_KEY_MPIRUN);
-        strMPI = strMPI == null ? null : strMPI.trim();
-
-        String strAll = strMain;
-        if (strMPI != null) {
-            strAll = strMPI + " " + strAll;
-        }
-
-        String[] command = strAll.trim().split("\\s+");
-        if (command != null) {
-            for (int i = 0; i < command.length; i++) {
-                if (command[i] == null || command[i].isEmpty()) {
-                    continue;
-                }
-
-                if (VAR_PROC.equals(command[i])) {
-                    command[i] = Integer.toString(numProc);
-
-                } else if (VAR_INPUT.equals(command[i])) {
-                    command[i] = fileName;
-
-                } else if (strMain != null && strMain.startsWith(command[i])) {
-                    String path = QEPath.getPath();
-                    if (path == null || path.isEmpty()) {
-                        continue;
-                    }
-                    File file = new File(path, command[i]);
-                    try {
-                        if (file.isFile()) {
-                            command[i] = file.getPath();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (strMPI != null && strMPI.startsWith(command[i])) {
-                    String path = QEPath.getMPIPath();
-                    if (path == null || path.isEmpty()) {
-                        continue;
-                    }
-                    File file = new File(path, command[i]);
-                    try {
-                        if (file.isFile()) {
-                            command[i] = file.getPath();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        return command;
+        RunningCommand command = new RunningCommand(commandType);
+        command.setInput(fileName);
+        command.setProcess(numProc);
+        return command.getCommand();
     }
 
     public List<RunningCondition> getConditionList() {

@@ -38,7 +38,7 @@ public final class QEPath {
         if (path == null || path.trim().isEmpty()) {
             Environments.removeProperty(PROP_QE_PATH);
         } else {
-            Environments.setProperty(PROP_QE_PATH, path);
+            Environments.setProperty(PROP_QE_PATH, path.trim());
         }
     }
 
@@ -50,7 +50,7 @@ public final class QEPath {
         if (path == null || path.trim().isEmpty()) {
             Environments.removeProperty(PROP_MPI_PATH);
         } else {
-            Environments.setProperty(PROP_MPI_PATH, path);
+            Environments.setProperty(PROP_MPI_PATH, path.trim());
         }
     }
 

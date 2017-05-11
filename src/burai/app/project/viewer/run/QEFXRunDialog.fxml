@@ -28,7 +28,7 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="Job Type">
+            <Label text="Job Type">
                <padding>
                   <Insets left="35.0" />
                </padding>
@@ -66,12 +66,12 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="#Processes (MPI)">
+            <Label text="#Processes (MPI)">
                <padding>
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <Label styleClass="italic-text" text="#Threads (OpenMP)" GridPane.rowIndex="1">
+            <Label text="#Threads (OpenMP)" GridPane.rowIndex="1">
                <padding>
                   <Insets left="35.0" />
                </padding>
@@ -111,11 +111,6 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text">
-               <padding>
-                  <Insets left="35.0" />
-               </padding>
-            </Label>
             <Button fx:id="saveButton" mnemonicParsing="false" prefWidth="325.0" text="Save Project" textAlignment="CENTER">
                <GridPane.margin>
                   <Insets left="40.0" />

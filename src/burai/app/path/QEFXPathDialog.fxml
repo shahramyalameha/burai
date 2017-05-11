@@ -28,7 +28,7 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="495.0" vgap="5.0">
          <children>
-            <Label fx:id="qeLabel" styleClass="italic-text" text="Where is `pw.x' ?" />
+            <Label fx:id="qeLabel" text="Where is `pw.x' ?" />
             <Button fx:id="qeButton" mnemonicParsing="false" prefWidth="315.0" GridPane.columnIndex="1">
                <font>
                   <Font size="11.0" />
@@ -65,12 +65,14 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="495.0" vgap="5.0">
          <children>
-            <Label fx:id="mpiLabel" styleClass="italic-text" text="Where is `mpirun' ?" />
+            <Label fx:id="mpiLabel" text="Where is `mpirun' ?" />
+            <Label text="What is command ?" GridPane.rowIndex="1" />
             <Button fx:id="mpiButton" mnemonicParsing="false" prefWidth="315.0" GridPane.columnIndex="1">
                <font>
                   <Font size="11.0" />
                </font>
             </Button>
+            <TextField fx:id="mpiField" alignment="CENTER" prefWidth="315.0" promptText="command of `mpirun`" styleClass="italic-text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" prefWidth="145.0" />
@@ -80,6 +82,7 @@
             <Insets left="10.0" right="20.0" />
          </padding>
          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>

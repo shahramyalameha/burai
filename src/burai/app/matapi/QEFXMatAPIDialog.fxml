@@ -28,7 +28,7 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="435.0" vgap="5.0">
          <children>
-            <Label fx:id="usageLabel" styleClass="italic-text" text="usage" wrapText="true">
+            <Label fx:id="usageLabel" text="usage" wrapText="true">
                <padding>
                   <Insets left="35.0" />
                </padding>
@@ -64,12 +64,12 @@
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="435.0" vgap="5.0">
          <children>
-            <Label styleClass="italic-text" text="API Key">
+            <Label text="API Key">
                <padding>
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <Label fx:id="cellLabel" styleClass="italic-text" text="Cell Type" GridPane.rowIndex="1">
+            <Label fx:id="cellLabel" text="Cell Type" GridPane.rowIndex="1">
                <padding>
                   <Insets left="35.0" />
                </padding>
