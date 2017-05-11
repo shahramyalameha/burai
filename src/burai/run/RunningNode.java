@@ -499,9 +499,9 @@ public class RunningNode implements Runnable {
 
         final String message1;
         if (dirStr == null || dirStr.isEmpty()) {
-            message1 = "Error in running the project.";
+            message1 = "ERROR in running the project.";
         } else {
-            message1 = "Error in running the project: " + dirStr;
+            message1 = "ERROR in running the project: " + dirStr;
         }
 
         String cmdStr = null;
@@ -528,9 +528,9 @@ public class RunningNode implements Runnable {
 
         final String message2;
         if (cmdStr == null || cmdStr.isEmpty()) {
-            message2 = "Cannot execute command.";
+            message2 = "NO COMMAND.";
         } else {
-            message2 = "Cannot execute: " + cmdStr;
+            message2 = "COMMAND: " + cmdStr;
         }
 
         Platform.runLater(() -> {
