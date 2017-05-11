@@ -24,7 +24,6 @@ import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.graph.GraphProperty;
 import burai.app.project.viewer.result.graph.QEFXGraphViewerController;
 import burai.app.project.viewer.result.graph.SeriesProperty;
-import burai.com.consts.Constants;
 import burai.com.env.Environments;
 import burai.com.parallel.Parallel;
 import burai.project.property.BandData;
@@ -408,7 +407,7 @@ public class QEFXBandViewerController extends QEFXGraphViewerController {
             parallel.setNumThreads(NUM_LOADING_THREADS);
             parallel.forEach(i -> {
                 double coord = bandData1.getCoordinate(i);
-                double energy = bandData2.getEnergy(i) * Constants.RYTOEV - fermi;
+                double energy = bandData2.getEnergy(i) - fermi;
                 Data<Number, Number> data = new Data<Number, Number>(coord, energy);
                 synchronized (dataList) {
                     dataList[i] = data;
@@ -500,7 +499,7 @@ public class QEFXBandViewerController extends QEFXGraphViewerController {
 
         if (!empty1) {
             for (int i = 0; i < bandData1.numPoints(); i++) {
-                double energy = bandData1.getEnergy(i) * Constants.RYTOEV - fermi;
+                double energy = bandData1.getEnergy(i) - fermi;
                 minEnergy = Math.min(minEnergy, energy);
                 maxEnergy = Math.max(maxEnergy, energy);
             }
@@ -508,7 +507,7 @@ public class QEFXBandViewerController extends QEFXGraphViewerController {
 
         if (!empty2) {
             for (int i = 0; i < bandData2.numPoints(); i++) {
-                double energy = bandData2.getEnergy(i) * Constants.RYTOEV - fermi;
+                double energy = bandData2.getEnergy(i) - fermi;
                 minEnergy = Math.min(minEnergy, energy);
                 maxEnergy = Math.max(maxEnergy, energy);
             }
