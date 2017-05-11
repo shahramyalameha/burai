@@ -179,20 +179,38 @@ public class BandData {
                 this.points.clear();
             }
 
+            boolean direction = true;
+            List<Point> points_ = new ArrayList<Point>();
+
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) {
+                    if (!points_.isEmpty()) {
+                        direction = !direction;
+                        this.points.addAll(points_);
+                        points_.clear();
+                    }
                     continue;
                 }
 
                 String[] subLines = line.split("[\\s,]+");
+
                 try {
                     double coord = Double.parseDouble(subLines[0]);
                     double energy = Double.parseDouble(subLines[1]);
-                    this.points.add(new Point(coord, energy));
+                    if (direction) {
+                        points_.add(new Point(coord, energy));
+                    } else {
+                        points_.add(0, new Point(coord, energy));
+                    }
+
                 } catch (Exception e) {
                     // NOP
                 }
+            }
+
+            if (!points_.isEmpty()) {
+                this.points.addAll(points_);
             }
 
         } catch (FileNotFoundException e1) {
