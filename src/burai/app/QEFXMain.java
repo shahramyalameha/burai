@@ -139,20 +139,22 @@ public class QEFXMain extends Application {
     }
 
     private void setBinaryPath() {
-        if (!Environments.isWindows()) {
-            return;
+        File dirFile = null;
+        if (Environments.isWindows()) {
+            dirFile = new File("exec.WIN");
+        } else if (Environments.isMac()) {
+            dirFile = new File("exec.MAC");
         }
 
-        File dirFile = new File("exec");
-
-        String qePath = QEPath.getPath();
-        if (qePath == null || qePath.trim().isEmpty()) {
-            QEPath.setPath(new File(dirFile, "qe"));
-        }
-
-        String mpiPath = QEPath.getMPIPath();
-        if (mpiPath == null || mpiPath.trim().isEmpty()) {
-            QEPath.setMPIPath(new File(dirFile, "mpi"));
+        if (dirFile != null) {
+            String qePath = QEPath.getPath();
+            if (qePath == null || qePath.trim().isEmpty()) {
+                QEPath.setPath(new File(dirFile, "qe"));
+            }
+            String mpiPath = QEPath.getMPIPath();
+            if (mpiPath == null || mpiPath.trim().isEmpty()) {
+                QEPath.setMPIPath(new File(dirFile, "mpi"));
+            }
         }
     }
 
