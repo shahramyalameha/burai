@@ -11,6 +11,8 @@ package burai.app.project.viewer.result;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,10 @@ import burai.app.project.viewer.result.graph.QEFXOptStressButton;
 import burai.app.project.viewer.result.graph.QEFXScfButton;
 import burai.app.project.viewer.result.log.QEFXCrashButton;
 import burai.app.project.viewer.result.log.QEFXErrorButton;
+import burai.app.project.viewer.result.log.QEFXInputButton;
 import burai.app.project.viewer.result.log.QEFXOutputButton;
+import burai.app.project.viewer.result.movie.QEFXMdMovieButton;
+import burai.app.project.viewer.result.movie.QEFXOptMovieButton;
 import burai.project.Project;
 import burai.run.RunningManager;
 
@@ -177,9 +182,9 @@ public class QEFXResultExplorer {
             return QEFXCrashButton.getWrapper(this.projectController, this.project);
         });
 
-        //this.updateButton("QEFXInputButton", () -> {
-        //    return QEFXInputButton.getWrapper(this.projectController, this.project);
-        //});
+        this.updateButton("QEFXInputButton", () -> {
+            return QEFXInputButton.getWrapper(this.projectController, this.project);
+        });
 
         File directory = this.project.getDirectory();
         if (directory == null) {
@@ -192,29 +197,57 @@ public class QEFXResultExplorer {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
+
+        Comparator<File> fileComparator = (file1, file2) -> {
+            long time1 = 0L;
+            try {
+                time1 = file1 == null ? Long.MAX_VALUE : file1.lastModified();
+            } catch (Exception e) {
+                time1 = Long.MAX_VALUE;
+            }
+
+            long time2 = 0L;
+            try {
+                time2 = file2 == null ? Long.MAX_VALUE : file2.lastModified();
+            } catch (Exception e) {
+                time2 = Long.MAX_VALUE;
+            }
+
+            if (time1 < time2) {
+                return -1;
+            } else if (time1 > time2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
 
         String logName0 = this.project.getLogFileName("#");
         if (logName0 != null && !(logName0.isEmpty())) {
             logName0 = logName0.substring(0, logName0.length() - 1);
         }
 
-        String[] logNames = null;
+        File[] logFiles = null;
         if (logName0 != null && !(logName0.isEmpty())) {
             String logName1 = logName0;
-            logNames = directory.list((dir, name) -> {
+            logFiles = directory.listFiles((dir, name) -> {
                 return (name != null && name.startsWith(logName1));
             });
         }
 
-        if (logNames != null) {
+        if (logFiles != null) {
+            Arrays.sort(logFiles, fileComparator);
+
             int nstem = logName0 == null ? 0 : logName0.length();
-            for (String logName : logNames) {
+            for (File logFile : logFiles) {
+                String logName = logFile == null ? null : logFile.getName();
                 if (logName == null || logName.isEmpty()) {
                     continue;
                 }
 
-                String ext = logName.substring(nstem);
+                String ext = logName.length() <= nstem ? null : logName.substring(nstem);
                 if (ext == null || ext.isEmpty()) {
                     continue;
                 }
@@ -230,22 +263,25 @@ public class QEFXResultExplorer {
             errName0 = errName0.substring(0, errName0.length() - 1);
         }
 
-        String[] errNames = null;
+        File[] errFiles = null;
         if (errName0 != null && !(errName0.isEmpty())) {
             String errName1 = errName0;
-            errNames = directory.list((dir, name) -> {
+            errFiles = directory.listFiles((dir, name) -> {
                 return (name != null && name.startsWith(errName1));
             });
         }
 
-        if (errNames != null) {
+        if (errFiles != null) {
+            Arrays.sort(errFiles, fileComparator);
+
             int nstem = errName0 == null ? 0 : errName0.length();
-            for (String errName : errNames) {
+            for (File errFile : errFiles) {
+                String errName = errFile == null ? null : errFile.getName();
                 if (errName == null || errName.isEmpty()) {
                     continue;
                 }
 
-                String ext = errName.substring(nstem);
+                String ext = errName.length() <= nstem ? null : errName.substring(nstem);
                 if (ext == null || ext.isEmpty()) {
                     continue;
                 }
@@ -292,9 +328,9 @@ public class QEFXResultExplorer {
             return QEFXOptLatticeButton.getWrapper(this.projectController, this.project, LatticeViewerType.ANGLE);
         });
 
-        //this.updateButton("QEFXOptMovieButton", () -> {
-        //    return QEFXOptMovieButton.getWrapper(this.projectController, this.project);
-        //});
+        this.updateButton("QEFXOptMovieButton", () -> {
+            return QEFXOptMovieButton.getWrapper(this.projectController, this.project);
+        });
     }
 
     private void updateMdButtons() {
@@ -330,9 +366,9 @@ public class QEFXResultExplorer {
             return QEFXMdLatticeButton.getWrapper(this.projectController, this.project, LatticeViewerType.ANGLE);
         });
 
-        //this.updateButton("QEFXMdMovieButton", () -> {
-        //    return QEFXMdMovieButton.getWrapper(this.projectController, this.project);
-        //});
+        this.updateButton("QEFXMdMovieButton", () -> {
+            return QEFXMdMovieButton.getWrapper(this.projectController, this.project);
+        });
     }
 
     private void updateDosButtons() {
