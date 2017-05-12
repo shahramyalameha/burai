@@ -117,6 +117,20 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupMillerField(this.millerField1);
         this.setupMillerField(this.millerField2);
         this.setupMillerField(this.millerField3);
+
+        // only for Ver.1.2
+        if (this.slabButton != null) {
+            this.slabButton.setDisable(true);
+        }
+        if (this.millerField1 != null) {
+            this.millerField1.setDisable(true);
+        }
+        if (this.millerField2 != null) {
+            this.millerField2.setDisable(true);
+        }
+        if (this.millerField3 != null) {
+            this.millerField3.setDisable(true);
+        }
     }
 
     private void setupScreenButton() {
