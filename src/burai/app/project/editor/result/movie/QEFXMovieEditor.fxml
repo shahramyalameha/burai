@@ -101,7 +101,7 @@
                   </ToolBar>
                   <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="42.0" prefWidth="100.0" GridPane.columnIndex="1">
                      <items>
-                        <Button fx:id="exportButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
+                        <Button fx:id="exportButton" mnemonicParsing="false" styleClass="italic-text" text="New Project" />
                      </items>
                      <padding>
                         <Insets left="10.0" />

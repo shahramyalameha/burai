@@ -74,7 +74,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             return;
         }
 
-        this.exportButton.setText("New Project");
+        this.exportButton.getStyleClass().add(GRAPHIC_CLASS);
         this.exportButton.setGraphic(SVGLibrary.getGraphic(SVGData.EXPORT, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.exportButton.setOnAction(event -> {
