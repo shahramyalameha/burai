@@ -21,6 +21,21 @@ public abstract class QEFXAppComponent<T extends QEFXAppController> {
 
     protected T controller;
 
+    public QEFXAppComponent(Node node, T controller) {
+        if (node == null) {
+            throw new IllegalArgumentException("node is null.");
+        }
+
+        if (controller == null) {
+            throw new IllegalArgumentException("controller is null.");
+        }
+
+        this.node = node;
+        this.controller = controller;
+
+        this.initializeNode();
+    }
+
     public QEFXAppComponent(String fileFXML, T controller) throws IOException {
         if (fileFXML == null || fileFXML.trim().isEmpty()) {
             throw new IllegalArgumentException("file name of FXML is empty.");
@@ -36,6 +51,10 @@ public abstract class QEFXAppComponent<T extends QEFXAppController> {
         fxmlLoader.setController(this.controller);
         this.node = fxmlLoader.load();
 
+        this.initializeNode();
+    }
+
+    private void initializeNode() {
         AnchorPane.setBottomAnchor(this.node, 0.0);
         AnchorPane.setTopAnchor(this.node, 0.0);
         AnchorPane.setLeftAnchor(this.node, 0.0);

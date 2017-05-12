@@ -12,27 +12,38 @@ package burai.app.project.viewer.result.movie;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.QEFXResultViewerController;
+import burai.atoms.model.Cell;
 import burai.project.property.ProjectGeometryList;
+import burai.project.property.ProjectProperty;
 
 public class QEFXMovieViewerController extends QEFXResultViewerController {
 
+    private Cell cell;
+
     private ProjectGeometryList projectGeometryList;
 
-    @FXML
-    private BorderPane basePane;
+    public QEFXMovieViewerController(QEFXProjectController
+            projectController, ProjectProperty projectProperty, Cell cell, boolean mdMode) {
 
-    public QEFXMovieViewerController(QEFXProjectController projectController, ProjectGeometryList projectGeometryList) {
         super(projectController);
 
-        if (projectGeometryList == null) {
-            throw new IllegalArgumentException("projectGeometryList is null.");
+        if (projectProperty == null) {
+            throw new IllegalArgumentException("projectProperty is null.");
         }
 
-        this.projectGeometryList = projectGeometryList;
+        if (cell == null) {
+            throw new IllegalArgumentException("cell is null.");
+        }
+
+        if (mdMode) {
+            this.projectGeometryList = projectProperty.getMdList();
+        } else {
+            this.projectGeometryList = projectProperty.getOptList();
+        }
+
+        this.cell = cell;
     }
 
     @Override

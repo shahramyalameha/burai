@@ -14,22 +14,28 @@ import java.io.IOException;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.movie.QEFXMovieEditor;
 import burai.app.project.viewer.result.QEFXResultButton;
+import burai.atoms.model.Cell;
+import burai.project.property.ProjectGeometry;
 import burai.project.property.ProjectGeometryList;
+import burai.project.property.ProjectProperty;
 
 public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, QEFXMovieEditor> {
 
-    private ProjectGeometryList projectGeometryList;
+    private boolean mdMode;
+
+    private ProjectProperty projectProperty;
 
     protected QEFXMovieButton(QEFXProjectController projectController,
-            ProjectGeometryList projectGeometryList, String title, String subTitle) {
+            ProjectProperty projectProperty, String title, String subTitle, boolean mdMode) {
 
         super(projectController, title, subTitle);
 
-        if (projectGeometryList == null) {
-            throw new IllegalArgumentException("projectGeometryList is null.");
+        if (projectProperty == null) {
+            throw new IllegalArgumentException("projectProperty is null.");
         }
 
-        this.projectGeometryList = projectGeometryList;
+        this.projectProperty = projectProperty;
+        this.mdMode = mdMode;
     }
 
     @Override
@@ -38,7 +44,47 @@ public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, 
             return null;
         }
 
-        return new QEFXMovieViewer(this.projectController, this.projectGeometryList);
+        ProjectGeometryList projectGeometryList = null;
+        if (this.mdMode) {
+            projectGeometryList = this.projectProperty.getMdList();
+        } else {
+            projectGeometryList = this.projectProperty.getOptList();
+        }
+
+        if (projectGeometryList == null || projectGeometryList.numGeometries() < 1) {
+            return null;
+        }
+
+        Cell cell = null;
+
+        try {
+            ProjectGeometry projectGeometry = projectGeometryList.getGeometry(0);
+            if (projectGeometry == null) {
+                return null;
+            }
+
+            double[][] lattice = projectGeometry.getCell();
+            if (lattice == null || lattice.length < 3) {
+                return null;
+            }
+            if (lattice[0] == null || lattice[0].length < 3) {
+                return null;
+            }
+            if (lattice[1] == null || lattice[1].length < 3) {
+                return null;
+            }
+            if (lattice[2] == null || lattice[2].length < 3) {
+                return null;
+            }
+
+            cell = new Cell(lattice);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return new QEFXMovieViewer(this.projectController, this.projectProperty, cell, this.mdMode);
     }
 
     @Override

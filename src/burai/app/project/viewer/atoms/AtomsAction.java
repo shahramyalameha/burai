@@ -65,7 +65,7 @@ public class AtomsAction {
             return;
         }
 
-        this.atomsViewer = new AtomsViewer(cell, ATOMS_VIEWER_SIZE);
+        this.atomsViewer = new AtomsViewer(cell, getAtomsViewerSize());
 
         final BorderPane projectPane;
         if (this.controller != null) {

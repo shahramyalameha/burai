@@ -11,9 +11,14 @@ package burai.app.project.viewer.result;
 
 import java.io.IOException;
 
+import javafx.scene.Node;
 import burai.app.QEFXAppComponent;
 
 public abstract class QEFXResultViewer<V extends QEFXResultViewerController> extends QEFXAppComponent<V> {
+
+    public QEFXResultViewer(Node node, V controller) {
+        super(node, controller);
+    }
 
     public QEFXResultViewer(String fileFXML, V controller) throws IOException {
         super(fileFXML, controller);

@@ -37,11 +37,11 @@ public class QEFXMdMovieButton extends QEFXMovieButton {
             return null;
         }
 
-        return () -> new QEFXMdMovieButton(projectController, projectGeometryList);
+        return () -> new QEFXMdMovieButton(projectController, projectProperty);
     }
 
-    private QEFXMdMovieButton(QEFXProjectController projectController, ProjectGeometryList projectGeometryList) {
-        super(projectController, projectGeometryList, BUTTON_TITLE, BUTTON_SUBTITLE);
+    private QEFXMdMovieButton(QEFXProjectController projectController, ProjectProperty projectProperty) {
+        super(projectController, projectProperty, BUTTON_TITLE, BUTTON_SUBTITLE, true);
 
         this.setIconStyle(BUTTON_BACKGROUND);
         this.setLabelStyle(BUTTON_FONT_COLOR);

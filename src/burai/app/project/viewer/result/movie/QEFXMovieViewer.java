@@ -9,16 +9,19 @@
 
 package burai.app.project.viewer.result.movie;
 
-import java.io.IOException;
-
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.atoms.AtomsAction;
 import burai.app.project.viewer.result.QEFXResultViewer;
-import burai.project.property.ProjectGeometryList;
+import burai.atoms.model.Cell;
+import burai.atoms.viewer.AtomsViewer;
+import burai.project.property.ProjectProperty;
 
 public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController> {
 
-    public QEFXMovieViewer(QEFXProjectController projectController, ProjectGeometryList projectGeometryList) throws IOException {
-        super("QEFXMovieViewer.fxml", new QEFXMovieViewerController(projectController, projectGeometryList));
+    public QEFXMovieViewer(QEFXProjectController projectController, ProjectProperty projectProperty, Cell cell, boolean mdMode) {
+
+        super(cell == null ? null : new AtomsViewer(cell, AtomsAction.getAtomsViewerSize()),
+                new QEFXMovieViewerController(projectController, projectProperty, cell, mdMode));
     }
 
 }
