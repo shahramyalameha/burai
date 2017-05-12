@@ -22,7 +22,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import burai.app.QEFXMain;
 import burai.app.path.QEPath;
-import burai.com.env.Environments;
 import burai.com.file.FileTools;
 import burai.input.QEInput;
 import burai.project.Project;
@@ -221,7 +220,7 @@ public class RunningNode implements Runnable {
             return;
         }
 
-        this.deleteExitFiles(directory);
+        this.deleteExitFile(directory);
 
         ProcessBuilder builder = null;
         boolean errOccurred = false;
@@ -286,6 +285,7 @@ public class RunningNode implements Runnable {
 
             File logFile = new File(directory, logName);
             File errFile = new File(directory, errName);
+            this.deleteLogFiles(logFile, errFile);
 
             builder = new ProcessBuilder();
             builder.directory(directory);
@@ -388,7 +388,7 @@ public class RunningNode implements Runnable {
         return true;
     }
 
-    private void deleteExitFiles(File directory) {
+    private void deleteExitFile(File directory) {
         if (directory == null) {
             return;
         }
@@ -407,16 +407,24 @@ public class RunningNode implements Runnable {
         }
     }
 
+    private void deleteLogFiles(File logFile, File errFile) {
+        try {
+            if (logFile != null && logFile.exists()) {
+                FileTools.deleteAllFiles(logFile, false);
+            }
+
+            if (errFile != null && errFile.exists()) {
+                FileTools.deleteAllFiles(errFile, false);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setPathToBuilder(ProcessBuilder builder) {
         if (builder == null) {
             return;
-        }
-
-        String delim = null;
-        if (Environments.isWindows()) {
-            delim = ";";
-        } else {
-            delim = ":";
         }
 
         String qePath = QEPath.getPath();
@@ -433,15 +441,15 @@ public class RunningNode implements Runnable {
         String path = null;
 
         if (qePath != null && !(qePath.isEmpty())) {
-            path = path == null ? qePath : (path + delim + qePath);
+            path = path == null ? qePath : (path + File.pathSeparator + qePath);
         }
 
         if (mpiPath != null && !(mpiPath.isEmpty())) {
-            path = path == null ? mpiPath : (path + delim + mpiPath);
+            path = path == null ? mpiPath : (path + File.pathSeparator + mpiPath);
         }
 
         if (orgPath != null && !(orgPath.isEmpty())) {
-            path = path == null ? orgPath : (path + delim + orgPath);
+            path = path == null ? orgPath : (path + File.pathSeparator + orgPath);
         }
 
         if (path != null && !(path.isEmpty())) {
