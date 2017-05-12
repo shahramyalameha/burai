@@ -22,8 +22,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
 
     private static final String KEY_SELECTED = AtomProperty.SELECTED;
 
-    private static final double RADIUS_SCALE = 0.5;
-    private static final double RADIUS_BOLD_SCALE = 1.4;
+    private static final double RADIUS_SCALE_NORM = 0.5;
+    private static final double RADIUS_SCALE_BOLD = 0.7;
 
     private static final double RMIN = 5.0e-3;
     private static final double RRMIN = RMIN * RMIN;
@@ -60,17 +60,14 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
     }
 
     private void updateRadiusOfSphere() {
-        double boldScale = 1.0;
-        if (this.boldMode) {
-            boldScale = RADIUS_BOLD_SCALE;
-        }
-
-        double radius = RADIUS_SCALE * this.model.getRadius();
+        double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
+        double radius = scale * this.model.getRadius();
         if (this.isSelected()) {
-            radius = Math.max(1.05 * radius, RADIUS_SCALE * 0.80);
+            double radiusMin = scale * 0.80;
+            radius = Math.max(1.05 * radius, radiusMin);
         }
 
-        this.atomSphere.setRadius(boldScale * radius);
+        this.atomSphere.setRadius(radius);
     }
 
     private void updateXYZOfSphere() {

@@ -22,8 +22,8 @@ import burai.atoms.model.event.BondEventListener;
 
 public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
-    private static final double CYLINDER_RADIUS = 0.10;
-    private static final double CYLINDER_BOLD_SCALE = 1.2;
+    private static final double CYLINDER_RADIUS_NORM = 0.10;
+    private static final double CYLINDER_RADIUS_BOLD = 0.12;
     private static final int CYLINDER_DIV = 12;
 
     private static final double RMIN = 5.0e-3;
@@ -44,13 +44,10 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
         this.model.addListener(this);
 
         this.boldMode = boldMode;
-        double boldScale = 1.0;
-        if (this.boldMode) {
-            boldScale = CYLINDER_BOLD_SCALE;
-        }
 
-        this.bondCylinder1 = new Cylinder(boldScale * CYLINDER_RADIUS, 1.0, CYLINDER_DIV);
-        this.bondCylinder2 = new Cylinder(boldScale * CYLINDER_RADIUS, 1.0, CYLINDER_DIV);
+        double radius = this.boldMode ? CYLINDER_RADIUS_BOLD : CYLINDER_RADIUS_NORM;
+        this.bondCylinder1 = new Cylinder(radius, 1.0, CYLINDER_DIV);
+        this.bondCylinder2 = new Cylinder(radius, 1.0, CYLINDER_DIV);
 
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();

@@ -25,8 +25,8 @@ import burai.com.math.Matrix3D;
 
 public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
-    private static final double CYLINDER_RADIUS = 0.0015;
-    private static final double CYLINDER_BOLD_SCALE = 5.0;
+    private static final double CYLINDER_SCALE_NORM = 0.0020;
+    private static final double CYLINDER_SCALE_BOLD = 0.0080;
     private static final int CYLINDER_DIV = 6;
 
     private boolean boldMode;
@@ -97,17 +97,13 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
     }
 
     private void updateRadiusOfCylinders() {
-        double boldScale = 1.0;
-        if (this.boldMode) {
-            boldScale = CYLINDER_BOLD_SCALE;
-        }
-
         double[][] lattice = this.model.copyLattice();
         double aNorm = Matrix3D.norm(lattice[0]);
         double bNorm = Matrix3D.norm(lattice[1]);
         double cNorm = Matrix3D.norm(lattice[2]);
         double minNorm = Math.min(Math.min(aNorm, bNorm), cNorm);
-        double radius = boldScale * minNorm * CYLINDER_RADIUS;
+        double scale = this.boldMode ? CYLINDER_SCALE_BOLD : CYLINDER_SCALE_NORM;
+        double radius = scale * minNorm;
 
         for (int i = 0; i < latticeCylinders.length; i++) {
             this.latticeCylinders[i].setRadius(radius);
