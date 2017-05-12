@@ -20,7 +20,7 @@ public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, 
 
     private ProjectGeometryList projectGeometryList;
 
-    public QEFXMovieButton(QEFXProjectController projectController,
+    protected QEFXMovieButton(QEFXProjectController projectController,
             ProjectGeometryList projectGeometryList, String title, String subTitle) {
 
         super(projectController, title, subTitle);

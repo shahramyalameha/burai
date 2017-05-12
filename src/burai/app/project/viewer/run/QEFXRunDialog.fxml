@@ -33,11 +33,11 @@
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="jobCombo" prefWidth="200.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="jobCombo" prefWidth="185.0" GridPane.columnIndex="1" />
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" prefWidth="160.0" />
-            <ColumnConstraints hgrow="SOMETIMES" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" prefWidth="175.0" />
+            <ColumnConstraints hgrow="SOMETIMES" prefWidth="185.0" />
          </columnConstraints>
          <padding>
             <Insets left="10.0" right="20.0" />
@@ -76,12 +76,12 @@
                   <Insets left="35.0" />
                </padding>
             </Label>
-            <TextField fx:id="mpiField" prefWidth="200.0" GridPane.columnIndex="1" />
-            <TextField fx:id="ompField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="mpiField" prefWidth="185.0" GridPane.columnIndex="1" />
+            <TextField fx:id="ompField" prefWidth="190185.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" prefWidth="160.0" />
-            <ColumnConstraints hgrow="SOMETIMES" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" prefWidth="175.0" />
+            <ColumnConstraints hgrow="SOMETIMES" prefWidth="185.0" />
          </columnConstraints>
          <padding>
             <Insets left="10.0" right="20.0" />

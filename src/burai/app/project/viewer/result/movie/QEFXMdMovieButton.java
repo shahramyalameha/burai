@@ -23,6 +23,9 @@ public class QEFXMdMovieButton extends QEFXMovieButton {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: derive(limegreen, -5.0%)";
 
     public static QEFXResultButtonWrapper<QEFXMdMovieButton> getWrapper(QEFXProjectController projectController, Project project) {
+        if (projectController == null) {
+            return null;
+        }
 
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {

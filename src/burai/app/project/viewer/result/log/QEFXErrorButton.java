@@ -22,6 +22,9 @@ public class QEFXErrorButton extends QEFXLogButton {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: derive(deepskyblue, -24.0%)";
 
     public static QEFXResultButtonWrapper<QEFXErrorButton> getWrapper(QEFXProjectController projectController, Project project, String ext) {
+        if (projectController == null) {
+            return null;
+        }
 
         String dirPath = project == null ? null : project.getDirectoryPath();
         String fileName = project == null ? null : project.getErrFileName(ext);

@@ -30,6 +30,9 @@ public class QEFXDosButton extends QEFXGraphButton<QEFXDosViewer> {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: derive(lightslategrey, -45.0%)";
 
     public static QEFXResultButtonWrapper<QEFXDosButton> getWrapper(QEFXProjectController projectController, Project project) {
+        if (projectController == null) {
+            return null;
+        }
 
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {

@@ -23,6 +23,9 @@ public class QEFXCrashButton extends QEFXLogButton {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: derive(red, -25.0%)";
 
     public static QEFXResultButtonWrapper<QEFXCrashButton> getWrapper(QEFXProjectController projectController, Project project) {
+        if (projectController == null) {
+            return null;
+        }
 
         String dirPath = project == null ? null : project.getDirectoryPath();
         String fileName = FILE_NAME;

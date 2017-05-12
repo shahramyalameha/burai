@@ -29,6 +29,10 @@ public class QEFXMdEnergyButton extends QEFXGraphButton<QEFXEnergyViewer> {
     public static QEFXResultButtonWrapper<QEFXMdEnergyButton> getWrapper(
             QEFXProjectController projectController, Project project, EnergyType energyType) {
 
+        if (projectController == null) {
+            return null;
+        }
+
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {
             return null;

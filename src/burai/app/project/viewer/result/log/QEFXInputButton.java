@@ -22,6 +22,9 @@ public class QEFXInputButton extends QEFXLogButton {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: deepskyblue";
 
     public static QEFXResultButtonWrapper<QEFXInputButton> getWrapper(QEFXProjectController projectController, Project project) {
+        if (projectController == null) {
+            return null;
+        }
 
         String dirPath = project == null ? null : project.getDirectoryPath();
         String fileName = project == null ? null : project.getInpFileName();

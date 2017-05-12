@@ -30,6 +30,10 @@ public class QEFXMdLatticeButton extends QEFXGraphButton<QEFXLatticeViewer> {
     public static QEFXResultButtonWrapper<QEFXMdLatticeButton> getWrapper(
             QEFXProjectController projectController, Project project, LatticeViewerType lattVType) {
 
+        if (projectController == null) {
+            return null;
+        }
+
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {
             return null;

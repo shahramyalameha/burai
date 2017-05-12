@@ -28,6 +28,9 @@ public class QEFXOptStressButton extends QEFXGraphButton<QEFXStressViewer> {
     private static final String BUTTON_BACKGROUND = "-fx-background-color: snow";
 
     public static QEFXResultButtonWrapper<QEFXOptStressButton> getWrapper(QEFXProjectController projectController, Project project) {
+        if (projectController == null) {
+            return null;
+        }
 
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {
