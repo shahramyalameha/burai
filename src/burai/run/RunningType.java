@@ -487,8 +487,8 @@ public enum RunningType {
         case Project.INPUT_MODE_BAND:
             logList.add(project.getLogFileName("scf"));
             logList.add(project.getLogFileName("bands"));
-            logList.add(project.getLogFileName("band1"));
-            logList.add(project.getLogFileName("band2"));
+            logList.add(project.getLogFileName("band.up"));
+            logList.add(project.getLogFileName("band.down"));
             break;
 
         default:
