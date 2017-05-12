@@ -196,11 +196,11 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
             }
 
             String dirPath = directory == null ? null : directory.getPath();
-            if (dirPath != null) {
-                dirPath = dirPath.trim();
-            }
+            dirPath = dirPath == null ? null : dirPath.trim();
 
-            this.updateButtonPath(button, dirPath);
+            if (dirPath != null && !(dirPath.isEmpty())) {
+                this.updateButtonPath(button, dirPath);
+            }
         });
     }
 
