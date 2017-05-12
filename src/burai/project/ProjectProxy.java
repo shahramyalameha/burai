@@ -130,13 +130,13 @@ public class ProjectProxy extends Project {
     }
 
     @Override
-    public String getLogFileName(int i) {
-        return this.getNetProject() == null ? null : this.netProject.getLogFileName(i);
+    public String getLogFileName(String ext) {
+        return this.getNetProject() == null ? null : this.netProject.getLogFileName(ext);
     }
 
     @Override
-    public String getErrFileName(int i) {
-        return this.getNetProject() == null ? null : this.netProject.getErrFileName(i);
+    public String getErrFileName(String ext) {
+        return this.getNetProject() == null ? null : this.netProject.getErrFileName(ext);
     }
 
     @Override

@@ -201,6 +201,16 @@ public class RunningNode implements Runnable {
             return;
         }
 
+        List<String> logNameList = type2.getLogNameList(this.project);
+        if (logNameList == null || logNameList.size() < commandList.size()) {
+            return;
+        }
+
+        List<String> errNameList = type2.getErrNameList(this.project);
+        if (errNameList == null || errNameList.size() < commandList.size()) {
+            return;
+        }
+
         List<LogParser> parserList = type2.getParserList(this.project);
         if (parserList == null || parserList.size() < commandList.size()) {
             return;
@@ -211,9 +221,8 @@ public class RunningNode implements Runnable {
             return;
         }
 
-        this.deleteLogFiles(directory);
+        this.deleteExitFiles(directory);
 
-        int iCommand = 0;
         ProcessBuilder builder = null;
         boolean errOccurred = false;
 
@@ -236,6 +245,18 @@ public class RunningNode implements Runnable {
 
             InputEditor inputEditor = inputEditorList.get(i);
             if (inputEditor == null) {
+                continue;
+            }
+
+            String logName = logNameList.get(i);
+            logName = logName == null ? null : logName.trim();
+            if (logName == null || logName.isEmpty()) {
+                continue;
+            }
+
+            String errName = errNameList.get(i);
+            errName = errName == null ? null : errName.trim();
+            if (errName == null || errName.isEmpty()) {
                 continue;
             }
 
@@ -263,19 +284,8 @@ public class RunningNode implements Runnable {
                 continue;
             }
 
-            String logName = this.project.getLogFileName(iCommand);
-            logName = logName == null ? null : logName.trim();
-            File logFile = (logName == null || logName.isEmpty()) ? null : new File(directory, logName);
-            if (logFile == null) {
-                continue;
-            }
-
-            String errName = this.project.getErrFileName(iCommand);
-            errName = errName == null ? null : errName.trim();
-            File errFile = (errName == null || errName.isEmpty()) ? null : new File(directory, errName);
-            if (errFile == null) {
-                continue;
-            }
+            File logFile = new File(directory, logName);
+            File errFile = new File(directory, errName);
 
             builder = new ProcessBuilder();
             builder.directory(directory);
@@ -315,8 +325,6 @@ public class RunningNode implements Runnable {
             if (!errOccurred) {
                 post.operate(this.project);
             }
-
-            iCommand++;
         }
 
         if (!errOccurred) {
@@ -380,55 +388,9 @@ public class RunningNode implements Runnable {
         return true;
     }
 
-    private void deleteLogFiles(File directory) {
+    private void deleteExitFiles(File directory) {
         if (directory == null) {
             return;
-        }
-
-        final int maxIndex = 9;
-
-        for (int i = 0; true; i++) {
-            String logName = this.project.getLogFileName(i);
-            logName = logName == null ? null : logName.trim();
-            if (logName == null || logName.isEmpty()) {
-                continue;
-            }
-
-            boolean status = false;
-            try {
-                File logFile = new File(directory, logName);
-                if (logFile.exists()) {
-                    status = FileTools.deleteAllFiles(logFile, false);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if ((!status) && (i > maxIndex)) {
-                break;
-            }
-        }
-
-        for (int i = 0; true; i++) {
-            String errName = this.project.getErrFileName(i);
-            errName = errName == null ? null : errName.trim();
-            if (errName == null || errName.isEmpty()) {
-                continue;
-            }
-
-            boolean status = false;
-            try {
-                File errFile = new File(directory, errName);
-                if (errFile.exists()) {
-                    status = FileTools.deleteAllFiles(errFile, false);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if ((!status) && (i > maxIndex)) {
-                break;
-            }
         }
 
         String exitName = this.project.getExitFileName();

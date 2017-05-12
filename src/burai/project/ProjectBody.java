@@ -384,13 +384,23 @@ public class ProjectBody extends Project {
     }
 
     @Override
-    public String getLogFileName(int i) {
-        return this.logFileName + "." + i;
+    public String getLogFileName(String ext) {
+        String ext_ = ext == null ? null : ext.trim();
+        if (ext_ == null || ext_.isEmpty()) {
+            return this.logFileName;
+        } else {
+            return this.logFileName + "." + ext_;
+        }
     }
 
     @Override
-    public String getErrFileName(int i) {
-        return this.errFileName + "." + i;
+    public String getErrFileName(String ext) {
+        String ext_ = ext == null ? null : ext.trim();
+        if (ext_ == null || ext_.isEmpty()) {
+            return this.errFileName;
+        } else {
+            return this.errFileName + "." + ext_;
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@
 
 package burai.app.project.viewer.result;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,6 @@ import burai.app.project.viewer.result.graph.QEFXOptStressButton;
 import burai.app.project.viewer.result.graph.QEFXScfButton;
 import burai.app.project.viewer.result.log.QEFXCrashButton;
 import burai.app.project.viewer.result.log.QEFXErrorButton;
-import burai.app.project.viewer.result.log.QEFXInputButton;
 import burai.app.project.viewer.result.log.QEFXOutputButton;
 import burai.project.Project;
 import burai.run.RunningManager;
@@ -177,29 +177,83 @@ public class QEFXResultExplorer {
             return QEFXCrashButton.getWrapper(this.projectController, this.project);
         });
 
-        this.updateButton("QEFXInputButton", () -> {
-            return QEFXInputButton.getWrapper(this.projectController, this.project);
-        });
+        //this.updateButton("QEFXInputButton", () -> {
+        //    return QEFXInputButton.getWrapper(this.projectController, this.project);
+        //});
 
-        int numOutput = 0;
-        for (int i = 0; true; i++) {
-            final int i_ = i;
-            boolean buttonShown = this.updateButton("QEFXOutputButton#" + i, () -> {
-                return QEFXOutputButton.getWrapper(this.projectController, this.project, i_);
+        File directory = this.project.getDirectory();
+        if (directory == null) {
+            return;
+        }
+
+        try {
+            if (!directory.isDirectory()) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String logName0 = this.project.getLogFileName("#");
+        if (logName0 != null && !(logName0.isEmpty())) {
+            logName0 = logName0.substring(0, logName0.length() - 1);
+        }
+
+        String[] logNames = null;
+        if (logName0 != null && !(logName0.isEmpty())) {
+            String logName1 = logName0;
+            logNames = directory.list((dir, name) -> {
+                return (name != null && name.startsWith(logName1));
             });
+        }
 
-            if (buttonShown) {
-                numOutput++;
-            } else {
-                break;
+        if (logNames != null) {
+            int nstem = logName0 == null ? 0 : logName0.length();
+            for (String logName : logNames) {
+                if (logName == null || logName.isEmpty()) {
+                    continue;
+                }
+
+                String ext = logName.substring(nstem);
+                if (ext == null || ext.isEmpty()) {
+                    continue;
+                }
+
+                this.updateButton("QEFXOutputButton#" + ext, () -> {
+                    return QEFXOutputButton.getWrapper(this.projectController, this.project, ext);
+                });
             }
         }
 
-        for (int i = 0; i < numOutput; i++) {
-            final int i_ = i;
-            this.updateButton("QEFXErrorButton#" + i, () -> {
-                return QEFXErrorButton.getWrapper(this.projectController, this.project, i_);
+        String errName0 = this.project.getErrFileName("#");
+        if (errName0 != null && !(errName0.isEmpty())) {
+            errName0 = errName0.substring(0, errName0.length() - 1);
+        }
+
+        String[] errNames = null;
+        if (errName0 != null && !(errName0.isEmpty())) {
+            String errName1 = errName0;
+            errNames = directory.list((dir, name) -> {
+                return (name != null && name.startsWith(errName1));
             });
+        }
+
+        if (errNames != null) {
+            int nstem = errName0 == null ? 0 : errName0.length();
+            for (String errName : errNames) {
+                if (errName == null || errName.isEmpty()) {
+                    continue;
+                }
+
+                String ext = errName.substring(nstem);
+                if (ext == null || ext.isEmpty()) {
+                    continue;
+                }
+
+                this.updateButton("QEFXErrorButton#" + ext, () -> {
+                    return QEFXErrorButton.getWrapper(this.projectController, this.project, ext);
+                });
+            }
         }
     }
 

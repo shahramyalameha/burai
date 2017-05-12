@@ -21,10 +21,10 @@ public class QEFXErrorButton extends QEFXLogButton {
     private static final String BUTTON_FONT_COLOR = "-fx-text-fill: ivory";
     private static final String BUTTON_BACKGROUND = "-fx-background-color: derive(deepskyblue, -24.0%)";
 
-    public static QEFXResultButtonWrapper<QEFXErrorButton> getWrapper(QEFXProjectController projectController, Project project, int index) {
+    public static QEFXResultButtonWrapper<QEFXErrorButton> getWrapper(QEFXProjectController projectController, Project project, String ext) {
 
         String dirPath = project == null ? null : project.getDirectoryPath();
-        String fileName = project == null ? null : project.getErrFileName(index);
+        String fileName = project == null ? null : project.getErrFileName(ext);
 
         File file = null;
         if (dirPath != null && fileName != null) {
@@ -34,7 +34,7 @@ public class QEFXErrorButton extends QEFXLogButton {
         try {
             if (file != null && file.isFile() && (file.length() > 0L)) {
                 final File file_ = file;
-                return () -> new QEFXErrorButton(projectController, file_, index);
+                return () -> new QEFXErrorButton(projectController, file_, ext);
             }
 
         } catch (Exception e) {
@@ -44,8 +44,8 @@ public class QEFXErrorButton extends QEFXLogButton {
         return null;
     }
 
-    private QEFXErrorButton(QEFXProjectController projectController, File file, int index) {
-        super(projectController, BUTTON_TITLE, "#" + index, file);
+    private QEFXErrorButton(QEFXProjectController projectController, File file, String ext) {
+        super(projectController, BUTTON_TITLE, "." + ext, file);
 
         this.setIconStyle(BUTTON_BACKGROUND);
         this.setLabelStyle(BUTTON_FONT_COLOR);

@@ -457,6 +457,90 @@ public enum RunningType {
         return editorList;
     }
 
+    public List<String> getLogNameList(Project project) {
+        if (project == null) {
+            return null;
+        }
+
+        List<String> logList = new ArrayList<String>();
+
+        switch (this.inputMode) {
+        case Project.INPUT_MODE_SCF:
+            logList.add(project.getLogFileName("scf"));
+            break;
+
+        case Project.INPUT_MODE_OPTIMIZ:
+            logList.add(project.getLogFileName("opt"));
+            break;
+
+        case Project.INPUT_MODE_MD:
+            logList.add(project.getLogFileName("md"));
+            break;
+
+        case Project.INPUT_MODE_DOS:
+            logList.add(project.getLogFileName("scf"));
+            logList.add(project.getLogFileName("nscf"));
+            logList.add(project.getLogFileName("dos"));
+            logList.add(project.getLogFileName("pdos"));
+            break;
+
+        case Project.INPUT_MODE_BAND:
+            logList.add(project.getLogFileName("scf"));
+            logList.add(project.getLogFileName("bands"));
+            logList.add(project.getLogFileName("band1"));
+            logList.add(project.getLogFileName("band2"));
+            break;
+
+        default:
+            // NOP
+            break;
+        }
+
+        return logList;
+    }
+
+    public List<String> getErrNameList(Project project) {
+        if (project == null) {
+            return null;
+        }
+
+        List<String> errList = new ArrayList<String>();
+
+        switch (this.inputMode) {
+        case Project.INPUT_MODE_SCF:
+            errList.add(project.getErrFileName("scf"));
+            break;
+
+        case Project.INPUT_MODE_OPTIMIZ:
+            errList.add(project.getErrFileName("opt"));
+            break;
+
+        case Project.INPUT_MODE_MD:
+            errList.add(project.getErrFileName("md"));
+            break;
+
+        case Project.INPUT_MODE_DOS:
+            errList.add(project.getErrFileName("scf"));
+            errList.add(project.getErrFileName("nscf"));
+            errList.add(project.getErrFileName("dos"));
+            errList.add(project.getErrFileName("pdos"));
+            break;
+
+        case Project.INPUT_MODE_BAND:
+            errList.add(project.getErrFileName("scf"));
+            errList.add(project.getErrFileName("bands"));
+            errList.add(project.getErrFileName("band.up"));
+            errList.add(project.getErrFileName("band.down"));
+            break;
+
+        default:
+            // NOP
+            break;
+        }
+
+        return errList;
+    }
+
     public List<LogParser> getParserList(Project project) {
         ProjectProperty projectProperty = project == null ? null : project.getProperty();
         if (projectProperty == null) {

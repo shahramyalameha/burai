@@ -129,17 +129,21 @@ public abstract class Project {
         }
     }
 
+    public File getRootFile() {
+        if (this.rootFilePath == null) {
+            return null;
+        }
+
+        return new File(this.rootFilePath);
+    }
+
     public String getRootFilePath() {
         return this.rootFilePath;
     }
 
     public String getRootFileName() {
-        if (this.rootFilePath == null) {
-            return null;
-        }
-
-        File file = new File(this.rootFilePath);
-        return file.getName();
+        File file = this.getRootFile();
+        return file == null ? null : file.getName();
     }
 
     protected void setRootFilePath(String rootFilePath) {
@@ -164,17 +168,21 @@ public abstract class Project {
         }
     }
 
+    public File getDirectory() {
+        if (this.directoryPath == null) {
+            return null;
+        }
+
+        return new File(this.directoryPath);
+    }
+
     public String getDirectoryPath() {
         return this.directoryPath;
     }
 
     public String getDirectoryName() {
-        if (this.directoryPath == null) {
-            return null;
-        }
-
-        File file = new File(this.directoryPath);
-        return file.getName();
+        File file = this.getDirectory();
+        return file == null ? null : file.getName();
     }
 
     protected void setDirectoryPath(String directoryPath) {
@@ -329,9 +337,17 @@ public abstract class Project {
 
     public abstract String getInpFileName();
 
-    public abstract String getLogFileName(int i);
+    public abstract String getLogFileName(String ext);
 
-    public abstract String getErrFileName(int i);
+    public String getLogFileName() {
+        return this.getLogFileName(null);
+    }
+
+    public abstract String getErrFileName(String ext);
+
+    public String getErrFileName() {
+        return this.getErrFileName(null);
+    }
 
     public abstract String getExitFileName();
 
