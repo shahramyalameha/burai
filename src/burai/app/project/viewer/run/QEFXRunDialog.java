@@ -260,6 +260,19 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
         }
     }
 
+    private boolean hasTwoByteChar(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+
+        byte[] bytes = str.getBytes();
+        if (bytes == null || bytes.length < 1) {
+            return false;
+        }
+
+        return bytes.length > str.length();
+    }
+
     private void setupMPIField() {
         if (this.mpiField == null) {
             return;
@@ -268,8 +281,13 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
         int numMPI = 0;
         if (Environments.hasProperty(PROP_KEY_MPI)) {
             numMPI = Math.max(1, Environments.getIntProperty(PROP_KEY_MPI));
+
         } else {
-            numMPI = Math.max(1, Environments.getNumCUPs());
+            if (!this.hasTwoByteChar(this.project.getDirectoryPath())) {
+                numMPI = Math.max(1, Environments.getNumCUPs());
+            } else {
+                numMPI = 1;
+            }
         }
 
         String strMPI = Integer.toString(numMPI);
@@ -301,8 +319,13 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
         int numOMP = 0;
         if (Environments.hasProperty(PROP_KEY_OPENMP)) {
             numOMP = Math.max(1, Environments.getIntProperty(PROP_KEY_OPENMP));
+
         } else {
-            numOMP = 1;
+            if (this.hasTwoByteChar(this.project.getDirectoryPath())) {
+                numOMP = Math.max(1, Environments.getNumCUPs());
+            } else {
+                numOMP = 1;
+            }
         }
 
         String strOMP = Integer.toString(numOMP);
