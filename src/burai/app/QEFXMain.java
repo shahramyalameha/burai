@@ -159,6 +159,17 @@ public class QEFXMain extends Application {
     }
 
     private void setLogFiles() {
+        String debug = null;
+        try {
+            debug = System.getProperty("debug", null);
+        } catch (Exception e) {
+            debug = null;
+        }
+
+        if (debug != null) {
+            return;
+        }
+
         String projectsPath = Environments.getProjectsPath();
         if (projectsPath == null || projectsPath.isEmpty()) {
             return;
