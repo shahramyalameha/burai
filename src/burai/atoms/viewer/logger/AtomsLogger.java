@@ -106,23 +106,7 @@ public class AtomsLogger {
         }
 
         Configuration config = configs.poll();
-
-        if (config.lattice == null) {
-            return false;
-        }
-        if (config.atomName == null) {
-            return false;
-        }
-        if (config.atomCoord == null) {
-            return false;
-        }
-        if (config.atomFixed == null) {
-            return false;
-        }
-        if (config.atomName.length != config.atomCoord.length) {
-            return false;
-        }
-        if (config.atomName.length != config.atomFixed.length) {
+        if (config == null) {
             return false;
         }
 
@@ -136,6 +120,12 @@ public class AtomsLogger {
 
     private void restoreCell(Configuration config) {
         if (config == null) {
+            return;
+        }
+        if (config.lattice == null) {
+            return;
+        }
+        if (config.lattice.length < 3) {
             return;
         }
 
@@ -158,9 +148,27 @@ public class AtomsLogger {
         if (config == null) {
             return;
         }
+        if (config.atomName == null) {
+            return;
+        }
+        if (config.atomCoord == null) {
+            return;
+        }
+        if (config.atomFixed == null) {
+            return;
+        }
+        if (config.atomName.length > config.atomCoord.length) {
+            return;
+        }
+        if (config.atomName.length > config.atomFixed.length) {
+            return;
+        }
 
         for (int i = 0; i < config.atomName.length; i++) {
             if (config.atomCoord[i].length < 3) {
+                continue;
+            }
+            if (config.atomFixed[i].length < 3) {
                 continue;
             }
 
