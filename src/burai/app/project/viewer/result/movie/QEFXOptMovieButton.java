@@ -33,7 +33,11 @@ public class QEFXOptMovieButton extends QEFXMovieButton {
         }
 
         ProjectGeometryList projectGeometryList = projectProperty.getOptList();
-        if (projectGeometryList == null || projectGeometryList.numGeometries() < 2) {
+        if (projectGeometryList == null || projectGeometryList.numGeometries() < 1) {
+            return null;
+        }
+
+        if (!projectGeometryList.hasAnyConvergedGeometries()) {
             return null;
         }
 

@@ -48,11 +48,12 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO
+        // NOP
     }
 
     @Override
     public void reload() {
+        System.out.println("movie reload");
         // TODO
     }
 
