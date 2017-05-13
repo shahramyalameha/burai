@@ -24,13 +24,4 @@ public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController>
                 new QEFXMovieViewerController(projectController, projectProperty, cell, mdMode));
     }
 
-    @Override
-    public void reload() {
-        super.reload();
-
-        if (this.node != null && (this.node instanceof AtomsViewer)) {
-            ((AtomsViewer) this.node).setCellToCenter();
-        }
-    }
-
 }

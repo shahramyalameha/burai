@@ -15,6 +15,8 @@ import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.movie.QEFXMovieEditor;
 import burai.app.project.viewer.result.QEFXResultButton;
 import burai.atoms.model.Cell;
+import burai.com.consts.Constants;
+import burai.com.math.Matrix3D;
 import burai.project.property.ProjectGeometry;
 import burai.project.property.ProjectGeometryList;
 import burai.project.property.ProjectProperty;
@@ -64,6 +66,8 @@ public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, 
             }
 
             double[][] lattice = projectGeometry.getCell();
+            lattice = Matrix3D.mult(Constants.BOHR_RADIUS_ANGS, lattice);
+
             if (lattice == null || lattice.length < 3) {
                 return null;
             }

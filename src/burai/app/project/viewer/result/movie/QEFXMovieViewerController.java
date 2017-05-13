@@ -32,6 +32,8 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     private int currentIndex;
 
+    private GeometryShown onGeometryShown;
+
     private ProjectGeometryList projectGeometryList;
 
     public QEFXMovieViewerController(QEFXProjectController
@@ -55,6 +57,11 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
         this.cell = cell;
         this.currentIndex = 0;
+        this.onGeometryShown = null;
+    }
+
+    public void setOnGeometryShown(GeometryShown onGeometryShown) {
+        this.onGeometryShown = onGeometryShown;
     }
 
     @Override
@@ -64,10 +71,22 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     @Override
     public void reload() {
-        this.showGeometry(this.currentIndex);
+        this.showCurrentGeometry();
     }
 
-    private boolean showGeometry(int index) {
+    public boolean showCurrentGeometry() {
+        return this.showGeometry(this.currentIndex);
+    }
+
+    public boolean showNextGeometry() {
+        return this.showGeometry(this.currentIndex + 1);
+    }
+
+    public boolean showPreviousGeometry() {
+        return this.showGeometry(this.currentIndex - 1);
+    }
+
+    public boolean showGeometry(int index) {
         if (this.projectGeometryList == null) {
             return false;
         }
@@ -165,6 +184,12 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         }
 
         this.cell.restartResolving();
+
+        this.currentIndex = index;
+
+        if (this.onGeometryShown != null) {
+            this.onGeometryShown.onGeometryShown(index, projectGeometry);
+        }
 
         return true;
     }
