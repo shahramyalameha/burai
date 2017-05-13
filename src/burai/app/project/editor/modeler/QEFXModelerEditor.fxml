@@ -142,7 +142,7 @@
                   <Separator prefHeight="30.0" BorderPane.alignment="CENTER" />
                </center>
                <left>
-                  <Label styleClass="medium-text" text="Slab Model" BorderPane.alignment="CENTER">
+                  <Label disable="true" styleClass="medium-text" text="Slab Model" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold Italic" size="14.0" />
                      </font>
@@ -157,10 +157,10 @@
             </BorderPane>
             <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
                <children>
-                  <Label text="Miller Index" />
-                  <TextField fx:id="millerField1" prefWidth="100.0" GridPane.columnIndex="1" />
-                  <TextField fx:id="millerField2" prefWidth="100.0" GridPane.columnIndex="2" />
-                  <TextField fx:id="millerField3" prefWidth="100.0" GridPane.columnIndex="3" />
+                  <Label disable="true" text="Miller Index" />
+                  <TextField fx:id="millerField1" disable="true" prefWidth="100.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="millerField2" disable="true" prefWidth="100.0" GridPane.columnIndex="2" />
+                  <TextField fx:id="millerField3" disable="true" prefWidth="100.0" GridPane.columnIndex="3" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="70.0" />
@@ -177,7 +177,7 @@
             </GridPane>
             <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
                <children>
-                  <Button fx:id="slabButton" contentDisplay="RIGHT" focusTraversable="false" mnemonicParsing="false" prefWidth="100.0" styleClass="italic-text" text="Build" GridPane.columnIndex="1" />
+                  <Button fx:id="slabButton" contentDisplay="RIGHT" disable="true" focusTraversable="false" mnemonicParsing="false" prefWidth="100.0" styleClass="italic-text" text="Build" GridPane.columnIndex="1" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="280.0" />
