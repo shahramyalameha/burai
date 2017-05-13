@@ -59,7 +59,7 @@ public class BandData {
         return this.points == null ? 0 : this.points.size();
     }
 
-    public synchronized double getCoordinate(int i) {
+    public synchronized double getCoordinate(int i) throws IndexOutOfBoundsException {
         synchronized (this.preLoadingLock) {
             while (this.preLoading) {
                 try {
@@ -77,7 +77,7 @@ public class BandData {
         return this.points.get(i).coord;
     }
 
-    public synchronized double getEnergy(int i) {
+    public synchronized double getEnergy(int i) throws IndexOutOfBoundsException {
         synchronized (this.preLoadingLock) {
             while (this.preLoading) {
                 try {

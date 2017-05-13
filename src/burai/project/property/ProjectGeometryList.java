@@ -43,7 +43,7 @@ public class ProjectGeometryList {
         return this.geometries == null ? 0 : this.geometries.size();
     }
 
-    public synchronized ProjectGeometry getGeometry(int i) {
+    public synchronized ProjectGeometry getGeometry(int i) throws IndexOutOfBoundsException {
         if (this.geometries == null || i < 0 || i >= this.geometries.size()) {
             throw new IndexOutOfBoundsException("incorrect index of geometries: " + i + ".");
         }
@@ -51,7 +51,7 @@ public class ProjectGeometryList {
         return this.geometries.get(i);
     }
 
-    public synchronized void removeGeometry(int i) {
+    public synchronized void removeGeometry(int i) throws IndexOutOfBoundsException {
         if (this.geometries == null || i < 0 || i >= this.geometries.size()) {
             throw new IndexOutOfBoundsException("incorrect index of geometries: " + i + ".");
         }

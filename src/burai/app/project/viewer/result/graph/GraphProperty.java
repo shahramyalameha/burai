@@ -170,7 +170,7 @@ public class GraphProperty {
         return this.seriesList == null ? 0 : this.seriesList.size();
     }
 
-    public SeriesProperty getSeries(int i) {
+    public SeriesProperty getSeries(int i) throws IndexOutOfBoundsException {
         if (this.seriesList == null || i < 0 || i >= this.seriesList.size()) {
             throw new IndexOutOfBoundsException("incorrect index of seriesList: " + i + ".");
         }
@@ -178,7 +178,7 @@ public class GraphProperty {
         return this.seriesList.get(i);
     }
 
-    public void removeSeries(int i) {
+    public void removeSeries(int i) throws IndexOutOfBoundsException {
         if (this.seriesList == null || i < 0 || i >= this.seriesList.size()) {
             throw new IndexOutOfBoundsException("incorrect index of seriesList: " + i + ".");
         }

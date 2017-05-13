@@ -14,13 +14,23 @@ import java.util.ResourceBundle;
 
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.QEFXResultViewerController;
+import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.com.consts.Constants;
+import burai.com.math.Matrix3D;
+import burai.project.property.ProjectGeometry;
 import burai.project.property.ProjectGeometryList;
 import burai.project.property.ProjectProperty;
 
 public class QEFXMovieViewerController extends QEFXResultViewerController {
 
+    private static final double RMIN = 1.0e-3;
+    private static final double RRMIN = RMIN * RMIN;
+
     private Cell cell;
+
+    private int currentIndex;
 
     private ProjectGeometryList projectGeometryList;
 
@@ -44,6 +54,7 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         }
 
         this.cell = cell;
+        this.currentIndex = 0;
     }
 
     @Override
@@ -53,16 +64,108 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     @Override
     public void reload() {
-        if (this.projectGeometryList == null) {
-            return;
-        }
-
-        ProjectGeometryList projectGeometryList = this.projectGeometryList.copyGeometryList();
-        if (projectGeometryList == null) {
-            return;
-        }
-
-        // TODO
+        this.showGeometry(this.currentIndex);
     }
 
+    private boolean showGeometry(int index) {
+        if (this.projectGeometryList == null) {
+            return false;
+        }
+
+        if (index < 0 || this.projectGeometryList.numGeometries() <= index) {
+            return false;
+        }
+
+        ProjectGeometry projectGeometry = null;
+
+        try {
+            projectGeometry = this.projectGeometryList.getGeometry(index);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        double[][] lattice = projectGeometry.getCell();
+        if (lattice == null || lattice.length < 3) {
+            return false;
+        }
+
+        lattice = Matrix3D.mult(Constants.BOHR_RADIUS_ANGS, lattice);
+        if (lattice == null || lattice.length < 3) {
+            return false;
+        }
+
+        this.cell.stopResolving();
+
+        try {
+            this.cell.moveLattice(lattice);
+        } catch (ZeroVolumCellException e) {
+            e.printStackTrace();
+            this.cell.restartResolving();
+            return false;
+        }
+
+        int natom = projectGeometry.numAtoms();
+        int natom2 = this.cell.numAtoms(true);
+
+        Atom[] refAtoms = null;
+        if (natom == natom2) {
+            refAtoms = this.cell.listAtoms(true);
+        }
+
+        if (refAtoms != null && refAtoms.length >= natom) {
+            for (int i = 0; i < natom; i++) {
+                String name = projectGeometry.getName(i);
+                if (name == null || name.trim().isEmpty()) {
+                    continue;
+                }
+
+                double x = projectGeometry.getX(i) * Constants.BOHR_RADIUS_ANGS;
+                double y = projectGeometry.getY(i) * Constants.BOHR_RADIUS_ANGS;
+                double z = projectGeometry.getZ(i) * Constants.BOHR_RADIUS_ANGS;
+
+                Atom atom = refAtoms[i];
+                if (atom == null) {
+                    this.cell.addAtom(new Atom(name, x, y, z));
+
+                } else {
+                    String name2 = atom.getName();
+                    if (!name.equals(name2)) {
+                        atom.setName(name);
+                    }
+
+                    double x2 = atom.getX();
+                    double y2 = atom.getY();
+                    double z2 = atom.getZ();
+                    double dx = x - x2;
+                    double dy = y - y2;
+                    double dz = z - z2;
+                    double rr = dx * dx + dy * dy + dz * dz;
+                    if (rr > RRMIN) {
+                        atom.moveTo(x, y, z);
+                    }
+                }
+            }
+
+        } else {
+            this.cell.removeAllAtoms();
+
+            for (int i = 0; i < natom; i++) {
+                String name = projectGeometry.getName(i);
+                if (name == null || name.trim().isEmpty()) {
+                    continue;
+                }
+
+                double x = projectGeometry.getX(i) * Constants.BOHR_RADIUS_ANGS;
+                double y = projectGeometry.getY(i) * Constants.BOHR_RADIUS_ANGS;
+                double z = projectGeometry.getZ(i) * Constants.BOHR_RADIUS_ANGS;
+
+                this.cell.addAtom(new Atom(name, x, y, z));
+            }
+        }
+
+        this.cell.restartResolving();
+
+        return true;
+    }
 }

@@ -32,7 +32,7 @@ public class ProjectBandPaths {
         return this.points == null ? 0 : this.points.size();
     }
 
-    private Point getPoint(int i) {
+    private Point getPoint(int i) throws IndexOutOfBoundsException {
         if (this.points == null || i < 0 || i >= this.points.size()) {
             throw new IndexOutOfBoundsException("incorrect index of points: " + i + ".");
         }
@@ -40,28 +40,28 @@ public class ProjectBandPaths {
         return this.points.get(i);
     }
 
-    public synchronized double getKx(int i) {
+    public synchronized double getKx(int i) throws IndexOutOfBoundsException {
         return this.getPoint(i).kx;
     }
 
-    public synchronized double getKy(int i) {
+    public synchronized double getKy(int i) throws IndexOutOfBoundsException {
         return this.getPoint(i).ky;
     }
 
-    public synchronized double getKz(int i) {
+    public synchronized double getKz(int i) throws IndexOutOfBoundsException {
         return this.getPoint(i).kz;
     }
 
-    public synchronized double getCoordinate(int i) {
+    public synchronized double getCoordinate(int i) throws IndexOutOfBoundsException {
         return this.getPoint(i).coord;
     }
 
-    public synchronized String getLabel(int i) {
+    public synchronized String getLabel(int i) throws IndexOutOfBoundsException {
         String label = this.getPoint(i).label;
         return label == null ? DEFAULT_LABEL : label;
     }
 
-    public synchronized void removePoint(int i) {
+    public synchronized void removePoint(int i) throws IndexOutOfBoundsException {
         if (this.points == null || i < 0 || i >= this.points.size()) {
             throw new IndexOutOfBoundsException("incorrect index of points: " + i + ".");
         }
@@ -77,7 +77,7 @@ public class ProjectBandPaths {
         this.points.add(new Point(kx, ky, kz, coord));
     }
 
-    public synchronized void setLabel(int i, String label) {
+    public synchronized void setLabel(int i, String label) throws IndexOutOfBoundsException {
         this.getPoint(i).label = label;
     }
 

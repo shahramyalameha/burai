@@ -43,7 +43,7 @@ public class ProjectEnergies {
         return this.energies == null ? 0 : this.energies.size();
     }
 
-    public synchronized double getEnergy(int i) {
+    public synchronized double getEnergy(int i) throws IndexOutOfBoundsException {
         if (this.energies == null || i < 0 || i >= this.energies.size()) {
             throw new IndexOutOfBoundsException("incorrect index of energies: " + i + ".");
         }
@@ -51,7 +51,7 @@ public class ProjectEnergies {
         return this.energies.get(i);
     }
 
-    public synchronized void removeEnergy(int i) {
+    public synchronized void removeEnergy(int i) throws IndexOutOfBoundsException {
         if (this.energies == null || i < 0 || i >= this.energies.size()) {
             throw new IndexOutOfBoundsException("incorrect index of energies: " + i + ".");
         }

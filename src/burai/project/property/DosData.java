@@ -135,7 +135,7 @@ public class DosData implements DosInterface, Comparable<DosData> {
     }
 
     @Override
-    public synchronized double getEnergy(int i) {
+    public synchronized double getEnergy(int i) throws IndexOutOfBoundsException {
         synchronized (this.preLoadingLock) {
             while (this.preLoading) {
                 try {
@@ -154,7 +154,7 @@ public class DosData implements DosInterface, Comparable<DosData> {
     }
 
     @Override
-    public synchronized double getDosUp(int i) {
+    public synchronized double getDosUp(int i) throws IndexOutOfBoundsException {
         synchronized (this.preLoadingLock) {
             while (this.preLoading) {
                 try {
@@ -173,7 +173,7 @@ public class DosData implements DosInterface, Comparable<DosData> {
     }
 
     @Override
-    public synchronized double getDosDown(int i) {
+    public synchronized double getDosDown(int i) throws IndexOutOfBoundsException {
         synchronized (this.preLoadingLock) {
             while (this.preLoading) {
                 try {
