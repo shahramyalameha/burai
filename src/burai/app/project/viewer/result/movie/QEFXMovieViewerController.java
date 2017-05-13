@@ -12,6 +12,7 @@ package burai.app.project.viewer.result.movie;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.scene.control.Label;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.QEFXResultViewerController;
 import burai.atoms.model.Atom;
@@ -71,6 +72,11 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     @Override
     public void reload() {
+        if (this.projectController != null) {
+            this.projectController.clearStackedsOnViewerPane();
+            this.projectController.stackOnViewerPane(new Label("test"));
+        }
+
         this.showCurrentGeometry();
     }
 
