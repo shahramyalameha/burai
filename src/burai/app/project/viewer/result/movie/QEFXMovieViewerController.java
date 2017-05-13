@@ -9,10 +9,11 @@
 
 package burai.app.project.viewer.result.movie;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.scene.control.Label;
+import javafx.scene.Node;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.QEFXResultViewerController;
 import burai.atoms.model.Atom;
@@ -32,6 +33,8 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
     private Cell cell;
 
     private int currentIndex;
+
+    private QEFXMovieBar movieBar;
 
     private GeometryShown onGeometryShown;
 
@@ -59,6 +62,13 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         this.cell = cell;
         this.currentIndex = 0;
         this.onGeometryShown = null;
+
+        try {
+            this.movieBar = new QEFXMovieBar(this.projectController);
+        } catch (IOException e) {
+            this.movieBar = null;
+            e.printStackTrace();
+        }
     }
 
     public void setOnGeometryShown(GeometryShown onGeometryShown) {
@@ -73,8 +83,11 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
     @Override
     public void reload() {
         if (this.projectController != null) {
-            this.projectController.clearStackedsOnViewerPane();
-            this.projectController.stackOnViewerPane(new Label("test"));
+            Node movieBarNode = this.movieBar == null ? null : this.movieBar.getNode();
+            if (movieBarNode != null) {
+                this.projectController.clearStackedsOnViewerPane();
+                this.projectController.stackOnViewerPane(movieBarNode);
+            }
         }
 
         this.showCurrentGeometry();
