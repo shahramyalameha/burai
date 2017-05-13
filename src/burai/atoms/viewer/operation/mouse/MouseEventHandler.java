@@ -24,7 +24,7 @@ public class MouseEventHandler extends ViewerEventHandler<MouseEvent> {
 
     private double[][] mousePosition;
 
-    public MouseEventHandler(ViewerEventManager manager) {
+    public MouseEventHandler(ViewerEventManager manager, boolean silent) {
         super(manager);
 
         this.pickedAtom = null;
@@ -36,11 +36,14 @@ public class MouseEventHandler extends ViewerEventHandler<MouseEvent> {
             }
         }
 
-        this.addKernel(new MouseEventCompassPicking(this));
-        this.addKernel(new MouseEventCompass(this));
-        this.addKernel(new MouseEventEditorMenu(this));
-        this.addKernel(new MouseEventScope(this));
-        this.addKernel(new MouseEventRegular(this));
+        if (!silent) {
+            this.addKernel(new MouseEventCompassPicking(this));
+            this.addKernel(new MouseEventCompass(this));
+            this.addKernel(new MouseEventEditorMenu(this));
+            this.addKernel(new MouseEventScope(this));
+        }
+
+        this.addKernel(new MouseEventRegular(this, silent));
     }
 
     @Override

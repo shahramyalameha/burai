@@ -38,7 +38,15 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         this(cell, size, size);
     }
 
+    public AtomsViewer(Cell cell, double size, boolean silent) {
+        this(cell, size, size, silent);
+    }
+
     public AtomsViewer(Cell cell, double width, double height) {
+        this(cell, width, height, false);
+    }
+
+    public AtomsViewer(Cell cell, double width, double height, boolean silent) {
         super(cell, width, height);
 
         this.compassMode = false;
@@ -46,16 +54,22 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         this.viewerCell = new ViewerCell(this, this.cell);
         this.viewerSample = new ViewerSample(this, this.cell);
         this.viewerXYZAxis = new ViewerXYZAxis(this);
-        this.viewerCompass = new ViewerCompass(this.viewerCell);
+        if (!silent) {
+            this.viewerCompass = new ViewerCompass(this.viewerCell);
+        }
 
-        this.logger = new AtomsLogger(this.cell);
+        if (!silent) {
+            this.logger = new AtomsLogger(this.cell);
+        }
 
         this.sceneRoot.getChildren().add(this.viewerCell.getNode());
         this.sceneRoot.getChildren().add(this.viewerSample.getNode());
         this.sceneRoot.getChildren().add(this.viewerXYZAxis.getNode());
-        this.sceneRoot.getChildren().add(this.viewerCompass.getNode());
+        if (!silent) {
+            this.sceneRoot.getChildren().add(this.viewerCompass.getNode());
+        }
 
-        ViewerEventManager viewerEventManager = new ViewerEventManager(this);
+        ViewerEventManager viewerEventManager = new ViewerEventManager(this, silent);
         this.subScene.setOnMousePressed(viewerEventManager.getMousePressedHandler());
         this.subScene.setOnMouseDragged(viewerEventManager.getMouseDraggedHandler());
         this.subScene.setOnMouseReleased(viewerEventManager.getMouseReleasedHandler());
@@ -178,6 +192,10 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
     }
 
     public void setCompassMode(VisibleAtom targetAtom) {
+        if (this.viewerCompass == null) {
+            return;
+        }
+
         this.compassMode = (targetAtom != null);
         this.viewerCompass.setTargetAtom(targetAtom);
 

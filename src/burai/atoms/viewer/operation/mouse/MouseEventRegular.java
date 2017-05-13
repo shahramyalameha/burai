@@ -9,18 +9,21 @@
 
 package burai.atoms.viewer.operation.mouse;
 
+import javafx.scene.input.MouseEvent;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.viewer.operation.ViewerEventRegular;
 import burai.atoms.viewer.operation.editor.EditorMenu;
 import burai.atoms.visible.VisibleAtom;
-import javafx.scene.input.MouseEvent;
 
 public class MouseEventRegular extends ViewerEventRegular<MouseEvent> implements MouseEventKernel {
 
+    private boolean silent;
+
     private MouseEventProxy proxy;
 
-    public MouseEventRegular(MouseEventHandler handler) {
+    public MouseEventRegular(MouseEventHandler handler, boolean silent) {
         super();
+        this.silent = silent;
         this.proxy = new MouseEventProxy(handler, this);
     }
 
@@ -31,6 +34,10 @@ public class MouseEventRegular extends ViewerEventRegular<MouseEvent> implements
 
     @Override
     public void performOnMousePressed(MouseEvent event) {
+        if (this.silent) {
+            return;
+        }
+
         if (event == null) {
             return;
         }

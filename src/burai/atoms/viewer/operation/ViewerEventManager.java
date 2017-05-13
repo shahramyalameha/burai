@@ -9,18 +9,18 @@
 
 package burai.atoms.viewer.operation;
 
-import burai.atoms.viewer.AtomsViewer;
-import burai.atoms.viewer.operation.editor.EditorMenu;
-import burai.atoms.viewer.operation.key.KeyPressedHandler;
-import burai.atoms.viewer.operation.mouse.MouseEventHandler;
-import burai.atoms.viewer.operation.scroll.ScrollHandler;
-import burai.atoms.visible.VisibleAtom;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.operation.editor.EditorMenu;
+import burai.atoms.viewer.operation.key.KeyPressedHandler;
+import burai.atoms.viewer.operation.mouse.MouseEventHandler;
+import burai.atoms.viewer.operation.scroll.ScrollHandler;
+import burai.atoms.visible.VisibleAtom;
 
 public class ViewerEventManager {
 
@@ -40,7 +40,7 @@ public class ViewerEventManager {
     private MouseEventHandler mouseEventHandler;
     private ScrollHandler scrollHandler;
 
-    public ViewerEventManager(AtomsViewer atomsViewer) {
+    public ViewerEventManager(AtomsViewer atomsViewer, boolean silent) {
         if (atomsViewer == null) {
             throw new IllegalArgumentException("atomsViewer is null.");
         }
@@ -57,13 +57,13 @@ public class ViewerEventManager {
         this.regularScope = false;
         this.scopeRectangle = null;
 
-        this.createHandlers();
+        this.createHandlers(silent);
     }
 
-    private void createHandlers() {
-        this.keyPressedHandler = new KeyPressedHandler(this);
-        this.mouseEventHandler = new MouseEventHandler(this);
-        this.scrollHandler = new ScrollHandler(this);
+    private void createHandlers(boolean silent) {
+        this.keyPressedHandler = new KeyPressedHandler(this, silent);
+        this.mouseEventHandler = new MouseEventHandler(this, silent);
+        this.scrollHandler = new ScrollHandler(this, silent);
     }
 
     public AtomsViewer getAtomsViewer() {

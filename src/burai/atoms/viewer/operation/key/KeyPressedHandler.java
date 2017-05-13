@@ -16,13 +16,17 @@ import burai.com.keys.PriorKeyEvent;
 
 public class KeyPressedHandler extends ViewerEventHandler<KeyEvent> {
 
-    public KeyPressedHandler(ViewerEventManager manager) {
+    public KeyPressedHandler(ViewerEventManager manager, boolean silent) {
         super(manager);
-        this.addKernel(new KeyPressedCompassPicking());
-        this.addKernel(new KeyPressedCompass());
-        this.addKernel(new KeyPressedEditorMenu());
-        this.addKernel(new KeyPressedScope());
-        this.addKernel(new KeyPressedRegular());
+
+        if (!silent) {
+            this.addKernel(new KeyPressedCompassPicking());
+            this.addKernel(new KeyPressedCompass());
+            this.addKernel(new KeyPressedEditorMenu());
+            this.addKernel(new KeyPressedScope());
+        }
+
+        this.addKernel(new KeyPressedRegular(silent));
     }
 
     @Override

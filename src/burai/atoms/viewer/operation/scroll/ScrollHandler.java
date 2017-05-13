@@ -9,18 +9,22 @@
 
 package burai.atoms.viewer.operation.scroll;
 
+import javafx.scene.input.ScrollEvent;
 import burai.atoms.viewer.operation.ViewerEventHandler;
 import burai.atoms.viewer.operation.ViewerEventManager;
-import javafx.scene.input.ScrollEvent;
 
 public class ScrollHandler extends ViewerEventHandler<ScrollEvent> {
 
-    public ScrollHandler(ViewerEventManager manager) {
+    public ScrollHandler(ViewerEventManager manager, boolean silent) {
         super(manager);
-        this.addKernel(new ScrollCompassPicking());
-        this.addKernel(new ScrollCompass());
-        this.addKernel(new ScrollEditorMenu());
-        this.addKernel(new ScrollScope());
+
+        if (!silent) {
+            this.addKernel(new ScrollCompassPicking());
+            this.addKernel(new ScrollCompass());
+            this.addKernel(new ScrollEditorMenu());
+            this.addKernel(new ScrollScope());
+        }
+
         this.addKernel(new ScrollRegular());
     }
 

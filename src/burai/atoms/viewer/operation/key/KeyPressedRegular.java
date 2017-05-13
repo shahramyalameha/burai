@@ -12,6 +12,8 @@ package burai.atoms.viewer.operation.key;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.viewer.operation.ViewerEventRegular;
 import burai.atoms.viewer.operation.editor.CenterMenuItem;
@@ -21,8 +23,6 @@ import burai.atoms.viewer.operation.editor.RedoMenuItem;
 import burai.atoms.viewer.operation.editor.RenameMenuItem;
 import burai.atoms.viewer.operation.editor.SelectAllMenuItem;
 import burai.atoms.viewer.operation.editor.UndoMenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
 
@@ -30,10 +30,10 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
 
     private Map<KeyPressedAnsatz, KeyPressedKernel> keyKernels;
 
-    public KeyPressedRegular() {
+    public KeyPressedRegular(boolean silent) {
         super();
         this.manager = null;
-        this.createKeyKernels();
+        this.createKeyKernels(silent);
     }
 
     @Override
@@ -61,20 +61,23 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
         }
     }
 
-    private void createKeyKernels() {
+    private void createKeyKernels(boolean silent) {
         this.keyKernels = new HashMap<KeyPressedAnsatz, KeyPressedKernel>();
 
         // Ctrl key is pressed
-        this.keyKernels.put(new KeyPressedAnsatz(KeyCode.A, true, false, false),
-                () -> new SelectAllMenuItem(this.manager).performAction());
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.C, true, false, false),
                 () -> new CenterMenuItem(this.manager).performAction());
-        this.keyKernels.put(new KeyPressedAnsatz(KeyCode.D, true, false, false),
-                () -> new DeleteMenuItem(this.manager).performAction());
-        this.keyKernels.put(new KeyPressedAnsatz(KeyCode.R, true, false, false),
-                () -> new RenameMenuItem(this.manager).performAction());
-        this.keyKernels.put(new KeyPressedAnsatz(KeyCode.Z, true, false, false),
-                () -> new UndoMenuItem(this.manager).performAction());
+
+        if (!silent) {
+            this.keyKernels.put(new KeyPressedAnsatz(KeyCode.A, true, false, false),
+                    () -> new SelectAllMenuItem(this.manager).performAction());
+            this.keyKernels.put(new KeyPressedAnsatz(KeyCode.D, true, false, false),
+                    () -> new DeleteMenuItem(this.manager).performAction());
+            this.keyKernels.put(new KeyPressedAnsatz(KeyCode.R, true, false, false),
+                    () -> new RenameMenuItem(this.manager).performAction());
+            this.keyKernels.put(new KeyPressedAnsatz(KeyCode.Z, true, false, false),
+                    () -> new UndoMenuItem(this.manager).performAction());
+        }
 
         // Shift key is pressed
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.RIGHT, false, true, false),

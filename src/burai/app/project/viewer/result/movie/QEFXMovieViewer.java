@@ -20,7 +20,7 @@ public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController>
 
     public QEFXMovieViewer(QEFXProjectController projectController, ProjectProperty projectProperty, Cell cell, boolean mdMode) {
 
-        super(cell == null ? null : new AtomsViewer(cell, AtomsAction.getAtomsViewerSize()),
+        super(cell == null ? null : new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true),
                 new QEFXMovieViewerController(projectController, projectProperty, cell, mdMode));
     }
 
