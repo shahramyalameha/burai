@@ -7,10 +7,10 @@ Usage
 By selecting the left menu of home tab, users can control the files.
 
 .. image:: ../../img/imgWindowStructure_leftmenu.png
-   :scale: 20 %
+   :scale: 40 %
    :align: center
 |
-.. csv-table:: Layout of BURAI's window
+.. csv-table:: Left menu of home tab
     :header: "No.", "Name", "explanation of showed list"
     :widths: 10, 10, 35
 
