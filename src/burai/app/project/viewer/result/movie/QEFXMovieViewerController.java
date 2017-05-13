@@ -53,7 +53,15 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     @Override
     public void reload() {
-        System.out.println("movie reload");
+        if (this.projectGeometryList == null) {
+            return;
+        }
+
+        ProjectGeometryList projectGeometryList = this.projectGeometryList.copyGeometryList();
+        if (projectGeometryList == null) {
+            return;
+        }
+
         // TODO
     }
 

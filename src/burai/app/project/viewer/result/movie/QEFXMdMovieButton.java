@@ -32,7 +32,7 @@ public class QEFXMdMovieButton extends QEFXMovieButton {
             return null;
         }
 
-        ProjectGeometryList projectGeometryList = projectProperty.getOptList();
+        ProjectGeometryList projectGeometryList = projectProperty.getMdList();
         if (projectGeometryList == null || projectGeometryList.numGeometries() < 1) {
             return null;
         }
