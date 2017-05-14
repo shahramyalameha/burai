@@ -181,13 +181,13 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
             return false;
         }
 
-        this.cell.stopResolving();
+        //this.cell.stopResolving();
 
         try {
             this.cell.moveLattice(lattice);
         } catch (ZeroVolumCellException e) {
             e.printStackTrace();
-            this.cell.restartResolving();
+            //this.cell.restartResolving();
             return false;
         }
 
@@ -250,7 +250,7 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
             }
         }
 
-        this.cell.restartResolving();
+        //this.cell.restartResolving();
 
         this.currentIndex = index_;
         this.postShowGeometry(projectGeometry);

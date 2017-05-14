@@ -39,7 +39,7 @@ public class QEFXMovieBarController extends QEFXAppController {
     private static final String GRAPHIC_CLASS_PLAY = "picplay-button";
     private static final String GRAPHIC_CLASS_PAUSE = "picpause-button";
 
-    private static final double TIME_PER_GEOM = 500.0;
+    private static final double TIME_PER_GEOM = 250.0;
 
     private QEFXProjectController projectController;
 
