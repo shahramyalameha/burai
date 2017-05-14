@@ -9,10 +9,14 @@ Quantum ESPRESSO
 Instructions for the impatient:
 
     cd espresso-X.Y.Z/
+|
     ./configure
+|
      make all
+|
      make install
 
+|
 If users change the installed directory, user should set " --with-qe-source" of configure option.
 (./configure --with-qe-source=$HOME/espresso-X.Y.Z)
 |
