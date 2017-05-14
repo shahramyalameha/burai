@@ -31,13 +31,13 @@ public class QEFXMovieBarController extends QEFXAppController {
     private static final double GRAPHIC_SIZE = 20.0;
     private static final String GRAPHIC_CLASS = "piclight-button";
 
-    private QEFXProjectController projectController;
+    private QEFXMovieViewerController viewerController;
 
     @FXML
     private BorderPane basePane;
 
     @FXML
-    private Button startButton;
+    private Button playButton;
 
     @FXML
     private Button nextButton;
@@ -51,20 +51,20 @@ public class QEFXMovieBarController extends QEFXAppController {
     @FXML
     private Button lastButton;
 
-    public QEFXMovieBarController(QEFXProjectController projectController) {
+    public QEFXMovieBarController(QEFXProjectController projectController, QEFXMovieViewerController viewerController) {
         super(projectController == null ? null : projectController.getMainController());
 
-        if (projectController == null) {
-            throw new IllegalArgumentException("projectController is null.");
+        if (viewerController == null) {
+            throw new IllegalArgumentException("viewerController is null.");
         }
 
-        this.projectController = projectController;
+        this.viewerController = viewerController;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.setupBasePane();
-        this.setupStartButton();
+        this.setupPlayButton();
         this.setupNextButton();
         this.setupPrevButton();
         this.setupFirstButton();
@@ -80,18 +80,18 @@ public class QEFXMovieBarController extends QEFXAppController {
         StackPane.setAlignment(this.basePane, Pos.BOTTOM_CENTER);
     }
 
-    private void setupStartButton() {
-        if (this.startButton == null) {
+    private void setupPlayButton() {
+        if (this.playButton == null) {
             return;
         }
 
-        this.startButton.setText("");
-        this.startButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.CLOSE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+        this.playButton.setText("");
+        this.playButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.MOVIE_PLAY, GRAPHIC_SIZE, "-fx-fill: green", GRAPHIC_CLASS));
 
-        this.startButton.setTooltip(new Tooltip("start"));
+        this.playButton.setTooltip(new Tooltip("play"));
 
-        this.startButton.setOnAction(event -> {
+        this.playButton.setOnAction(event -> {
             // TODO
             });
     }
@@ -103,13 +103,10 @@ public class QEFXMovieBarController extends QEFXAppController {
 
         this.nextButton.setText("");
         this.nextButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.CLOSE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.MOVIE_NEXT, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.nextButton.setTooltip(new Tooltip("next"));
-
-        this.nextButton.setOnAction(event -> {
-            // TODO
-            });
+        this.nextButton.setOnAction(event -> this.viewerController.showNextGeometry());
     }
 
     private void setupPrevButton() {
@@ -119,13 +116,10 @@ public class QEFXMovieBarController extends QEFXAppController {
 
         this.prevButton.setText("");
         this.prevButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.CLOSE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.MOVIE_PREVIOUS, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.prevButton.setTooltip(new Tooltip("previous"));
-
-        this.prevButton.setOnAction(event -> {
-            // TODO
-            });
+        this.prevButton.setOnAction(event -> this.viewerController.showPreviousGeometry());
     }
 
     private void setupFirstButton() {
@@ -135,13 +129,10 @@ public class QEFXMovieBarController extends QEFXAppController {
 
         this.firstButton.setText("");
         this.firstButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.CLOSE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.MOVIE_FIRST, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.firstButton.setTooltip(new Tooltip("first"));
-
-        this.firstButton.setOnAction(event -> {
-            // TODO
-            });
+        this.firstButton.setOnAction(event -> this.viewerController.showFirstGeometry());
     }
 
     private void setupLastButton() {
@@ -151,13 +142,29 @@ public class QEFXMovieBarController extends QEFXAppController {
 
         this.lastButton.setText("");
         this.lastButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.CLOSE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+                SVGLibrary.getGraphic(SVGData.MOVIE_LAST, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.lastButton.setTooltip(new Tooltip("last"));
-
-        this.lastButton.setOnAction(event -> {
-            // TODO
-            });
+        this.lastButton.setOnAction(event -> this.viewerController.showLastGeometry());
     }
 
+    protected void disableNextButtons(boolean disable) {
+        if (this.nextButton != null) {
+            this.nextButton.setDisable(disable);
+        }
+
+        if (this.lastButton != null) {
+            this.lastButton.setDisable(disable);
+        }
+    }
+
+    protected void disablePreviousButtons(boolean disable) {
+        if (this.prevButton != null) {
+            this.prevButton.setDisable(disable);
+        }
+
+        if (this.firstButton != null) {
+            this.firstButton.setDisable(disable);
+        }
+    }
 }

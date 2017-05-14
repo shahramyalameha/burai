@@ -64,7 +64,7 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         this.onGeometryShown = null;
 
         try {
-            this.movieBar = new QEFXMovieBar(this.projectController);
+            this.movieBar = new QEFXMovieBar(this.projectController, this);
         } catch (IOException e) {
             this.movieBar = null;
             e.printStackTrace();
@@ -217,11 +217,23 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         this.cell.restartResolving();
 
         this.currentIndex = index;
-
-        if (this.onGeometryShown != null) {
-            this.onGeometryShown.onGeometryShown(index, projectGeometry);
-        }
+        this.postShowGeometry(projectGeometry);
 
         return true;
+    }
+
+    private void postShowGeometry(ProjectGeometry projectGeometry) {
+        QEFXMovieBarController movieBarController = this.movieBar == null ? null : this.movieBar.getController();
+        if (movieBarController != null) {
+            movieBarController.disablePreviousButtons(this.currentIndex <= 0);
+            if (this.projectGeometryList != null) {
+                int numGeoms = this.projectGeometryList.numGeometries();
+                movieBarController.disableNextButtons(this.currentIndex >= (numGeoms - 1));
+            }
+        }
+
+        if (this.onGeometryShown != null) {
+            this.onGeometryShown.onGeometryShown(this.currentIndex, projectGeometry);
+        }
     }
 }

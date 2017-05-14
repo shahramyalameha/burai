@@ -16,8 +16,8 @@ import burai.app.project.QEFXProjectController;
 
 public class QEFXMovieBar extends QEFXAppComponent<QEFXMovieBarController> {
 
-    public QEFXMovieBar(QEFXProjectController projectController) throws IOException {
-        super("QEFXMovieBar.fxml", new QEFXMovieBarController(projectController));
+    public QEFXMovieBar(QEFXProjectController projectController, QEFXMovieViewerController viewerController) throws IOException {
+        super("QEFXMovieBar.fxml", new QEFXMovieBarController(projectController, viewerController));
     }
 
 }
