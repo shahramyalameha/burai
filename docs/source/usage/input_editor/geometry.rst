@@ -3,7 +3,7 @@ Geometry
 
 The geometry window is consist of three windows, "Cell", "Elemant", and "Atoms".
 The geometry window show the crystallographic information which user select.
-Also, the used psudopotential is shown.
+Also, the information of used psudopotential is shown.
 
 |
 Cell window shows the lattice constants and lattice vectors.
