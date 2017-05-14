@@ -30,7 +30,7 @@
    <center>
       <ToolBar prefHeight="48.0" prefWidth="304.0" style="-fx-background-radius: 0 8 8 0;" styleClass="moviebar-tool" BorderPane.alignment="CENTER">
          <items>
-            <Slider prefWidth="270.0" />
+            <Slider fx:id="movieSlider" max="1.0" prefWidth="270.0" />
          </items>
          <opaqueInsets>
             <Insets />

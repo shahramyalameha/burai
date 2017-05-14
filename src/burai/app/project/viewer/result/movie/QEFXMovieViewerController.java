@@ -94,7 +94,7 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
     }
 
     public boolean showCurrentGeometry() {
-        return this.showGeometry(this.currentIndex);
+        return this.showGeometry(-1);
     }
 
     public boolean showNextGeometry() {
@@ -117,19 +117,47 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         return this.showGeometry(this.projectGeometryList.numGeometries() - 1);
     }
 
+    public boolean showGeometry(double rate) {
+        if (this.projectGeometryList == null) {
+            return false;
+        }
+
+        int numGeoms = this.projectGeometryList.numGeometries();
+        if (numGeoms < 1) {
+            return false;
+        }
+
+        if (numGeoms == 1) {
+            return this.showGeometry(0);
+        }
+
+        double value = rate * ((double) (numGeoms - 1));
+        int index = (int) (Math.rint(value) + 0.1);
+        return this.showGeometry(index);
+    }
+
     public boolean showGeometry(int index) {
         if (this.projectGeometryList == null) {
             return false;
         }
 
-        if (index < 0 || this.projectGeometryList.numGeometries() <= index) {
+        if (index == this.currentIndex) {
+            return false;
+        }
+
+        int index_ = index;
+        if (index_ < 0) {
+            index_ = this.currentIndex;
+        }
+
+        if (index_ < 0 || this.projectGeometryList.numGeometries() <= index_) {
             return false;
         }
 
         ProjectGeometry projectGeometry = null;
 
         try {
-            projectGeometry = this.projectGeometryList.getGeometry(index);
+            projectGeometry = this.projectGeometryList.getGeometry(index_);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return false;
@@ -216,20 +244,29 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
         this.cell.restartResolving();
 
-        this.currentIndex = index;
+        this.currentIndex = index_;
         this.postShowGeometry(projectGeometry);
 
         return true;
     }
 
     private void postShowGeometry(ProjectGeometry projectGeometry) {
+        int numGeoms = 0;
+        if (this.projectGeometryList != null) {
+            numGeoms = this.projectGeometryList.numGeometries();
+        }
+
         QEFXMovieBarController movieBarController = this.movieBar == null ? null : this.movieBar.getController();
-        if (movieBarController != null) {
+        if (movieBarController != null && numGeoms > 0) {
             movieBarController.disablePreviousButtons(this.currentIndex <= 0);
-            if (this.projectGeometryList != null) {
-                int numGeoms = this.projectGeometryList.numGeometries();
-                movieBarController.disableNextButtons(this.currentIndex >= (numGeoms - 1));
+            movieBarController.disableNextButtons(this.currentIndex >= (numGeoms - 1));
+
+            double rate = 0.5;
+            if (numGeoms > 1) {
+                rate = ((double) this.currentIndex) / ((double) (numGeoms - 1));
             }
+
+            movieBarController.setSliderValue(rate);
         }
 
         if (this.onGeometryShown != null) {

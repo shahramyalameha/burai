@@ -88,6 +88,30 @@
     -fx-fill: derive(red, -10.0%);
 }
 
+.picplay-button {
+    -fx-fill: derive(green, -20.0%);
+    -fx-font-size: 0.833333em;
+    -fx-font-weight: bold;
+    -fx-background-color: transparent;
+    -fx-focus-traversable: false;
+}
+
+.picplay-button:hover {
+    -fx-fill: derive(green, -10.0%);
+}
+
+.picpause-button {
+    -fx-fill: derive(red, -20.0%);
+    -fx-font-size: 0.833333em;
+    -fx-font-weight: bold;
+    -fx-background-color: transparent;
+    -fx-focus-traversable: false;
+}
+
+.picpause-button:hover {
+    -fx-fill: derive(red, -10.0%);
+}
+
 .modan-button {
     -fx-background-color: -fx-base-expr;
     -fx-background-radius: 0.0em;
