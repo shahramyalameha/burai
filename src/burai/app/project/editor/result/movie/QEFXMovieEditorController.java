@@ -19,6 +19,7 @@ import burai.app.project.editor.result.QEFXResultEditorController;
 import burai.app.project.viewer.result.movie.QEFXMovieViewerController;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.project.property.ProjectGeometry;
 
 public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMovieViewerController> {
 
@@ -48,7 +49,6 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     protected void setupFXComponents() {
         this.setupMovieButton();
         this.setupNumberField();
-        this.setupTotalLabel();
         this.setupExportButton();
         this.setupAtomArea();
     }
@@ -74,14 +74,6 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         // TODO
     }
 
-    private void setupTotalLabel() {
-        if (this.totalLabel == null) {
-            return;
-        }
-
-        // TODO
-    }
-
     private void setupExportButton() {
         if (this.exportButton == null) {
             return;
@@ -100,6 +92,53 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             return;
         }
 
+        if (this.viewerController == null) {
+            return;
+        }
+
+        this.viewerController.setOnGeometryShown((i, n, geometry) -> {
+            if (n > 0) {
+                if (this.totalLabel != null) {
+                    this.totalLabel.setText(Integer.toString(n));
+                }
+            } else {
+                if (this.totalLabel != null) {
+                    this.totalLabel.setText("#");
+                }
+                return;
+            }
+
+            if (0 <= i && i < n) {
+                if (this.numberField != null) {
+                    this.numberField.setText(Integer.toString(i));
+                }
+            } else {
+                if (this.numberField != null) {
+                    this.numberField.setText("#");
+                }
+                return;
+            }
+
+            String strGeometry = this.geometryToString(geometry);
+            if (strGeometry != null && !(strGeometry.isEmpty())) {
+                if (this.atomArea != null) {
+                    this.atomArea.setText(strGeometry);
+                }
+            } else {
+                if (this.atomArea != null) {
+                    this.atomArea.setText("");
+                }
+                return;
+            }
+        });
+    }
+
+    private String geometryToString(ProjectGeometry geometry) {
+        if (geometry == null) {
+            return null;
+        }
+
         // TODO
+        return null;
     }
 }
