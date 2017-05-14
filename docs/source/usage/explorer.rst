@@ -11,7 +11,7 @@ By selecting the left menu of home tab, users can control the files.
    :align: center
 |
 .. csv-table:: Left menu of home tab
-    :header: "No.", "Name", "explanation of showed list"
+    :header: "No.", "Name", "explanation"
     :widths: 10, 10, 35
 
     "1", "Recently Used", "lately user used or accessed projects list."
