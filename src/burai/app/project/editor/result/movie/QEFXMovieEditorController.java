@@ -11,6 +11,7 @@ package burai.app.project.editor.result.movie;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import burai.app.project.QEFXProjectController;
@@ -31,6 +32,9 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     private TextField numberField;
 
     @FXML
+    private Label totalLabel;
+
+    @FXML
     private Button exportButton;
 
     @FXML
@@ -44,6 +48,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     protected void setupFXComponents() {
         this.setupMovieButton();
         this.setupNumberField();
+        this.setupTotalLabel();
         this.setupExportButton();
         this.setupAtomArea();
     }
@@ -63,6 +68,14 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
 
     private void setupNumberField() {
         if (this.numberField == null) {
+            return;
+        }
+
+        // TODO
+    }
+
+    private void setupTotalLabel() {
+        if (this.totalLabel == null) {
             return;
         }
 

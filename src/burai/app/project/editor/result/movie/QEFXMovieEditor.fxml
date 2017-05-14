@@ -90,7 +90,9 @@
                <children>
                   <ToolBar prefHeight="42.0" prefWidth="285.0">
                      <items>
-                        <TextField fx:id="numberField" prefWidth="65.0" promptText="#" />
+                        <TextField fx:id="numberField" prefWidth="50.0" promptText="#" />
+                        <Label text="/" />
+                        <Label fx:id="totalLabel" text="#" />
                      </items>
                      <GridPane.margin>
                         <Insets />

@@ -14,6 +14,6 @@ import burai.project.property.ProjectGeometry;
 @FunctionalInterface
 public interface GeometryShown {
 
-    public abstract void onGeometryShown(int index, ProjectGeometry geometry);
+    public abstract void onGeometryShown(int index, int size, ProjectGeometry geometry);
 
 }
