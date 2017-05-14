@@ -30,6 +30,10 @@ public abstract class AtomsViewerInterface extends Group {
 
     public abstract void addExclusiveNode(NodeWrapper nodeWrapper);
 
+    public abstract void startExclusiveMode();
+
+    public abstract void stopExclusiveMode();
+
     public abstract void bindSceneTo(Pane pane);
 
     public abstract void unbindScene();

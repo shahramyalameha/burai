@@ -142,7 +142,8 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
         this.exclusiveNodes.add(nodeWrapper);
     }
 
-    protected void stopExclusiveNodes() {
+    @Override
+    public void startExclusiveMode() {
         if (this.exclusiveNodes == null) {
             return;
         }
@@ -164,7 +165,8 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
         }
     }
 
-    protected void restartExclusiveNodes() {
+    @Override
+    public void stopExclusiveMode() {
         if (this.exclusiveNodes == null) {
             return;
         }

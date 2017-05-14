@@ -9,11 +9,13 @@
 
 package burai.app.project.viewer.result.movie;
 
+import javafx.scene.layout.BorderPane;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.atoms.AtomsAction;
 import burai.app.project.viewer.result.QEFXResultViewer;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.project.property.ProjectProperty;
 
 public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController> {
@@ -22,6 +24,24 @@ public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController>
 
         super(cell == null ? null : new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true),
                 new QEFXMovieViewerController(projectController, projectProperty, cell, mdMode));
+
+        if (this.node != null && (this.node instanceof AtomsViewerInterface)) {
+            final BorderPane projectPane;
+            if (projectController != null) {
+                projectPane = projectController.getProjectPane();
+            } else {
+                projectPane = null;
+            }
+
+            if (projectPane != null) {
+                ((AtomsViewerInterface) this.node).addExclusiveNode(() -> {
+                    return projectPane.getRight();
+                });
+                ((AtomsViewerInterface) this.node).addExclusiveNode(() -> {
+                    return projectPane.getBottom();
+                });
+            }
+        }
     }
 
 }

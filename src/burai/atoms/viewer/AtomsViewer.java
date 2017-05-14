@@ -202,11 +202,11 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         if (this.compassMode) {
             this.viewerCompass.initialize();
             this.viewerCompass.getNode().setVisible(true);
-            this.stopExclusiveNodes();
+            this.startExclusiveMode();
 
         } else {
             this.viewerCompass.getNode().setVisible(false);
-            this.restartExclusiveNodes();
+            this.stopExclusiveMode();
         }
     }
 

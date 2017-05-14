@@ -62,6 +62,8 @@ public class QEFXProjectController extends QEFXAppController {
     @FXML
     private BorderPane projectPane;
 
+    private AtomsViewerInterface atomsViewer;
+
     @FXML
     private StackPane viewerPane;
 
@@ -90,8 +92,6 @@ public class QEFXProjectController extends QEFXAppController {
 
     private EditorActions editorActions;
 
-    private AtomsViewerInterface atomsViewer;
-
     private ProjectAction shownAction;
 
     private ProjectAction detachAction;
@@ -107,6 +107,8 @@ public class QEFXProjectController extends QEFXAppController {
     public QEFXProjectController(QEFXMainController mainController) {
         super(mainController);
 
+        this.atomsViewer = null;
+
         this.viewerMenu = null;
         this.onViewerSelected = null;
         this.stackedsOnViewer = null;
@@ -116,8 +118,6 @@ public class QEFXProjectController extends QEFXAppController {
         this.editorMenu = null;
         this.onEditorSelected = null;
         this.editorActions = null;
-
-        this.atomsViewer = null;
 
         this.shownAction = null;
         this.detachAction = null;
@@ -140,6 +140,10 @@ public class QEFXProjectController extends QEFXAppController {
 
     public BorderPane getProjectPane() {
         return this.projectPane;
+    }
+
+    public AtomsViewerInterface getAtomsViewer() {
+        return this.atomsViewer;
     }
 
     /**

@@ -14,33 +14,19 @@
 
 <BorderPane fx:id="basePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="moviebar-pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <ToolBar prefHeight="48.0" style="-fx-background-radius: 8 0 0 8;" styleClass="moviebar-tool" BorderPane.alignment="CENTER">
+      <ToolBar prefHeight="48.0" style="-fx-background-radius: 8 8 8 8;" styleClass="moviebar-tool" BorderPane.alignment="CENTER">
          <items>
             <Button fx:id="firstButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
             <Button fx:id="prevButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
             <Button fx:id="playButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
             <Button fx:id="nextButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
             <Button fx:id="lastButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" />
+            <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="20.0" />
+            <Slider fx:id="movieSlider" blockIncrement="0.05" focusTraversable="false" max="1.0" prefWidth="256.0" />
          </items>
          <padding>
-            <Insets left="20.0" right="10.0" />
+            <Insets left="20.0" right="20.0" />
          </padding>
       </ToolBar>
    </left>
-   <center>
-      <ToolBar prefHeight="48.0" prefWidth="304.0" style="-fx-background-radius: 0 8 8 0;" styleClass="moviebar-tool" BorderPane.alignment="CENTER">
-         <items>
-            <Slider fx:id="movieSlider" max="1.0" prefWidth="270.0" />
-         </items>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets left="12.0" right="20.0" />
-         </padding>
-      </ToolBar>
-   </center>
 </BorderPane>

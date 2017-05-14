@@ -93,6 +93,14 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         this.showCurrentGeometry();
     }
 
+    public int numGeometries() {
+        if (this.projectGeometryList == null) {
+            return 0;
+        }
+
+        return this.projectGeometryList.numGeometries();
+    }
+
     public boolean showCurrentGeometry() {
         return this.showGeometry(-1);
     }
