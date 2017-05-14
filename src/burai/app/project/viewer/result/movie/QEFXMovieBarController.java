@@ -58,6 +58,8 @@ public class QEFXMovieBarController extends QEFXAppController {
     @FXML
     private Slider movieSlider;
 
+    private boolean movieSliderBusy;
+
     public QEFXMovieBarController(QEFXProjectController projectController, QEFXMovieViewerController viewerController) {
         super(projectController == null ? null : projectController.getMainController());
 
@@ -66,6 +68,8 @@ public class QEFXMovieBarController extends QEFXAppController {
         }
 
         this.viewerController = viewerController;
+
+        this.movieSliderBusy = false;
     }
 
     @Override
@@ -162,8 +166,12 @@ public class QEFXMovieBarController extends QEFXAppController {
         }
 
         this.movieSlider.valueProperty().addListener(o -> {
+            this.movieSliderBusy = true;
+
             double value = this.movieSlider.getValue();
             this.viewerController.showGeometry(value);
+
+            this.movieSliderBusy = false;
         });
     }
 
@@ -188,6 +196,10 @@ public class QEFXMovieBarController extends QEFXAppController {
     }
 
     protected void setSliderValue(double value) {
+        if (this.movieSliderBusy) {
+            return;
+        }
+
         if (this.movieSlider != null) {
             double value_ = Math.min(Math.max(0.0, value), 1.0);
             this.movieSlider.setValue(value_);
