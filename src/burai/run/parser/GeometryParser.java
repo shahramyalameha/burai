@@ -312,7 +312,7 @@ public class GeometryParser extends LogParser {
 
         ProjectGeometry geometry = new ProjectGeometry();
         geometry.setConverged(false);
-        geometry.setTime(0.0);
+        geometry.setTime(-1.0);
         geometry.setEnergy(0.0);
         geometry.setTotalForce(0.0);
         geometry.setKinetic(0.0);
