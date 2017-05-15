@@ -562,7 +562,7 @@ public class GeometryParser extends LogParser {
             }
 
         } else {
-            time = (double) iter;
+            time = (double) (-iter);
             hasTime = true;
         }
 

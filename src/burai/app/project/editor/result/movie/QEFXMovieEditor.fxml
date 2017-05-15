@@ -88,11 +88,16 @@
             </BorderPane>
             <GridPane prefWidth="385.0">
                <children>
-                  <ToolBar prefHeight="42.0" prefWidth="285.0">
+                  <ToolBar prefHeight="42.0" prefWidth="250.0">
                      <items>
                         <TextField fx:id="numberField" prefWidth="50.0" promptText="#" />
                         <Label text="/" />
                         <Label fx:id="totalLabel" text="#" />
+                        <Label fx:id="timeLabel" text="( t = 0.0ps )">
+                           <padding>
+                              <Insets left="8.0" />
+                           </padding>
+                        </Label>
                      </items>
                      <GridPane.margin>
                         <Insets />
@@ -101,7 +106,7 @@
                         <Insets left="10.0" />
                      </padding>
                   </ToolBar>
-                  <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="42.0" prefWidth="100.0" GridPane.columnIndex="1">
+                  <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="42.0" prefWidth="135.0" GridPane.columnIndex="1">
                      <items>
                         <Button fx:id="exportButton" mnemonicParsing="false" styleClass="italic-text" text="New Project" />
                      </items>
@@ -111,8 +116,8 @@
                   </ToolBar>
                </children>
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="185.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="135.0" />
                </columnConstraints>
                <padding>
                   <Insets top="2.0" />
@@ -124,7 +129,7 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </GridPane>
-            <TextArea fx:id="atomArea" editable="false" prefHeight="400.0" prefWidth="385.0" style="-fx-font-family: monospace; -fx-font-size: 0.916667em;">
+            <TextArea fx:id="atomArea" editable="false" prefHeight="400.0" prefWidth="385.0" style="-fx-font-family: monospace; -fx-font-size: 1.0em;">
                <VBox.margin>
                   <Insets left="10.0" top="2.0" />
                </VBox.margin>

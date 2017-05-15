@@ -325,7 +325,7 @@ public class QECellParameters extends QECard {
     @Override
     public String toString() {
         String str = CARD_NAME + " {" + this.option + "}" + System.lineSeparator();
-        String strFormat = "%12.6f %12.6f %12.6f%n";
+        String strFormat = "%10.6f %10.6f %10.6f%n";
         str = str + String.format(strFormat, this.vector1[0], this.vector1[1], this.vector1[2]);
         str = str + String.format(strFormat, this.vector2[0], this.vector2[1], this.vector2[2]);
         str = str + String.format(strFormat, this.vector3[0], this.vector3[1], this.vector3[2]);

@@ -150,7 +150,7 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         }
 
         if (index == this.currentIndex) {
-            return false;
+            return true; // already shown
         }
 
         int index_ = index;
@@ -172,12 +172,17 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         }
 
         double[][] lattice = projectGeometry.getCell();
+        lattice = Matrix3D.mult(Constants.BOHR_RADIUS_ANGS, lattice);
         if (lattice == null || lattice.length < 3) {
             return false;
         }
-
-        lattice = Matrix3D.mult(Constants.BOHR_RADIUS_ANGS, lattice);
-        if (lattice == null || lattice.length < 3) {
+        if (lattice[0] == null || lattice[0].length < 3) {
+            return false;
+        }
+        if (lattice[1] == null || lattice[1].length < 3) {
+            return false;
+        }
+        if (lattice[2] == null || lattice[2].length < 3) {
             return false;
         }
 

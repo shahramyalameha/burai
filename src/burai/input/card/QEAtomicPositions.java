@@ -462,8 +462,13 @@ public class QEAtomicPositions extends QECard {
             double[] position = this.positions.get(i);
             boolean[] mobile = this.mobiles.get(i);
             int[] intMobile = { mobile[0] ? 1 : 0, mobile[1] ? 1 : 0, mobile[2] ? 1 : 0 };
-            str = str + String.format("%-5s %10.6f %10.6f %10.6f  %d %d %d%n",
-                    label, position[0], position[1], position[2], intMobile[0], intMobile[1], intMobile[2]);
+            if (mobile[0] && mobile[1] && mobile[2]) {
+                str = str + String.format("%-5s %10.6f %10.6f %10.6f%n",
+                        label, position[0], position[1], position[2]);
+            } else {
+                str = str + String.format("%-5s %10.6f %10.6f %10.6f  %d %d %d%n",
+                        label, position[0], position[1], position[2], intMobile[0], intMobile[1], intMobile[2]);
+            }
         }
 
         return str;

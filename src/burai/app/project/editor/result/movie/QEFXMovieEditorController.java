@@ -10,15 +10,20 @@
 package burai.app.project.editor.result.movie;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.QEFXResultEditorController;
 import burai.app.project.viewer.result.movie.QEFXMovieViewerController;
+import burai.com.consts.Constants;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.com.math.Matrix3D;
 import burai.project.property.ProjectGeometry;
 
 public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMovieViewerController> {
@@ -32,8 +37,13 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     @FXML
     private TextField numberField;
 
+    private String numberText;
+
     @FXML
     private Label totalLabel;
+
+    @FXML
+    private Label timeLabel;
 
     @FXML
     private Button exportButton;
@@ -43,6 +53,8 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
 
     public QEFXMovieEditorController(QEFXProjectController projectController, QEFXMovieViewerController viewerController) {
         super(projectController, viewerController);
+
+        this.numberText = null;
     }
 
     @Override
@@ -71,7 +83,48 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             return;
         }
 
-        // TODO
+        this.numberField.focusedProperty().addListener(o -> {
+            if (this.numberField.isFocused()) {
+                this.numberText = this.numberField.getText();
+            } else {
+                if (this.numberText != null) {
+                    this.numberField.setText(this.numberText);
+                }
+            }
+        });
+
+        this.numberField.setOnAction(event -> {
+            String value = this.numberField.getText();
+            value = value == null ? null : value.trim();
+            if (value == null || value.isEmpty()) {
+                return;
+            }
+
+            int index = -1;
+            try {
+                index = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                index = -1;
+            }
+
+            boolean status = false;
+            if (this.viewerController != null && index > 0) {
+                status = this.viewerController.showGeometry(index - 1);
+            }
+
+            if (status) {
+                this.numberText = Integer.toString(index);
+            } else {
+                this.showErrorDialog();
+            }
+        });
+    }
+
+    private void showErrorDialog() {
+        Alert alert = new Alert(AlertType.ERROR);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Incorrect number of atomic configuration.");
+        alert.showAndWait();
     }
 
     private void setupExportButton() {
@@ -97,6 +150,17 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         }
 
         this.viewerController.setOnGeometryShown((i, n, geometry) -> {
+            if (0 <= i && i < n) {
+                if (this.numberField != null) {
+                    this.numberField.setText(Integer.toString(i + 1));
+                }
+            } else {
+                if (this.numberField != null) {
+                    this.numberField.setText("#");
+                }
+                return;
+            }
+
             if (n > 0) {
                 if (this.totalLabel != null) {
                     this.totalLabel.setText(Integer.toString(n));
@@ -108,15 +172,15 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
                 return;
             }
 
-            if (0 <= i && i < n) {
-                if (this.numberField != null) {
-                    this.numberField.setText(Integer.toString(i));
+            double time = geometry == null ? -1.0 : geometry.getTime();
+            if (time >= 0.0) {
+                if (this.timeLabel != null) {
+                    this.timeLabel.setText("( t = " + String.format("%10.4f", time).trim() + "ps )");
                 }
             } else {
-                if (this.numberField != null) {
-                    this.numberField.setText("#");
+                if (this.timeLabel != null) {
+                    this.timeLabel.setText("");
                 }
-                return;
             }
 
             String strGeometry = this.geometryToString(geometry);
@@ -138,7 +202,48 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             return null;
         }
 
-        // TODO
-        return null;
+        String str = "";
+
+        // cell
+        double[][] lattice = geometry.getCell();
+        lattice = Matrix3D.mult(Constants.BOHR_RADIUS_ANGS, lattice);
+        if (lattice == null || lattice.length < 3) {
+            return null;
+        }
+        if (lattice[0] == null || lattice[0].length < 3) {
+            return null;
+        }
+        if (lattice[1] == null || lattice[1].length < 3) {
+            return null;
+        }
+        if (lattice[2] == null || lattice[2].length < 3) {
+            return null;
+        }
+
+        String strFormat = "%10.6f %10.6f %10.6f%n";
+        str = str + "CELL_PARAMETERS {angstrom}" + System.lineSeparator();
+        str = str + String.format(strFormat, lattice[0][0], lattice[0][1], lattice[0][2]);
+        str = str + String.format(strFormat, lattice[1][0], lattice[1][1], lattice[1][2]);
+        str = str + String.format(strFormat, lattice[2][0], lattice[2][1], lattice[2][2]);
+
+        // atoms
+        int natom = geometry.numAtoms();
+        if (natom > 0) {
+            str = str + System.lineSeparator();
+            str = str + "ATOMIC_POSITIONS {angstrom}" + System.lineSeparator();
+        }
+
+        for (int i = 0; i < natom; i++) {
+            String name = geometry.getName(i);
+            if (name == null || name.isEmpty()) {
+                continue;
+            }
+            double x = geometry.getX(i) * Constants.BOHR_RADIUS_ANGS;
+            double y = geometry.getY(i) * Constants.BOHR_RADIUS_ANGS;
+            double z = geometry.getZ(i) * Constants.BOHR_RADIUS_ANGS;
+            str = str + String.format("%-5s %10.6f %10.6f %10.6f%n", name, x, y, z);
+        }
+
+        return str;
     }
 }

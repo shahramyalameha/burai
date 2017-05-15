@@ -26,22 +26,29 @@ public class QEFXMovieViewer extends QEFXResultViewer<QEFXMovieViewerController>
                 new QEFXMovieViewerController(projectController, projectProperty, cell, mdMode));
 
         if (this.node != null && (this.node instanceof AtomsViewerInterface)) {
-            final BorderPane projectPane;
-            if (projectController != null) {
-                projectPane = projectController.getProjectPane();
-            } else {
-                projectPane = null;
-            }
-
-            if (projectPane != null) {
-                ((AtomsViewerInterface) this.node).addExclusiveNode(() -> {
-                    return projectPane.getRight();
-                });
-                ((AtomsViewerInterface) this.node).addExclusiveNode(() -> {
-                    return projectPane.getBottom();
-                });
-            }
+            this.setupAtomsViewer((AtomsViewerInterface) this.node, projectController);
         }
     }
 
+    private void setupAtomsViewer(AtomsViewerInterface atomsViewer, QEFXProjectController projectController) {
+        if (atomsViewer == null) {
+            return;
+        }
+
+        final BorderPane projectPane;
+        if (projectController != null) {
+            projectPane = projectController.getProjectPane();
+        } else {
+            projectPane = null;
+        }
+
+        if (projectPane != null) {
+            atomsViewer.addExclusiveNode(() -> {
+                return projectPane.getRight();
+            });
+            atomsViewer.addExclusiveNode(() -> {
+                return projectPane.getBottom();
+            });
+        }
+    }
 }
