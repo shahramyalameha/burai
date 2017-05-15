@@ -17,6 +17,7 @@ import burai.app.project.viewer.result.QEFXResultButton;
 import burai.atoms.model.Cell;
 import burai.com.consts.Constants;
 import burai.com.math.Matrix3D;
+import burai.project.Project;
 import burai.project.property.ProjectGeometry;
 import burai.project.property.ProjectGeometryList;
 import burai.project.property.ProjectProperty;
@@ -25,17 +26,24 @@ public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, 
 
     private boolean mdMode;
 
+    private Project project;
+
     private ProjectProperty projectProperty;
 
     protected QEFXMovieButton(QEFXProjectController projectController,
-            ProjectProperty projectProperty, String title, String subTitle, boolean mdMode) {
+            Project project, ProjectProperty projectProperty, String title, String subTitle, boolean mdMode) {
 
         super(projectController, title, subTitle);
+
+        if (project == null) {
+            throw new IllegalArgumentException("project is null.");
+        }
 
         if (projectProperty == null) {
             throw new IllegalArgumentException("projectProperty is null.");
         }
 
+        this.project = project;
         this.projectProperty = projectProperty;
         this.mdMode = mdMode;
     }
@@ -97,10 +105,14 @@ public abstract class QEFXMovieButton extends QEFXResultButton<QEFXMovieViewer, 
             return null;
         }
 
+        if (this.project == null) {
+            return null;
+        }
+
         if (this.projectController == null) {
             return null;
         }
 
-        return new QEFXMovieEditor(this.projectController, resultViewer);
+        return new QEFXMovieEditor(this.projectController, project, resultViewer);
     }
 }

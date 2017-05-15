@@ -17,12 +17,13 @@ import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.QEFXResultEditor;
 import burai.app.project.viewer.result.movie.QEFXMovieViewer;
 import burai.com.keys.PriorKeyEvent;
+import burai.project.Project;
 
 public class QEFXMovieEditor extends QEFXResultEditor<QEFXMovieEditorController> {
 
-    public QEFXMovieEditor(QEFXProjectController projectController, QEFXMovieViewer viewer) throws IOException {
+    public QEFXMovieEditor(QEFXProjectController projectController, Project project, QEFXMovieViewer viewer) throws IOException {
         super("QEFXMovieEditor.fxml",
-                new QEFXMovieEditorController(projectController, viewer == null ? null : viewer.getController()));
+                new QEFXMovieEditorController(projectController, viewer == null ? null : viewer.getController(), project));
 
         if (this.node != null) {
             this.setupKeys(this.node);

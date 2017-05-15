@@ -720,6 +720,9 @@ public class ProjectBody extends Project {
         this.saveQEInput(directoryPath2, this.bandData.getFileName(), this.getQEInputBand());
 
         Project project = Project.getInstance(directoryPath2);
+        if (project == null) {
+            return null;
+        }
 
         if (project.getDirectoryPath() != null && this.getPrefixName() != null) {
             ProjectProperty property = new ProjectProperty(project.getDirectoryPath(), this.getPrefixName());

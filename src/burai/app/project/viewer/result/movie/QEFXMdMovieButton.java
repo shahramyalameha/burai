@@ -27,7 +27,11 @@ public class QEFXMdMovieButton extends QEFXMovieButton {
             return null;
         }
 
-        ProjectProperty projectProperty = project == null ? null : project.getProperty();
+        if (project == null) {
+            return null;
+        }
+
+        ProjectProperty projectProperty = project.getProperty();
         if (projectProperty == null) {
             return null;
         }
@@ -41,11 +45,11 @@ public class QEFXMdMovieButton extends QEFXMovieButton {
             return null;
         }
 
-        return () -> new QEFXMdMovieButton(projectController, projectProperty);
+        return () -> new QEFXMdMovieButton(projectController, project, projectProperty);
     }
 
-    private QEFXMdMovieButton(QEFXProjectController projectController, ProjectProperty projectProperty) {
-        super(projectController, projectProperty, BUTTON_TITLE, BUTTON_SUBTITLE, true);
+    private QEFXMdMovieButton(QEFXProjectController projectController, Project project, ProjectProperty projectProperty) {
+        super(projectController, project, projectProperty, BUTTON_TITLE, BUTTON_SUBTITLE, true);
 
         this.setIconStyle(BUTTON_BACKGROUND);
         this.setLabelStyle(BUTTON_FONT_COLOR);

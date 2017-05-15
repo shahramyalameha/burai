@@ -381,6 +381,15 @@ public abstract class Project {
 
     public abstract Project cloneProject(String directoryPath);
 
+    public Project cloneProject(File directory) {
+        String directoryPath = directory == null ? null : directory.getPath();
+        if (directoryPath != null && !(directoryPath.trim().isEmpty())) {
+            return this.cloneProject(directoryPath.trim());
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         if (this.rootFilePath != null) {
