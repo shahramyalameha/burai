@@ -166,6 +166,74 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         });
     }
 
+    public Project saveNewProject() {
+        File directory = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("New project");
+
+        String projPath = this.project == null ? null : this.project.getDirectoryPath();
+        projPath = projPath == null ? null : projPath.trim();
+
+        File projDir = null;
+        if (projPath != null && !(projPath.isEmpty())) {
+            projDir = new File(projPath);
+        }
+
+        File initDir = projDir == null ? null : projDir.getParentFile();
+        String initPath = initDir == null ? null : initDir.getPath();
+        if (initDir == null || initPath == null || initPath.trim().isEmpty()) {
+            initPath = Environments.getProjectsPath();
+            initDir = new File(initPath);
+        }
+
+        if (initDir != null) {
+            try {
+                if (initDir.isDirectory()) {
+                    fileChooser.setInitialDirectory(initDir);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Stage stage = this.getStage();
+        if (stage != null) {
+            directory = fileChooser.showSaveDialog(stage);
+        }
+        if (directory == null) {
+            return null;
+        }
+
+        try {
+            if (directory.exists()) {
+                Alert alert = new Alert(AlertType.ERROR);
+                QEFXMain.initializeDialogOwner(alert);
+                alert.setHeaderText(directory.getName() + " already exists.");
+                alert.showAndWait();
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Project project = null;
+        if (this.project != null) {
+            project = this.project.cloneProject(directory);
+        }
+
+        if (project == null) {
+            Alert alert = new Alert(AlertType.ERROR);
+            QEFXMain.initializeDialogOwner(alert);
+            alert.setHeaderText("Cannot create project: " + directory.getPath());
+            alert.showAndWait();
+            return null;
+        }
+
+        return project;
+    }
+
     private boolean editProject(Project project) {
         Cell cell = project == null ? null : project.getCell();
         if (cell == null) {
@@ -248,74 +316,6 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         }
 
         return true;
-    }
-
-    public Project saveNewProject() {
-        File directory = null;
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("New project");
-
-        String projPath = this.project == null ? null : this.project.getDirectoryPath();
-        projPath = projPath == null ? null : projPath.trim();
-
-        File projDir = null;
-        if (projPath != null && !(projPath.isEmpty())) {
-            projDir = new File(projPath);
-        }
-
-        File initDir = projDir == null ? null : projDir.getParentFile();
-        String initPath = initDir == null ? null : initDir.getPath();
-        if (initDir == null || initPath == null || initPath.trim().isEmpty()) {
-            initPath = Environments.getProjectsPath();
-            initDir = new File(initPath);
-        }
-
-        if (initDir != null) {
-            try {
-                if (initDir.isDirectory()) {
-                    fileChooser.setInitialDirectory(initDir);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        Stage stage = this.getStage();
-        if (stage != null) {
-            directory = fileChooser.showSaveDialog(stage);
-        }
-        if (directory == null) {
-            return null;
-        }
-
-        try {
-            if (directory.exists()) {
-                Alert alert = new Alert(AlertType.ERROR);
-                QEFXMain.initializeDialogOwner(alert);
-                alert.setHeaderText(directory.getName() + " already exists.");
-                alert.showAndWait();
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        Project project = null;
-        if (this.project != null) {
-            project = this.project.cloneProject(directory);
-        }
-
-        if (project == null) {
-            Alert alert = new Alert(AlertType.ERROR);
-            QEFXMain.initializeDialogOwner(alert);
-            alert.setHeaderText("Cannot create project: " + directory.getPath());
-            alert.showAndWait();
-            return null;
-        }
-
-        return project;
     }
 
     private void setupAtomArea() {
