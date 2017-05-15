@@ -27,7 +27,7 @@ import burai.atoms.model.event.ModelEvent;
 
 public class AtomsSample extends Group implements AtomEventListener, CellEventListener {
 
-    private static final double BETWEEN_ATOMS = 2.0;
+    private static final double BETWEEN_ATOMS = 2.32;
     private static final double TEXT_SIZE = 0.8;
     private static final String TEXT_FONT = "Times New Roman";
 
