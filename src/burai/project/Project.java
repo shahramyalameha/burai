@@ -379,6 +379,8 @@ public abstract class Project {
         this.saveQEInputs(null);
     }
 
+    public abstract Project cloneProject(String directoryPath);
+
     @Override
     public String toString() {
         if (this.rootFilePath != null) {

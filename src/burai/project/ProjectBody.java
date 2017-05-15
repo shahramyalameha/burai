@@ -122,17 +122,22 @@ public class ProjectBody extends Project {
         boolean status = true;
         File directory = new File(directoryPath);
 
-        if (!directory.isDirectory()) {
-            status = status && directory.mkdirs();
-        }
-        if (!directory.canExecute()) {
-            status = status && directory.setExecutable(true);
-        }
-        if (!directory.canRead()) {
-            status = status && directory.setReadable(true);
-        }
-        if (!directory.canWrite()) {
-            status = status && directory.setWritable(true);
+        try {
+            if (!directory.isDirectory()) {
+                status = status && directory.mkdirs();
+            }
+            if (!directory.canExecute()) {
+                status = status && directory.setExecutable(true);
+            }
+            if (!directory.canRead()) {
+                status = status && directory.setReadable(true);
+            }
+            if (!directory.canWrite()) {
+                status = status && directory.setWritable(true);
+            }
+
+        } catch (Exception e) {
+            status = false;
         }
 
         return status;
@@ -655,6 +660,14 @@ public class ProjectBody extends Project {
     }
 
     private void saveQEInput(String fileName, QEInput input) {
+        this.saveQEInput(this.getDirectoryPath(), fileName, input);
+    }
+
+    private void saveQEInput(String directoryPath, String fileName, QEInput input) {
+        if (directoryPath == null) {
+            return;
+        }
+
         if (fileName == null) {
             return;
         }
@@ -664,7 +677,7 @@ public class ProjectBody extends Project {
         }
 
         PrintWriter writer = null;
-        File file = new File(this.getDirectoryPath(), fileName);
+        File file = new File(directoryPath, fileName);
 
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
@@ -678,5 +691,41 @@ public class ProjectBody extends Project {
                 writer.close();
             }
         }
+    }
+
+    @Override
+    public Project cloneProject(String directoryPath) {
+        String directoryPath2 = directoryPath == null ? null : directoryPath.trim();
+        if (directoryPath2 == null || directoryPath2.isEmpty()) {
+            return null;
+        }
+
+        try {
+            if (new File(directoryPath2).exists()) {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        if (!this.createDirectory(directoryPath2)) {
+            return null;
+        }
+
+        this.saveQEInput(directoryPath2, this.geomData.getFileName(), this.getQEInputGeometry());
+        this.saveQEInput(directoryPath2, this.scfData.getFileName(), this.getQEInputScf());
+        this.saveQEInput(directoryPath2, this.optData.getFileName(), this.getQEInputOptimiz());
+        this.saveQEInput(directoryPath2, this.mdData.getFileName(), this.getQEInputMd());
+        this.saveQEInput(directoryPath2, this.dosData.getFileName(), this.getQEInputDos());
+        this.saveQEInput(directoryPath2, this.bandData.getFileName(), this.getQEInputBand());
+
+        Project project = Project.getInstance(directoryPath2);
+
+        if (project.getDirectoryPath() != null && this.getPrefixName() != null) {
+            ProjectProperty property = new ProjectProperty(project.getDirectoryPath(), this.getPrefixName());
+            property.saveProperty();
+        }
+
+        return project;
     }
 }

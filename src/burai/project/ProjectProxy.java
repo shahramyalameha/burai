@@ -221,4 +221,13 @@ public class ProjectProxy extends Project {
             this.netProject.saveQEInputs(directoryPath);
         }
     }
+
+    @Override
+    public Project cloneProject(String directoryPath) {
+        if (this.getNetProject() != null) {
+            return this.netProject.cloneProject(directoryPath);
+        }
+
+        return null;
+    }
 }
