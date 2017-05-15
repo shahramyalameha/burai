@@ -112,19 +112,16 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
                 status = this.viewerController.showGeometry(index - 1);
             }
 
-            if (status) {
-                this.numberText = Integer.toString(index);
-            } else {
-                this.showErrorDialog();
+            if (!status) {
+                Alert alert = new Alert(AlertType.ERROR);
+                QEFXMain.initializeDialogOwner(alert);
+                alert.setHeaderText("Incorrect number of atomic configuration.");
+                alert.showAndWait();
+                return;
             }
-        });
-    }
 
-    private void showErrorDialog() {
-        Alert alert = new Alert(AlertType.ERROR);
-        QEFXMain.initializeDialogOwner(alert);
-        alert.setHeaderText("Incorrect number of atomic configuration.");
-        alert.showAndWait();
+            this.numberText = Integer.toString(index);
+        });
     }
 
     private void setupExportButton() {
