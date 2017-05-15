@@ -62,7 +62,9 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     @FXML
     private TextArea atomArea;
 
-    public QEFXMovieEditorController(QEFXProjectController projectController, QEFXMovieViewerController viewerController, Project project) {
+    public QEFXMovieEditorController(
+            QEFXProjectController projectController, QEFXMovieViewerController viewerController, Project project) {
+
         super(projectController, viewerController);
 
         if (project == null) {
@@ -158,6 +160,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             boolean status = this.editProject(project);
             if (!status) {
                 System.err.println("cannot edit project.");
+                return;
             }
 
             if (this.mainController != null) {
@@ -314,6 +317,8 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
                 cell.addAtom(new Atom(name, x, y, z));
             }
         }
+
+        project.saveQEInputs();
 
         return true;
     }
