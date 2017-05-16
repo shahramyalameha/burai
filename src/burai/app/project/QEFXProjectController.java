@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -468,6 +470,20 @@ public class QEFXProjectController extends QEFXAppController {
 
     protected void setEditorActions(EditorActions editorActions) {
         this.editorActions = editorActions;
+    }
+
+    protected void pushViewerButton() {
+        if (this.viewerButton == null) {
+            return;
+        }
+        if (this.viewerButton.isDisable() || this.viewerButton.isDisabled()) {
+            return;
+        }
+
+        EventHandler<ActionEvent> handler = this.viewerButton.getOnAction();
+        if (handler != null) {
+            handler.handle(new ActionEvent());
+        }
     }
 
     public void toBeShown() {

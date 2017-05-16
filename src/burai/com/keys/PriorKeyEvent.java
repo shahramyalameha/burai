@@ -45,6 +45,11 @@ public final class PriorKeyEvent {
             return true;
         }
 
+        // return screen
+        if (event.isControlDown() && KeyCode.LEFT.equals(keyCode)) {
+            return true;
+        }
+
         // print screen
         if (KeyCode.PRINTSCREEN.equals(keyCode)) {
             return true;

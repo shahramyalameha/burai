@@ -108,6 +108,8 @@ public class QEFXResultExplorer {
     private void createTilePane() {
         this.tilePane = new TilePane();
         this.tilePane.getStyleClass().add(TILE_CLASS);
+        this.tilePane.setFocusTraversable(true);
+        this.tilePane.setOnMouseClicked(event -> this.tilePane.requestFocus());
         this.scrollPane.setContent(this.tilePane);
     }
 
