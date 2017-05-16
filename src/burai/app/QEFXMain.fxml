@@ -31,7 +31,7 @@
             <ToolBar prefHeight="42.0" style="-fx-base: -fx-base-enh1;" BorderPane.alignment="CENTER">
                <items>
                   <Button fx:id="matApiButton" focusTraversable="false" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" styleClass="picblack-button" text="Materials API " />
-                  <TextField fx:id="matApiField" prefWidth="240.0" style="-fx-base: -fx-base-mapi; -fx-background-radius: 16;" />
+                  <TextField fx:id="matApiField" focusTraversable="false" prefWidth="240.0" style="-fx-base: -fx-base-mapi; -fx-background-radius: 16;" />
                   <Pane prefHeight="5.0" prefWidth="10.0" />
                </items>
             </ToolBar>

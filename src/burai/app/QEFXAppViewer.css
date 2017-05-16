@@ -10,16 +10,7 @@
 /* AtomsViewer */
 
 .atoms-viewer {
-    /*
-    -fx-focus-traversable: true;
-     */
     -fx-focus-traversable: false;
-}
-
-.atoms-viewer:focused {
-    /*
-    -fx-effect: innershadow(gaussian, -fx-focus-color, 18.0, 0.21, 0.0em, 0.0em);
-     */
 }
 
 /* InputFile */
