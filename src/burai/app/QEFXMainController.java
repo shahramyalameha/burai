@@ -155,6 +155,7 @@ public class QEFXMainController implements Initializable {
         this.setupMenuItems();
         this.setupTabPane();
         this.setupHomeTab();
+        this.setupHomePane();
         this.setupMatApiButton();
         this.setupMatApiField();
     }
@@ -335,6 +336,35 @@ public class QEFXMainController implements Initializable {
         this.homeTab.setOnSelectionChanged(event -> {
             if (this.homeTab.isSelected()) {
                 this.executeOnHomeTabSelected();
+            }
+        });
+    }
+
+    private void setupHomePane() {
+        if (this.homePane == null) {
+            return;
+        }
+
+        this.homePane.setOnKeyPressed(event -> {
+            if (event == null) {
+                return;
+            }
+
+            if (event.isControlDown() && KeyCode.LEFT.equals(event.getCode())) {
+                // Ctrl + <-
+                if (this.explorerFacade != null) {
+                    this.explorerFacade.goBackward();
+                }
+            } else if (event.isControlDown() && KeyCode.RIGHT.equals(event.getCode())) {
+                // Ctrl + ->
+                if (this.explorerFacade != null) {
+                    this.explorerFacade.goForward();
+                }
+            } else if (event.isControlDown() && KeyCode.UP.equals(event.getCode())) {
+                // Ctrl + ^
+                if (this.explorerFacade != null) {
+                    this.explorerFacade.goUpward();
+                }
             }
         });
     }

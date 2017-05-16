@@ -12,6 +12,8 @@ package burai.app.explorer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
@@ -133,6 +135,39 @@ public class QEFXExplorerController extends QEFXAppController {
 
     protected void clearRedoLocations() {
         this.locationSetupper.clearRedoLocations();
+    }
+
+    protected void pushBackwardButton() {
+        EventHandler<ActionEvent> handler = null;
+        if (this.backwardButton != null) {
+            handler = this.backwardButton.getOnAction();
+        }
+
+        if (handler != null) {
+            handler.handle(new ActionEvent());
+        }
+    }
+
+    protected void pushForwardButton() {
+        EventHandler<ActionEvent> handler = null;
+        if (this.forwardButton != null) {
+            handler = this.forwardButton.getOnAction();
+        }
+
+        if (handler != null) {
+            handler.handle(new ActionEvent());
+        }
+    }
+
+    protected void pushUpwardButton() {
+        EventHandler<ActionEvent> handler = null;
+        if (this.upwardButton != null) {
+            handler = this.upwardButton.getOnAction();
+        }
+
+        if (handler != null) {
+            handler.handle(new ActionEvent());
+        }
     }
 
     protected QEFXExplorerBody getExplorerBody() {

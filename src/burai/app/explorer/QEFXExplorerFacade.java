@@ -67,6 +67,18 @@ public class QEFXExplorerFacade {
         }
     }
 
+    public void goBackward() {
+        this.controller.pushBackwardButton();
+    }
+
+    public void goForward() {
+        this.controller.pushForwardButton();
+    }
+
+    public void goUpward() {
+        this.controller.pushUpwardButton();
+    }
+
     public void refreshProject(Project project) {
         this.controller.refreshProject(project);
     }
