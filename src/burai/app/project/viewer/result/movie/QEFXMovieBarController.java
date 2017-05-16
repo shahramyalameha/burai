@@ -295,6 +295,8 @@ public class QEFXMovieBarController extends QEFXAppController {
             atomsViewer.startExclusiveMode();
         }
 
+        this.viewerController.freezeGeometries();
+
         try {
             this.movieTimeline.playFromStart();
         } catch (Exception e) {
@@ -312,6 +314,8 @@ public class QEFXMovieBarController extends QEFXAppController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        this.viewerController.thawGeometries();
 
         AtomsViewerInterface atomsViewer = this.projectController.getAtomsViewer();
         if (atomsViewer != null) {

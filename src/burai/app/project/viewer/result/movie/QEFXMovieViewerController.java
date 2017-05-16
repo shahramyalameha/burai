@@ -40,6 +40,8 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
 
     private ProjectGeometryList projectGeometryList;
 
+    private ProjectGeometryList projectGeometryListSaved;
+
     public QEFXMovieViewerController(QEFXProjectController
             projectController, ProjectProperty projectProperty, Cell cell, boolean mdMode) {
 
@@ -58,6 +60,8 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         } else {
             this.projectGeometryList = projectProperty.getOptList();
         }
+
+        this.projectGeometryListSaved = null;
 
         this.cell = cell;
         this.currentIndex = 0;
@@ -115,6 +119,26 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
         }
 
         return projectGeometry;
+    }
+
+    protected void freezeGeometries() {
+        if (this.projectGeometryListSaved != null) {
+            return;
+        }
+
+        this.projectGeometryListSaved = this.projectGeometryList;
+        if (this.projectGeometryList != null) {
+            this.projectGeometryList = this.projectGeometryList.copyGeometryList();
+        }
+    }
+
+    protected void thawGeometries() {
+        if (this.projectGeometryListSaved == null) {
+            return;
+        }
+
+        this.projectGeometryList = this.projectGeometryListSaved;
+        this.projectGeometryListSaved = null;
     }
 
     public boolean showCurrentGeometry() {
