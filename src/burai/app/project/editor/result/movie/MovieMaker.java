@@ -9,6 +9,11 @@
 
 package burai.app.project.editor.result.movie;
 
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+
 import burai.app.QEFXMainController;
 import burai.project.Project;
 
@@ -31,4 +36,12 @@ public class MovieMaker {
         this.project = project;
     }
 
+    protected void makeMovie() {
+        Iterator<ImageWriter> it = ImageIO.getImageWritersByFormatName("mpeg");
+        if (it != null && it.hasNext()) {
+            System.out.println(it.next());
+        }
+
+        // TODO
+    }
 }

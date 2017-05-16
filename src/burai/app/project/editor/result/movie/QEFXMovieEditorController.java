@@ -87,6 +87,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         this.movieButton.setOnAction(event -> {
             if (this.mainController != null && this.project != null) {
                 MovieMaker movieMaker = new MovieMaker(this.mainController, this.project);
+                movieMaker.makeMovie();
             }
         });
     }
