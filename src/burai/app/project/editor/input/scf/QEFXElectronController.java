@@ -252,7 +252,7 @@ public class QEFXElectronController extends QEFXInputController {
             item.setDefault("david", this.diagButton);
         }
 
-        item.addItems("david", "cg");
+        item.addItems("david", "rmm", "cg");
     }
 
     private void setupNumDavidsonItem(QENamelist nmlElectrons) {
