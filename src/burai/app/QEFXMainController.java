@@ -665,12 +665,12 @@ public class QEFXMainController implements Initializable {
             return;
         }
 
-        QEFXIcon icon = QEFXIcon.getInstance(file);
-        if (icon == null) {
-            return;
-        }
-
         Platform.runLater(() -> {
+            QEFXIcon icon = QEFXIcon.getInstance(file);
+            if (icon == null) {
+                return;
+            }
+
             if (icon instanceof QEFXProjectIcon) {
                 Project project = ((QEFXProjectIcon) icon).getContent();
                 if (project != null) {
