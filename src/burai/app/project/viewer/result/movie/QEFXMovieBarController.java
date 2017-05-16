@@ -268,14 +268,16 @@ public class QEFXMovieBarController extends QEFXAppController {
             return;
         }
 
+        this.viewerController.freezeGeometries();
+        int numGeoms = this.viewerController.numGeometries();
+        if (numGeoms < 2) {
+            this.viewerController.thawGeometries();
+            return;
+        }
+
         double value = this.movieSlider.getValue();
         if (value >= (1.0 - 1.0e-6)) {
             this.movieSlider.setValue(value = 0.0);
-        }
-
-        int numGeoms = this.viewerController.numGeometries();
-        if (numGeoms < 2) {
-            return;
         }
 
         double time = TIME_PER_GEOM * (1.0 - value) * ((double) (numGeoms - 1));
@@ -295,8 +297,6 @@ public class QEFXMovieBarController extends QEFXAppController {
             atomsViewer.startExclusiveMode();
         }
 
-        this.viewerController.freezeGeometries();
-
         try {
             this.movieTimeline.playFromStart();
         } catch (Exception e) {
@@ -315,13 +315,13 @@ public class QEFXMovieBarController extends QEFXAppController {
             e.printStackTrace();
         }
 
-        this.viewerController.thawGeometries();
-
         AtomsViewerInterface atomsViewer = this.projectController.getAtomsViewer();
         if (atomsViewer != null) {
             atomsViewer.stopExclusiveMode();
         }
 
         this.movieTimeline = null;
+
+        this.viewerController.thawGeometries();
     }
 }
