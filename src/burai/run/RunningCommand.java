@@ -228,14 +228,17 @@ public class RunningCommand {
             }
 
             if ((!hasCommand) && Environments.isWindows()) {
-                File file2 = new File(path_, command0 + ".exe");
-                try {
-                    if (file2.isFile()) {
-                        command0 = file2.getPath();
-                        hasCommand = true;
+                for (String ext : new String[] { ".exe", ".EXE" }) {
+                    File file2 = new File(path_, command0 + ext);
+                    try {
+                        if (file2.isFile()) {
+                            command0 = file2.getPath();
+                            hasCommand = true;
+                            break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }
