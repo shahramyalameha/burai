@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import burai.app.QEFXMain;
 import burai.app.QEFXMainController;
+import burai.app.project.QEFXProjectController;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
@@ -28,15 +29,15 @@ import burai.project.property.ProjectGeometry;
 
 public class ProjectExporter {
 
-    private QEFXMainController mainController;
+    private QEFXProjectController projectController;
 
     private Project project;
 
     private ProjectGeometry geometry;
 
-    protected ProjectExporter(QEFXMainController mainController, Project project, ProjectGeometry geometry) {
-        if (mainController == null) {
-            throw new IllegalArgumentException("mainController is null.");
+    protected ProjectExporter(QEFXProjectController projectController, Project project, ProjectGeometry geometry) {
+        if (projectController == null) {
+            throw new IllegalArgumentException("projectController is null.");
         }
 
         if (project == null) {
@@ -47,7 +48,7 @@ public class ProjectExporter {
             throw new IllegalArgumentException("geometry is null.");
         }
 
-        this.mainController = mainController;
+        this.projectController = projectController;
         this.project = project;
         this.geometry = geometry;
     }
@@ -64,8 +65,12 @@ public class ProjectExporter {
             return;
         }
 
-        if (this.mainController != null) {
-            this.mainController.showProject(project);
+        QEFXMainController mainController = null;
+        if (this.projectController != null) {
+            mainController = this.projectController.getMainController();
+        }
+        if (mainController != null) {
+            mainController.showProject(project);
         }
     }
 
@@ -100,7 +105,7 @@ public class ProjectExporter {
             }
         }
 
-        Stage stage = this.mainController == null ? null : this.mainController.getStage();
+        Stage stage = this.projectController == null ? null : this.projectController.getStage();
         if (stage != null) {
             directory = fileChooser.showSaveDialog(stage);
         }

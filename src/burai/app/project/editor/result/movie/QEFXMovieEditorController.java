@@ -85,8 +85,8 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
         this.movieButton.setGraphic(SVGLibrary.getGraphic(SVGData.MOVIE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         this.movieButton.setOnAction(event -> {
-            if (this.mainController != null && this.project != null) {
-                MovieMaker movieMaker = new MovieMaker(this.mainController, this.project);
+            if (this.projectController != null && this.project != null) {
+                MovieMaker movieMaker = new MovieMaker(this.projectController, this.project);
                 movieMaker.makeMovie();
             }
         });
@@ -106,8 +106,8 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
                 geometry = this.viewerController.getGeometry();
             }
 
-            if (this.mainController != null && this.project != null && geometry != null) {
-                ProjectExporter exporter = new ProjectExporter(this.mainController, this.project, geometry);
+            if (this.projectController != null && this.project != null && geometry != null) {
+                ProjectExporter exporter = new ProjectExporter(this.projectController, this.project, geometry);
                 exporter.exportProject();
             }
         });
