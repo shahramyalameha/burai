@@ -11,6 +11,8 @@
             <fileset dir="C:/Users/慧径/git/burai/class"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/慧径/git/burai/lib/exp4j-0.4.6.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/慧径/git/burai/lib/gson-2.6.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/慧径/git/burai/lib/jcodec-0.2.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/慧径/git/burai/lib/jcodec-javase-0.2.0.jar"/>
         </jar>
     </target>
 </project>

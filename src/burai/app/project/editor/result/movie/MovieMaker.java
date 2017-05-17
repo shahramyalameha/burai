@@ -40,6 +40,8 @@ public class MovieMaker {
 
     private File mp4File;
 
+    private MovieProgress movieProgress;
+
     protected MovieMaker(QEFXProjectController projectController, QEFXMovieViewerController viewerController, Project project) {
         if (projectController == null) {
             throw new IllegalArgumentException("projectController is null.");
@@ -58,18 +60,26 @@ public class MovieMaker {
         this.project = project;
 
         this.mp4File = null;
+        this.movieProgress = null;
     }
 
     protected void makeMovie() {
-        boolean status = this.makeMP4();
+        boolean status = false;
+        this.mp4File = this.selectMP4File();
+        if (this.mp4File != null) {
+            this.movieProgress = new MovieProgress(this.mp4File);
+            this.movieProgress.showProgress();
+            status = this.makeMP4();
+            this.movieProgress.hideProgress();
+        }
 
         if (!status) {
             Alert alert = new Alert(AlertType.ERROR);
             QEFXMain.initializeDialogOwner(alert);
             if (this.mp4File != null) {
-                alert.setHeaderText("ERROR in making movie file: " + this.mp4File.getName());
+                alert.setHeaderText("ERROR in creating movie file: " + this.mp4File.getName());
             } else {
-                alert.setHeaderText("ERROR in making movie file.");
+                alert.setHeaderText("ERROR in creating movie file.");
             }
 
             alert.showAndWait();
@@ -77,7 +87,6 @@ public class MovieMaker {
     }
 
     private boolean makeMP4() {
-        this.mp4File = this.selectMP4File();
         if (this.mp4File == null) {
             return false;
         }
@@ -114,6 +123,12 @@ public class MovieMaker {
                 }
 
                 encoder.encodeImage(swingImage);
+
+                if (this.movieProgress != null) {
+                    double valueDone = (double) (i + 1);
+                    double valueTotal = (double) numGeoms;
+                    this.movieProgress.setProgress(valueDone / valueTotal);
+                }
             }
 
         } catch (Exception e1) {
