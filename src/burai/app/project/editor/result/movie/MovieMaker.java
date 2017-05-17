@@ -12,7 +12,6 @@ package burai.app.project.editor.result.movie;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
@@ -117,7 +116,7 @@ public class MovieMaker {
                 encoder.encodeImage(swingImage);
             }
 
-        } catch (IOException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
             return false;
 
@@ -126,7 +125,7 @@ public class MovieMaker {
                 try {
                     encoder.finish();
 
-                } catch (IOException e2) {
+                } catch (Exception e2) {
                     e2.printStackTrace();
                     return false;
                 }
