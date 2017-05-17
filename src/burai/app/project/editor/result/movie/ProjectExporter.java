@@ -73,7 +73,7 @@ public class ProjectExporter {
         File directory = null;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("New project");
+        fileChooser.setTitle("Export new project");
 
         String projPath = this.project == null ? null : this.project.getDirectoryPath();
         projPath = projPath == null ? null : projPath.trim();
