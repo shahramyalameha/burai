@@ -178,7 +178,10 @@ public class QEFXScreenshotDialog extends Dialog<ButtonType> {
 
         if (dirPath != null) {
             dirFile = new File(dirPath);
-            fileName = dirFile.getName() + ".png";
+            fileName = dirFile.getName();
+            if (fileName != null) {
+                fileName = fileName.trim() + ".png";
+            }
 
         } else if (rootPath != null) {
             File rootFile = new File(rootPath);
@@ -207,7 +210,7 @@ public class QEFXScreenshotDialog extends Dialog<ButtonType> {
             e.printStackTrace();
         }
 
-        if (fileName != null) {
+        if (fileName != null && !(fileName.isEmpty())) {
             fileChooser.setInitialFileName(fileName);
         }
 
