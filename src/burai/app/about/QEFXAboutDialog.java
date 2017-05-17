@@ -115,8 +115,9 @@ public class QEFXAboutDialog extends Dialog<ButtonType> implements Initializable
         message = message + "or later version of runtime environment." + ls;
         message = message + ls;
         message = message + "The following external libraries are used:" + ls;
-        message = message + "  - exp4j (Apache License 2.0, http://www.objecthunter.net/exp4j/)" + ls;
-        message = message + "  - Gson  (Apache License 2.0, https://github.com/google/gson)" + ls;
+        message = message + "  - exp4j  (Apache License 2.0, http://www.objecthunter.net/exp4j/)" + ls;
+        message = message + "  - Gson   (Apache License 2.0, https://github.com/google/gson)" + ls;
+        message = message + "  - JCodec (FreeBSD License,    http://jcodec.org)" + ls;
         message = message + ls;
         message = message + "All of SVG icons are from FLATICON <http://www.flaticon.com>." + ls;
         message = message + ls;
