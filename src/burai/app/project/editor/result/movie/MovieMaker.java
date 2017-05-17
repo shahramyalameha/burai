@@ -9,6 +9,7 @@
 
 package burai.app.project.editor.result.movie;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -90,14 +91,14 @@ public class MovieMaker {
         AWTSequenceEncoder8Bit encoder = null;
 
         try {
-            encoder = AWTSequenceEncoder8Bit.create25Fps(this.mp4File);
+            encoder = AWTSequenceEncoder8Bit.create30Fps(this.mp4File);
             if (encoder == null) {
                 return false;
             }
 
             H264Encoder h264Encoder = encoder.getEncoder();
             if (h264Encoder != null) {
-                h264Encoder.setKeyInterval(25);
+                h264Encoder.setKeyInterval(30);
             }
 
             for (int i = 0; i < numGeoms; i++) {
@@ -108,12 +109,12 @@ public class MovieMaker {
                 Node subject = this.projectController.getViewerPane();
                 Image image = subject == null ? null : subject.snapshot(null, null);
                 BufferedImage swingImage = image == null ? null : SwingFXUtils.fromFXImage(image, null);
+                swingImage = this.resizeSwingImage(swingImage);
                 if (swingImage == null) {
                     return false;
                 }
 
-                // width and height must be 8*N
-                encoder.encodeImage(new BufferedImage(640, 480, BufferedImage.TYPE_3BYTE_BGR));
+                encoder.encodeImage(swingImage);
             }
 
         } catch (IOException e1) {
@@ -133,6 +134,37 @@ public class MovieMaker {
         }
 
         return true;
+    }
+
+    private BufferedImage resizeSwingImage(BufferedImage swingImage1) {
+        if (swingImage1 == null) {
+            return null;
+        }
+
+        int width1 = swingImage1.getWidth();
+        int height1 = swingImage1.getHeight();
+        int width2 = 8 * ((int) (Math.rint(((double) width1) / 8.0) + 0.1));
+        int height2 = 8 * ((int) (Math.rint(((double) height1) / 8.0) + 0.1));
+        if (width2 <= 0 || height2 <= 0) {
+            return null;
+        }
+
+        BufferedImage swingImage2 = new BufferedImage(width2, height2, swingImage1.getType());
+
+        Graphics graphics1 = swingImage1.getGraphics();
+        Graphics graphics2 = swingImage2.getGraphics();
+        if (graphics1 == null || graphics2 == null) {
+            return null;
+        }
+
+        java.awt.Image image1 = swingImage1.getScaledInstance(width2, height2, java.awt.Image.SCALE_DEFAULT);
+        if (image1 == null) {
+            return null;
+        }
+
+        graphics2.drawImage(image1, 0, 0, null);
+
+        return swingImage2;
     }
 
     private File selectMP4File() {
