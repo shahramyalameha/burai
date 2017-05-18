@@ -9,10 +9,16 @@
 
 package burai.app.project.viewer.modeler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.com.math.Matrix3D;
 
 public class SlabModelBuilder {
+
+    private static final double DET_THR = 1.0e-8;
 
     private Cell cell;
 
@@ -32,8 +38,18 @@ public class SlabModelBuilder {
     private int[] vector2;
     private int[] vector3;
 
+    private int aMax;
+    private int aMin;
+    private int bMax;
+    private int bMin;
+    private int cMax;
+    private int cMin;
+
     private String[] names;
-    private double[][] coord;
+    private double[][] coords;
+
+    private List<String> nameList;
+    private List<double[]> coordList;
 
     protected SlabModelBuilder(Cell cell) {
         if (cell == null) {
@@ -52,6 +68,10 @@ public class SlabModelBuilder {
             return false;
         }
 
+        if (!this.packAtoms()) {
+            return false;
+        }
+
         // TODO
 
         return true;
@@ -64,7 +84,7 @@ public class SlabModelBuilder {
         }
 
         this.names = new String[atoms.length];
-        this.coord = new double[atoms.length][];
+        this.coords = new double[atoms.length][];
 
         for (int i = 0; i < atoms.length; i++) {
             Atom atom = atoms[i];
@@ -72,7 +92,73 @@ public class SlabModelBuilder {
                 return false;
             }
             this.names[i] = atom.getName();
-            this.coord[i] = this.cell.convertToLatticePosition(atom.getX(), atom.getY(), atom.getZ());
+            this.coords[i] = this.cell.convertToLatticePosition(atom.getX(), atom.getY(), atom.getZ());
+        }
+
+        return true;
+    }
+
+    private boolean packAtoms() {
+        if (this.names.length != this.coords.length) {
+            return false;
+        }
+
+        double[][] lattice = new double[3][];
+        lattice[0] = new double[] { (double) this.vector1[0], (double) this.vector1[1], (double) this.vector1[2] };
+        lattice[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
+        lattice[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
+
+        double detLatt = Matrix3D.determinant(lattice);
+        if (Math.abs(detLatt) < DET_THR) {
+            return false;
+        }
+
+        double[][] invLatt = Matrix3D.inverse(lattice);
+        if (invLatt == null || invLatt.length < 3) {
+            return false;
+        }
+        if (invLatt[0] == null || invLatt[0].length < 3) {
+            return false;
+        }
+        if (invLatt[1] == null || invLatt[1].length < 3) {
+            return false;
+        }
+        if (invLatt[2] == null || invLatt[2].length < 3) {
+            return false;
+        }
+
+        int natom = this.names.length;
+        this.nameList = new ArrayList<String>();
+        this.coordList = new ArrayList<double[]>();
+
+        for (int ia = this.aMin; ia <= this.aMax; ia++) {
+            double ta = (double) ia;
+            for (int ib = this.bMin; ib <= this.bMax; ib++) {
+                double tb = (double) ib;
+                for (int ic = this.cMin; ic <= this.cMax; ic++) {
+                    double tc = (double) ic;
+
+                    String name = null;
+                    double[] coord = new double[3];
+                    for (int iatom = 0; iatom < natom; iatom++) {
+                        name = this.names[iatom];
+                        coord[0] = this.coords[iatom][0] + ta;
+                        coord[1] = this.coords[iatom][1] + tb;
+                        coord[2] = this.coords[iatom][2] + tc;
+                        double f1 = coord[0] * invLatt[0][0] + coord[1] * invLatt[1][0] + coord[2] * invLatt[2][0];
+                        double f2 = coord[0] * invLatt[0][1] + coord[1] * invLatt[1][1] + coord[2] * invLatt[2][1];
+                        double f3 = coord[0] * invLatt[0][2] + coord[1] * invLatt[1][2] + coord[2] * invLatt[2][2];
+                        if (0.0 <= f1 && f1 < 1.0 && 0.0 <= f2 && f2 < 1.0 && 0.0 <= f3 && f3 < 1.0) {
+                            this.nameList.add(name);
+                            this.coordList.add(new double[] { f1, f2, f3 });
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this.nameList.isEmpty() || this.coordList.isEmpty()) {
+            return false;
         }
 
         return true;
@@ -94,6 +180,8 @@ public class SlabModelBuilder {
         }
 
         this.setupVectors();
+
+        this.setupBox();
 
         return true;
     }
@@ -258,5 +346,70 @@ public class SlabModelBuilder {
         this.vector3[0] = sign1;
         this.vector3[1] = sign2;
         this.vector3[2] = sign3;
+    }
+
+    private void setupBox() {
+        this.aMax = 0;
+        this.aMin = 0;
+
+        if (this.vector1[0] > 0) {
+            aMax += this.vector1[0];
+        } else {
+            aMin += this.vector1[0];
+        }
+
+        if (this.vector2[0] > 0) {
+            aMax += this.vector2[0];
+        } else {
+            aMin += this.vector2[0];
+        }
+
+        if (this.vector3[0] > 0) {
+            aMax += this.vector3[0];
+        } else {
+            aMin += this.vector3[0];
+        }
+
+        this.bMax = 0;
+        this.bMin = 0;
+
+        if (this.vector1[1] > 0) {
+            bMax += this.vector1[1];
+        } else {
+            bMin += this.vector1[1];
+        }
+
+        if (this.vector2[1] > 0) {
+            bMax += this.vector2[1];
+        } else {
+            bMin += this.vector2[1];
+        }
+
+        if (this.vector3[1] > 0) {
+            bMax += this.vector3[1];
+        } else {
+            bMin += this.vector3[1];
+        }
+
+        this.cMax = 0;
+        this.cMin = 0;
+
+        if (this.vector1[2] > 0) {
+            cMax += this.vector1[2];
+        } else {
+            cMin += this.vector1[2];
+        }
+
+        if (this.vector2[2] > 0) {
+            cMax += this.vector2[2];
+        } else {
+            cMin += this.vector2[2];
+        }
+
+        if (this.vector3[2] > 0) {
+            cMax += this.vector3[2];
+        } else {
+            cMin += this.vector3[2];
+        }
     }
 }
