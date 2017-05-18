@@ -9,6 +9,7 @@
 
 package burai.app.project.viewer.modeler;
 
+import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 
 public class SlabModelBuilder {
@@ -31,6 +32,9 @@ public class SlabModelBuilder {
     private int[] vector2;
     private int[] vector3;
 
+    private String[] names;
+    private double[][] coord;
+
     protected SlabModelBuilder(Cell cell) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
@@ -40,6 +44,41 @@ public class SlabModelBuilder {
     }
 
     protected boolean build(int h, int k, int l) {
+        if (!this.setupMillers(h, k, l)) {
+            return false;
+        }
+
+        if (!this.setupAtoms()) {
+            return false;
+        }
+
+        // TODO
+
+        return true;
+    }
+
+    private boolean setupAtoms() {
+        Atom[] atoms = this.cell.listAtoms(true);
+        if (atoms == null || atoms.length < 1) {
+            return false;
+        }
+
+        this.names = new String[atoms.length];
+        this.coord = new double[atoms.length][];
+
+        for (int i = 0; i < atoms.length; i++) {
+            Atom atom = atoms[i];
+            if (atom == null) {
+                return false;
+            }
+            this.names[i] = atom.getName();
+            this.coord[i] = this.cell.convertToLatticePosition(atom.getX(), atom.getY(), atom.getZ());
+        }
+
+        return true;
+    }
+
+    private boolean setupMillers(int h, int k, int l) {
         if (h == 0 && k == 0 && l == 0) {
             return false;
         }
@@ -56,8 +95,7 @@ public class SlabModelBuilder {
 
         this.setupVectors();
 
-        // TODO
-        return false;
+        return true;
     }
 
     private void setupIntercepts() throws RuntimeException {

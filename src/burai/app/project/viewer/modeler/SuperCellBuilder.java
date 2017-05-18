@@ -10,6 +10,7 @@
 package burai.app.project.viewer.modeler;
 
 import burai.atoms.model.Atom;
+import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.com.env.Environments;
@@ -111,7 +112,13 @@ public class SuperCellBuilder {
                         double x = atom.getX() + tx;
                         double y = atom.getY() + ty;
                         double z = atom.getZ() + tz;
+                        boolean xFix = atom.booleanProperty(AtomProperty.FIXED_X);
+                        boolean yFix = atom.booleanProperty(AtomProperty.FIXED_Y);
+                        boolean zFix = atom.booleanProperty(AtomProperty.FIXED_Z);
                         atoms_[i] = new Atom(name, x, y, z);
+                        atoms_[i].setProperty(AtomProperty.FIXED_X, xFix);
+                        atoms_[i].setProperty(AtomProperty.FIXED_Y, yFix);
+                        atoms_[i].setProperty(AtomProperty.FIXED_Z, zFix);
                     }
                 }
 
