@@ -13,15 +13,20 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
 import org.jcodec.api.awt.AWTSequenceEncoder8Bit;
 import org.jcodec.codecs.h264.H264Encoder;
 
+import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.movie.QEFXMovieViewerController;
+import burai.com.fx.FXThread;
 
 public class MP4Maker {
 
@@ -30,8 +35,6 @@ public class MP4Maker {
     private QEFXMovieViewerController viewerController;
 
     private boolean movieMaking;
-
-    private boolean movieResult;
 
     private MovieProgress movieProgress;
 
@@ -48,47 +51,59 @@ public class MP4Maker {
         this.viewerController = viewerController;
 
         this.movieMaking = false;
-        this.movieResult = false;
         this.movieProgress = null;
     }
 
-    protected boolean makeMP4(File file) {
+    private synchronized boolean isMovieMaking() {
+        return this.movieMaking;
+    }
+
+    private synchronized void setMovieMaking(boolean movieMaking) {
+        this.movieMaking = movieMaking;
+    }
+
+    protected void makeMP4(File file) {
         if (file == null) {
-            return false;
+            return;
+        }
+
+        if (this.isMovieMaking()) {
+            return;
         }
 
         this.movieProgress = new MovieProgress(file);
-        this.movieProgress.showProgress();
-
-        this.movieMaking = true;
+        this.movieProgress.showProgress(event -> this.setMovieMaking(false));
+        this.setMovieMaking(true);
 
         Thread thread = new Thread(() -> {
-            this.movieResult = this.makeMP4Kernel(file);
+            boolean status = this.makeMP4Async(file);
 
-            synchronized (this) {
-                this.movieMaking = false;
-                this.notifyAll();
-            }
+            Platform.runLater(() -> {
+                this.movieProgress.hideProgress();
+                this.movieProgress = null;
+                this.setMovieMaking(false);
+
+                if (!status) {
+                    this.showErrorDialog(file);
+                }
+            });
         });
 
         thread.start();
-
-        synchronized (this) {
-            while (this.movieMaking) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        this.movieProgress.hideProgress();
-
-        return this.movieResult;
     }
 
-    private boolean makeMP4Kernel(File file) {
+    private void showErrorDialog(File file) {
+        if (file == null) {
+            return;
+        }
+
+        Alert alert = new Alert(AlertType.ERROR);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("ERROR in creating a movie file: " + file.getName());
+        alert.showAndWait();
+    }
+
+    private boolean makeMP4Async(File file) {
         if (file == null) {
             return false;
         }
@@ -112,25 +127,51 @@ public class MP4Maker {
             }
 
             for (int i = 0; i < numGeoms; i++) {
-                if (!this.viewerController.showGeometry(i)) {
+                int i_ = i;
+
+                if (!this.isMovieMaking()) {
                     return false;
                 }
 
-                Node subject = this.projectController.getViewerPane();
-                Image image = subject == null ? null : subject.snapshot(null, null);
-                BufferedImage swingImage = image == null ? null : SwingFXUtils.fromFXImage(image, null);
-                swingImage = this.resizeSwingImage(swingImage);
+                FXThread<BufferedImage> thread1 = new FXThread<BufferedImage>(() -> {
+                    if (!this.viewerController.showGeometry(i_)) {
+                        return null;
+                    }
+
+                    Node subject = this.projectController.getViewerPane();
+                    Image image = subject == null ? null : subject.snapshot(null, null);
+                    return image == null ? null : SwingFXUtils.fromFXImage(image, null);
+                });
+
+                BufferedImage swingImage = thread1.getResult();
+                swingImage = swingImage == null ? null : this.resizeSwingImage(swingImage);
                 if (swingImage == null) {
+                    return false;
+                }
+
+                if (!this.isMovieMaking()) {
                     return false;
                 }
 
                 encoder.encodeImage(swingImage);
 
-                if (this.movieProgress != null) {
-                    double valueDone = (double) (i + 1);
-                    double valueTotal = (double) numGeoms;
-                    this.movieProgress.setProgress(valueDone / valueTotal);
+                if (!this.isMovieMaking()) {
+                    return false;
                 }
+
+                numGeoms = this.viewerController.numGeometries();
+                double valueDone = (double) (i + 1);
+                double valueTotal = (double) numGeoms;
+                double rate = valueDone / valueTotal;
+
+                FXThread<Double> thread2 = new FXThread<Double>(() -> {
+                    if (this.movieProgress != null) {
+                        this.movieProgress.setProgress(rate);
+                    }
+                    return rate;
+                });
+
+                thread2.start();
             }
 
         } catch (Exception e1) {

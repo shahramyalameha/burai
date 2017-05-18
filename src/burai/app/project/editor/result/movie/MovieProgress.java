@@ -11,6 +11,9 @@ package burai.app.project.editor.result.movie;
 
 import java.io.File;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 public class MovieProgress {
 
     private File file;
@@ -22,24 +25,29 @@ public class MovieProgress {
         this.dialog = null;
     }
 
-    protected synchronized void setProgress(double value) {
+    protected void setProgress(double value) {
         if (this.dialog != null) {
             this.dialog.setProgress(value);
         }
     }
 
-    protected synchronized void showProgress() {
+    protected void showProgress() {
+        this.showProgress(null);
+    }
+
+    protected void showProgress(EventHandler<ActionEvent> handler) {
         if (this.dialog != null) {
             return;
         }
 
         if (this.file != null) {
             this.dialog = new QEFXMovieProgressDialog(this.file);
+            this.dialog.setOnStopAction(handler);
             this.dialog.showProgress();
         }
     }
 
-    protected synchronized void hideProgress() {
+    protected void hideProgress() {
         if (this.dialog == null) {
             return;
         }

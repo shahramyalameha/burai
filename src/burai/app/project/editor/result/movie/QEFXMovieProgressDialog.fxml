@@ -17,9 +17,9 @@
    <left>
       <StackPane prefHeight="130.0" prefWidth="130.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane>
+            <AnchorPane style="-fx-background-color: transparent;">
                <children>
-                  <ProgressIndicator fx:id="progressIndicator" focusTraversable="false" prefHeight="80.0" prefWidth="80.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="25.0" />
+                  <ProgressIndicator fx:id="progressIndicator" focusTraversable="false" prefHeight="80.0" prefWidth="80.0" progress="0.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="25.0" />
                </children>
             </AnchorPane>
          </children></StackPane>
@@ -28,17 +28,15 @@
       <HBox BorderPane.alignment="CENTER">
          <children>
             <Separator orientation="VERTICAL" />
-            <StackPane prefHeight="130.0" prefWidth="400.0" style="-fx-background-color: transparent;">
-               <children>
-                  <Label fx:id="progressLabel" style="-fx-font-size: 1.166667em;" text="Creating a movie file: " wrapText="true" />
-               </children></StackPane>
+            <BorderPane prefHeight="130.0" prefWidth="360.0" style="-fx-background-color: transparent;">
+               <center>
+                  <Label fx:id="progressLabel" style="-fx-font-size: 1.083333em;" text="Creating a movie file: " wrapText="true" BorderPane.alignment="CENTER" />
+               </center>
+               <bottom>
+                  <Button fx:id="stopButton" mnemonicParsing="false" text="Stop to create a movie" BorderPane.alignment="CENTER" />
+               </bottom>
+            </BorderPane>
          </children>
       </HBox>
    </center>
-   <bottom>
-      <Separator BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets top="2.0" />
-         </BorderPane.margin></Separator>
-   </bottom>
 </BorderPane>

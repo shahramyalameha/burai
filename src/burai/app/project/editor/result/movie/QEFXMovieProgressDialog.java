@@ -14,10 +14,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -34,6 +37,9 @@ public class QEFXMovieProgressDialog extends Dialog<File> implements Initializab
 
     @FXML
     private ProgressIndicator progressIndicator;
+
+    @FXML
+    private Button stopButton;
 
     public QEFXMovieProgressDialog(File movieFile) {
         super();
@@ -77,6 +83,7 @@ public class QEFXMovieProgressDialog extends Dialog<File> implements Initializab
     public void initialize(URL location, ResourceBundle resources) {
         this.setupProgressLabel();
         this.setupProgressIndicator();
+        this.setupStopButton();
     }
 
     private void setupProgressLabel() {
@@ -95,12 +102,20 @@ public class QEFXMovieProgressDialog extends Dialog<File> implements Initializab
             return;
         }
 
-        this.progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        this.progressIndicator.setProgress(0.0);
+    }
+
+    private void setupStopButton() {
+        if (this.stopButton == null) {
+            return;
+        }
+
+        // NOP
     }
 
     public void setProgress(double value) {
         if (this.progressIndicator != null) {
-            //this.progressIndicator.setProgress(value);
+            this.progressIndicator.setProgress(value);
         }
     }
 
@@ -116,5 +131,11 @@ public class QEFXMovieProgressDialog extends Dialog<File> implements Initializab
         dialogPane.getButtonTypes().clear();
         dialogPane.getButtonTypes().add(ButtonType.CLOSE);
         this.hide();
+    }
+
+    public void setOnStopAction(EventHandler<ActionEvent> value) {
+        if (this.stopButton != null) {
+            this.stopButton.setOnAction(value);
+        }
     }
 }
