@@ -28,7 +28,7 @@
       <HBox BorderPane.alignment="CENTER">
          <children>
             <Separator orientation="VERTICAL" />
-            <BorderPane prefHeight="130.0" prefWidth="360.0" style="-fx-background-color: transparent;">
+            <BorderPane prefHeight="130.0" prefWidth="400.0" style="-fx-background-color: transparent;">
                <center>
                   <Label fx:id="progressLabel" style="-fx-font-size: 1.083333em;" text="Creating a movie file: " wrapText="true" BorderPane.alignment="CENTER" />
                </center>
