@@ -14,6 +14,7 @@ import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.logger.AtomsLoggerProperty;
 import burai.com.consts.ConstantAtoms;
 import burai.com.math.Matrix3D;
 
@@ -58,6 +59,41 @@ public class Modeler {
 
     protected void setAtomsViewer(AtomsViewer atomsViewer) {
         this.atomsViewer = atomsViewer;
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setLoggerPropertyFactory(() -> {
+                return new CellOffsetProperty(this);
+            });
+        }
+    }
+
+    private static class CellOffsetProperty implements AtomsLoggerProperty {
+        private Modeler parent;
+
+        private double aOffset;
+        private double bOffset;
+        private double cOffset;
+
+        public CellOffsetProperty(Modeler parent) {
+            this.parent = parent;
+            this.aOffset = 0.0;
+            this.bOffset = 0.0;
+            this.cOffset = 0.0;
+        }
+
+        @Override
+        public void storeProperty() {
+            this.aOffset = this.parent == null ? 0.0 : this.parent.aOffset;
+            this.bOffset = this.parent == null ? 0.0 : this.parent.bOffset;
+            this.cOffset = this.parent == null ? 0.0 : this.parent.cOffset;
+        }
+
+        @Override
+        public void restoreProperty() {
+            if (this.parent != null) {
+                this.parent.setCellOffset(this.aOffset, this.bOffset, this.cOffset);
+            }
+        }
     }
 
     public void initialize() {
