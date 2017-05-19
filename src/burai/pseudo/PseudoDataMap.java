@@ -86,7 +86,7 @@ public class PseudoDataMap implements Map<String, PseudoData> {
     }
 
     @Override
-    public Set<java.util.Map.Entry<String, PseudoData>> entrySet() {
+    public Set<Entry<String, PseudoData>> entrySet() {
         return this.getMap().entrySet();
     }
 }
