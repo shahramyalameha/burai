@@ -116,7 +116,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.modeler = modeler;
         this.initializeModeler();
 
-        this.bufferedThread = new FXBufferedThread(100L, true);
+        this.bufferedThread = new FXBufferedThread(200L, true);
     }
 
     private void initializeModeler() {

@@ -14,7 +14,7 @@ import java.util.Queue;
 
 public final class FXBufferedThread implements Runnable {
 
-    private static final long DEF_SLEEP_TIME = 50L;
+    private static final long DEF_SLEEP_TIME = 100L;
 
     private long sleepTime;
 
@@ -73,6 +73,17 @@ public final class FXBufferedThread implements Runnable {
 
     @Override
     public void run() {
+        long initTime = this.sleepTime / 2L;
+        if (initTime > 0L) {
+            synchronized (this) {
+                try {
+                    this.wait(initTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         while (true) {
             Runnable runnable = null;
 
