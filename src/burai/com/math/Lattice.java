@@ -270,14 +270,14 @@ public final class Lattice {
         return z;
     }
 
-    /*
+    /**
      * celldm of primitive cell
      */
     public static double[] getCellDm(double[][] cell) {
         return getCellDm(0, cell);
     }
 
-    /*
+    /**
      * celldm of primitive cell (ibrav = 0) or standard cell (ibrav > 0)
      */
     public static double[] getCellDm(int ibrav, double[][] cell) {
@@ -306,14 +306,14 @@ public final class Lattice {
         }
     }
 
-    /*
+    /**
      * a, b, c, alpha, beta, gamma of primitive cell
      */
     public static double[] getLatticeConstants(double[][] cell, boolean asCos) {
         return getLatticeConstants(0, cell, asCos);
     }
 
-    /*
+    /**
      * a, b, c, alpha, beta, gamma of primitive cell (ibrav = 0) or standard cell (ibrav > 0)
      */
     public static double[] getLatticeConstants(int ibrav, double[][] cell, boolean asCos) {
@@ -362,7 +362,7 @@ public final class Lattice {
         return new double[] { a, b, c, alpha, beta, gamma };
     }
 
-    /*
+    /**
      * check available value of ibrav
      */
     public static boolean isCorrectBravais(int ibrav) {
@@ -375,7 +375,7 @@ public final class Lattice {
         return false;
     }
 
-    /*
+    /**
      * detect ibrav from lattice vectors
      */
     public static int getBravais(double[][] cell) {
@@ -406,7 +406,7 @@ public final class Lattice {
         return 0;
     }
 
-    /*
+    /**
      * detect lattice vectors from primitive celldm
      */
     private static double[][] getCell(double[] celldmPrim) {
@@ -450,7 +450,7 @@ public final class Lattice {
         return null;
     }
 
-    /*
+    /**
      * detect lattice vectors from primitive a, b, c, alpha, beta, gamma
      */
     public static double[][] getCell(double a, double b, double c, double alpha, double beta, double gamma) {
@@ -489,7 +489,7 @@ public final class Lattice {
         return getCell(celldm);
     }
 
-    /*
+    /**
      * convert celldm: primitive cell -> standard cell
      */
     private static double[] convertCellDm(int ibrav, double[] celldmPrim) {
@@ -703,7 +703,7 @@ public final class Lattice {
         return celldmStd;
     }
 
-    /*
+    /**
      * create lattice vectors from standard celldm
      */
     public static double[][] getCell(int ibrav, double[] celldm) {

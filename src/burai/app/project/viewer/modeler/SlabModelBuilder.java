@@ -14,12 +14,16 @@ import java.util.List;
 
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.com.consts.Constants;
+import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 
 public class SlabModelBuilder {
 
     private static final double DET_THR = 1.0e-8;
-    private static final double PACK_THR = 1.0e-6;
+    private static final double PACK_THR = 1.0e-6; // internal coordinate
+    private static final double CART_THR = 1.0e-4; // angstrom
 
     private Cell cell;
 
@@ -46,6 +50,9 @@ public class SlabModelBuilder {
     private int cMax;
     private int cMin;
 
+    private double[][] lattCart;
+    private double[] lattConst;
+
     private List<AtomEntry> entryUnit;
     private List<AtomEntry> entryAll;
 
@@ -70,57 +77,116 @@ public class SlabModelBuilder {
             return false;
         }
 
-        // TODO
+        if (!this.updateCell()) {
+            return false;
+        }
 
         return true;
     }
 
     private static class AtomEntry {
+        private SlabModelBuilder parent;
+
         public String name;
         public double a;
         public double b;
         public double c;
 
-        public AtomEntry() {
+        public AtomEntry(SlabModelBuilder parent) {
+            this.parent = parent;
             this.name = null;
             this.a = 0.0;
             this.b = 0.0;
             this.c = 0.0;
         }
 
-        // TODO
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            long temp;
-            temp = Double.doubleToLongBits(a);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(b);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(c);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            return result;
+            return this.name == null ? 0 : this.name.hashCode();
         }
 
-        // TODO
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (this.getClass() != obj.getClass()) {
                 return false;
+            }
+
             AtomEntry other = (AtomEntry) obj;
-            if (Double.doubleToLongBits(a) != Double.doubleToLongBits(other.a))
+            if (this.name == null) {
+                if (this.name != other.name) {
+                    return false;
+                }
+            } else {
+                if (!this.name.equals(other.name)) {
+                    return false;
+                }
+            }
+
+            double da = Math.abs(this.a - other.a);
+            da = Math.min(da, Math.abs(this.a - other.a + Math.signum(0.5 - this.a)));
+
+            double db = Math.abs(this.b - other.b);
+            db = Math.min(db, Math.abs(this.b - other.b + Math.signum(0.5 - this.b)));
+
+            double dc = Math.abs(this.c - other.c);
+            dc = Math.min(db, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
+
+            double alat = this.parent.lattConst[0] * Constants.BOHR_RADIUS_ANGS;
+            double dx = alat * da;
+            double dy = alat * this.parent.lattConst[1] * db;
+            double dz = alat * this.parent.lattConst[2] * dc;
+            double rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
                 return false;
-            if (Double.doubleToLongBits(b) != Double.doubleToLongBits(other.b))
-                return false;
-            if (Double.doubleToLongBits(c) != Double.doubleToLongBits(other.c))
-                return false;
+            }
+
             return true;
         }
+    }
+
+    private boolean updateCell() {
+        int natom = this.entryAll.size();
+        if (natom < 1 || Modeler.MAX_NUM_ATOMS <= natom) {
+            return false;
+        }
+
+        this.cell.removeAllAtoms();
+        this.cell.stopResolving();
+
+        try {
+
+            // lattice
+            try {
+                this.cell.moveLattice(this.lattCart);
+            } catch (ZeroVolumCellException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            // fill with atoms
+            for (AtomEntry entry : this.entryAll) {
+                if (entry == null) {
+                    continue;
+                }
+                if (entry.name == null || entry.name.isEmpty()) {
+                    continue;
+                }
+
+                // here, a b c are cartesian coordinate
+                this.cell.addAtom(new Atom(entry.name, entry.a, entry.b, entry.c));
+            }
+
+        } finally {
+            this.cell.restartResolving();
+        }
+
+        return true;
     }
 
     private boolean setupAtoms() {
@@ -149,7 +215,7 @@ public class SlabModelBuilder {
                 return false;
             }
 
-            AtomEntry entry = new AtomEntry();
+            AtomEntry entry = new AtomEntry(this);
             entry.name = name;
             entry.a = coord[0];
             entry.b = coord[1];
@@ -166,22 +232,33 @@ public class SlabModelBuilder {
             return false;
         }
 
-        double[][] lattice = new double[3][];
-        lattice[0] = new double[] { (double) this.vector1[0], (double) this.vector1[1], (double) this.vector1[2] };
-        lattice[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
-        lattice[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
+        double[][] lattInt = new double[3][];
+        lattInt[0] = new double[] { (double) this.vector1[0], (double) this.vector1[1], (double) this.vector1[2] };
+        lattInt[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
+        lattInt[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
 
-        double detLatt = Math.abs(Matrix3D.determinant(lattice));
-        if (detLatt < DET_THR) {
+        double detLatt = Matrix3D.determinant(lattInt);
+        if (Math.abs(detLatt) < DET_THR) {
+            System.err.println("volume is zero.");
+            return false;
+        }
+        if (detLatt < 0.0) {
+            System.err.println("parity is incorrect.");
             return false;
         }
 
-        int nsize = (int) (Math.rint(detLatt) + 0.1);
+        double detLatt2 = Math.rint(detLatt);
+        if (Math.abs(detLatt - detLatt2) >= DET_THR) {
+            System.err.println("not integer volume of lattice.");
+            return false;
+        }
+
+        int nsize = (int) (detLatt2 + 0.1);
         if ((nsize * natom) >= Modeler.MAX_NUM_ATOMS) {
             return false;
         }
 
-        double[][] invLatt = Matrix3D.inverse(lattice);
+        double[][] invLatt = Matrix3D.inverse(lattInt);
         if (invLatt == null || invLatt.length < 3) {
             return false;
         }
@@ -216,7 +293,7 @@ public class SlabModelBuilder {
                                 -PACK_THR <= b2 && b2 < (1.0 + PACK_THR) &&
                                 -PACK_THR <= c2 && c2 < (1.0 + PACK_THR)) {
 
-                            AtomEntry entry2 = new AtomEntry();
+                            AtomEntry entry2 = new AtomEntry(this);
                             entry2.name = entry.name;
                             entry2.a = a2;
                             entry2.b = b2;
@@ -238,6 +315,20 @@ public class SlabModelBuilder {
             entry.a -= Math.floor(entry.a);
             entry.b -= Math.floor(entry.b);
             entry.c -= Math.floor(entry.c);
+
+            double dc = Math.abs(entry.c - 1.0);
+            double dz = dc * this.lattConst[0] * this.lattConst[2] * Constants.BOHR_RADIUS_ANGS;
+            if (dz < CART_THR) {
+                entry.c -= 1.0;
+            }
+
+            // internal coordinate -> cartesian coordinate
+            double x = entry.a * this.lattCart[0][0] + entry.b * this.lattCart[1][0] + entry.c * this.lattCart[2][0];
+            double y = entry.a * this.lattCart[0][1] + entry.b * this.lattCart[1][1] + entry.c * this.lattCart[2][1];
+            double z = entry.a * this.lattCart[0][2] + entry.b * this.lattCart[1][2] + entry.c * this.lattCart[2][2];
+            entry.a = x;
+            entry.b = y;
+            entry.c = z;
         }
 
         return true;
@@ -254,20 +345,20 @@ public class SlabModelBuilder {
 
         try {
             this.setupIntercepts();
+            this.setupVectors();
+            this.setupBoundaryBox();
+            this.setupLattice();
+
         } catch (RuntimeException e) {
             return false;
         }
-
-        this.setupVectors();
-
-        this.setupBox();
 
         return true;
     }
 
     private void setupIntercepts() throws RuntimeException {
-        int scaleMin = 0;
-        int scaleMax = 0;
+        int scaleMin = 1;
+        int scaleMax = 1;
         this.numIntercept = 0;
 
         if (this.miller1 != 0) {
@@ -329,9 +420,9 @@ public class SlabModelBuilder {
             throw new RuntimeException("cannot detect scale.");
         }
 
-        this.intercept1 = scale / this.miller1;
-        this.intercept2 = scale / this.miller2;
-        this.intercept3 = scale / this.miller3;
+        this.intercept1 = this.hasIntercept1 ? (scale / this.miller1) : 0;
+        this.intercept2 = this.hasIntercept2 ? (scale / this.miller2) : 0;
+        this.intercept3 = this.hasIntercept3 ? (scale / this.miller3) : 0;
     }
 
     private void setupVectors() {
@@ -427,7 +518,7 @@ public class SlabModelBuilder {
         this.vector3[2] = sign3;
     }
 
-    private void setupBox() {
+    private void setupBoundaryBox() {
         this.aMax = 0;
         this.aMin = 0;
 
@@ -489,6 +580,33 @@ public class SlabModelBuilder {
             cMax += this.vector3[2];
         } else {
             cMin += this.vector3[2];
+        }
+    }
+
+    private void setupLattice() throws RuntimeException {
+        double[][] lattInt = new double[3][];
+        lattInt[0] = new double[] { (double) this.vector1[0], (double) this.vector1[1], (double) this.vector1[2] };
+        lattInt[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
+        lattInt[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
+
+        double[][] lattCart0 = Matrix3D.mult(lattInt, this.cell.copyLattice());
+        this.lattConst = lattCart0 == null ? null : Lattice.getCellDm(14, lattCart0);
+        if (this.lattConst == null || this.lattConst.length < 6) {
+            throw new RuntimeException("error to create lattice constants.");
+        }
+
+        this.lattCart = Lattice.getCell(14, this.lattConst);
+        if (this.lattCart == null || this.lattCart.length < 3) {
+            throw new RuntimeException("error to create new lattice.");
+        }
+        if (this.lattCart[0] == null || this.lattCart[0].length < 3) {
+            throw new RuntimeException("error to create new lattice.");
+        }
+        if (this.lattCart[1] == null || this.lattCart[1].length < 3) {
+            throw new RuntimeException("error to create new lattice.");
+        }
+        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
+            throw new RuntimeException("error to create new lattice.");
         }
     }
 }
