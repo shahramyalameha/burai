@@ -15,7 +15,6 @@ import java.util.List;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
-import burai.com.consts.Constants;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 
@@ -50,6 +49,8 @@ public class SlabModelBuilder {
     private int cMax;
     private int cMin;
 
+    private double vacuum;
+
     private double[][] lattCart;
     private double[] lattConst;
 
@@ -77,6 +78,7 @@ public class SlabModelBuilder {
             return false;
         }
 
+        this.vacuum = 10.0;
         if (!this.updateCell()) {
             return false;
         }
@@ -135,12 +137,11 @@ public class SlabModelBuilder {
             db = Math.min(db, Math.abs(this.b - other.b + Math.signum(0.5 - this.b)));
 
             double dc = Math.abs(this.c - other.c);
-            dc = Math.min(db, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
+            dc = Math.min(dc, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
 
-            double alat = this.parent.lattConst[0] * Constants.BOHR_RADIUS_ANGS;
-            double dx = alat * da;
-            double dy = alat * this.parent.lattConst[1] * db;
-            double dz = alat * this.parent.lattConst[2] * dc;
+            double dx = da * this.parent.lattCart[0][0] + db * this.parent.lattCart[1][0] + dc * this.parent.lattCart[2][0];
+            double dy = da * this.parent.lattCart[0][1] + db * this.parent.lattCart[1][1] + dc * this.parent.lattCart[2][1];
+            double dz = da * this.parent.lattCart[0][2] + db * this.parent.lattCart[1][2] + dc * this.parent.lattCart[2][2];
             double rr = dx * dx + dy * dy + dz * dz;
             if (rr > CART_THR * CART_THR) {
                 return false;
@@ -168,8 +169,7 @@ public class SlabModelBuilder {
             }
 
             double zSlab = lattice[2][2];
-            double zVacuum = 10.0;
-            double zTotal = zSlab + 2.0 * zVacuum;
+            double zTotal = zSlab + 2.0 * this.vacuum;
             double zScale = zSlab == 0.0 ? 1.0 : (zTotal / zSlab);
             lattice[2] = Matrix3D.mult(zScale, lattice[2]);
 
@@ -348,7 +348,7 @@ public class SlabModelBuilder {
             entry.c -= Math.floor(entry.c);
 
             double dc = Math.abs(entry.c - 1.0);
-            double dz = dc * this.lattConst[0] * this.lattConst[2] * Constants.BOHR_RADIUS_ANGS;
+            double dz = dc * this.lattCart[2][2];
             if (dz < CART_THR) {
                 entry.c -= 1.0;
             }
