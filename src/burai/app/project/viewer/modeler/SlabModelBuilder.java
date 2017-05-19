@@ -162,24 +162,55 @@ public class SlabModelBuilder {
         try {
 
             // lattice
+            double[][] lattice = Matrix3D.copy(this.lattCart);
+            if (lattice == null || lattice.length < 3) {
+                return false;
+            }
+
+            double zSlab = lattice[2][2];
+            double zVacuum = 10.0;
+            double zTotal = zSlab + 2.0 * zVacuum;
+            double zScale = zSlab == 0.0 ? 1.0 : (zTotal / zSlab);
+            lattice[2] = Matrix3D.mult(zScale, lattice[2]);
+
             try {
-                this.cell.moveLattice(this.lattCart);
+                this.cell.moveLattice(lattice);
             } catch (ZeroVolumCellException e) {
                 e.printStackTrace();
                 return false;
             }
 
             // fill with atoms
+            double zMax = this.entryAll.get(0).c;
+            double zMin = zMax;
+            for (AtomEntry entry : this.entryAll) {
+                if (entry != null) {
+                    double z = entry.c;
+                    zMax = Math.max(z, zMax);
+                    zMin = Math.min(z, zMin);
+                }
+            }
+
+            double zScale2 = zSlab == 0.0 ? 1.0 : ((zMax - zMin) / zSlab);
+            double tx = 0.5 * (lattice[2][0] - zScale2 * this.lattCart[2][0]);
+            double ty = 0.5 * (lattice[2][1] - zScale2 * this.lattCart[2][1]);
+            double tz = 0.5 * (lattice[2][2] - zScale2 * this.lattCart[2][2]);
+
             for (AtomEntry entry : this.entryAll) {
                 if (entry == null) {
                     continue;
                 }
-                if (entry.name == null || entry.name.isEmpty()) {
+
+                String name = entry.name;
+                if (name == null || name.isEmpty()) {
                     continue;
                 }
 
                 // here, a b c are cartesian coordinate
-                this.cell.addAtom(new Atom(entry.name, entry.a, entry.b, entry.c));
+                double x = entry.a + tx;
+                double y = entry.b + ty;
+                double z = entry.c + tz;
+                this.cell.addAtom(new Atom(name, x, y, z));
             }
 
         } finally {
@@ -509,10 +540,17 @@ public class SlabModelBuilder {
         int sign1 = Integer.signum(this.intercept1);
         int sign2 = Integer.signum(this.intercept2);
         int sign3 = Integer.signum(this.intercept3);
-        this.vector1[1] = +this.intercept2;
-        this.vector1[2] = -this.intercept3;
-        this.vector2[0] = -this.intercept1;
-        this.vector2[2] = +this.intercept3;
+        if (sign3 > 0) {
+            this.vector1[1] = +sign1 * this.intercept2;
+            this.vector1[2] = -sign1 * this.intercept3;
+            this.vector2[0] = -sign2 * this.intercept1;
+            this.vector2[2] = +sign2 * this.intercept3;
+        } else {
+            this.vector1[0] = -sign1 * this.intercept1;
+            this.vector1[2] = +sign1 * this.intercept3;
+            this.vector2[1] = +sign2 * this.intercept2;
+            this.vector2[2] = -sign2 * this.intercept3;
+        }
         this.vector3[0] = sign1;
         this.vector3[1] = sign2;
         this.vector3[2] = sign3;
