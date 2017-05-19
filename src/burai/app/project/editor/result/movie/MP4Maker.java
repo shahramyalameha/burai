@@ -171,7 +171,7 @@ public class MP4Maker {
                     return rate;
                 });
 
-                thread2.start();
+                thread2.runAndWait();
             }
 
         } catch (Exception e1) {

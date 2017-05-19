@@ -33,11 +33,11 @@ public class FXThread<R> {
     }
 
     public R getResult() {
-        this.start();
+        this.runAndWait();
         return this.result;
     }
 
-    public void start() {
+    public void runAndWait() {
         if (this.doneFX) {
             return;
         }
