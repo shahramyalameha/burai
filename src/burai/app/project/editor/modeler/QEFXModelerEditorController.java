@@ -17,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import burai.app.QEFXAppController;
@@ -55,6 +56,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     @FXML
     private Button redoButton;
+
+    @FXML
+    private Slider transSlider1;
+
+    @FXML
+    private Slider transSlider2;
+
+    @FXML
+    private Slider transSlider3;
 
     @FXML
     private Button superButton;
@@ -107,6 +117,10 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupInitButton();
         this.setupUndoButton();
         this.setupRedoButton();
+
+        this.setupTransSlider(this.transSlider1);
+        this.setupTransSlider(this.transSlider2);
+        this.setupTransSlider(this.transSlider3);
 
         this.setupSuperButton();
         this.setupScaleField(this.scaleField1);
@@ -251,6 +265,14 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         return (n1 * n2 * n3) > 1;
+    }
+
+    private void setupTransSlider(Slider slider) {
+        if (slider == null) {
+            return;
+        }
+
+        // TODO
     }
 
     private void setupScaleField(TextField textField) {

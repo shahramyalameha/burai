@@ -95,6 +95,10 @@ public class SlabModelBuilder {
         public double c;
 
         public AtomEntry(SlabModelBuilder parent) {
+            if (parent == null) {
+                throw new IllegalArgumentException("parent is null.");
+            }
+
             this.parent = parent;
             this.name = null;
             this.a = 0.0;
@@ -139,9 +143,14 @@ public class SlabModelBuilder {
             double dc = Math.abs(this.c - other.c);
             dc = Math.min(dc, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
 
-            double dx = da * this.parent.lattCart[0][0] + db * this.parent.lattCart[1][0] + dc * this.parent.lattCart[2][0];
-            double dy = da * this.parent.lattCart[0][1] + db * this.parent.lattCart[1][1] + dc * this.parent.lattCart[2][1];
-            double dz = da * this.parent.lattCart[0][2] + db * this.parent.lattCart[1][2] + dc * this.parent.lattCart[2][2];
+            double[][] lattice = this.parent.lattCart;
+            if (lattice == null) {
+                lattice = Matrix3D.unit();
+            }
+
+            double dx = da * lattice[0][0] + db * lattice[1][0] + dc * lattice[2][0];
+            double dy = da * lattice[0][1] + db * lattice[1][1] + dc * lattice[2][1];
+            double dz = da * lattice[0][2] + db * lattice[1][2] + dc * lattice[2][2];
             double rr = dx * dx + dy * dy + dz * dz;
             if (rr > CART_THR * CART_THR) {
                 return false;
