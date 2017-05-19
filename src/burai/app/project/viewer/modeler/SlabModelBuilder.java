@@ -19,6 +19,7 @@ import burai.com.math.Matrix3D;
 public class SlabModelBuilder {
 
     private static final double DET_THR = 1.0e-8;
+    private static final double PACK_THR = 1.0e-6;
 
     private Cell cell;
 
@@ -45,11 +46,8 @@ public class SlabModelBuilder {
     private int cMax;
     private int cMin;
 
-    private String[] names;
-    private double[][] coords;
-
-    private List<String> nameList;
-    private List<double[]> coordList;
+    private List<AtomEntry> entryUnit;
+    private List<AtomEntry> entryAll;
 
     protected SlabModelBuilder(Cell cell) {
         if (cell == null) {
@@ -77,29 +75,94 @@ public class SlabModelBuilder {
         return true;
     }
 
+    private static class AtomEntry {
+        public String name;
+        public double a;
+        public double b;
+        public double c;
+
+        public AtomEntry() {
+            this.name = null;
+            this.a = 0.0;
+            this.b = 0.0;
+            this.c = 0.0;
+        }
+
+        // TODO
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            long temp;
+            temp = Double.doubleToLongBits(a);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(b);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(c);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            return result;
+        }
+
+        // TODO
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            AtomEntry other = (AtomEntry) obj;
+            if (Double.doubleToLongBits(a) != Double.doubleToLongBits(other.a))
+                return false;
+            if (Double.doubleToLongBits(b) != Double.doubleToLongBits(other.b))
+                return false;
+            if (Double.doubleToLongBits(c) != Double.doubleToLongBits(other.c))
+                return false;
+            return true;
+        }
+    }
+
     private boolean setupAtoms() {
         Atom[] atoms = this.cell.listAtoms(true);
         if (atoms == null || atoms.length < 1) {
             return false;
         }
 
-        this.names = new String[atoms.length];
-        this.coords = new double[atoms.length][];
+        this.entryUnit = new ArrayList<AtomEntry>();
 
-        for (int i = 0; i < atoms.length; i++) {
-            Atom atom = atoms[i];
+        for (Atom atom : atoms) {
             if (atom == null) {
                 return false;
             }
-            this.names[i] = atom.getName();
-            this.coords[i] = this.cell.convertToLatticePosition(atom.getX(), atom.getY(), atom.getZ());
+
+            String name = atom.getName();
+            if (name == null || name.isEmpty()) {
+                return false;
+            }
+
+            double x = atom.getX();
+            double y = atom.getY();
+            double z = atom.getZ();
+            double[] coord = this.cell.convertToLatticePosition(x, y, z);
+            if (coord == null || coord.length < 3) {
+                return false;
+            }
+
+            AtomEntry entry = new AtomEntry();
+            entry.name = name;
+            entry.a = coord[0];
+            entry.b = coord[1];
+            entry.c = coord[2];
+            this.entryUnit.add(entry);
         }
 
         return true;
     }
 
     private boolean packAtoms() {
-        if (this.names.length != this.coords.length) {
+        int natom = this.entryUnit.size();
+        if (natom < 1) {
             return false;
         }
 
@@ -108,8 +171,13 @@ public class SlabModelBuilder {
         lattice[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
         lattice[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
 
-        double detLatt = Matrix3D.determinant(lattice);
-        if (Math.abs(detLatt) < DET_THR) {
+        double detLatt = Math.abs(Matrix3D.determinant(lattice));
+        if (detLatt < DET_THR) {
+            return false;
+        }
+
+        int nsize = (int) (Math.rint(detLatt) + 0.1);
+        if ((nsize * natom) >= Modeler.MAX_NUM_ATOMS) {
             return false;
         }
 
@@ -127,9 +195,7 @@ public class SlabModelBuilder {
             return false;
         }
 
-        int natom = this.names.length;
-        this.nameList = new ArrayList<String>();
-        this.coordList = new ArrayList<double[]>();
+        this.entryAll = new ArrayList<AtomEntry>();
 
         for (int ia = this.aMin; ia <= this.aMax; ia++) {
             double ta = (double) ia;
@@ -138,27 +204,40 @@ public class SlabModelBuilder {
                 for (int ic = this.cMin; ic <= this.cMax; ic++) {
                     double tc = (double) ic;
 
-                    String name = null;
-                    double[] coord = new double[3];
-                    for (int iatom = 0; iatom < natom; iatom++) {
-                        name = this.names[iatom];
-                        coord[0] = this.coords[iatom][0] + ta;
-                        coord[1] = this.coords[iatom][1] + tb;
-                        coord[2] = this.coords[iatom][2] + tc;
-                        double f1 = coord[0] * invLatt[0][0] + coord[1] * invLatt[1][0] + coord[2] * invLatt[2][0];
-                        double f2 = coord[0] * invLatt[0][1] + coord[1] * invLatt[1][1] + coord[2] * invLatt[2][1];
-                        double f3 = coord[0] * invLatt[0][2] + coord[1] * invLatt[1][2] + coord[2] * invLatt[2][2];
-                        if (0.0 <= f1 && f1 < 1.0 && 0.0 <= f2 && f2 < 1.0 && 0.0 <= f3 && f3 < 1.0) {
-                            this.nameList.add(name);
-                            this.coordList.add(new double[] { f1, f2, f3 });
+                    for (AtomEntry entry : this.entryUnit) {
+                        double a = entry.a + ta;
+                        double b = entry.b + tb;
+                        double c = entry.c + tc;
+                        double a2 = a * invLatt[0][0] + b * invLatt[1][0] + c * invLatt[2][0];
+                        double b2 = a * invLatt[0][1] + b * invLatt[1][1] + c * invLatt[2][1];
+                        double c2 = a * invLatt[0][2] + b * invLatt[1][2] + c * invLatt[2][2];
+
+                        if (-PACK_THR <= a2 && a2 < (1.0 + PACK_THR) &&
+                                -PACK_THR <= b2 && b2 < (1.0 + PACK_THR) &&
+                                -PACK_THR <= c2 && c2 < (1.0 + PACK_THR)) {
+
+                            AtomEntry entry2 = new AtomEntry();
+                            entry2.name = entry.name;
+                            entry2.a = a2;
+                            entry2.b = b2;
+                            entry2.c = c2;
+                            if (!this.entryAll.contains(entry2)) {
+                                this.entryAll.add(entry2);
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (this.nameList.isEmpty() || this.coordList.isEmpty()) {
+        if (this.entryAll.isEmpty()) {
             return false;
+        }
+
+        for (AtomEntry entry : this.entryAll) {
+            entry.a -= Math.floor(entry.a);
+            entry.b -= Math.floor(entry.b);
+            entry.c -= Math.floor(entry.c);
         }
 
         return true;
