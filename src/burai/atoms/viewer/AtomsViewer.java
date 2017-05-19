@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.logger.AtomsLogger;
+import burai.atoms.viewer.logger.AtomsLoggerPFactory;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
 import burai.atoms.visible.VisibleCell;
@@ -386,6 +387,12 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
 
         if (this.viewerCompass != null) {
             this.viewerCompass.initialize();
+        }
+    }
+
+    public void setLoggerPropertyFactory(AtomsLoggerPFactory propFactory) {
+        if (this.logger != null) {
+            this.logger.setPropertyFactory(propFactory);
         }
     }
 

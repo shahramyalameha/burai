@@ -21,7 +21,7 @@ import burai.atoms.model.exception.ZeroVolumCellException;
 
 public class AtomsLogger {
 
-    private static final int DEFAULT_MAX_STORED = 20;
+    private static final int DEFAULT_MAX_STORED = 16;
 
     private int maxStored;
 
@@ -30,6 +30,8 @@ public class AtomsLogger {
     private Deque<Configuration> configs;
 
     private Deque<Configuration> subConfigs;
+
+    private AtomsLoggerPFactory propFactory;
 
     public AtomsLogger(Cell cell) {
         this(DEFAULT_MAX_STORED, cell);
@@ -44,12 +46,17 @@ public class AtomsLogger {
         this.cell = cell;
         this.configs = new LinkedList<AtomsLogger.Configuration>();
         this.subConfigs = new LinkedList<AtomsLogger.Configuration>();
+        this.propFactory = null;
+    }
+
+    public void setPropertyFactory(AtomsLoggerPFactory propFactory) {
+        this.propFactory = propFactory;
     }
 
     public void storeConfiguration() {
         this.subConfigs.clear();
 
-        this.configs.push(new Configuration(this.cell));
+        this.configs.push(new Configuration(this));
 
         if (this.configs.size() > this.maxStored) {
             this.configs.removeLast();
@@ -77,7 +84,7 @@ public class AtomsLogger {
             return;
         }
 
-        this.subConfigs.push(new Configuration(this.cell));
+        this.subConfigs.push(new Configuration(this));
 
         boolean status = this.restoreConfiguration(this.configs);
 
@@ -91,7 +98,7 @@ public class AtomsLogger {
             return;
         }
 
-        this.configs.push(new Configuration(this.cell));
+        this.configs.push(new Configuration(this));
 
         boolean status = this.restoreConfiguration(this.subConfigs);
 
@@ -114,6 +121,7 @@ public class AtomsLogger {
         this.cell.stopResolving();
         this.restoreCell(config);
         this.restoreAtoms(config);
+        this.restoreProperty(config);
         this.cell.restartResolving();
         return true;
     }
@@ -190,6 +198,17 @@ public class AtomsLogger {
         }
     }
 
+    private void restoreProperty(Configuration config) {
+        if (config == null) {
+            return;
+        }
+        if (config.property == null) {
+            return;
+        }
+
+        config.property.restoreProperty();
+    }
+
     private static class Configuration {
 
         public double[][] lattice;
@@ -200,50 +219,60 @@ public class AtomsLogger {
 
         public boolean[][] atomFixed;
 
-        public Configuration(Cell cell) {
+        public AtomsLoggerProperty property;
+
+        public Configuration(AtomsLogger parent) {
             this.lattice = null;
             this.atomName = null;
             this.atomCoord = null;
             this.atomFixed = null;
+            this.property = null;
 
-            if (cell == null) {
+            if (parent == null) {
+                return;
+            }
+            if (parent.cell == null) {
                 return;
             }
 
-            this.lattice = cell.copyLattice();
+            this.lattice = parent.cell.copyLattice();
 
-            Atom[] atoms = cell.listAtoms();
-            if (atoms == null || atoms.length < 1) {
-                return;
-            }
+            Atom[] atoms = parent.cell.listAtoms();
+            if (atoms != null && atoms.length > 0) {
+                List<String> listName = new ArrayList<String>();
+                List<double[]> listCoord = new ArrayList<double[]>();
+                List<boolean[]> listFixed = new ArrayList<boolean[]>();
 
-            List<String> listName = new ArrayList<String>();
-            List<double[]> listCoord = new ArrayList<double[]>();
-            List<boolean[]> listFixed = new ArrayList<boolean[]>();
+                for (Atom atom : atoms) {
+                    if (atom == null || !atom.isSlaveAtom()) {
+                        listName.add(atom.getName());
 
-            for (Atom atom : atoms) {
-                if (atom == null || !atom.isSlaveAtom()) {
-                    listName.add(atom.getName());
+                        double x = atom.getX();
+                        double y = atom.getY();
+                        double z = atom.getZ();
+                        listCoord.add(new double[] { x, y, z });
 
-                    double x = atom.getX();
-                    double y = atom.getY();
-                    double z = atom.getZ();
-                    listCoord.add(new double[] { x, y, z });
+                        boolean xFixed = atom.booleanProperty(AtomProperty.FIXED_X);
+                        boolean yFixed = atom.booleanProperty(AtomProperty.FIXED_Y);
+                        boolean zFixed = atom.booleanProperty(AtomProperty.FIXED_Z);
+                        listFixed.add(new boolean[] { xFixed, yFixed, zFixed });
+                    }
+                }
 
-                    boolean xFixed = atom.booleanProperty(AtomProperty.FIXED_X);
-                    boolean yFixed = atom.booleanProperty(AtomProperty.FIXED_Y);
-                    boolean zFixed = atom.booleanProperty(AtomProperty.FIXED_Z);
-                    listFixed.add(new boolean[] { xFixed, yFixed, zFixed });
+                if ((!listName.isEmpty()) && (!listCoord.isEmpty())) {
+                    this.atomName = listName.toArray(new String[listName.size()]);
+                    this.atomCoord = listCoord.toArray(new double[listCoord.size()][]);
+                    this.atomFixed = listFixed.toArray(new boolean[listFixed.size()][]);
                 }
             }
 
-            if (listName.isEmpty() || listCoord.isEmpty()) {
-                return;
+            if (parent.propFactory != null) {
+                this.property = parent.propFactory.getProperty();
             }
 
-            this.atomName = listName.toArray(new String[listName.size()]);
-            this.atomCoord = listCoord.toArray(new double[listCoord.size()][]);
-            this.atomFixed = listFixed.toArray(new boolean[listFixed.size()][]);
+            if (this.property != null) {
+                this.property.storeProperty();
+            }
         }
     }
 }
