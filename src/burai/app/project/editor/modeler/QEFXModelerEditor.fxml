@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<ScrollPane prefHeight="620.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane prefHeight="625.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox>
          <children>
@@ -80,9 +80,6 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <VBox.margin>
-                  <Insets bottom="4.0" />
-               </VBox.margin>
             </GridPane>
             <BorderPane prefWidth="395.0">
                <center>
@@ -135,6 +132,9 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
+               <VBox.margin>
+                  <Insets bottom="4.0" />
+               </VBox.margin>
             </GridPane>
             <BorderPane prefWidth="395.0">
                <center>

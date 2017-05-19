@@ -29,6 +29,11 @@ public class Modeler {
 
     private AtomsViewer atomsViewer;
 
+    private double aOffset;
+    private double bOffset;
+    private double cOffset;
+    private CellOffsetChanged onCellOffsetChanged;
+
     public Modeler(Cell srcCell) {
         if (srcCell == null) {
             throw new IllegalArgumentException("srcCell is null.");
@@ -38,6 +43,11 @@ public class Modeler {
         this.dstCell = null;
 
         this.atomsViewer = null;
+
+        this.aOffset = 0.0;
+        this.bOffset = 0.0;
+        this.cOffset = 0.0;
+        this.onCellOffsetChanged = null;
 
         this.copyCellForward();
     }
@@ -60,6 +70,8 @@ public class Modeler {
         if (this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
         }
+
+        this.setCellOffset(0.0, 0.0, 0.0);
     }
 
     public void reflect() {
@@ -78,6 +90,59 @@ public class Modeler {
         }
     }
 
+    public void setOnCellOffsetChanged(CellOffsetChanged onCellOffsetChanged) {
+        this.onCellOffsetChanged = onCellOffsetChanged;
+    }
+
+    private void setCellOffset(double a, double b, double c) {
+        this.aOffset = a;
+        this.bOffset = b;
+        this.cOffset = c;
+
+        if (this.onCellOffsetChanged != null) {
+            this.onCellOffsetChanged.onCellOffsetChanged(a, b, c);
+        }
+    }
+
+    public void translateCell(double a, double b, double c) {
+        if (this.dstCell == null) {
+            return;
+        }
+
+        double da = a - this.aOffset;
+        double db = b - this.bOffset;
+        double dc = c - this.cOffset;
+        if (Math.abs(da) <= 0.0 && Math.abs(db) <= 0.0 && Math.abs(dc) <= 0.0) {
+            return;
+        }
+
+        double[] trans = this.dstCell.convertToCartesianPosition(da, db, dc);
+        if (trans == null || trans.length < 3) {
+            return;
+        }
+
+        double dx = trans[0];
+        double dy = trans[1];
+        double dz = trans[2];
+        double rr = dx * dx + dy * dy + dz * dz;
+        if (rr <= RRMIN) {
+            return;
+        }
+
+        Atom[] atoms = this.dstCell.listAtoms(true);
+        if (atoms != null) {
+            //this.dstCell.stopResolving();
+            for (Atom atom : atoms) {
+                if (atom != null) {
+                    atom.moveBy(dx, dy, dz);
+                }
+            }
+            //this.dstCell.restartResolving();
+        }
+
+        this.setCellOffset(a, b, c);
+    }
+
     public boolean buildSuperCell(int na, int nb, int nc) {
         SuperCellBuilder builder = this.dstCell == null ? null : new SuperCellBuilder(this.dstCell);
         if (builder == null) {
@@ -92,6 +157,10 @@ public class Modeler {
 
         if (status && this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
+        }
+
+        if (status) {
+            this.setCellOffset(0.0, 0.0, 0.0);
         }
 
         return status;
@@ -111,6 +180,10 @@ public class Modeler {
 
         if (status && this.atomsViewer != null) {
             this.atomsViewer.setCellToCenter();
+        }
+
+        if (status) {
+            this.setCellOffset(0.0, 0.0, 0.0);
         }
 
         return status;

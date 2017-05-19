@@ -12,6 +12,7 @@ package burai.app.project.editor.modeler;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -56,6 +57,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     @FXML
     private Button redoButton;
+
+    private boolean transBusy;
 
     @FXML
     private Slider transSlider1;
@@ -107,7 +110,31 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         this.projectController = projectController;
+
         this.modeler = modeler;
+        this.initializeTrans();
+    }
+
+    private void initializeTrans() {
+        this.transBusy = false;
+
+        this.modeler.setOnCellOffsetChanged((a, b, c) -> {
+            if (this.transBusy) {
+                return;
+            }
+
+            if (this.transSlider1 != null) {
+                this.transSlider1.setValue(Math.min(Math.max(-0.5, a), 0.5));
+            }
+
+            if (this.transSlider2 != null) {
+                this.transSlider2.setValue(Math.min(Math.max(-0.5, b), 0.5));
+            }
+
+            if (this.transSlider3 != null) {
+                this.transSlider3.setValue(Math.min(Math.max(-0.5, c), 0.5));
+            }
+        });
     }
 
     @Override
@@ -217,6 +244,25 @@ public class QEFXModelerEditorController extends QEFXAppController {
         });
     }
 
+    private void setupTransSlider(Slider slider) {
+        if (slider == null) {
+            return;
+        }
+
+        slider.valueProperty().addListener(o -> {
+            if (this.modeler != null) {
+                double a = this.transSlider1 == null ? 0.0 : this.transSlider1.getValue();
+                double b = this.transSlider2 == null ? 0.0 : this.transSlider2.getValue();
+                double c = this.transSlider3 == null ? 0.0 : this.transSlider3.getValue();
+                Platform.runLater(() -> {
+                    this.transBusy = true;
+                    this.modeler.translateCell(a, b, c);
+                    this.transBusy = false;
+                });
+            }
+        });
+    }
+
     private void setupSuperButton() {
         if (this.superButton == null) {
             return;
@@ -265,14 +311,6 @@ public class QEFXModelerEditorController extends QEFXAppController {
         }
 
         return (n1 * n2 * n3) > 1;
-    }
-
-    private void setupTransSlider(Slider slider) {
-        if (slider == null) {
-            return;
-        }
-
-        // TODO
     }
 
     private void setupScaleField(TextField textField) {
