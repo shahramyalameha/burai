@@ -124,15 +124,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
             }
 
             if (this.transSlider1 != null) {
-                this.transSlider1.setValue(Math.min(Math.max(-0.5, a), 0.5));
+                this.transSlider1.setValue(Math.min(Math.max(0.0, a), 1.0));
             }
 
             if (this.transSlider2 != null) {
-                this.transSlider2.setValue(Math.min(Math.max(-0.5, b), 0.5));
+                this.transSlider2.setValue(Math.min(Math.max(0.0, b), 1.0));
             }
 
             if (this.transSlider3 != null) {
-                this.transSlider3.setValue(Math.min(Math.max(-0.5, c), 0.5));
+                this.transSlider3.setValue(Math.min(Math.max(0.0, c), 1.0));
             }
         });
     }
