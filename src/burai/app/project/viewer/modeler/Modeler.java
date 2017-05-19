@@ -167,13 +167,13 @@ public class Modeler {
 
         Atom[] atoms = this.dstCell.listAtoms(true);
         if (atoms != null) {
-            //this.dstCell.stopResolving();
+            this.dstCell.stopResolving();
             for (Atom atom : atoms) {
                 if (atom != null) {
                     atom.moveBy(dx, dy, dz);
                 }
             }
-            //this.dstCell.restartResolving();
+            this.dstCell.restartResolving();
         }
 
         this.setCellOffset(a, b, c);

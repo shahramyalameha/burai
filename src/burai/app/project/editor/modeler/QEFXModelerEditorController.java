@@ -12,7 +12,6 @@ package burai.app.project.editor.modeler;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,6 +25,7 @@ import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
 import burai.com.consts.ConstantStyles;
+import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
@@ -42,6 +42,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
     private QEFXProjectController projectController;
 
     private Modeler modeler;
+
+    private FXBufferedThread bufferedThread;
 
     @FXML
     private Button screenButton;
@@ -112,10 +114,12 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.projectController = projectController;
 
         this.modeler = modeler;
-        this.initializeTrans();
+        this.initializeModeler();
+
+        this.bufferedThread = new FXBufferedThread(100L, true);
     }
 
-    private void initializeTrans() {
+    private void initializeModeler() {
         this.transBusy = false;
 
         this.modeler.setOnCellOffsetChanged((a, b, c) -> {
@@ -254,7 +258,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
                 double a = this.transSlider1 == null ? 0.0 : this.transSlider1.getValue();
                 double b = this.transSlider2 == null ? 0.0 : this.transSlider2.getValue();
                 double c = this.transSlider3 == null ? 0.0 : this.transSlider3.getValue();
-                Platform.runLater(() -> {
+                this.bufferedThread.runLater(() -> {
                     this.transBusy = true;
                     this.modeler.translateCell(a, b, c);
                     this.transBusy = false;
