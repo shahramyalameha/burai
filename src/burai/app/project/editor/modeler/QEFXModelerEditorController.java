@@ -12,6 +12,8 @@ package burai.app.project.editor.modeler;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -337,6 +339,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
                 this.superButton.setDisable(!this.isAvailSuper());
             }
         });
+
+        textField.setOnAction(event -> {
+            if (this.superButton != null && !(this.superButton.isDisable())) {
+                EventHandler<ActionEvent> handler = this.superButton.getOnAction();
+                if (handler != null) {
+                    handler.handle(event);
+                }
+            }
+        });
     }
 
     private int getScaleValue(TextField textField) {
@@ -428,6 +439,15 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
             if (this.slabButton != null) {
                 this.slabButton.setDisable(!this.isAvailSlab());
+            }
+        });
+
+        textField.setOnAction(event -> {
+            if (this.slabButton != null && !(this.slabButton.isDisable())) {
+                EventHandler<ActionEvent> handler = this.slabButton.getOnAction();
+                if (handler != null) {
+                    handler.handle(event);
+                }
             }
         });
     }
