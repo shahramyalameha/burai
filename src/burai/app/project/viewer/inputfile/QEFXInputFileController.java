@@ -12,6 +12,8 @@ package burai.app.project.viewer.inputfile;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -78,6 +80,17 @@ public class QEFXInputFileController extends QEFXAppController implements InputM
         this.setupReloadButton();
         this.setupUploadButton();
         this.setupInputArea();
+    }
+
+    public void close() {
+        EventHandler<ActionEvent> handler = null;
+        if (this.closeButton != null) {
+            handler = this.closeButton.getOnAction();
+        }
+
+        if (handler != null) {
+            handler.handle(new ActionEvent());
+        }
     }
 
     private void setupBaseGroup() {
