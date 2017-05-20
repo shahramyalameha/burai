@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.DepthTest;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.ParallelCamera;
 import javafx.scene.Parent;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -38,6 +40,7 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
     private Camera camera;
     protected R sceneRoot;
     protected SubScene subScene;
+    protected EventHandler<? super KeyEvent> subKeyHandler;
 
     private List<NodeWrapper> exclusiveNodes;
     private Map<NodeWrapper, Boolean> exclusiveDisables;
@@ -65,6 +68,7 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
         this.camera = null;
         this.sceneRoot = null;
         this.subScene = null;
+        this.subKeyHandler = null;
 
         this.exclusiveNodes = null;
         this.exclusiveDisables = null;
@@ -242,6 +246,9 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
         }
 
         pane.getChildren().add(this.subScene);
+
+        this.subKeyHandler = this.getOnKeyPressed();
+        this.setOnKeyPressed(null);
     }
 
     @Override
@@ -260,5 +267,8 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
         }
 
         this.getChildren().add(this.subScene);
+
+        this.setOnKeyPressed(this.subKeyHandler);
+        this.subKeyHandler = null;
     }
 }

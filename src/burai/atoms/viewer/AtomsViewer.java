@@ -12,9 +12,11 @@ package burai.atoms.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.logger.AtomsLogger;
@@ -74,8 +76,17 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         this.subScene.setOnMousePressed(viewerEventManager.getMousePressedHandler());
         this.subScene.setOnMouseDragged(viewerEventManager.getMouseDraggedHandler());
         this.subScene.setOnMouseReleased(viewerEventManager.getMouseReleasedHandler());
-        this.subScene.setOnKeyPressed(viewerEventManager.getKeyPressedHandler());
         this.subScene.setOnScroll(viewerEventManager.getScrollHandler());
+
+        this.subScene.setOnKeyPressed(event -> {
+            EventHandler<KeyEvent> handler = viewerEventManager.getKeyPressedHandler();
+            if (handler != null) {
+                handler.handle(event);
+            }
+            if (this.subKeyHandler != null) {
+                subKeyHandler.handle(event);
+            }
+        });
 
         this.initialRotation();
     }
