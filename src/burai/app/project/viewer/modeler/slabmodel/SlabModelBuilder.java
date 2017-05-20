@@ -26,7 +26,7 @@ public class SlabModelBuilder {
     public boolean build(int h, int k, int l) {
         SlabModel slabModel = null;
         try {
-            slabModel = new SlabModel(this.cell, h, k, l);
+            slabModel = new SlabModelStem(this.cell, h, k, l);
         } catch (MillerIndexException e) {
             e.printStackTrace();
             return false;
