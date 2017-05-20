@@ -33,6 +33,8 @@ import burai.com.graphic.svg.SVGLibrary.SVGData;
 
 public class QEFXModelerEditorController extends QEFXAppController {
 
+    private static final long SLEEP_OF_FXBUFFER = 300L;
+
     private static final double CTRL_GRAPHIC_SIZE = 20.0;
     private static final String CTRL_GRAPHIC_CLASS = "piclight-button";
 
@@ -121,7 +123,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.modeler = modeler;
         this.initializeModeler();
 
-        this.bufferedThread = new FXBufferedThread(200L, true);
+        this.bufferedThread = new FXBufferedThread(SLEEP_OF_FXBUFFER, true);
     }
 
     private void initializeModeler() {
