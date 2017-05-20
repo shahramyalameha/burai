@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.TilePane;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.band.QEFXBandButton;
@@ -40,6 +41,7 @@ import burai.app.project.viewer.result.log.QEFXInputButton;
 import burai.app.project.viewer.result.log.QEFXOutputButton;
 import burai.app.project.viewer.result.movie.QEFXMdMovieButton;
 import burai.app.project.viewer.result.movie.QEFXOptMovieButton;
+import burai.com.keys.PriorKeyEvent;
 import burai.project.Project;
 import burai.run.RunningManager;
 
@@ -103,6 +105,7 @@ public class QEFXResultExplorer {
         this.scrollPane.setPrefWidth(PANE_WIDTH);
         this.scrollPane.setPannable(false);
         this.scrollPane.getStyleClass().add(SCROLL_CLASS);
+        this.setupKeys(this.scrollPane);
     }
 
     private void createTilePane() {
@@ -111,6 +114,23 @@ public class QEFXResultExplorer {
         this.tilePane.setFocusTraversable(false);
         this.tilePane.setOnMouseClicked(event -> this.tilePane.requestFocus());
         this.scrollPane.setContent(this.tilePane);
+    }
+
+    private void setupKeys(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        node.setOnKeyPressed(event -> {
+            if (event == null || PriorKeyEvent.isPriorKeyEvent(event)) {
+                return;
+            }
+
+            if (KeyCode.F5.equals(event.getCode())) {
+                // F5
+                this.reload();
+            }
+        });
     }
 
     public void reload() {
