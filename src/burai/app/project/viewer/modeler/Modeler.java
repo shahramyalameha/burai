@@ -30,6 +30,7 @@ public class Modeler {
     }
 
     private static final int NATOMS_TO_AUTO_CENTER = 8;
+    private static final double VOLUME_TO_AUTO_CENTER = 2.0;
 
     private static final double RMIN = 1.0e-4;
     private static final double RRMIN = RMIN * RMIN;
@@ -84,6 +85,7 @@ public class Modeler {
         private double cOffset;
 
         private int numAtoms;
+        private double volume;
 
         public CellOffsetProperty(Modeler parent) {
             this.parent = parent;
@@ -91,6 +93,7 @@ public class Modeler {
             this.bOffset = 0.0;
             this.cOffset = 0.0;
             this.numAtoms = 0;
+            this.volume = 0.0;
         }
 
         @Override
@@ -98,7 +101,13 @@ public class Modeler {
             this.aOffset = this.parent == null ? 0.0 : this.parent.aOffset;
             this.bOffset = this.parent == null ? 0.0 : this.parent.bOffset;
             this.cOffset = this.parent == null ? 0.0 : this.parent.cOffset;
-            this.numAtoms = this.parent == null ? 0 : this.parent.dstCell.numAtoms();
+
+            this.numAtoms = 0;
+            this.volume = 0.0;
+            if (this.parent != null && this.parent.dstCell != null) {
+                this.numAtoms = this.parent.dstCell.numAtoms();
+                this.volume = this.parent.dstCell.getVolume();
+            }
         }
 
         @Override
@@ -114,7 +123,19 @@ public class Modeler {
                 deltaAtoms = this.parent.dstCell.numAtoms() - this.numAtoms;
             }
 
-            if (Math.abs(deltaAtoms) >= NATOMS_TO_AUTO_CENTER) {
+            double scaleVolume = 1.0;
+            if (this.parent.dstCell != null) {
+                double volume2 = this.parent.dstCell.getVolume();
+                if (this.volume > 0.0 && volume2 > 0.0) {
+                    if (this.volume > volume2) {
+                        scaleVolume = this.volume / volume2;
+                    } else {
+                        scaleVolume = volume2 / this.volume;
+                    }
+                }
+            }
+
+            if (Math.abs(deltaAtoms) >= NATOMS_TO_AUTO_CENTER || scaleVolume >= VOLUME_TO_AUTO_CENTER) {
                 Platform.runLater(() -> {
                     if (this.parent.atomsViewer != null) {
                         this.parent.atomsViewer.setCellToCenter();
