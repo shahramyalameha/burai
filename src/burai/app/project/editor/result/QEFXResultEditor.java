@@ -11,7 +11,10 @@ package burai.app.project.editor.result;
 
 import java.io.IOException;
 
+import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
 import burai.app.QEFXAppComponent;
+import burai.com.keys.PriorKeyEvent;
 
 public abstract class QEFXResultEditor<E extends QEFXResultEditorController<?>> extends QEFXAppComponent<E> {
 
@@ -19,8 +22,39 @@ public abstract class QEFXResultEditor<E extends QEFXResultEditorController<?>> 
         super(fileFXML, controller);
 
         if (this.node != null) {
-            this.node.setOnMouseReleased(event -> this.node.requestFocus());
+            this.setupMouse(this.node);
+            this.setupKeys(this.node);
         }
     }
 
+    private void setupMouse(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        node.setOnMouseReleased(event -> {
+            this.node.requestFocus();
+        });
+    }
+
+    private void setupKeys(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        node.setOnKeyPressed(event -> {
+            if (event == null) {
+                return;
+            }
+
+            if (PriorKeyEvent.isPriorKeyEvent(event)) {
+                return;
+            }
+
+            if (KeyCode.F5.equals(event.getCode())) {
+                // F5
+                this.controller.reload();
+            }
+        });
+    }
 }

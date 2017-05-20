@@ -11,12 +11,9 @@ package burai.app.project.editor.result.movie;
 
 import java.io.IOException;
 
-import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.QEFXResultEditor;
 import burai.app.project.viewer.result.movie.QEFXMovieViewer;
-import burai.com.keys.PriorKeyEvent;
 import burai.project.Project;
 
 public class QEFXMovieEditor extends QEFXResultEditor<QEFXMovieEditorController> {
@@ -24,30 +21,6 @@ public class QEFXMovieEditor extends QEFXResultEditor<QEFXMovieEditorController>
     public QEFXMovieEditor(QEFXProjectController projectController, Project project, QEFXMovieViewer viewer) throws IOException {
         super("QEFXMovieEditor.fxml",
                 new QEFXMovieEditorController(projectController, viewer == null ? null : viewer.getController(), project));
-
-        if (this.node != null) {
-            this.setupKeys(this.node);
-        }
     }
 
-    private void setupKeys(Node node) {
-        if (node == null) {
-            return;
-        }
-
-        node.setOnKeyPressed(event -> {
-            if (event == null) {
-                return;
-            }
-
-            if (PriorKeyEvent.isPriorKeyEvent(event)) {
-                return;
-            }
-
-            if (KeyCode.F5.equals(event.getCode())) {
-                // F5
-                this.controller.reload();
-            }
-        });
-    }
 }
