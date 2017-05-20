@@ -10,6 +10,7 @@
 package burai.app.project.viewer.modeler.slabmodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import burai.app.project.viewer.modeler.Modeler;
@@ -43,12 +44,7 @@ public class SlabModelStem extends SlabModel {
     private int[] vector2;
     private int[] vector3;
 
-    private int aMax;
-    private int aMin;
-    private int bMax;
-    private int bMin;
-    private int cMax;
-    private int cMin;
+    private int[][] boundBox;
 
     private double[] lattConst;
     private double[][] lattCart;
@@ -71,11 +67,11 @@ public class SlabModelStem extends SlabModel {
             throw new MillerIndexException();
         }
 
-        if (!this.setupAtoms(cell)) {
+        if (!this.setupUnitAtoms(cell)) {
             throw new MillerIndexException();
         }
 
-        if (!this.packAtoms()) {
+        if (!this.setupAllAtoms()) {
             throw new MillerIndexException();
         }
     }
@@ -129,8 +125,8 @@ public class SlabModelStem extends SlabModel {
         return true;
     }
 
-    private static class AtomEntry {
-        private SlabModelStem parent;
+    private static class AtomEntry implements Comparable<AtomEntry> {
+        private double[][] lattice;
 
         public String name;
         public double a;
@@ -140,12 +136,12 @@ public class SlabModelStem extends SlabModel {
         public double y;
         public double z;
 
-        public AtomEntry(SlabModelStem parent) {
-            if (parent == null) {
-                throw new IllegalArgumentException("parent is null.");
+        public AtomEntry(double[][] lattice) {
+            if (lattice == null) {
+                throw new IllegalArgumentException("lattice is null.");
             }
 
-            this.parent = parent;
+            this.lattice = lattice;
             this.name = null;
             this.a = 0.0;
             this.b = 0.0;
@@ -153,6 +149,67 @@ public class SlabModelStem extends SlabModel {
             this.x = 0.0;
             this.y = 0.0;
             this.z = 0.0;
+        }
+
+        @Override
+        public int compareTo(AtomEntry other) {
+            if (other == null) {
+                return -1;
+            }
+
+            double dx;
+            double dy;
+            double dz;
+            double rr;
+
+            double dc = this.c - other.c;
+            dx = dc * this.lattice[2][0];
+            dy = dc * this.lattice[2][1];
+            dz = dc * this.lattice[2][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (dc > 0.0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            double db = this.b - other.b;
+            dx = db * this.lattice[1][0];
+            dy = db * this.lattice[1][1];
+            dz = db * this.lattice[1][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (db > 0.0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            double da = this.a - other.a;
+            dx = da * this.lattice[0][0];
+            dy = da * this.lattice[0][1];
+            dz = da * this.lattice[0][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (da > 0.0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            if (this.name == null) {
+                if (other.name == null) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+
+            return this.name.compareTo(other.name);
         }
 
         @Override
@@ -192,14 +249,9 @@ public class SlabModelStem extends SlabModel {
             double dc = Math.abs(this.c - other.c);
             dc = Math.min(dc, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
 
-            double[][] lattice = this.parent.lattCart;
-            if (lattice == null) {
-                lattice = Matrix3D.unit();
-            }
-
-            double dx = da * lattice[0][0] + db * lattice[1][0] + dc * lattice[2][0];
-            double dy = da * lattice[0][1] + db * lattice[1][1] + dc * lattice[2][1];
-            double dz = da * lattice[0][2] + db * lattice[1][2] + dc * lattice[2][2];
+            double dx = da * this.lattice[0][0] + db * this.lattice[1][0] + dc * this.lattice[2][0];
+            double dy = da * this.lattice[0][1] + db * this.lattice[1][1] + dc * this.lattice[2][1];
+            double dz = da * this.lattice[0][2] + db * this.lattice[1][2] + dc * this.lattice[2][2];
             double rr = dx * dx + dy * dy + dz * dz;
             if (rr > CART_THR * CART_THR) {
                 return false;
@@ -299,7 +351,7 @@ public class SlabModelStem extends SlabModel {
         return true;
     }
 
-    private boolean setupAtoms(Cell cell) {
+    private boolean setupUnitAtoms(Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -329,18 +381,21 @@ public class SlabModelStem extends SlabModel {
                 return false;
             }
 
-            AtomEntry entry = new AtomEntry(this);
-            entry.name = name;
-            entry.a = coord[0];
-            entry.b = coord[1];
-            entry.c = coord[2];
-            this.entryUnit.add(entry);
+            double[][] lattice = cell.copyLattice();
+            if (lattice != null) {
+                AtomEntry entry = new AtomEntry(lattice);
+                entry.name = name;
+                entry.a = coord[0];
+                entry.b = coord[1];
+                entry.c = coord[2];
+                this.entryUnit.add(entry);
+            }
         }
 
         return true;
     }
 
-    private boolean packAtoms() {
+    private boolean setupAllAtoms() {
         int natom = this.entryUnit.size();
         if (natom < 1) {
             return false;
@@ -388,11 +443,11 @@ public class SlabModelStem extends SlabModel {
 
         this.entryAll = new ArrayList<AtomEntry>();
 
-        for (int ia = this.aMin; ia <= this.aMax; ia++) {
+        for (int ia = this.boundBox[0][0]; ia <= this.boundBox[0][1]; ia++) {
             double ta = (double) ia;
-            for (int ib = this.bMin; ib <= this.bMax; ib++) {
+            for (int ib = this.boundBox[1][0]; ib <= this.boundBox[1][1]; ib++) {
                 double tb = (double) ib;
-                for (int ic = this.cMin; ic <= this.cMax; ic++) {
+                for (int ic = this.boundBox[2][0]; ic <= this.boundBox[2][1]; ic++) {
                     double tc = (double) ic;
 
                     for (AtomEntry entry : this.entryUnit) {
@@ -407,7 +462,7 @@ public class SlabModelStem extends SlabModel {
                                 -PACK_THR <= b2 && b2 < (1.0 + PACK_THR) &&
                                 -PACK_THR <= c2 && c2 < (1.0 + PACK_THR)) {
 
-                            AtomEntry entry2 = new AtomEntry(this);
+                            AtomEntry entry2 = new AtomEntry(this.lattCart);
                             entry2.name = entry.name;
                             entry2.a = a2;
                             entry2.b = b2;
@@ -436,6 +491,8 @@ public class SlabModelStem extends SlabModel {
                 entry.c -= 1.0;
             }
         }
+
+        Collections.sort(this.entryAll);
 
         return true;
     }
@@ -650,67 +707,29 @@ public class SlabModelStem extends SlabModel {
     }
 
     private boolean setupBoundaryBox() {
-        this.aMax = 0;
-        this.aMin = 0;
+        this.boundBox = new int[3][2];
 
-        if (this.vector1[0] > 0) {
-            aMax += this.vector1[0];
-        } else {
-            aMin += this.vector1[0];
-        }
+        for (int i = 0; i < 3; i++) {
+            this.boundBox[i][0] = 0;
+            this.boundBox[i][1] = 0;
 
-        if (this.vector2[0] > 0) {
-            aMax += this.vector2[0];
-        } else {
-            aMin += this.vector2[0];
-        }
+            if (this.vector1[i] < 0) {
+                this.boundBox[i][0] += this.vector1[i];
+            } else {
+                this.boundBox[i][1] += this.vector1[i];
+            }
 
-        if (this.vector3[0] > 0) {
-            aMax += this.vector3[0];
-        } else {
-            aMin += this.vector3[0];
-        }
+            if (this.vector2[i] < 0) {
+                this.boundBox[i][0] += this.vector2[i];
+            } else {
+                this.boundBox[i][1] += this.vector2[i];
+            }
 
-        this.bMax = 0;
-        this.bMin = 0;
-
-        if (this.vector1[1] > 0) {
-            bMax += this.vector1[1];
-        } else {
-            bMin += this.vector1[1];
-        }
-
-        if (this.vector2[1] > 0) {
-            bMax += this.vector2[1];
-        } else {
-            bMin += this.vector2[1];
-        }
-
-        if (this.vector3[1] > 0) {
-            bMax += this.vector3[1];
-        } else {
-            bMin += this.vector3[1];
-        }
-
-        this.cMax = 0;
-        this.cMin = 0;
-
-        if (this.vector1[2] > 0) {
-            cMax += this.vector1[2];
-        } else {
-            cMin += this.vector1[2];
-        }
-
-        if (this.vector2[2] > 0) {
-            cMax += this.vector2[2];
-        } else {
-            cMin += this.vector2[2];
-        }
-
-        if (this.vector3[2] > 0) {
-            cMax += this.vector3[2];
-        } else {
-            cMin += this.vector3[2];
+            if (this.vector3[i] < 0) {
+                this.boundBox[i][0] += this.vector3[i];
+            } else {
+                this.boundBox[i][1] += this.vector3[i];
+            }
         }
 
         return true;
@@ -729,25 +748,20 @@ public class SlabModelStem extends SlabModel {
         double[][] lattCart0 = Matrix3D.mult(lattInt, cell.copyLattice());
         this.lattConst = lattCart0 == null ? null : Lattice.getCellDm(14, lattCart0);
         if (this.lattConst == null || this.lattConst.length < 6) {
-            System.err.println("error to create lattice constants.");
             return false;
         }
 
         this.lattCart = Lattice.getCell(14, this.lattConst);
         if (this.lattCart == null || this.lattCart.length < 3) {
-            System.err.println("error to create new lattice.");
             return false;
         }
         if (this.lattCart[0] == null || this.lattCart[0].length < 3) {
-            System.err.println("error to create new lattice.");
             return false;
         }
         if (this.lattCart[1] == null || this.lattCart[1].length < 3) {
-            System.err.println("error to create new lattice.");
             return false;
         }
         if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
-            System.err.println("error to create new lattice.");
             return false;
         }
 
