@@ -62,6 +62,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
     @FXML
     private Button redoButton;
 
+    @FXML
+    private Button centerButton;
+
     private boolean transBusy;
 
     @FXML
@@ -150,6 +153,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.setupInitButton();
         this.setupUndoButton();
         this.setupRedoButton();
+        this.setupCenterButton();
 
         this.setupTransSlider(this.transSlider1);
         this.setupTransSlider(this.transSlider2);
@@ -246,6 +250,22 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.redoButton.setOnAction(event -> {
             if (this.modeler != null) {
                 this.modeler.redo();
+            }
+        });
+    }
+
+    private void setupCenterButton() {
+        if (this.centerButton == null) {
+            return;
+        }
+
+        this.centerButton.setText("");
+        this.centerButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.CENTER, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
+
+        this.centerButton.setOnAction(event -> {
+            if (this.modeler != null) {
+                this.modeler.center();
             }
         });
     }

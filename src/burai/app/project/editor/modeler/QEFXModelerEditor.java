@@ -59,6 +59,12 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
                         modeler.redo();
                     }
                 }
+
+            } else if (event.isControlDown() && KeyCode.C.equals(event.getCode())) {
+                // Ctrl + C
+                if (modeler != null) {
+                    modeler.center();
+                }
             }
         });
     }

@@ -9,6 +9,7 @@
 
 package burai.app.project.viewer.modeler;
 
+import javafx.application.Platform;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
@@ -21,6 +22,8 @@ import burai.com.math.Matrix3D;
 public class Modeler {
 
     protected static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
+
+    private static final int NATOMS_TO_AUTO_CENTER = 8;
 
     private static final double RMIN = 1.0e-4;
     private static final double RRMIN = RMIN * RMIN;
@@ -74,11 +77,14 @@ public class Modeler {
         private double bOffset;
         private double cOffset;
 
+        private int numAtoms;
+
         public CellOffsetProperty(Modeler parent) {
             this.parent = parent;
             this.aOffset = 0.0;
             this.bOffset = 0.0;
             this.cOffset = 0.0;
+            this.numAtoms = 0;
         }
 
         @Override
@@ -86,12 +92,28 @@ public class Modeler {
             this.aOffset = this.parent == null ? 0.0 : this.parent.aOffset;
             this.bOffset = this.parent == null ? 0.0 : this.parent.bOffset;
             this.cOffset = this.parent == null ? 0.0 : this.parent.cOffset;
+            this.numAtoms = this.parent == null ? 0 : this.parent.dstCell.numAtoms();
         }
 
         @Override
         public void restoreProperty() {
-            if (this.parent != null) {
-                this.parent.setCellOffset(this.aOffset, this.bOffset, this.cOffset);
+            if (this.parent == null) {
+                return;
+            }
+
+            this.parent.setCellOffset(this.aOffset, this.bOffset, this.cOffset);
+
+            int deltaAtoms = 0;
+            if (this.parent.dstCell != null) {
+                deltaAtoms = this.parent.dstCell.numAtoms() - this.numAtoms;
+            }
+
+            if (Math.abs(deltaAtoms) >= NATOMS_TO_AUTO_CENTER) {
+                Platform.runLater(() -> {
+                    if (this.parent.atomsViewer != null) {
+                        this.parent.atomsViewer.setCellToCenter();
+                    }
+                });
             }
         }
     }
@@ -123,6 +145,12 @@ public class Modeler {
     public void redo() {
         if (this.atomsViewer != null) {
             this.atomsViewer.subRestoreCell();
+        }
+    }
+
+    public void center() {
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
         }
     }
 

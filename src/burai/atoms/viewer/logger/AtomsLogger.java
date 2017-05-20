@@ -27,11 +27,11 @@ public class AtomsLogger {
 
     private Cell cell;
 
+    private AtomsLoggerPFactory propFactory;
+
     private Deque<Configuration> configs;
 
     private Deque<Configuration> subConfigs;
-
-    private AtomsLoggerPFactory propFactory;
 
     public AtomsLogger(Cell cell) {
         this(DEFAULT_MAX_STORED, cell);
@@ -43,10 +43,13 @@ public class AtomsLogger {
         }
 
         this.maxStored = Math.max(maxStored, 0);
+
         this.cell = cell;
+
+        this.propFactory = null;
+
         this.configs = new LinkedList<AtomsLogger.Configuration>();
         this.subConfigs = new LinkedList<AtomsLogger.Configuration>();
-        this.propFactory = null;
     }
 
     public void setPropertyFactory(AtomsLoggerPFactory propFactory) {
@@ -117,13 +120,25 @@ public class AtomsLogger {
             return false;
         }
 
+        this.restoreProperty(config);
+
         this.cell.removeAllAtoms();
         this.cell.stopResolving();
         this.restoreCell(config);
         this.restoreAtoms(config);
-        this.restoreProperty(config);
         this.cell.restartResolving();
         return true;
+    }
+
+    private void restoreProperty(Configuration config) {
+        if (config == null) {
+            return;
+        }
+        if (config.property == null) {
+            return;
+        }
+
+        config.property.restoreProperty();
     }
 
     private void restoreCell(Configuration config) {
@@ -198,17 +213,6 @@ public class AtomsLogger {
         }
     }
 
-    private void restoreProperty(Configuration config) {
-        if (config == null) {
-            return;
-        }
-        if (config.property == null) {
-            return;
-        }
-
-        config.property.restoreProperty();
-    }
-
     private static class Configuration {
 
         public double[][] lattice;
@@ -233,6 +237,14 @@ public class AtomsLogger {
             }
             if (parent.cell == null) {
                 return;
+            }
+
+            if (parent.propFactory != null) {
+                this.property = parent.propFactory.getProperty();
+            }
+
+            if (this.property != null) {
+                this.property.storeProperty();
             }
 
             this.lattice = parent.cell.copyLattice();
@@ -264,14 +276,6 @@ public class AtomsLogger {
                     this.atomCoord = listCoord.toArray(new double[listCoord.size()][]);
                     this.atomFixed = listFixed.toArray(new boolean[listFixed.size()][]);
                 }
-            }
-
-            if (parent.propFactory != null) {
-                this.property = parent.propFactory.getProperty();
-            }
-
-            if (this.property != null) {
-                this.property.storeProperty();
             }
         }
     }

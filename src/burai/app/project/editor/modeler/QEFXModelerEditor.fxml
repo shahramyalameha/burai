@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<ScrollPane prefHeight="625.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane prefHeight="650.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox>
          <children>
@@ -60,11 +60,17 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
+                  <Button fx:id="centerButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets left="8.0" />
+                     </GridPane.margin>
+                  </Button>
                   <Label text="Screen-shot" GridPane.columnIndex="1" />
-                  <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Initialize Model" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Undo [Ctrl+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Redo [Ctrl+Shift+Z]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Centering [Ctrl+C]" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />
@@ -74,6 +80,7 @@
                   <Insets left="10.0" />
                </padding>
                <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
