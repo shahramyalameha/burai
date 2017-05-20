@@ -219,8 +219,12 @@ public class Modeler {
 
         boolean status = builder.build(na, nb, nc);
 
-        if (status && this.atomsViewer != null) {
-            this.atomsViewer.setCellToCenter();
+        if (this.atomsViewer != null) {
+            if (status) {
+                this.atomsViewer.setCellToCenter();
+            } else {
+                this.atomsViewer.restoreCell();
+            }
         }
 
         if (status) {
@@ -242,8 +246,12 @@ public class Modeler {
 
         boolean status = builder.build(i, j, k);
 
-        if (status && this.atomsViewer != null) {
-            this.atomsViewer.setCellToCenter();
+        if (this.atomsViewer != null) {
+            if (status) {
+                this.atomsViewer.setCellToCenter();
+            } else {
+                this.atomsViewer.restoreCell();
+            }
         }
 
         if (status) {
