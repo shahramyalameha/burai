@@ -12,6 +12,7 @@ package burai.app.project.viewer.modeler;
 import java.io.IOException;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -186,5 +187,12 @@ public class ModelerAction {
         if (this.modeler != null) {
             this.modeler.reflect();
         }
+
+        Platform.runLater(() -> {
+            AtomsViewerInterface atomsViewer = this.controller.getAtomsViewer();
+            if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                ((AtomsViewer) atomsViewer).setCellToCenter();
+            }
+        });
     }
 }

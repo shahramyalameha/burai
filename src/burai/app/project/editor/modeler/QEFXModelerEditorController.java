@@ -12,6 +12,7 @@ package burai.app.project.editor.modeler;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +27,8 @@ import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
+import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.ConstantStyles;
 import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
@@ -201,6 +204,16 @@ public class QEFXModelerEditorController extends QEFXAppController {
             if (this.modeler != null) {
                 this.modeler.reflect();
             }
+
+            Platform.runLater(() -> {
+                AtomsViewerInterface atomsViewer = null;
+                if (this.projectController != null) {
+                    atomsViewer = this.projectController.getAtomsViewer();
+                }
+                if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                    ((AtomsViewer) atomsViewer).setCellToCenter();
+                }
+            });
 
             if (this.projectController != null) {
                 this.projectController.setNormalMode();
