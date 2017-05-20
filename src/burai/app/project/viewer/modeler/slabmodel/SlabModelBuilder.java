@@ -7,11 +7,12 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.project.viewer.modeler;
+package burai.app.project.viewer.modeler.slabmodel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import burai.app.project.viewer.modeler.Modeler;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
@@ -57,7 +58,7 @@ public class SlabModelBuilder {
     private List<AtomEntry> entryUnit;
     private List<AtomEntry> entryAll;
 
-    protected SlabModelBuilder(Cell cell) {
+    public SlabModelBuilder(Cell cell) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
@@ -65,7 +66,7 @@ public class SlabModelBuilder {
         this.cell = cell;
     }
 
-    protected boolean build(int h, int k, int l) {
+    public boolean build(int h, int k, int l) {
         if (!this.setupMillers(h, k, l)) {
             return false;
         }
@@ -162,7 +163,7 @@ public class SlabModelBuilder {
 
     private boolean updateCell() {
         int natom = this.entryAll.size();
-        if (natom < 1 || Modeler.MAX_NUM_ATOMS <= natom) {
+        if (natom < 1 || Modeler.maxNumAtoms() <= natom) {
             return false;
         }
 
@@ -294,7 +295,7 @@ public class SlabModelBuilder {
         }
 
         int nsize = (int) (detLatt2 + 0.1);
-        if ((nsize * natom) >= Modeler.MAX_NUM_ATOMS) {
+        if ((nsize * natom) >= Modeler.maxNumAtoms()) {
             return false;
         }
 

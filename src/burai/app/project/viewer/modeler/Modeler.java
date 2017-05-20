@@ -10,6 +10,8 @@
 package burai.app.project.viewer.modeler;
 
 import javafx.application.Platform;
+import burai.app.project.viewer.modeler.slabmodel.SlabModelBuilder;
+import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
@@ -21,7 +23,11 @@ import burai.com.math.Matrix3D;
 
 public class Modeler {
 
-    protected static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
+    private static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
+
+    public static int maxNumAtoms() {
+        return MAX_NUM_ATOMS;
+    }
 
     private static final int NATOMS_TO_AUTO_CENTER = 8;
 

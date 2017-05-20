@@ -7,8 +7,9 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.project.viewer.modeler;
+package burai.app.project.viewer.modeler.supercell;
 
+import burai.app.project.viewer.modeler.Modeler;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
@@ -23,7 +24,7 @@ public class SuperCellBuilder {
 
     private Cell cell;
 
-    protected SuperCellBuilder(Cell cell) {
+    public SuperCellBuilder(Cell cell) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
@@ -31,14 +32,14 @@ public class SuperCellBuilder {
         this.cell = cell;
     }
 
-    protected boolean build(int na, int nb, int nc) {
+    public boolean build(int na, int nb, int nc) {
         if (na < 1 || nb < 1 || nc < 1) {
             return false;
         }
 
         int nt = na * nb * nc;
         int natom = this.cell.numAtoms(true);
-        if ((nt * natom) >= Modeler.MAX_NUM_ATOMS) {
+        if ((nt * natom) >= Modeler.maxNumAtoms()) {
             return false;
         }
 
