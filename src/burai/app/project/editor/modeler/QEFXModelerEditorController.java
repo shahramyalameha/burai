@@ -332,6 +332,16 @@ public class QEFXModelerEditorController extends QEFXAppController {
             if (!status) {
                 this.showErrorDialog();
             }
+
+            if (this.scaleField1 != null) {
+                this.scaleField1.setText("");
+            }
+            if (this.scaleField2 != null) {
+                this.scaleField2.setText("");
+            }
+            if (this.scaleField3 != null) {
+                this.scaleField3.setText("");
+            }
         });
     }
 
@@ -437,6 +447,16 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
             if (!status) {
                 this.showErrorDialog();
+            }
+
+            if (this.millerField1 != null) {
+                this.millerField1.setText("");
+            }
+            if (this.millerField2 != null) {
+                this.millerField2.setText("");
+            }
+            if (this.millerField3 != null) {
+                this.millerField3.setText("");
             }
         });
     }
