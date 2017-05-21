@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.project.viewer.modeler;
+package burai.app.project.viewer.modeler.slabmodel;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -27,21 +27,21 @@ import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
 import burai.project.Project;
 
-public class ModelerAction {
+public class SlabAction {
 
     private Cell cell;
 
     private QEFXProjectController controller;
 
-    private Modeler modeler;
+    private SlabModeler modeler;
 
     private AtomsViewerInterface atomsViewer;
 
-    public ModelerAction(Project project, QEFXProjectController controller) {
+    public SlabAction(Project project, QEFXProjectController controller) {
         this(project == null ? null : project.getCell(), controller);
     }
 
-    public ModelerAction(Cell cell, QEFXProjectController controller) {
+    public SlabAction(Cell cell, QEFXProjectController controller) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
@@ -72,7 +72,7 @@ public class ModelerAction {
 
     private void initializeModeler() {
         if (this.modeler == null) {
-            this.modeler = new Modeler(this.cell);
+            this.modeler = new SlabModeler(this.cell);
         }
 
         if (this.atomsViewer == null) {

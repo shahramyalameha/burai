@@ -7,10 +7,10 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.project.viewer.modeler;
+package burai.app.project.viewer.modeler.slabmodel;
 
 import javafx.application.Platform;
-import burai.app.project.viewer.modeler.slabmodel.SlabModelBuilder;
+import burai.app.project.viewer.modeler.CellOffsetChanged;
 import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
@@ -18,34 +18,16 @@ import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.logger.AtomsLoggerProperty;
-import burai.com.consts.ConstantAtoms;
 import burai.com.math.Matrix3D;
 
-public class Modeler {
-
-    private static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
-
-    public static int maxNumAtoms() {
-        return MAX_NUM_ATOMS;
-    }
-
-    private static final int NATOMS_TO_AUTO_CENTER = 8;
-    private static final double VOLUME_TO_AUTO_CENTER = 2.0;
-
-    private static final double RMIN = 1.0e-4;
-    private static final double RRMIN = RMIN * RMIN;
+public class SlabModeler {
 
     private Cell srcCell;
     private Cell dstCell;
 
     private AtomsViewer atomsViewer;
 
-    private double aOffset;
-    private double bOffset;
-    private double cOffset;
-    private CellOffsetChanged onCellOffsetChanged;
-
-    public Modeler(Cell srcCell) {
+    public SlabModeler(Cell srcCell) {
         if (srcCell == null) {
             throw new IllegalArgumentException("srcCell is null.");
         }
@@ -55,11 +37,6 @@ public class Modeler {
 
         this.atomsViewer = null;
 
-        this.aOffset = 0.0;
-        this.bOffset = 0.0;
-        this.cOffset = 0.0;
-        this.onCellOffsetChanged = null;
-
         this.copyCellForward();
     }
 
@@ -67,7 +44,7 @@ public class Modeler {
         return this.dstCell;
     }
 
-    public void setAtomsViewer(AtomsViewer atomsViewer) {
+    protected void setAtomsViewer(AtomsViewer atomsViewer) {
         this.atomsViewer = atomsViewer;
 
         if (this.atomsViewer != null) {
@@ -78,7 +55,7 @@ public class Modeler {
     }
 
     private static class CellOffsetProperty implements AtomsLoggerProperty {
-        private Modeler parent;
+        private SlabModeler parent;
 
         private double aOffset;
         private double bOffset;
@@ -87,7 +64,7 @@ public class Modeler {
         private int numAtoms;
         private double volume;
 
-        public CellOffsetProperty(Modeler parent) {
+        public CellOffsetProperty(SlabModeler parent) {
             this.parent = parent;
             this.aOffset = 0.0;
             this.bOffset = 0.0;

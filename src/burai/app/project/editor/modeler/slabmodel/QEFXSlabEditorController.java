@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.project.editor.modeler;
+package burai.app.project.editor.modeler.slabmodel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.TilePane;
 import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
@@ -32,7 +33,7 @@ import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
-public class QEFXModelerEditorController extends QEFXAppController {
+public class QEFXSlabEditorController extends QEFXAppController {
 
     private static final long SLEEP_OF_FXBUFFER = 300L;
 
@@ -46,38 +47,14 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     private QEFXProjectController projectController;
 
-    private Modeler modeler;
-
-    private FXBufferedThread bufferedThread;
-
     @FXML
     private Button screenButton;
 
     @FXML
-    private Button reflectButton;
-
-    @FXML
-    private Button initButton;
-
-    @FXML
-    private Button undoButton;
-
-    @FXML
-    private Button redoButton;
-
-    @FXML
     private Button centerButton;
 
-    private boolean transBusy;
-
     @FXML
-    private Slider transSlider1;
-
-    @FXML
-    private Slider transSlider2;
-
-    @FXML
-    private Slider transSlider3;
+    private Slider slabSlider;
 
     @FXML
     private Button superButton;
@@ -89,21 +66,12 @@ public class QEFXModelerEditorController extends QEFXAppController {
     private TextField scaleField2;
 
     @FXML
-    private TextField scaleField3;
+    private Slider vacuumSlider;
 
     @FXML
-    private Button slabButton;
+    private TilePane kindPane;
 
-    @FXML
-    private TextField millerField1;
-
-    @FXML
-    private TextField millerField2;
-
-    @FXML
-    private TextField millerField3;
-
-    public QEFXModelerEditorController(QEFXProjectController projectController, Modeler modeler) {
+    public QEFXSlabEditorController(QEFXProjectController projectController, Modeler modeler) {
         super(projectController == null ? null : projectController.getMainController());
 
         if (modeler == null) {

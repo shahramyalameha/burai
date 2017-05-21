@@ -55,8 +55,7 @@ public class QEFXProjectController extends QEFXAppController {
     private static final int MODE_RESULT_EXPLORER = 1;
     private static final int MODE_RESULT_VIEWER = 2;
     private static final int MODE_MODELER = 3;
-    private static final int MODE_MODELER_SLAB1 = 4;
-    private static final int MODE_MODELER_SLAB2 = 5;
+    private static final int MODE_MODELER_SLAB = 4;
 
     @FXML
     private Pane basePane;
@@ -417,13 +416,9 @@ public class QEFXProjectController extends QEFXAppController {
                 // shift modeler -> normal
                 this.setNormalMode();
                 break;
-            case MODE_MODELER_SLAB1:
-                // shift modeler-slab1 -> modeler
+            case MODE_MODELER_SLAB:
+                // shift modeler-slab -> modeler
                 this.setModelerMode();
-                break;
-            case MODE_MODELER_SLAB2:
-                // shift modeler-slab2 -> modeler-slab1
-                this.setModelerSlab1Mode();
                 break;
             }
         });
@@ -591,30 +586,17 @@ public class QEFXProjectController extends QEFXAppController {
         this.setAbnormalMode(MODE_MODELER, restoredAction);
     }
 
-    // Modeler-Slab1 mode
-    public boolean isModelerSlab1Mode() {
-        return this.projectMode == MODE_MODELER_SLAB1;
+    // Modeler-Slab mode
+    public boolean isModelerSlabMode() {
+        return this.projectMode == MODE_MODELER_SLAB;
     }
 
-    public void setModelerSlab1Mode() {
-        this.setModelerSlab1Mode(null);
+    public void setModelerSlabMode() {
+        this.setModelerSlabMode(null);
     }
 
-    public void setModelerSlab1Mode(ModeRestored restoredAction) {
-        this.setAbnormalMode(MODE_MODELER_SLAB1, restoredAction);
-    }
-
-    // Modeler-Slab2 mode
-    public boolean isModelerSlab2Mode() {
-        return this.projectMode == MODE_MODELER_SLAB2;
-    }
-
-    public void setModelerSlab2Mode() {
-        this.setModelerSlab2Mode(null);
-    }
-
-    public void setModelerSlab2Mode(ModeRestored restoredAction) {
-        this.setAbnormalMode(MODE_MODELER_SLAB2, restoredAction);
+    public void setModelerSlabMode(ModeRestored restoredAction) {
+        this.setAbnormalMode(MODE_MODELER_SLAB, restoredAction);
     }
 
     private void setAbnormalMode(int projectMode, ModeRestored restoredAction) {

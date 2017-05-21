@@ -32,7 +32,11 @@ public class SlabModelBuilder {
             return false;
         }
 
-        slabModel.getSlabModels();
+        SlabModel[] models = slabModel.getSlabModels();
+        for (SlabModel model : models) {
+            System.out.println(model);
+        }
+
         slabModel.updateCell(this.cell);
 
         return true;
