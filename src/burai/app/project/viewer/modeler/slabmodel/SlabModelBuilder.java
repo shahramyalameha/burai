@@ -28,10 +28,11 @@ public class SlabModelBuilder {
         try {
             slabModel = new SlabModelStem(this.cell, h, k, l);
         } catch (MillerIndexException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
 
+        slabModel.getSlabModels();
         slabModel.updateCell(this.cell);
 
         return true;

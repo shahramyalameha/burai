@@ -11,7 +11,9 @@ package burai.app.project.viewer.modeler.slabmodel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import burai.app.project.viewer.modeler.Modeler;
 import burai.atoms.model.Atom;
@@ -27,6 +29,8 @@ public class SlabModelStem extends SlabModel {
     private static final double CART_THR = 1.0e-4; // angstrom
 
     private static final double DEFAULT_VACUUM = 10.0; // angstrom
+
+    private static final double STEP_FOR_GENOMS = 0.5; // angstrom
 
     private int miller1;
     private int miller2;
@@ -74,6 +78,108 @@ public class SlabModelStem extends SlabModel {
         if (!this.setupAllAtoms()) {
             throw new MillerIndexException();
         }
+    }
+
+    @Override
+    public SlabModel[] getSlabModels() {
+        if (this.lattCart == null || this.lattCart.length < 3) {
+            return new SlabModel[] { this };
+        }
+        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
+            return new SlabModel[] { this };
+        }
+
+        int nstep = (int) (this.lattCart[2][2] / STEP_FOR_GENOMS);
+        if (nstep < 1) {
+            return new SlabModel[] { this };
+        }
+
+        Map<SlabGenom, Double> slabGenoms = new LinkedHashMap<SlabGenom, Double>();
+
+        for (int i = 0; i < nstep; i++) {
+            double offset = ((double) i) / ((double) nstep);
+            SlabGenom slabGenom = this.getSlabGenom(offset);
+            if (slabGenom != null && !(slabGenoms.containsKey(slabGenom))) {
+                slabGenoms.put(slabGenom, offset);
+                // debug
+                System.err.println(slabGenom);
+            }
+        }
+
+        if (slabGenoms.isEmpty()) {
+            return new SlabModel[] { this };
+        }
+
+        int index = 0;
+        SlabModel[] slabModels = new SlabModel[slabGenoms.size()];
+        for (double offset : slabGenoms.values()) {
+            slabModels[index] = new SlabModelLeaf(this, offset, this.vacuum);
+            index++;
+        }
+
+        return slabModels;
+    }
+
+    private SlabGenom getSlabGenom(double offset) {
+        if (this.lattCart == null || this.lattCart.length < 3) {
+            return null;
+        }
+        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
+            return null;
+        }
+
+        if (this.entryAll == null || this.entryAll.isEmpty()) {
+            return null;
+        }
+
+        int natom = this.entryAll.size();
+        int iatom = natom;
+
+        String[] names = new String[natom];
+        double[] coords = new double[natom];
+
+        for (int i = 0; i < natom; i++) {
+            AtomEntry entry = this.entryAll.get(i);
+            if (entry == null) {
+                return null;
+            }
+
+            double c1 = entry.c + offset;
+            double c2 = c1;
+            c2 -= Math.floor(c2);
+
+            double dc = Math.abs(c2 - 1.0);
+            double dz = dc * this.lattCart[2][2];
+            if (dz < CART_THR) {
+                c2 -= 1.0;
+            }
+
+            dz = Math.abs(c1 - c2) * this.lattCart[2][2];
+            if (iatom >= natom && dz > CART_THR) {
+                iatom = i;
+            }
+
+            names[i] = entry.name;
+            coords[i] = c2 * this.lattCart[2][2];
+        }
+
+        String[] names2 = new String[natom];
+        double[] coords2 = new double[natom];
+
+        int index = 0;
+        for (int i = iatom; i < natom; i++) {
+            names2[index] = names[i];
+            coords2[index] = coords[i];
+            index++;
+        }
+
+        for (int i = 0; i < iatom; i++) {
+            names2[index] = names[i];
+            coords2[index] = coords[i];
+            index++;
+        }
+
+        return new SlabGenom(names2, coords2);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class SlabGenom {
 
-    private static final double COORD_THR = 0.5; // angstrom
+    private static final double COORD_THR = 0.25; // angstrom
 
     private List<String> genom;
 
@@ -42,6 +42,7 @@ public class SlabGenom {
         int iend = 0;
 
         while (true) {
+            istart = iend;
             iend = this.nextLayer(istart, coords);
             if (istart >= iend) {
                 break;

@@ -29,6 +29,8 @@ public abstract class SlabModel {
         this.vacuum = vacuum;
     }
 
+    public abstract SlabModel[] getSlabModels();
+
     public abstract boolean updateCell(Cell cell);
 
 }
