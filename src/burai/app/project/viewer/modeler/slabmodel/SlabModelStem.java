@@ -83,15 +83,15 @@ public class SlabModelStem extends SlabModel {
     @Override
     public SlabModel[] getSlabModels() {
         if (this.lattCart == null || this.lattCart.length < 3) {
-            return new SlabModel[] { this };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
         if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
-            return new SlabModel[] { this };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
 
         int nstep = (int) (this.lattCart[2][2] / STEP_FOR_GENOMS);
-        if (nstep < 1) {
-            return new SlabModel[] { this };
+        if (nstep < 2) {
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
 
         Map<SlabGenom, Double> slabGenoms = new LinkedHashMap<SlabGenom, Double>();
@@ -101,13 +101,11 @@ public class SlabModelStem extends SlabModel {
             SlabGenom slabGenom = this.getSlabGenom(offset);
             if (slabGenom != null && !(slabGenoms.containsKey(slabGenom))) {
                 slabGenoms.put(slabGenom, offset);
-                // debug
-                System.err.println(slabGenom);
             }
         }
 
         if (slabGenoms.isEmpty()) {
-            return new SlabModel[] { this };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
 
         int index = 0;
