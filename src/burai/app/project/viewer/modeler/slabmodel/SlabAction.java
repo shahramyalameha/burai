@@ -59,6 +59,7 @@ public class SlabAction {
             return;
         }
 
+        this.slabModeler.initialize();
         this.controller.setModelerSlabMode();
     }
 
@@ -105,7 +106,7 @@ public class SlabAction {
                 this.controller.setViewerPane(this.atomsViewer);
             }
 
-            this.controller.stackOnViewerPane(new ModelerIcon("Slab Model"));
+            this.controller.stackOnViewerPane(new ModelerIcon("Slab" + System.lineSeparator() + "Model"));
 
             Node editorNode = slabEditor.getNode();
             if (editorNode != null) {

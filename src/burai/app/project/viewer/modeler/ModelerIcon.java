@@ -36,6 +36,7 @@ public class ModelerIcon extends Group {
         StackPane.setMargin(figure, new Insets(INSETS_SIZE));
 
         Label label = new Label(text2);
+        label.setWrapText(true);
         label.getStyleClass().add(GRAPHIC_CLASS);
 
         StackPane pane = new StackPane();
