@@ -24,19 +24,25 @@ public class ModelerIcon extends Group {
     private static final double GRAPHIC_SIZE = 72.0;
     private static final String GRAPHIC_CLASS = "icon-modeler";
 
-    public ModelerIcon() {
+    public ModelerIcon(String text) {
         super();
+
+        String text2 = "";
+        if (text != null) {
+            text2 = text;
+        }
 
         Node figure = SVGLibrary.getGraphic(SVGData.TOOL, GRAPHIC_SIZE, null, GRAPHIC_CLASS);
         StackPane.setMargin(figure, new Insets(INSETS_SIZE));
 
-        Label label = new Label("Modeler");
+        Label label = new Label(text2);
         label.getStyleClass().add(GRAPHIC_CLASS);
 
         StackPane pane = new StackPane();
         pane.getChildren().add(figure);
         pane.getChildren().add(label);
 
+        this.getChildren().add(pane);
         StackPane.setAlignment(this, Pos.BOTTOM_LEFT);
     }
 }

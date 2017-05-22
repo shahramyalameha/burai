@@ -9,7 +9,7 @@
 
 package burai.app.project.viewer.modeler.supercell;
 
-import burai.app.project.viewer.modeler.Modeler;
+import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
@@ -39,7 +39,7 @@ public class SuperCellBuilder {
 
         int nt = na * nb * nc;
         int natom = this.cell.numAtoms(true);
-        if ((nt * natom) >= Modeler.maxNumAtoms()) {
+        if ((nt * natom) >= ModelerBase.maxNumAtoms()) {
             return false;
         }
 

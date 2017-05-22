@@ -15,12 +15,12 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
-import burai.app.project.viewer.modeler.Modeler;
+import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
 import burai.com.keys.PriorKeyEvent;
 
 public class QEFXSlabEditor extends QEFXAppComponent<QEFXSlabEditorController> {
 
-    public QEFXSlabEditor(QEFXProjectController projectController, Modeler modeler) throws IOException {
+    public QEFXSlabEditor(QEFXProjectController projectController, SlabModeler modeler) throws IOException {
         super("QEFXSlabEditor.fxml", new QEFXSlabEditorController(projectController, modeler));
 
         if (this.node != null) {
@@ -32,7 +32,7 @@ public class QEFXSlabEditor extends QEFXAppComponent<QEFXSlabEditorController> {
         }
     }
 
-    private void setupKeys(Node node, Modeler modeler) {
+    private void setupKeys(Node node, SlabModeler modeler) {
         if (node == null) {
             return;
         }

@@ -26,7 +26,7 @@ import javafx.scene.layout.TilePane;
 import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
-import burai.app.project.viewer.modeler.Modeler;
+import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.ConstantStyles;
@@ -76,7 +76,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
     @FXML
     private TilePane kindPane;
 
-    public QEFXSlabEditorController(QEFXProjectController projectController, Modeler modeler) {
+    public QEFXSlabEditorController(QEFXProjectController projectController, SlabModeler modeler) {
         super(projectController == null ? null : projectController.getMainController());
 
         if (modeler == null) {

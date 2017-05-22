@@ -51,14 +51,14 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
-                  <Label text="Reload" GridPane.columnIndex="1" />
-                  <Label text="Screen-shot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Save Movie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Button fx:id="centerButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
+                  <Label text="Reload" GridPane.columnIndex="1" />
+                  <Label text="Screen-shot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Save Movie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="centerLabel" text="Centering [Shortcut+C]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
                <columnConstraints>

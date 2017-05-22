@@ -26,6 +26,8 @@ import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
+import burai.app.project.viewer.modeler.slabmodel.SlabAction;
+import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.ConstantStyles;
@@ -49,8 +51,6 @@ public class QEFXModelerEditorController extends QEFXAppController {
     private QEFXProjectController projectController;
 
     private Modeler modeler;
-
-    private FXBufferedThread bufferedThread;
 
     @FXML
     private Button screenButton;
@@ -81,6 +81,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     private boolean transBusy;
 
+    private FXBufferedThread transThread;
+
     @FXML
     private Slider transSlider1;
 
@@ -101,6 +103,8 @@ public class QEFXModelerEditorController extends QEFXAppController {
 
     @FXML
     private TextField scaleField3;
+
+    private SlabAction slabAction;
 
     @FXML
     private Button slabButton;
@@ -126,12 +130,17 @@ public class QEFXModelerEditorController extends QEFXAppController {
         this.modeler = modeler;
         this.initializeModeler();
 
-        this.bufferedThread = new FXBufferedThread(SLEEP_OF_FXBUFFER, true);
+        this.transBusy = false;
+        this.transThread = new FXBufferedThread(SLEEP_OF_FXBUFFER, true);
+
+        this.slabAction = null;
+        Cell cell = this.modeler.getCell();
+        if (cell != null && this.projectController != null) {
+            this.slabAction = new SlabAction(cell, this.projectController);
+        }
     }
 
     private void initializeModeler() {
-        this.transBusy = false;
-
         this.modeler.setOnCellOffsetChanged((a, b, c) -> {
             if (this.transBusy) {
                 return;
@@ -340,7 +349,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
                 double a = this.transSlider1 == null ? 0.0 : this.transSlider1.getValue();
                 double b = this.transSlider2 == null ? 0.0 : this.transSlider2.getValue();
                 double c = this.transSlider3 == null ? 0.0 : this.transSlider3.getValue();
-                this.bufferedThread.runLater(() -> {
+                this.transThread.runLater(() -> {
                     this.transBusy = true;
                     this.modeler.translateCell(a, b, c);
                     this.transBusy = false;
@@ -490,7 +499,9 @@ public class QEFXModelerEditorController extends QEFXAppController {
             int m3 = M3 == null ? 0 : M3.intValue();
             boolean status = this.modeler.buildSlabModel(m1, m2, m3);
 
-            if (!status) {
+            if (status) {
+                this.slabAction.showSlabModeler();
+            } else {
                 this.showErrorDialog();
             }
 

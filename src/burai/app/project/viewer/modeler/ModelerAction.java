@@ -89,6 +89,7 @@ public class ModelerAction {
 
         if (this.atomsViewer != null && modelerEditor != null) {
             this.controller.setModelerMode();
+
             this.controller.setOnModeBacked(controller2 -> {
                 if (this.modeler != null && this.modeler.isToReflect()) {
                     this.showReflectDialog();
@@ -102,7 +103,7 @@ public class ModelerAction {
                 this.controller.setViewerPane(this.atomsViewer);
             }
 
-            this.controller.stackOnViewerPane(new ModelerIcon());
+            this.controller.stackOnViewerPane(new ModelerIcon("Modeler"));
 
             Node editorNode = modelerEditor.getNode();
             if (editorNode != null) {

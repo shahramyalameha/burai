@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import burai.app.project.viewer.modeler.Modeler;
+import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
@@ -527,7 +527,7 @@ public class SlabModelStem extends SlabModel {
         }
 
         int nsize = (int) (detLatt2 + 0.1);
-        if ((nsize * natom) >= Modeler.maxNumAtoms()) {
+        if ((nsize * natom) >= ModelerBase.maxNumAtoms()) {
             return false;
         }
 
