@@ -16,16 +16,18 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.KeyCode;
 import burai.app.QEFXMain;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
+import burai.com.keys.KeyName;
 
 public class DeleteMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Delete selected atoms [Ctrl+D]";
+    private static final String ITEM_LABEL = "Delete selected atoms [" + KeyName.getShortcut(KeyCode.D) + "]";
 
     public DeleteMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

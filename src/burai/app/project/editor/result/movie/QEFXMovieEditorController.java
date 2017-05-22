@@ -25,6 +25,7 @@ import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.Constants;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.com.keys.KeyName;
 import burai.com.math.Matrix3D;
 import burai.project.Project;
 import burai.project.property.ProjectGeometry;
@@ -41,6 +42,9 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
 
     @FXML
     private Button centerButton;
+
+    @FXML
+    private Label centerLabel;
 
     @FXML
     private Button exportButton;
@@ -77,6 +81,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     protected void setupFXComponents() {
         this.setupMovieButton();
         this.setupCenterButton();
+        this.setupCenterLabel();
         this.setupExportButton();
         this.setupNumberField();
         this.setupAtomArea();
@@ -116,6 +121,20 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
                 ((AtomsViewer) atomsViewer).setCellToCenter();
             }
         });
+    }
+
+    private void setupCenterLabel() {
+        if (this.centerLabel == null) {
+            return;
+        }
+
+        String text = this.centerLabel.getText();
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        this.centerLabel.setText(text);
     }
 
     private void setupExportButton() {

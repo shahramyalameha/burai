@@ -68,9 +68,9 @@
                   <Label text="Screen-shot" GridPane.columnIndex="1" />
                   <Label text="Initialize Model" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Reflect on Input-file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Undo [Ctrl+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Redo [Ctrl+Shift+Z]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="Centering [Ctrl+C]" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="undoLabel" text="Undo [Shortcut+Z]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label fx:id="redoLabel" text="Redo [Shortcut+Shift+Z]" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label fx:id="centerLabel" text="Centering [Shortcut+C]" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />

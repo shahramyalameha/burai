@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
@@ -32,6 +33,7 @@ import burai.com.consts.ConstantStyles;
 import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.com.keys.KeyName;
 
 public class QEFXSlabEditorController extends QEFXAppController {
 
@@ -52,6 +54,9 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
     @FXML
     private Button centerButton;
+
+    @FXML
+    private Label centerLabel;
 
     @FXML
     private Slider slabSlider;
@@ -240,6 +245,20 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 this.modeler.center();
             }
         });
+    }
+
+    private void setupCenterLabel() {
+        if (this.centerLabel == null) {
+            return;
+        }
+
+        String text = this.centerLabel.getText();
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        this.centerLabel.setText(text);
     }
 
     private void setupTransSlider(Slider slider) {

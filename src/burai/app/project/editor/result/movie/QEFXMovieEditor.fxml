@@ -59,7 +59,7 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </Button>
-                  <Label text="Centering [Ctrl+C]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label fx:id="centerLabel" text="Centering [Shortcut+C]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />

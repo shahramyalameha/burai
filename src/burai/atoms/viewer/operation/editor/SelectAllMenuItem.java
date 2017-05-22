@@ -11,13 +11,15 @@ package burai.atoms.viewer.operation.editor;
 
 import java.util.List;
 
+import javafx.scene.input.KeyCode;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
+import burai.com.keys.KeyName;
 
 public class SelectAllMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Select all atoms [Ctrl+A]";
+    private static final String ITEM_LABEL = "Select all atoms [" + KeyName.getShortcut(KeyCode.A) + "]";
 
     public SelectAllMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

@@ -12,14 +12,16 @@ package burai.atoms.viewer.operation.editor;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.input.KeyCode;
 import burai.atoms.model.Atom;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
+import burai.com.keys.KeyName;
 
 public class RenameMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Rename selected atoms [Ctrl+R]";
+    private static final String ITEM_LABEL = "Rename selected atoms [" + KeyName.getShortcut(KeyCode.R) + "]";
 
     public RenameMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

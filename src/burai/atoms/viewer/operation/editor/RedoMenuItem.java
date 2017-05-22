@@ -9,12 +9,14 @@
 
 package burai.atoms.viewer.operation.editor;
 
+import javafx.scene.input.KeyCode;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
+import burai.com.keys.KeyName;
 
 public class RedoMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Redo [Ctrl+Shift+Z]";
+    private static final String ITEM_LABEL = "Redo [" + KeyName.getShortcutShift(KeyCode.Z) + "]";
 
     public RedoMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

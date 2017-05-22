@@ -46,7 +46,7 @@
                      </GridPane.margin>
                   </Button>
                   <Label text="Screen-shot" GridPane.columnIndex="1" />
-                  <Label text="Centering [Ctrl+C]" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="centerLabel" text="Centering [Shortcut+C]" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />
