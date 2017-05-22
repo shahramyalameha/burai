@@ -23,22 +23,22 @@ public class SlabModelBuilder {
         this.cell = cell;
     }
 
-    public boolean build(int h, int k, int l) {
+    public SlabModel[] build(int h, int k, int l) {
         SlabModel slabModel = null;
         try {
             slabModel = new SlabModelStem(this.cell, h, k, l);
         } catch (MillerIndexException e) {
             //e.printStackTrace();
-            return false;
+            return null;
         }
 
-        SlabModel[] models = slabModel.getSlabModels();
-        for (SlabModel model : models) {
-            System.out.println(model);
+        SlabModel[] slabModels = slabModel.getSlabModels();
+        if (slabModels == null || slabModels.length < 1) {
+            return null;
         }
 
         slabModel.updateCell(this.cell);
 
-        return true;
+        return slabModels;
     }
 }

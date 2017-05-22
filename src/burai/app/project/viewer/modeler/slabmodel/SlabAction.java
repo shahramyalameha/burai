@@ -53,7 +53,7 @@ public class SlabAction {
         this.atomsViewer = null;
     }
 
-    public void showSlabModeler() {
+    public void showSlabModeler(SlabModel[] slabModels) {
         if (this.slabModeler == null || this.atomsViewer == null) {
             this.initializeSlabModeler();
             return;

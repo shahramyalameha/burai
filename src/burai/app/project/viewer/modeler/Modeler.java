@@ -10,6 +10,7 @@
 package burai.app.project.viewer.modeler;
 
 import javafx.application.Platform;
+import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModelBuilder;
 import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Atom;
@@ -201,45 +202,49 @@ public class Modeler extends ModelerBase {
 
         boolean status = builder.build(na, nb, nc);
 
-        if (this.atomsViewer != null) {
-            if (status) {
-                this.atomsViewer.setCellToCenter();
-            } else {
+        if (!status) {
+            if (this.atomsViewer != null) {
                 this.atomsViewer.restoreCell();
             }
+
+            return false;
         }
 
-        if (status) {
-            this.setCellOffset(0.0, 0.0, 0.0);
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
         }
 
-        return status;
+        this.setCellOffset(0.0, 0.0, 0.0);
+
+        return true;
     }
 
-    public boolean buildSlabModel(int i, int j, int k) {
+    public SlabModel[] buildSlabModel(int i, int j, int k) {
         SlabModelBuilder builder = this.dstCell == null ? null : new SlabModelBuilder(this.dstCell);
         if (builder == null) {
-            return false;
+            return null;
         }
 
         if (this.atomsViewer != null) {
             this.atomsViewer.storeCell();
         }
 
-        boolean status = builder.build(i, j, k);
+        SlabModel[] slabModels = builder.build(i, j, k);
 
-        if (this.atomsViewer != null) {
-            if (status) {
-                this.atomsViewer.setCellToCenter();
-            } else {
+        if (slabModels == null || slabModels.length < 1) {
+            if (this.atomsViewer != null) {
                 this.atomsViewer.restoreCell();
             }
+
+            return null;
         }
 
-        if (status) {
-            this.setCellOffset(0.0, 0.0, 0.0);
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
         }
 
-        return status;
+        this.setCellOffset(0.0, 0.0, 0.0);
+
+        return slabModels;
     }
 }

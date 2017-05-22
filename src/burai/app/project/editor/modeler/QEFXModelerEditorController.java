@@ -27,6 +27,7 @@ import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.Modeler;
 import burai.app.project.viewer.modeler.slabmodel.SlabAction;
+import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
@@ -497,10 +498,10 @@ public class QEFXModelerEditorController extends QEFXAppController {
             int m1 = M1 == null ? 0 : M1.intValue();
             int m2 = M2 == null ? 0 : M2.intValue();
             int m3 = M3 == null ? 0 : M3.intValue();
-            boolean status = this.modeler.buildSlabModel(m1, m2, m3);
+            SlabModel[] slabModels = this.modeler.buildSlabModel(m1, m2, m3);
 
-            if (status) {
-                this.slabAction.showSlabModeler();
+            if (slabModels != null && slabModels.length > 0) {
+                this.slabAction.showSlabModeler(slabModels);
             } else {
                 this.showErrorDialog();
             }
