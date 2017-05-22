@@ -59,8 +59,8 @@ public class QEFXProject extends QEFXAppComponent<QEFXProjectController> {
                     this.controller.saveFile();
                 }
 
-            } else if (event.isControlDown() && KeyCode.LEFT.equals(event.getCode())) {
-                // Ctrl + <-
+            } else if (event.isAltDown() && KeyCode.LEFT.equals(event.getCode())) {
+                // Alt + <-
                 if (!this.controller.isNormalMode()) {
                     this.controller.pushViewerButton();
                 }
