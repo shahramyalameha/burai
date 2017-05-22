@@ -20,6 +20,8 @@ import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.QEFXResultEditorController;
 import burai.app.project.viewer.result.movie.QEFXMovieViewerController;
+import burai.atoms.viewer.AtomsViewer;
+import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.Constants;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
@@ -36,6 +38,9 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
 
     @FXML
     private Button movieButton;
+
+    @FXML
+    private Button centerButton;
 
     @FXML
     private Button exportButton;
@@ -71,6 +76,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
     @Override
     protected void setupFXComponents() {
         this.setupMovieButton();
+        this.setupCenterButton();
         this.setupExportButton();
         this.setupNumberField();
         this.setupAtomArea();
@@ -88,6 +94,26 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             if (this.projectController != null && this.project != null) {
                 MovieMaker movieMaker = new MovieMaker(this.projectController, this.viewerController, this.project);
                 movieMaker.makeMovie();
+            }
+        });
+    }
+
+    private void setupCenterButton() {
+        if (this.centerButton == null) {
+            return;
+        }
+
+        this.centerButton.setText("");
+        this.centerButton.setGraphic(SVGLibrary.getGraphic(SVGData.CENTER, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
+
+        this.centerButton.setOnAction(event -> {
+            AtomsViewerInterface atomsViewer = null;
+            if (this.projectController != null) {
+                atomsViewer = this.projectController.getAtomsViewer();
+            }
+
+            if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                ((AtomsViewer) atomsViewer).setCellToCenter();
             }
         });
     }

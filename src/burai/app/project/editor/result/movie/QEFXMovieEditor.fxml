@@ -54,6 +54,12 @@
                   <Label text="Reload" GridPane.columnIndex="1" />
                   <Label text="Screen-shot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Save Movie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button fx:id="centerButton" mnemonicParsing="false" styleClass="piclight-button" text="\@" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets left="8.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label text="Centering [Ctrl+C]" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />
@@ -63,6 +69,7 @@
                   <Insets left="10.0" />
                </padding>
                <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -129,7 +136,7 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </GridPane>
-            <TextArea fx:id="atomArea" editable="false" prefHeight="400.0" prefWidth="385.0" style="-fx-font-family: monospace; -fx-font-size: 1.0em;">
+            <TextArea fx:id="atomArea" editable="false" prefHeight="380.0" prefWidth="385.0" style="-fx-font-family: monospace; -fx-font-size: 1.0em;">
                <VBox.margin>
                   <Insets left="10.0" top="2.0" />
                </VBox.margin>
