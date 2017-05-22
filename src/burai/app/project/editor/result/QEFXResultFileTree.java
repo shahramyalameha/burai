@@ -26,7 +26,7 @@ public class QEFXResultFileTree extends QEFXAppComponent<QEFXResultFileTreeContr
 
         if (this.node != null) {
             this.node.setOnMouseReleased(event -> this.node.requestFocus());
-            this.setupCtrlFKey(this.node);
+            this.setupKey(this.node);
         }
     }
 
@@ -38,7 +38,7 @@ public class QEFXResultFileTree extends QEFXAppComponent<QEFXResultFileTreeContr
         this.controller.reload();
     }
 
-    private void setupCtrlFKey(Node node) {
+    private void setupKey(Node node) {
         if (node == null) {
             return;
         }

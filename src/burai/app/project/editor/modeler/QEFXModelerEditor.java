@@ -48,20 +48,20 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
 
             if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
                 if (!event.isShiftDown()) {
-                    // Ctrl + Z
+                    // Shortcut + Z
                     if (modeler != null) {
                         modeler.undo();
                     }
 
                 } else {
-                    // Ctrl + Shift + Z
+                    // Shortcut + Shift + Z
                     if (modeler != null) {
                         modeler.redo();
                     }
                 }
 
             } else if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
-                // Ctrl + C
+                // Shortcut + C
                 if (modeler != null) {
                     modeler.center();
                 }

@@ -351,17 +351,17 @@ public class QEFXMainController implements Initializable {
             }
 
             if (event.isShortcutDown() && KeyCode.LEFT.equals(event.getCode())) {
-                // Ctrl + <-
+                // Shortcut + <-
                 if (this.explorerFacade != null) {
                     this.explorerFacade.goBackward();
                 }
             } else if (event.isShortcutDown() && KeyCode.RIGHT.equals(event.getCode())) {
-                // Ctrl + ->
+                // Shortcut + ->
                 if (this.explorerFacade != null) {
                     this.explorerFacade.goForward();
                 }
             } else if (event.isShortcutDown() && KeyCode.UP.equals(event.getCode())) {
-                // Ctrl + ^
+                // Shortcut + ^
                 if (this.explorerFacade != null) {
                     this.explorerFacade.goUpward();
                 }

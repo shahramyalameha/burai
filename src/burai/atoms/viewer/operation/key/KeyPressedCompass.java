@@ -42,11 +42,11 @@ public class KeyPressedCompass extends ViewerEventCompass<KeyEvent> {
         this.manager = manager;
 
         KeyCode keyCode = event.getCode();
-        boolean ctrlStat = event.isShortcutDown();
+        boolean shortStat = event.isShortcutDown();
         boolean shiftStat = event.isShiftDown();
         boolean altStat = event.isAltDown();
 
-        KeyPressedKernel keyKernel = this.keyKernels.get(new KeyPressedAnsatz(keyCode, ctrlStat, shiftStat, altStat));
+        KeyPressedKernel keyKernel = this.keyKernels.get(new KeyPressedAnsatz(keyCode, shortStat, shiftStat, altStat));
         if (keyKernel != null) {
             keyKernel.performOnKeyPressed();
         }
@@ -55,7 +55,7 @@ public class KeyPressedCompass extends ViewerEventCompass<KeyEvent> {
     private void createKeyKernels() {
         this.keyKernels = new HashMap<KeyPressedAnsatz, KeyPressedKernel>();
 
-        // Ctrl key is pressed
+        // Shortcut key is pressed
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.C, true, false, false),
                 () -> this.manager.getAtomsViewer().setCompassToCenter());
 

@@ -49,12 +49,12 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
         this.manager = manager;
 
         KeyCode keyCode = event.getCode();
-        boolean ctrlStat = event.isShortcutDown();
+        boolean shortStat = event.isShortcutDown();
         boolean shiftStat = event.isShiftDown();
         boolean altStat = event.isAltDown();
 
         KeyPressedKernel keyKernel =
-                this.keyKernels.get(new KeyPressedAnsatz(keyCode, ctrlStat, shiftStat, altStat));
+                this.keyKernels.get(new KeyPressedAnsatz(keyCode, shortStat, shiftStat, altStat));
 
         if (keyKernel != null) {
             keyKernel.performOnKeyPressed();
@@ -64,7 +64,7 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
     private void createKeyKernels(boolean silent) {
         this.keyKernels = new HashMap<KeyPressedAnsatz, KeyPressedKernel>();
 
-        // Ctrl key is pressed
+        // Shortcut key is pressed
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.C, true, false, false),
                 () -> new CenterMenuItem(this.manager).performAction());
 
@@ -103,7 +103,7 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.PAGE_DOWN, false, false, true),
                 () -> this.scaleDown());
 
-        // Ctrl+Shift key is pressed
+        // Shortcut+Shift key is pressed
         this.keyKernels.put(new KeyPressedAnsatz(KeyCode.Z, true, true, false),
                 () -> new RedoMenuItem(this.manager).performAction());
 

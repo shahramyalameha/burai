@@ -52,7 +52,7 @@ public class QEFXTabManager {
             }
 
             if (event.isShortcutDown() && KeyCode.W.equals(event.getCode())) {
-                // Ctrl + W
+                // Shortcut + W
                 SingleSelectionModel<Tab> selectionModel = this.tabPane.getSelectionModel();
                 if (selectionModel != null) {
                     Tab tab = null;

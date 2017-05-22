@@ -14,7 +14,7 @@ import javafx.scene.input.KeyCode;
 public class KeyPressedAnsatz {
 
     private KeyCode keyCode;
-    private boolean ctrlStatus;
+    private boolean shortStatus;
     private boolean shiftStatus;
     private boolean altStatus;
 
@@ -22,9 +22,9 @@ public class KeyPressedAnsatz {
         this(keyCode, false, false, false);
     }
 
-    public KeyPressedAnsatz(KeyCode keyCode, boolean ctrlStatus, boolean shiftStatus, boolean altStatus) {
+    public KeyPressedAnsatz(KeyCode keyCode, boolean shortStatus, boolean shiftStatus, boolean altStatus) {
         this.keyCode = keyCode;
-        this.ctrlStatus = ctrlStatus;
+        this.shortStatus = shortStatus;
         this.shiftStatus = shiftStatus;
         this.altStatus = altStatus;
     }
@@ -34,7 +34,7 @@ public class KeyPressedAnsatz {
         final int prime = 31;
         int result = 1;
         result = prime * result + (this.altStatus ? 1231 : 1237);
-        result = prime * result + (this.ctrlStatus ? 1231 : 1237);
+        result = prime * result + (this.shortStatus ? 1231 : 1237);
         result = prime * result + ((this.keyCode == null) ? 0 : this.keyCode.hashCode());
         result = prime * result + (this.shiftStatus ? 1231 : 1237);
         return result;
@@ -56,7 +56,7 @@ public class KeyPressedAnsatz {
         if (this.altStatus != other.altStatus) {
             return false;
         }
-        if (this.ctrlStatus != other.ctrlStatus) {
+        if (this.shortStatus != other.shortStatus) {
             return false;
         }
         if (this.keyCode != other.keyCode) {
