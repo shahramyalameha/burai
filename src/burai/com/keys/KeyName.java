@@ -45,4 +45,18 @@ public final class KeyName {
             return comb + "+" + name;
         }
     }
+
+    public static String getAlt() {
+        return getAlt(null);
+    }
+
+    public static String getAlt(KeyCode keyCode) {
+        String comb = Environments.isMac() ? "Option" : "Alt";
+        String name = keyCode == null ? null : keyCode.getName();
+        if (name == null) {
+            return comb;
+        } else {
+            return comb + "+" + name;
+        }
+    }
 }
