@@ -46,7 +46,7 @@ public final class PriorKeyEvent {
         }
 
         // return screen
-        if (event.isAltDown() && KeyCode.LEFT.equals(keyCode)) {
+        if (event.isShortcutDown() && KeyCode.LEFT.equals(keyCode)) {
             return true;
         }
 
