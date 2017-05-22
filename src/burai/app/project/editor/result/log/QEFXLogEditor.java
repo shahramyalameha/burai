@@ -48,7 +48,7 @@ public class QEFXLogEditor extends QEFXResultEditor<QEFXLogEditorController> {
                 return;
             }
 
-            if (event.isControlDown() && KeyCode.F.equals(event.getCode())) {
+            if (event.isShortcutDown() && KeyCode.F.equals(event.getCode())) {
                 // Ctrl + F
                 this.controller.focusSearchingField();
 

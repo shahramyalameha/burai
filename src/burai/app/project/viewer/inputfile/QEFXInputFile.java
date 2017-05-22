@@ -37,7 +37,7 @@ public class QEFXInputFile extends QEFXAppComponent<QEFXInputFileController> {
                 return;
             }
 
-            if (event.isControlDown() && KeyCode.W.equals(event.getCode())) {
+            if (event.isShortcutDown() && KeyCode.W.equals(event.getCode())) {
                 // Ctrl + W
                 this.controller.close();
                 event.consume();

@@ -49,7 +49,7 @@ public class KeyPressedRegular extends ViewerEventRegular<KeyEvent> {
         this.manager = manager;
 
         KeyCode keyCode = event.getCode();
-        boolean ctrlStat = event.isControlDown();
+        boolean ctrlStat = event.isShortcutDown();
         boolean shiftStat = event.isShiftDown();
         boolean altStat = event.isAltDown();
 

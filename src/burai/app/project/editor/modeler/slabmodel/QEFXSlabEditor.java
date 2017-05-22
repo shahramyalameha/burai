@@ -46,7 +46,7 @@ public class QEFXSlabEditor extends QEFXAppComponent<QEFXSlabEditorController> {
                 return;
             }
 
-            if (event.isControlDown() && KeyCode.C.equals(event.getCode())) {
+            if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
                 // Ctrl + C
                 if (modeler != null) {
                     modeler.center();

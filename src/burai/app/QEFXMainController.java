@@ -468,7 +468,7 @@ public class QEFXMainController implements Initializable {
                 if (event == null) {
                     return;
                 }
-                if (event.isControlDown() && KeyCode.Q.equals(event.getCode())) {
+                if (event.isShortcutDown() && KeyCode.Q.equals(event.getCode())) {
                     this.quitSystem();
                 }
             });

@@ -46,7 +46,7 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
                 return;
             }
 
-            if (event.isControlDown() && KeyCode.Z.equals(event.getCode())) {
+            if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
                 if (!event.isShiftDown()) {
                     // Ctrl + Z
                     if (modeler != null) {
@@ -60,7 +60,7 @@ public class QEFXModelerEditor extends QEFXAppComponent<QEFXModelerEditorControl
                     }
                 }
 
-            } else if (event.isControlDown() && KeyCode.C.equals(event.getCode())) {
+            } else if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
                 // Ctrl + C
                 if (modeler != null) {
                     modeler.center();

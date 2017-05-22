@@ -53,7 +53,7 @@ public class QEFXProject extends QEFXAppComponent<QEFXProjectController> {
                 return;
             }
 
-            if (event.isControlDown() && KeyCode.S.equals(event.getCode())) {
+            if (event.isShortcutDown() && KeyCode.S.equals(event.getCode())) {
                 // Ctrl + S
                 if (this.controller.isNormalMode()) {
                     this.controller.saveFile();

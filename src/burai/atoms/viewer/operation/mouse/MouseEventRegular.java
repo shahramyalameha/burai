@@ -42,7 +42,7 @@ public class MouseEventRegular extends ViewerEventRegular<MouseEvent> implements
             return;
         }
 
-        if (event.isControlDown()) {
+        if (event.isShortcutDown()) {
             this.startScoping(event);
 
         } else if (event.isSecondaryButtonDown()) {

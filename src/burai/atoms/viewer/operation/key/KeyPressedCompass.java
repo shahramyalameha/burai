@@ -12,10 +12,10 @@ package burai.atoms.viewer.operation.key;
 import java.util.HashMap;
 import java.util.Map;
 
-import burai.atoms.viewer.operation.ViewerEventCompass;
-import burai.atoms.viewer.operation.ViewerEventManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import burai.atoms.viewer.operation.ViewerEventCompass;
+import burai.atoms.viewer.operation.ViewerEventManager;
 
 public class KeyPressedCompass extends ViewerEventCompass<KeyEvent> {
 
@@ -42,7 +42,7 @@ public class KeyPressedCompass extends ViewerEventCompass<KeyEvent> {
         this.manager = manager;
 
         KeyCode keyCode = event.getCode();
-        boolean ctrlStat = event.isControlDown();
+        boolean ctrlStat = event.isShortcutDown();
         boolean shiftStat = event.isShiftDown();
         boolean altStat = event.isAltDown();
 

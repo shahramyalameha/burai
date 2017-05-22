@@ -31,17 +31,17 @@ public final class PriorKeyEvent {
         }
 
         // quit system
-        if (event.isControlDown() && KeyCode.Q.equals(keyCode)) {
+        if (event.isShortcutDown() && KeyCode.Q.equals(keyCode)) {
             return true;
         }
 
         // close window
-        if (event.isControlDown() && KeyCode.W.equals(keyCode)) {
+        if (event.isShortcutDown() && KeyCode.W.equals(keyCode)) {
             return true;
         }
 
         // save data
-        if (event.isControlDown() && KeyCode.S.equals(keyCode)) {
+        if (event.isShortcutDown() && KeyCode.S.equals(keyCode)) {
             return true;
         }
 
