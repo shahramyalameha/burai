@@ -101,9 +101,13 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
         double aNorm = Matrix3D.norm(lattice[0]);
         double bNorm = Matrix3D.norm(lattice[1]);
         double cNorm = Matrix3D.norm(lattice[2]);
-        double minNorm = Math.min(Math.min(aNorm, bNorm), cNorm);
+        double aSqrt = Math.sqrt(aNorm > 0.0 ? aNorm : 1.0);
+        double bSqrt = Math.sqrt(bNorm > 0.0 ? bNorm : 1.0);
+        double cSqrt = Math.sqrt(cNorm > 0.0 ? cNorm : 1.0);
+        double tSqrt = 3.0 / (1.0 / aSqrt + 1.0 / bSqrt + 1.0 / cSqrt);
+        double tNorm = tSqrt * tSqrt;
         double scale = this.boldMode ? CYLINDER_SCALE_BOLD : CYLINDER_SCALE_NORM;
-        double radius = scale * minNorm;
+        double radius = scale * tNorm;
 
         for (int i = 0; i < latticeCylinders.length; i++) {
             this.latticeCylinders[i].setRadius(radius);
