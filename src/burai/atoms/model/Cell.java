@@ -51,6 +51,16 @@ public class Cell extends Model<CellEvent, CellEventListener> {
 
     private BondsResolver bondsResolver;
 
+    public static Cell getEmptyCell() {
+        try {
+            return new Cell(Matrix3D.unit());
+        } catch (ZeroVolumCellException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public Cell(double[][] lattice) throws ZeroVolumCellException {
         this(lattice, MAX_ATOMS_TO_RESOLVE);
     }

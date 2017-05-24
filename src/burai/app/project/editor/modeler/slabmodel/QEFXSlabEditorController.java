@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
@@ -27,6 +28,8 @@ import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
+import burai.atoms.model.Cell;
+import burai.atoms.vlight.AtomsVLight;
 import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
@@ -41,6 +44,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
     private static final String BUILD_GRAPHIC_CLASS = "piclight-button";
 
     private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
+
+    private static final double ATOMS_TILE_SIZE = 185.0;
 
     private QEFXProjectController projectController;
 
@@ -76,6 +81,9 @@ public class QEFXSlabEditorController extends QEFXAppController {
     @FXML
     private TilePane kindPane;
 
+    @FXML
+    private ScrollPane kindScroll;
+
     public QEFXSlabEditorController(QEFXProjectController projectController, SlabModeler modeler) {
         super(projectController == null ? null : projectController.getMainController());
 
@@ -86,18 +94,6 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.projectController = projectController;
 
         this.modeler = modeler;
-    }
-
-    public void setSlabModels(SlabModel[] slabModels) {
-        if (slabModels == null || slabModels.length < 1) {
-            return;
-        }
-
-        // TODO
-    }
-
-    public void cleanSlabModels() {
-        // TODO
     }
 
     @Override
@@ -114,6 +110,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.setupSlabSlider();
         this.setupVacuumSlider();
         this.setupKindPane();
+        this.setupKindScroll();
     }
 
     private void setupScreenButton() {
@@ -311,6 +308,50 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        this.kindPane.setOnMouseClicked(event -> {
+            if (this.kindScroll != null) {
+                this.kindScroll.requestFocus();
+            }
+        });
+    }
+
+    private void setupKindScroll() {
+        if (this.kindScroll == null) {
+            return;
+        }
+
+        this.kindScroll.setFocusTraversable(true);
+    }
+
+    public void setSlabModels(SlabModel[] slabModels) {
+        if (slabModels == null || slabModels.length < 1) {
+            return;
+        }
+
+        if (this.kindPane == null) {
+            return;
+        }
+
+        for (SlabModel slabModel : slabModels) {
+            if (slabModel == null) {
+                continue;
+            }
+
+            Cell cell = Cell.getEmptyCell();
+            if (cell == null) {
+                return;
+            }
+
+            slabModel.updateCell(cell);
+
+            AtomsVLight atomsVLight = new AtomsVLight(cell, ATOMS_TILE_SIZE, false);
+            this.kindPane.getChildren().add(atomsVLight);
+        }
+    }
+
+    public void cleanSlabModels() {
+        if (this.kindPane != null) {
+            this.kindPane.getChildren().clear();
+        }
     }
 }
