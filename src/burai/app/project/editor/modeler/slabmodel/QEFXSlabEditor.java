@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
 import burai.com.keys.PriorKeyEvent;
 
@@ -53,5 +54,17 @@ public class QEFXSlabEditor extends QEFXAppComponent<QEFXSlabEditorController> {
                 }
             }
         });
+    }
+
+    public void setSlabModels(SlabModel[] slabModels) {
+        if (this.controller != null) {
+            this.controller.setSlabModels(slabModels);
+        }
+    }
+
+    public void cleanSlabModels() {
+        if (this.controller != null) {
+            this.controller.cleanSlabModels();
+        }
     }
 }

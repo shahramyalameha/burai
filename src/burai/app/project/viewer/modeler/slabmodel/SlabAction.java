@@ -10,10 +10,15 @@
 package burai.app.project.viewer.modeler.slabmodel;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.modeler.slabmodel.QEFXSlabEditor;
 import burai.app.project.viewer.atoms.AtomsAction;
@@ -21,7 +26,6 @@ import burai.app.project.viewer.modeler.ModelerIcon;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.AtomsViewerInterface;
-import burai.project.Project;
 
 public class SlabAction {
 
@@ -31,11 +35,9 @@ public class SlabAction {
 
     private SlabModeler slabModeler;
 
-    private AtomsViewerInterface atomsViewer;
+    private QEFXSlabEditor slabEditor;
 
-    public SlabAction(Project project, QEFXProjectController controller) {
-        this(project == null ? null : project.getCell(), controller);
-    }
+    private AtomsViewerInterface atomsViewer;
 
     public SlabAction(Cell cell, QEFXProjectController controller) {
         if (cell == null) {
@@ -50,54 +52,58 @@ public class SlabAction {
         this.controller = controller;
 
         this.slabModeler = null;
+        this.slabEditor = null;
         this.atomsViewer = null;
     }
 
     public void showSlabModeler(SlabModel[] slabModels) {
-        if (this.slabModeler == null || this.atomsViewer == null) {
-            this.initializeSlabModeler();
+        this.showInitialDialog();
+
+        if (this.slabModeler == null || this.slabEditor == null || this.atomsViewer == null) {
+            this.initializeSlabModeler(slabModels);
             return;
         }
 
         this.slabModeler.initialize();
+
+        if (slabModels != null && slabModels.length > 0) {
+            this.slabEditor.setSlabModels(slabModels);
+        }
+
         this.controller.setModelerSlabMode();
     }
 
-    private void initializeSlabModeler() {
+    private void initializeSlabModeler(SlabModel[] slabModels) {
         if (this.slabModeler == null) {
             this.slabModeler = new SlabModeler(this.cell);
+        }
+
+        if (this.slabEditor == null) {
+            this.slabEditor = this.createSlabEditor(slabModels);
         }
 
         if (this.atomsViewer == null) {
             this.atomsViewer = this.createAtomsViewer();
         }
 
-        QEFXSlabEditor slabEditor = null;
-        try {
-            slabEditor = new QEFXSlabEditor(this.controller, this.slabModeler);
-        } catch (IOException e) {
-            slabEditor = null;
-            e.printStackTrace();
-        }
-
-        if (this.atomsViewer != null && slabEditor != null) {
+        if (this.slabEditor != null && this.atomsViewer != null) {
             this.controller.setModelerSlabMode();
 
             this.controller.setOnModeBacked(controller2 -> {
-                if (this.slabModeler != null && this.slabModeler.isToReflect()) {
-                    if (this.slabModeler != null) {
-                        this.slabModeler.reflect();
+                boolean status = this.showFinishDialog();
+
+                if (status) {
+                    Cell cell = this.slabModeler == null ? null : this.slabModeler.getCell();
+                    if (cell != null) {
+                        cell.removeAllAtoms();
                     }
 
-                    Platform.runLater(() -> {
-                        AtomsViewerInterface atomsViewer = this.controller.getAtomsViewer();
-                        if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
-                            ((AtomsViewer) atomsViewer).setCellToCenter();
-                        }
-                    });
+                    if (this.slabEditor != null) {
+                        this.slabEditor.cleanSlabModels();
+                    }
                 }
 
-                return true;
+                return status;
             });
 
             this.controller.clearStackedsOnViewerPane();
@@ -108,11 +114,32 @@ public class SlabAction {
 
             this.controller.stackOnViewerPane(new ModelerIcon("Slab" + System.lineSeparator() + "Model"));
 
-            Node editorNode = slabEditor.getNode();
+            Node editorNode = this.slabEditor.getNode();
             if (editorNode != null) {
                 this.controller.setEditorPane(editorNode);
             }
         }
+    }
+
+    private QEFXSlabEditor createSlabEditor(SlabModel[] slabModels) {
+        QEFXSlabEditor slabEditor = null;
+
+        if (this.slabModeler != null) {
+            try {
+                slabEditor = new QEFXSlabEditor(this.controller, this.slabModeler);
+            } catch (IOException e) {
+                slabEditor = null;
+                e.printStackTrace();
+            }
+        }
+
+        if (slabEditor != null) {
+            if (slabModels != null && slabModels.length > 0) {
+                slabEditor.setSlabModels(slabModels);
+            }
+        }
+
+        return slabEditor;
     }
 
     private AtomsViewer createAtomsViewer() {
@@ -141,5 +168,43 @@ public class SlabAction {
         }
 
         return atomsViewer;
+    }
+
+    private void showInitialDialog() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Please set the details of slab model.");
+        alert.show();
+    }
+
+    private boolean showFinishDialog() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Finish to model the slab ?");
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+        Optional<ButtonType> optButtonType = alert.showAndWait();
+        if (optButtonType == null || (!optButtonType.isPresent())) {
+            return false;
+        }
+        if (!ButtonType.YES.equals(optButtonType.get())) {
+            return false;
+        }
+
+        if (this.slabModeler != null && this.slabModeler.isToReflect()) {
+            if (this.slabModeler != null) {
+                this.slabModeler.reflect();
+            }
+
+            Platform.runLater(() -> {
+                AtomsViewerInterface atomsViewer = this.controller.getAtomsViewer();
+                if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                    ((AtomsViewer) atomsViewer).setCellToCenter();
+                }
+            });
+        }
+
+        return true;
     }
 }

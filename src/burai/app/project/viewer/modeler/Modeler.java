@@ -121,7 +121,12 @@ public class Modeler extends ModelerBase {
 
     @Override
     public void initialize() {
+        if (this.atomsViewer != null) {
+            this.atomsViewer.storeCell();
+        }
+
         super.initialize();
+
         this.setCellOffset(0.0, 0.0, 0.0);
     }
 

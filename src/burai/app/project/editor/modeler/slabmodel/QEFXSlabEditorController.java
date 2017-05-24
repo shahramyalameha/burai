@@ -25,6 +25,7 @@ import javafx.scene.layout.TilePane;
 import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
 import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
@@ -85,6 +86,18 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.projectController = projectController;
 
         this.modeler = modeler;
+    }
+
+    public void setSlabModels(SlabModel[] slabModels) {
+        if (slabModels == null || slabModels.length < 1) {
+            return;
+        }
+
+        // TODO
+    }
+
+    public void cleanSlabModels() {
+        // TODO
     }
 
     @Override

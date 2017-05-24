@@ -55,10 +55,6 @@ public abstract class ModelerBase {
     }
 
     public void initialize() {
-        if (this.atomsViewer != null) {
-            this.atomsViewer.storeCell();
-        }
-
         this.copyCellForward();
 
         if (this.atomsViewer != null) {
