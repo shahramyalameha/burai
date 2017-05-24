@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<ScrollPane prefHeight="670.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane prefHeight="700.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox>
          <children>
@@ -187,7 +187,7 @@
                   <Insets top="10.0" />
                </padding>
             </BorderPane>
-            <ScrollPane fx:id="kindScroll" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="256.0" prefWidth="385.0">
+            <ScrollPane fx:id="kindScroll" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="285.0" prefWidth="385.0">
                <VBox.margin>
                   <Insets left="10.0" />
                </VBox.margin>

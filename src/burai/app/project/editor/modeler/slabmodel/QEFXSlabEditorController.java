@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -22,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import burai.app.QEFXAppController;
 import burai.app.QEFXMain;
@@ -45,7 +48,10 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
     private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
 
-    private static final double ATOMS_TILE_SIZE = 185.0;
+    private static final double ATOMS_TILE_SIZE = 184.0;
+    private static final double ATOMS_TILE_SCLAE = 1.62;
+    private static final double ATOMS_LABEL_INSET = 12.0;
+    private static final String ATOMS_LABEL_STYLE = "-fx-font: italic 1.166667em \"Arial Black\"";
 
     private QEFXProjectController projectController;
 
@@ -332,7 +338,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        for (SlabModel slabModel : slabModels) {
+        for (int i = 0; i < slabModels.length; i++) {
+            SlabModel slabModel = slabModels[i];
             if (slabModel == null) {
                 continue;
             }
@@ -344,8 +351,24 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
             slabModel.updateCell(cell);
 
-            AtomsVLight atomsVLight = new AtomsVLight(cell, ATOMS_TILE_SIZE, false);
-            this.kindPane.getChildren().add(atomsVLight);
+            AtomsVLight atomsVLight = new AtomsVLight(cell, ATOMS_TILE_SIZE, true);
+            atomsVLight.appendScale(ATOMS_TILE_SCLAE);
+
+            StackPane pane = new StackPane(atomsVLight);
+            pane.setOnMouseEntered(event -> {
+                pane.setStyle("-fx-background-color: -fx-focus-color");
+            });
+            pane.setOnMouseExited(event -> {
+                pane.setStyle("");
+            });
+
+            Label label = new Label("#" + Integer.toString(i + 1));
+            label.setStyle(ATOMS_LABEL_STYLE);
+            StackPane.setAlignment(label, Pos.TOP_LEFT);
+            StackPane.setMargin(label, new Insets(ATOMS_LABEL_INSET));
+            pane.getChildren().add(label);
+
+            this.kindPane.getChildren().add(pane);
         }
     }
 

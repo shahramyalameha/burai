@@ -118,6 +118,12 @@ public class AtomsVLight extends Group {
         return this.size;
     }
 
+    public void appendScale(double scale) {
+        if (this.vlightCell != null) {
+            this.vlightCell.appendScale(scale);
+        }
+    }
+
     public void appendRotation(double angle, double axisX, double axisY, double axisZ) {
         if (this.vlightCell != null) {
             this.vlightCell.appendRotation(angle, axisX, axisY, axisZ);
