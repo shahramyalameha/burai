@@ -50,6 +50,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
     private static final double ATOMS_TILE_SIZE = 184.0;
     private static final double ATOMS_TILE_SCLAE = 1.62;
+    private static final String ATOMS_TILE_STYLE = "-fx-background-color: -fx-focus-color";
     private static final double ATOMS_LABEL_INSET = 12.0;
     private static final String ATOMS_LABEL_STYLE = "-fx-font: italic 1.166667em \"Arial Black\"";
 
@@ -356,7 +357,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
             StackPane pane = new StackPane(atomsVLight);
             pane.setOnMouseEntered(event -> {
-                pane.setStyle("-fx-background-color: -fx-focus-color");
+                pane.setStyle(ATOMS_TILE_STYLE);
             });
             pane.setOnMouseExited(event -> {
                 pane.setStyle("");
