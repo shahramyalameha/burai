@@ -23,11 +23,11 @@ import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 
 public class DeleteMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Delete selected atoms [" + KeyName.getShortcut(KeyCode.D) + "]";
+    private static final String ITEM_LABEL = "Delete selected atoms [" + KeyNames.getShortcut(KeyCode.D) + "]";
 
     public DeleteMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

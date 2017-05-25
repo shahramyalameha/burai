@@ -35,7 +35,7 @@ import burai.com.consts.ConstantStyles;
 import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 
 public class QEFXModelerEditorController extends QEFXAppController {
 
@@ -276,7 +276,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
-        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        text = text.replaceAll("Shortcut", KeyNames.getShortcut());
         this.undoLabel.setText(text);
     }
 
@@ -306,7 +306,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
-        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        text = text.replaceAll("Shortcut", KeyNames.getShortcut());
         this.redoLabel.setText(text);
     }
 
@@ -336,7 +336,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
             return;
         }
 
-        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        text = text.replaceAll("Shortcut", KeyNames.getShortcut());
         this.centerLabel.setText(text);
     }
 

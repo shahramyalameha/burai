@@ -25,7 +25,7 @@ import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.consts.Constants;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 import burai.com.math.Matrix3D;
 import burai.project.Project;
 import burai.project.property.ProjectGeometry;
@@ -133,7 +133,7 @@ public class QEFXMovieEditorController extends QEFXResultEditorController<QEFXMo
             return;
         }
 
-        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        text = text.replaceAll("Shortcut", KeyNames.getShortcut());
         this.centerLabel.setText(text);
     }
 

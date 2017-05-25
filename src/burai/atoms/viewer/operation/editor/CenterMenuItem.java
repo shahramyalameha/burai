@@ -12,11 +12,11 @@ package burai.atoms.viewer.operation.editor;
 import javafx.scene.input.KeyCode;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 
 public class CenterMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Centering [" + KeyName.getShortcut(KeyCode.C) + "]";
+    private static final String ITEM_LABEL = "Centering [" + KeyNames.getShortcut(KeyCode.C) + "]";
 
     public CenterMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

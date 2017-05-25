@@ -12,9 +12,9 @@ package burai.com.keys;
 import javafx.scene.input.KeyCode;
 import burai.com.env.Environments;
 
-public final class KeyName {
+public final class KeyNames {
 
-    private KeyName() {
+    private KeyNames() {
         // NOP
     }
 

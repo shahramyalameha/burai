@@ -36,7 +36,7 @@ import burai.atoms.vlight.AtomsVLight;
 import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 
 public class QEFXSlabEditorController extends QEFXAppController {
 
@@ -178,7 +178,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        text = text.replaceAll("Shortcut", KeyName.getShortcut());
+        text = text.replaceAll("Shortcut", KeyNames.getShortcut());
         this.centerLabel.setText(text);
     }
 

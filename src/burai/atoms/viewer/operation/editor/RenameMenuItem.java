@@ -17,11 +17,11 @@ import burai.atoms.model.Atom;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
-import burai.com.keys.KeyName;
+import burai.com.keys.KeyNames;
 
 public class RenameMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Rename selected atoms [" + KeyName.getShortcut(KeyCode.R) + "]";
+    private static final String ITEM_LABEL = "Rename selected atoms [" + KeyNames.getShortcut(KeyCode.R) + "]";
 
     public RenameMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);
