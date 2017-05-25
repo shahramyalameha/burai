@@ -29,6 +29,8 @@ public class Cell extends Model<CellEvent, CellEventListener> {
 
     private static final double MIN_VOLUME = 1.0e-6;
 
+    private static final double MIN_BOUNDARY = 3.0;
+
     private static final double THR_LATTICE = 1.0e-4;
 
     private double[][] lattice;
@@ -146,6 +148,51 @@ public class Cell extends Model<CellEvent, CellEventListener> {
 
     public double getVolume() {
         return this.volume;
+    }
+
+    protected double getBoundaryVolume() {
+        if (this.atoms == null || this.atoms.isEmpty()) {
+            return 0.0;
+        }
+
+        Atom atom0 = this.atoms.get(0);
+
+        double x0 = atom0.getX();
+        double y0 = atom0.getY();
+        double z0 = atom0.getZ();
+        double a0 = x0 * this.recLattice[0][0] + y0 * this.recLattice[1][0] + z0 * this.recLattice[2][0];
+        double b0 = x0 * this.recLattice[0][1] + y0 * this.recLattice[1][1] + z0 * this.recLattice[2][1];
+        double c0 = x0 * this.recLattice[0][2] + y0 * this.recLattice[1][2] + z0 * this.recLattice[2][2];
+        double aMin = a0;
+        double aMax = a0;
+        double bMin = b0;
+        double bMax = b0;
+        double cMin = c0;
+        double cMax = c0;
+
+        int natom = this.atoms.size();
+        for (int i = 1; i < natom; i++) {
+            Atom atom = this.atoms.get(i);
+            double x = atom.getX();
+            double y = atom.getY();
+            double z = atom.getZ();
+            double a = x * this.recLattice[0][0] + y * this.recLattice[1][0] + z * this.recLattice[2][0];
+            double b = x * this.recLattice[0][1] + y * this.recLattice[1][1] + z * this.recLattice[2][1];
+            double c = x * this.recLattice[0][2] + y * this.recLattice[1][2] + z * this.recLattice[2][2];
+            aMin = Math.min(aMin, a);
+            aMax = Math.max(aMax, a);
+            bMin = Math.min(bMin, b);
+            bMax = Math.max(bMax, b);
+            cMin = Math.min(cMin, c);
+            cMax = Math.max(cMax, c);
+        }
+
+        double volume = this.volume;
+        volume *= Math.max((aMax - aMin), MIN_BOUNDARY / this.normLattice[0]);
+        volume *= Math.max((bMax - bMin), MIN_BOUNDARY / this.normLattice[1]);
+        volume *= Math.max((cMax - cMin), MIN_BOUNDARY / this.normLattice[2]);
+
+        return volume;
     }
 
     public double[][] copyLattice() {

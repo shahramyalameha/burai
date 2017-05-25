@@ -94,7 +94,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        if (!this.isAbleToResolve()) {
+        if (!this.isAbleToResolve(true)) {
             return;
         }
 
@@ -194,7 +194,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
             return;
         }
 
-        if (!this.isAbleToResolve()) {
+        if (!this.isAbleToResolve(false)) {
             return;
         }
 
@@ -224,19 +224,34 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
         }
     }
 
-    private boolean isAbleToResolve() {
+    private boolean isAbleToResolve(boolean fullCheck) {
         double ratom = (double) this.cell.numAtoms();
-        double volume = this.cell.getVolume();
-        if (volume <= 0.0) {
+
+        double volume0 = this.cell.getVolume();
+        if (volume0 <= 0.0) {
             return false;
         }
 
-        double density = ratom / volume;
-        if (density > THR_DENSITY) {
+        double density0 = ratom / volume0;
+        if (density0 > THR_DENSITY) {
             return false;
-        } else {
+        }
+
+        if (!fullCheck) {
             return true;
         }
+
+        double volume1 = this.cell.getBoundaryVolume();
+        if (volume1 <= 0.0) {
+            return false;
+        }
+
+        double density1 = ratom / volume1;
+        if (density1 > THR_DENSITY) {
+            return false;
+        }
+
+        return true;
     }
 
     private Bond[][] resolve(Atom atom1, int maxAtom, List<Atom> atoms, boolean fromBeginning) {
