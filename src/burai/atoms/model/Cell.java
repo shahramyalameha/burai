@@ -151,15 +151,14 @@ public class Cell extends Model<CellEvent, CellEventListener> {
     }
 
     protected double getBoundaryVolume() {
-        if (this.atoms == null || this.atoms.isEmpty()) {
-            return 0.0;
+        Atom atom0 = null;
+        if (this.atoms != null && !(this.atoms.isEmpty())) {
+            atom0 = this.atoms.get(0);
         }
 
-        Atom atom0 = this.atoms.get(0);
-
-        double x0 = atom0.getX();
-        double y0 = atom0.getY();
-        double z0 = atom0.getZ();
+        double x0 = atom0 == null ? 0.0 : atom0.getX();
+        double y0 = atom0 == null ? 0.0 : atom0.getY();
+        double z0 = atom0 == null ? 0.0 : atom0.getZ();
         double a0 = x0 * this.recLattice[0][0] + y0 * this.recLattice[1][0] + z0 * this.recLattice[2][0];
         double b0 = x0 * this.recLattice[0][1] + y0 * this.recLattice[1][1] + z0 * this.recLattice[2][1];
         double c0 = x0 * this.recLattice[0][2] + y0 * this.recLattice[1][2] + z0 * this.recLattice[2][2];
@@ -170,7 +169,7 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         double cMin = c0;
         double cMax = c0;
 
-        int natom = this.atoms.size();
+        int natom = this.atoms == null ? 0 : this.atoms.size();
         for (int i = 1; i < natom; i++) {
             Atom atom = this.atoms.get(i);
             double x = atom.getX();
@@ -188,9 +187,9 @@ public class Cell extends Model<CellEvent, CellEventListener> {
         }
 
         double volume = this.volume;
-        volume *= Math.max((aMax - aMin), MIN_BOUNDARY / this.normLattice[0]);
-        volume *= Math.max((bMax - bMin), MIN_BOUNDARY / this.normLattice[1]);
-        volume *= Math.max((cMax - cMin), MIN_BOUNDARY / this.normLattice[2]);
+        volume *= Math.max((aMax - aMin), Math.min(MIN_BOUNDARY / this.normLattice[0], 1.0));
+        volume *= Math.max((bMax - bMin), Math.min(MIN_BOUNDARY / this.normLattice[1], 1.0));
+        volume *= Math.max((cMax - cMin), Math.min(MIN_BOUNDARY / this.normLattice[2], 1.0));
 
         return volume;
     }

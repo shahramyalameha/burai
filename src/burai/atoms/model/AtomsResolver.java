@@ -215,13 +215,13 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
 
         double ratom = (double) natom;
 
-        double volume0 = this.cell.getVolume();
-        if (volume0 <= 0.0) {
+        double volume = this.cell.getVolume();
+        if (volume <= 0.0) {
             return false;
         }
 
-        double density0 = ratom / volume0;
-        if (density0 > THR_DENSITY) {
+        double density = ratom / volume;
+        if (density > THR_DENSITY) {
             return false;
         }
 
