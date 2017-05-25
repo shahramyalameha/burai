@@ -11,6 +11,6 @@ package burai.com.consts;
 
 public interface ConstantAtoms {
 
-    public static final int MAX_NUM_ATOMS = 4096;
+    public static final int MAX_NUM_ATOMS = 2048;
 
 }
