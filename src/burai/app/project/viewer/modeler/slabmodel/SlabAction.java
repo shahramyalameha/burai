@@ -76,6 +76,9 @@ public class SlabAction {
     private void initializeSlabModeler(SlabModel[] slabModels) {
         if (this.slabModeler == null) {
             this.slabModeler = new SlabModeler(this.cell);
+            if (slabModels != null && slabModels.length > 0 && slabModels[0] != null) {
+                this.slabModeler.setSlabModel(slabModels[0]);
+            }
         }
 
         if (this.slabEditor == null) {

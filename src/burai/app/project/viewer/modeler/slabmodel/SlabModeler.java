@@ -10,13 +10,20 @@
 package burai.app.project.viewer.modeler.slabmodel;
 
 import burai.app.project.viewer.modeler.ModelerBase;
-import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Cell;
 
 public class SlabModeler extends ModelerBase {
 
+    private SlabModel slabModel;
+
     public SlabModeler(Cell srcCell) {
         super(srcCell);
+
+        this.slabModel = null;
+    }
+
+    public void setSlabModel(SlabModel slabModel) {
+        this.slabModel = slabModel;
     }
 
     public boolean changeSlabWidth(double rate) {
@@ -30,18 +37,25 @@ public class SlabModeler extends ModelerBase {
     }
 
     public boolean scaleSlabArea(int na, int nb) {
-        SuperCellBuilder builder = this.dstCell == null ? null : new SuperCellBuilder(this.dstCell);
-        if (builder == null) {
+        if (na < 1 || nb < 1 || (na * nb) < 2) {
             return false;
         }
 
-        boolean status = builder.build(na, nb, 1);
+        if (this.slabModel == null) {
+            return false;
+        }
 
-        if (this.atomsViewer != null) {
-            if (status) {
+        this.slabModel.setScaleA(na);
+        this.slabModel.setScaleB(nb);
+
+        boolean status = false;
+        if (this.dstCell != null) {
+            status = this.slabModel.updateCell(this.dstCell);
+        }
+
+        if (status) {
+            if (this.atomsViewer != null) {
                 this.atomsViewer.setCellToCenter();
-            } else {
-                this.atomsViewer.restoreCell();
             }
         }
 
@@ -53,8 +67,23 @@ public class SlabModeler extends ModelerBase {
             return false;
         }
 
-        // TODO
+        if (this.slabModel == null) {
+            return false;
+        }
 
-        return false;
+        this.slabModel.setVacuum(vacuum);
+
+        boolean status = false;
+        if (this.dstCell != null) {
+            status = this.slabModel.updateCell(this.dstCell);
+        }
+
+        if (status) {
+            if (this.atomsViewer != null) {
+                this.atomsViewer.setCellToCenter();
+            }
+        }
+
+        return status;
     }
 }

@@ -299,7 +299,29 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        this.slabSlider.valueProperty().addListener(o -> {
+            if (this.modeler == null) {
+                return;
+            }
+
+            double rate = this.slabSlider.getValue();
+
+            boolean status = false;
+            if (rate > 0.0) {
+                status = this.modeler.changeSlabWidth(rate);
+            }
+
+            if (!status) {
+                this.showErrorDialog();
+            }
+
+            if (this.scaleField1 != null) {
+                this.scaleField1.setText("");
+            }
+            if (this.scaleField2 != null) {
+                this.scaleField2.setText("");
+            }
+        });
     }
 
     private void setupVacuumSlider() {
@@ -307,7 +329,29 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        this.vacuumSlider.valueProperty().addListener(o -> {
+            if (this.modeler == null) {
+                return;
+            }
+
+            double vacuum = this.vacuumSlider.getValue();
+
+            boolean status = false;
+            if (vacuum > 0.0) {
+                status = this.modeler.changeVacuumWidth(vacuum);
+            }
+
+            if (!status) {
+                //this.showErrorDialog();
+            }
+
+            if (this.scaleField1 != null) {
+                this.scaleField1.setText("");
+            }
+            if (this.scaleField2 != null) {
+                this.scaleField2.setText("");
+            }
+        });
     }
 
     private void setupKindPane() {
