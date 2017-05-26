@@ -15,14 +15,15 @@ public class SlabModelLeaf extends SlabModel {
 
     private SlabModelStem stem;
 
-    public SlabModelLeaf(SlabModelStem stem, double offset, double vacuum) {
-        super(offset, vacuum);
+    public SlabModelLeaf(SlabModelStem stem, double offset) {
+        super();
 
         if (stem == null) {
             throw new IllegalArgumentException("stem is null.");
         }
 
         this.stem = stem;
+        this.offset = offset;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class SlabModelLeaf extends SlabModel {
 
     @Override
     public boolean updateCell(Cell cell) {
-        return this.stem.updateCell(cell, this.offset, this.vacuum, this.scaleA, this.scaleB);
+        return this.stem.updateCell(cell, this);
     }
 
 }

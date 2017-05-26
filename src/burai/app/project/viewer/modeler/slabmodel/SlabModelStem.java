@@ -28,8 +28,6 @@ public class SlabModelStem extends SlabModel {
     private static final double PACK_THR = 1.0e-6; // internal coordinate
     private static final double CART_THR = 1.0e-4; // angstrom
 
-    private static final double DEFAULT_VACUUM = 10.0; // angstrom
-
     private static final double STEP_FOR_GENOMS = 0.5; // angstrom
 
     private int miller1;
@@ -61,7 +59,7 @@ public class SlabModelStem extends SlabModel {
      * cell is not changed.
      */
     public SlabModelStem(Cell cell, int h, int k, int l) throws MillerIndexException {
-        super(0.0, DEFAULT_VACUUM);
+        super();
 
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
@@ -83,15 +81,15 @@ public class SlabModelStem extends SlabModel {
     @Override
     public SlabModel[] getSlabModels() {
         if (this.lattUnit == null || this.lattUnit.length < 3) {
-            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset) };
         }
         if (this.lattUnit[2] == null || this.lattUnit[2].length < 3) {
-            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset) };
         }
 
         int nstep = (int) (this.lattUnit[2][2] / STEP_FOR_GENOMS);
         if (nstep < 2) {
-            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset) };
         }
 
         Map<SlabGenom, Double> slabGenoms = new LinkedHashMap<SlabGenom, Double>();
@@ -105,13 +103,13 @@ public class SlabModelStem extends SlabModel {
         }
 
         if (slabGenoms.isEmpty()) {
-            return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
+            return new SlabModel[] { new SlabModelLeaf(this, this.offset) };
         }
 
         int index = 0;
         SlabModel[] slabModels = new SlabModel[slabGenoms.size()];
         for (double offset : slabGenoms.values()) {
-            slabModels[index] = new SlabModelLeaf(this, offset, this.vacuum);
+            slabModels[index] = new SlabModelLeaf(this, offset);
             index++;
         }
 
@@ -182,15 +180,15 @@ public class SlabModelStem extends SlabModel {
 
     @Override
     public boolean updateCell(Cell cell) {
-        return this.updateCell(cell, this.offset, this.vacuum, this.scaleA, this.scaleB);
+        return this.updateCell(cell, this);
     }
 
-    protected boolean updateCell(Cell cell, double offset, double vacuum, int scaleA, int scaleB) {
+    protected boolean updateCell(Cell cell, SlabModel slabModel) {
         if (cell == null) {
-            throw new IllegalArgumentException("cell is null.");
+            return false;
         }
 
-        if (!this.setupSlabAtoms(offset, vacuum, scaleA, scaleB)) {
+        if (slabModel == null || !this.setupSlabAtoms(slabModel)) {
             return false;
         }
 
@@ -407,7 +405,11 @@ public class SlabModelStem extends SlabModel {
         }
     }
 
-    private boolean setupSlabAtoms(double offset, double vacuum, int scaleA, int scaleB) {
+    private boolean setupSlabAtoms(SlabModel slabModel) {
+        if (slabModel == null) {
+            return false;
+        }
+
         // lattice
         if (this.lattUnit == null) {
             return false;
@@ -418,20 +420,20 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        int aScale = Math.max(1, scaleA);
+        int aScale = Math.max(1, slabModel.scaleA);
         this.lattSlab[0] = Matrix3D.mult((double) aScale, this.lattSlab[0]);
         if (this.lattSlab[0] == null || lattSlab[0].length < 3) {
             return false;
         }
 
-        int bScale = Math.max(1, scaleB);
+        int bScale = Math.max(1, slabModel.scaleB);
         this.lattSlab[1] = Matrix3D.mult((double) bScale, this.lattSlab[1]);
         if (this.lattSlab[1] == null || lattSlab[1].length < 3) {
             return false;
         }
 
         double zSlab = this.lattSlab[2][2];
-        double zTotal = zSlab + 2.0 * vacuum;
+        double zTotal = zSlab + 2.0 * Math.max(0.0, slabModel.vacuum);
         double zScale = zSlab == 0.0 ? 1.0 : (zTotal / zSlab);
         this.lattSlab[2] = Matrix3D.mult(zScale, this.lattSlab[2]);
         if (this.lattSlab[2] == null || lattSlab[2].length < 3) {
@@ -455,7 +457,7 @@ public class SlabModelStem extends SlabModel {
 
             double a = entry.a;
             double b = entry.b;
-            double c = entry.c + offset;
+            double c = entry.c + slabModel.offset;
             c -= Math.floor(c);
 
             double dc = Math.abs(c - 1.0);
