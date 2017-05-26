@@ -37,7 +37,9 @@ public class SlabModelBuilder {
             return null;
         }
 
-        slabModel.updateCell(this.cell);
+        if (slabModels[0] != null) {
+            slabModels[0].updateCell(this.cell);
+        }
 
         return slabModels;
     }

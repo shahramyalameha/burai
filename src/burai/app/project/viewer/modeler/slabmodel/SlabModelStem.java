@@ -202,7 +202,6 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        cell.removeAllAtoms();
         cell.stopResolving();
 
         try {
@@ -212,17 +211,60 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        for (AtomEntry entry : this.entryAll) {
-            if (entry == null) {
-                continue;
+        int natom = this.entryAll.size();
+        int natom2 = cell.numAtoms(true);
+
+        Atom[] refAtoms = null;
+        if (natom == natom2) {
+            refAtoms = cell.listAtoms(true);
+        }
+
+        if (refAtoms != null && refAtoms.length >= natom) {
+            for (int i = 0; i < natom; i++) {
+                AtomEntry entry = this.entryAll.get(i);
+                if (entry == null) {
+                    continue;
+                }
+
+                String name = entry.name;
+                if (name == null || name.isEmpty()) {
+                    continue;
+                }
+
+                Atom atom = refAtoms[i];
+                if (atom == null) {
+                    cell.addAtom(new Atom(name, entry.x, entry.y, entry.z));
+
+                } else {
+                    String name2 = atom.getName();
+                    if (!name.equals(name2)) {
+                        atom.setName(name);
+                    }
+
+                    double x2 = atom.getX();
+                    double y2 = atom.getY();
+                    double z2 = atom.getZ();
+                    if (Math.abs(entry.x - x2) > 0.0 || Math.abs(entry.y - y2) > 0.0 || Math.abs(entry.z - z2) > 0.0) {
+                        atom.moveTo(entry.x, entry.y, entry.z);
+                    }
+                }
             }
 
-            String name = entry.name;
-            if (name == null || name.isEmpty()) {
-                continue;
-            }
+        } else {
+            cell.removeAllAtoms();
 
-            cell.addAtom(new Atom(name, entry.x, entry.y, entry.z));
+            for (AtomEntry entry : this.entryAll) {
+                if (entry == null) {
+                    continue;
+                }
+
+                String name = entry.name;
+                if (name == null || name.isEmpty()) {
+                    continue;
+                }
+
+                cell.addAtom(new Atom(name, entry.x, entry.y, entry.z));
+            }
         }
 
         cell.restartResolving();

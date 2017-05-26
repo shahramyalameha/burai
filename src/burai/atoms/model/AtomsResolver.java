@@ -122,7 +122,18 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
     }
 
     private Atom[] listAtomsOnCell(Atom atom) {
-        if (!this.isAbleToResolve()) {
+        int natom = this.cell.numAtoms();
+        if (natom < 1) {
+            return null;
+        }
+
+        double volume = this.cell.getVolume();
+        if (volume <= 0.0) {
+            return null;
+        }
+
+        double density = ((double) natom) / volume;
+        if (density > THR_DENSITY) {
             return null;
         }
 
@@ -205,27 +216,6 @@ public class AtomsResolver implements AtomEventListener, CellEventListener {
         }
 
         return atomArray;
-    }
-
-    private boolean isAbleToResolve() {
-        int natom = this.cell.numAtoms();
-        if (natom < 1) {
-            return false;
-        }
-
-        double ratom = (double) natom;
-
-        double volume = this.cell.getVolume();
-        if (volume <= 0.0) {
-            return false;
-        }
-
-        double density = ratom / volume;
-        if (density > THR_DENSITY) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
