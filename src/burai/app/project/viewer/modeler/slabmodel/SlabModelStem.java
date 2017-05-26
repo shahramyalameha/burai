@@ -51,11 +51,11 @@ public class SlabModelStem extends SlabModel {
     private int[][] boundBox;
 
     private double[] lattConst;
-    private double[][] lattCart;
+    private double[][] lattUnit;
     private double[][] lattSlab;
 
     private List<AtomEntry> entryUnit;
-    private List<AtomEntry> entryAll;
+    private List<AtomEntry> entrySlab;
 
     /**
      * cell is not changed.
@@ -71,25 +71,25 @@ public class SlabModelStem extends SlabModel {
             throw new MillerIndexException();
         }
 
-        if (!this.setupUnitAtoms(cell)) {
+        if (!this.setupUnitAtomsInCell(cell)) {
             throw new MillerIndexException();
         }
 
-        if (!this.setupAllAtoms()) {
+        if (!this.setupUnitAtomsInSlab()) {
             throw new MillerIndexException();
         }
     }
 
     @Override
     public SlabModel[] getSlabModels() {
-        if (this.lattCart == null || this.lattCart.length < 3) {
+        if (this.lattUnit == null || this.lattUnit.length < 3) {
             return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
-        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
+        if (this.lattUnit[2] == null || this.lattUnit[2].length < 3) {
             return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
 
-        int nstep = (int) (this.lattCart[2][2] / STEP_FOR_GENOMS);
+        int nstep = (int) (this.lattUnit[2][2] / STEP_FOR_GENOMS);
         if (nstep < 2) {
             return new SlabModel[] { new SlabModelLeaf(this, this.offset, this.vacuum) };
         }
@@ -119,25 +119,25 @@ public class SlabModelStem extends SlabModel {
     }
 
     private SlabGenom getSlabGenom(double offset) {
-        if (this.lattCart == null || this.lattCart.length < 3) {
+        if (this.lattUnit == null || this.lattUnit.length < 3) {
             return null;
         }
-        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
-            return null;
-        }
-
-        if (this.entryAll == null || this.entryAll.isEmpty()) {
+        if (this.lattUnit[2] == null || this.lattUnit[2].length < 3) {
             return null;
         }
 
-        int natom = this.entryAll.size();
+        if (this.entryUnit == null || this.entryUnit.isEmpty()) {
+            return null;
+        }
+
+        int natom = this.entryUnit.size();
         int iatom = natom;
 
         String[] names = new String[natom];
         double[] coords = new double[natom];
 
         for (int i = 0; i < natom; i++) {
-            AtomEntry entry = this.entryAll.get(i);
+            AtomEntry entry = this.entryUnit.get(i);
             if (entry == null) {
                 return null;
             }
@@ -147,18 +147,18 @@ public class SlabModelStem extends SlabModel {
             c2 -= Math.floor(c2);
 
             double dc = Math.abs(c2 - 1.0);
-            double dz = dc * this.lattCart[2][2];
+            double dz = dc * this.lattUnit[2][2];
             if (dz < CART_THR) {
                 c2 -= 1.0;
             }
 
-            dz = Math.abs(c1 - c2) * this.lattCart[2][2];
+            dz = Math.abs(c1 - c2) * this.lattUnit[2][2];
             if (iatom >= natom && dz > CART_THR) {
                 iatom = i;
             }
 
             names[i] = entry.name;
-            coords[i] = c2 * this.lattCart[2][2];
+            coords[i] = c2 * this.lattUnit[2][2];
         }
 
         String[] names2 = new String[natom];
@@ -182,15 +182,15 @@ public class SlabModelStem extends SlabModel {
 
     @Override
     public boolean updateCell(Cell cell) {
-        return this.updateCell(cell, this.offset, this.vacuum);
+        return this.updateCell(cell, this.offset, this.vacuum, this.scaleA, this.scaleB);
     }
 
-    protected boolean updateCell(Cell cell, double offset, double vacuum) {
+    protected boolean updateCell(Cell cell, double offset, double vacuum, int scaleA, int scaleB) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
 
-        if (!this.setupSlabModel(offset, vacuum)) {
+        if (!this.setupSlabAtoms(offset, vacuum, scaleA, scaleB)) {
             return false;
         }
 
@@ -198,7 +198,7 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        if (this.entryAll == null || this.entryAll.isEmpty()) {
+        if (this.entrySlab == null || this.entrySlab.isEmpty()) {
             return false;
         }
 
@@ -211,7 +211,7 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        int natom = this.entryAll.size();
+        int natom = this.entrySlab.size();
         int natom2 = cell.numAtoms(true);
 
         Atom[] refAtoms = null;
@@ -221,7 +221,7 @@ public class SlabModelStem extends SlabModel {
 
         if (refAtoms != null && refAtoms.length >= natom) {
             for (int i = 0; i < natom; i++) {
-                AtomEntry entry = this.entryAll.get(i);
+                AtomEntry entry = this.entrySlab.get(i);
                 if (entry == null) {
                     continue;
                 }
@@ -253,7 +253,7 @@ public class SlabModelStem extends SlabModel {
         } else {
             cell.removeAllAtoms();
 
-            for (AtomEntry entry : this.entryAll) {
+            for (AtomEntry entry : this.entrySlab) {
                 if (entry == null) {
                     continue;
                 }
@@ -407,23 +407,26 @@ public class SlabModelStem extends SlabModel {
         }
     }
 
-    private boolean setupSlabModel(double offset, double vacuum) {
+    private boolean setupSlabAtoms(double offset, double vacuum, int scaleA, int scaleB) {
         // lattice
-        if (this.lattCart == null) {
+        if (this.lattUnit == null) {
             return false;
         }
 
-        this.lattSlab = Matrix3D.copy(this.lattCart);
+        this.lattSlab = Matrix3D.copy(this.lattUnit);
         if (this.lattSlab == null || this.lattSlab.length < 3) {
             return false;
         }
-        if (this.lattSlab[0] == null || this.lattSlab[0].length < 3) {
+
+        int aScale = Math.max(1, scaleA);
+        this.lattSlab[0] = Matrix3D.mult((double) aScale, this.lattSlab[0]);
+        if (this.lattSlab[0] == null || lattSlab[0].length < 3) {
             return false;
         }
-        if (this.lattSlab[1] == null || this.lattSlab[1].length < 3) {
-            return false;
-        }
-        if (this.lattSlab[2] == null || this.lattSlab[2].length < 3) {
+
+        int bScale = Math.max(1, scaleB);
+        this.lattSlab[1] = Matrix3D.mult((double) bScale, this.lattSlab[1]);
+        if (this.lattSlab[1] == null || lattSlab[1].length < 3) {
             return false;
         }
 
@@ -431,16 +434,21 @@ public class SlabModelStem extends SlabModel {
         double zTotal = zSlab + 2.0 * vacuum;
         double zScale = zSlab == 0.0 ? 1.0 : (zTotal / zSlab);
         this.lattSlab[2] = Matrix3D.mult(zScale, this.lattSlab[2]);
-        if (this.lattSlab == null || lattSlab.length < 3) {
+        if (this.lattSlab[2] == null || lattSlab[2].length < 3) {
             return false;
         }
 
         // atoms
-        if (this.entryAll == null || this.entryAll.isEmpty()) {
+        int natom = this.entryUnit.size();
+        if (this.entryUnit == null || natom < 1) {
             return false;
         }
 
-        for (AtomEntry entry : this.entryAll) {
+        if ((aScale * bScale * natom) >= ModelerBase.maxNumAtoms()) {
+            return false;
+        }
+
+        for (AtomEntry entry : this.entryUnit) {
             if (entry == null) {
                 continue;
             }
@@ -451,20 +459,20 @@ public class SlabModelStem extends SlabModel {
             c -= Math.floor(c);
 
             double dc = Math.abs(c - 1.0);
-            double dz = dc * this.lattCart[2][2];
+            double dz = dc * this.lattUnit[2][2];
             if (dz < CART_THR) {
                 c -= 1.0;
             }
 
-            entry.x = a * this.lattCart[0][0] + b * this.lattCart[1][0] + c * this.lattCart[2][0];
-            entry.y = a * this.lattCart[0][1] + b * this.lattCart[1][1] + c * this.lattCart[2][1];
-            entry.z = a * this.lattCart[0][2] + b * this.lattCart[1][2] + c * this.lattCart[2][2];
+            entry.x = a * this.lattUnit[0][0] + b * this.lattUnit[1][0] + c * this.lattUnit[2][0];
+            entry.y = a * this.lattUnit[0][1] + b * this.lattUnit[1][1] + c * this.lattUnit[2][1];
+            entry.z = a * this.lattUnit[0][2] + b * this.lattUnit[1][2] + c * this.lattUnit[2][2];
         }
 
         double zMax = 0.0;
         double zMin = 0.0;
         boolean zFirst = true;
-        for (AtomEntry entry : this.entryAll) {
+        for (AtomEntry entry : this.entryUnit) {
             if (entry == null) {
                 continue;
             }
@@ -480,11 +488,11 @@ public class SlabModelStem extends SlabModel {
         }
 
         double zScale2 = zSlab == 0.0 ? 1.0 : (0.5 * (zMax + zMin) / zSlab);
-        double tx = 0.5 * this.lattSlab[2][0] - zScale2 * this.lattCart[2][0];
-        double ty = 0.5 * this.lattSlab[2][1] - zScale2 * this.lattCart[2][1];
-        double tz = 0.5 * this.lattSlab[2][2] - zScale2 * this.lattCart[2][2];
+        double tx = 0.5 * this.lattSlab[2][0] - zScale2 * this.lattUnit[2][0];
+        double ty = 0.5 * this.lattSlab[2][1] - zScale2 * this.lattUnit[2][1];
+        double tz = 0.5 * this.lattSlab[2][2] - zScale2 * this.lattUnit[2][2];
 
-        for (AtomEntry entry : this.entryAll) {
+        for (AtomEntry entry : this.entryUnit) {
             if (entry == null) {
                 continue;
             }
@@ -494,10 +502,36 @@ public class SlabModelStem extends SlabModel {
             entry.z += tz;
         }
 
+        this.entrySlab = new ArrayList<AtomEntry>();
+
+        for (int ia = 0; ia < aScale; ia++) {
+            double ra = ((double) ia) / ((double) aScale);
+            for (int ib = 0; ib < bScale; ib++) {
+                double rb = ((double) ib) / ((double) bScale);
+
+                double vx = ra * this.lattSlab[0][0] + rb * this.lattSlab[1][0];
+                double vy = ra * this.lattSlab[0][1] + rb * this.lattSlab[1][1];
+
+                for (AtomEntry entry : this.entryUnit) {
+                    if (entry == null) {
+                        continue;
+                    }
+
+                    AtomEntry entry2 = new AtomEntry(this.lattSlab);
+                    entry2.name = entry.name;
+                    entry2.x = entry.x + vx;
+                    entry2.y = entry.y + vy;
+                    entry2.z = entry.z;
+
+                    this.entrySlab.add(entry2);
+                }
+            }
+        }
+
         return true;
     }
 
-    private boolean setupUnitAtoms(Cell cell) {
+    private boolean setupUnitAtomsInCell(Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -508,6 +542,8 @@ public class SlabModelStem extends SlabModel {
         }
 
         this.entryUnit = new ArrayList<AtomEntry>();
+
+        double[][] lattice = cell.copyLattice();
 
         for (Atom atom : atoms) {
             if (atom == null) {
@@ -527,7 +563,6 @@ public class SlabModelStem extends SlabModel {
                 return false;
             }
 
-            double[][] lattice = cell.copyLattice();
             if (lattice != null) {
                 AtomEntry entry = new AtomEntry(lattice);
                 entry.name = name;
@@ -541,8 +576,9 @@ public class SlabModelStem extends SlabModel {
         return true;
     }
 
-    private boolean setupAllAtoms() {
-        int natom = this.entryUnit.size();
+    private boolean setupUnitAtomsInSlab() {
+        List<AtomEntry> entryUnit_ = this.entryUnit;
+        int natom = entryUnit_.size();
         if (natom < 1) {
             return false;
         }
@@ -587,7 +623,7 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        this.entryAll = new ArrayList<AtomEntry>();
+        this.entryUnit = new ArrayList<AtomEntry>();
 
         for (int ia = this.boundBox[0][0]; ia <= this.boundBox[0][1]; ia++) {
             double ta = (double) ia;
@@ -596,7 +632,7 @@ public class SlabModelStem extends SlabModel {
                 for (int ic = this.boundBox[2][0]; ic <= this.boundBox[2][1]; ic++) {
                     double tc = (double) ic;
 
-                    for (AtomEntry entry : this.entryUnit) {
+                    for (AtomEntry entry : entryUnit_) {
                         double a = entry.a + ta;
                         double b = entry.b + tb;
                         double c = entry.c + tc;
@@ -608,13 +644,13 @@ public class SlabModelStem extends SlabModel {
                                 -PACK_THR <= b2 && b2 < (1.0 + PACK_THR) &&
                                 -PACK_THR <= c2 && c2 < (1.0 + PACK_THR)) {
 
-                            AtomEntry entry2 = new AtomEntry(this.lattCart);
+                            AtomEntry entry2 = new AtomEntry(this.lattUnit);
                             entry2.name = entry.name;
                             entry2.a = a2;
                             entry2.b = b2;
                             entry2.c = c2;
-                            if (!this.entryAll.contains(entry2)) {
-                                this.entryAll.add(entry2);
+                            if (!this.entryUnit.contains(entry2)) {
+                                this.entryUnit.add(entry2);
                             }
                         }
                     }
@@ -622,23 +658,23 @@ public class SlabModelStem extends SlabModel {
             }
         }
 
-        if (this.entryAll.isEmpty()) {
+        if (this.entryUnit.isEmpty()) {
             return false;
         }
 
-        for (AtomEntry entry : this.entryAll) {
+        for (AtomEntry entry : this.entryUnit) {
             entry.a -= Math.floor(entry.a);
             entry.b -= Math.floor(entry.b);
             entry.c -= Math.floor(entry.c);
 
             double dc = Math.abs(entry.c - 1.0);
-            double dz = dc * this.lattCart[2][2];
+            double dz = dc * this.lattUnit[2][2];
             if (dz < CART_THR) {
                 entry.c -= 1.0;
             }
         }
 
-        Collections.sort(this.entryAll);
+        Collections.sort(this.entryUnit);
 
         return true;
     }
@@ -891,23 +927,23 @@ public class SlabModelStem extends SlabModel {
         lattInt[1] = new double[] { (double) this.vector2[0], (double) this.vector2[1], (double) this.vector2[2] };
         lattInt[2] = new double[] { (double) this.vector3[0], (double) this.vector3[1], (double) this.vector3[2] };
 
-        double[][] lattCart0 = Matrix3D.mult(lattInt, cell.copyLattice());
-        this.lattConst = lattCart0 == null ? null : Lattice.getCellDm(14, lattCart0);
+        double[][] lattUnit0 = Matrix3D.mult(lattInt, cell.copyLattice());
+        this.lattConst = lattUnit0 == null ? null : Lattice.getCellDm(14, lattUnit0);
         if (this.lattConst == null || this.lattConst.length < 6) {
             return false;
         }
 
-        this.lattCart = Lattice.getCell(14, this.lattConst);
-        if (this.lattCart == null || this.lattCart.length < 3) {
+        this.lattUnit = Lattice.getCell(14, this.lattConst);
+        if (this.lattUnit == null || this.lattUnit.length < 3) {
             return false;
         }
-        if (this.lattCart[0] == null || this.lattCart[0].length < 3) {
+        if (this.lattUnit[0] == null || this.lattUnit[0].length < 3) {
             return false;
         }
-        if (this.lattCart[1] == null || this.lattCart[1].length < 3) {
+        if (this.lattUnit[1] == null || this.lattUnit[1].length < 3) {
             return false;
         }
-        if (this.lattCart[2] == null || this.lattCart[2].length < 3) {
+        if (this.lattUnit[2] == null || this.lattUnit[2].length < 3) {
             return false;
         }
 

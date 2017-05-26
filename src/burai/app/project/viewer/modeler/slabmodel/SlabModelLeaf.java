@@ -32,7 +32,7 @@ public class SlabModelLeaf extends SlabModel {
 
     @Override
     public boolean updateCell(Cell cell) {
-        return this.stem.updateCell(cell, this.offset, this.vacuum);
+        return this.stem.updateCell(cell, this.offset, this.vacuum, this.scaleA, this.scaleB);
     }
 
 }

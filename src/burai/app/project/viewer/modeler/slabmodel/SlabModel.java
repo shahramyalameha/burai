@@ -16,9 +16,14 @@ public abstract class SlabModel {
     protected double offset;
     protected double vacuum;
 
+    protected int scaleA;
+    protected int scaleB;
+
     protected SlabModel(double offset, double vacuum) {
         this.offset = offset;
         this.vacuum = vacuum;
+        this.scaleA = 1;
+        this.scaleB = 1;
     }
 
     public final void setOffset(double offset) {
@@ -27,6 +32,14 @@ public abstract class SlabModel {
 
     public final void setVacuum(double vacuum) {
         this.vacuum = vacuum;
+    }
+
+    public final void setScaleA(int scaleA) {
+        this.scaleA = scaleA;
+    }
+
+    public final void setScaleB(int scaleB) {
+        this.scaleB = scaleB;
     }
 
     public abstract SlabModel[] getSlabModels();
