@@ -19,7 +19,7 @@ import burai.com.math.Matrix3D;
 
 public abstract class ModelerBase {
 
-    private static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS / 2;
+    private static final int MAX_NUM_ATOMS = ConstantAtoms.MAX_NUM_ATOMS;
 
     public static int maxNumAtoms() {
         return MAX_NUM_ATOMS;
