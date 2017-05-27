@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
@@ -26,6 +27,7 @@ public class SlabModelStem extends SlabModel {
 
     private static final double DET_THR = 1.0e-8;
     private static final double PACK_THR = 1.0e-6; // internal coordinate
+    private static final double THICK_THR = 1.0e-12; // internal coordinate
     private static final double CART_THR = 1.0e-4; // angstrom
 
     private static final double STEP_FOR_GENOMS = 0.5; // angstrom
@@ -50,10 +52,21 @@ public class SlabModelStem extends SlabModel {
 
     private double[] lattConst;
     private double[][] lattUnit;
+    private double[][] lattAuxi;
     private double[][] lattSlab;
 
     private List<AtomEntry> entryUnit;
+    private List<AtomEntry> entryAuxi;
     private List<AtomEntry> entrySlab;
+
+    private String codeAuxi;
+    private String codeSlab;
+
+    private Double objOffset;
+    private Double objThickness;
+    private Double objVacuum;
+    private Integer objScaleA;
+    private Integer objScaleB;
 
     /**
      * cell is not changed.
@@ -76,6 +89,19 @@ public class SlabModelStem extends SlabModel {
         if (!this.setupUnitAtomsInSlab()) {
             throw new MillerIndexException();
         }
+
+        this.lattAuxi = null;
+        this.lattSlab = null;
+        this.entryAuxi = null;
+        this.entrySlab = null;
+        this.codeAuxi = null;
+        this.codeSlab = null;
+
+        this.objOffset = null;
+        this.objThickness = null;
+        this.objVacuum = null;
+        this.objScaleA = null;
+        this.objScaleB = null;
     }
 
     @Override
@@ -188,7 +214,15 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        if (slabModel == null || !this.setupSlabAtoms(slabModel)) {
+        if (slabModel == null) {
+            return false;
+        }
+
+        if (!this.setupAuxiAtoms(slabModel)) {
+            return false;
+        }
+
+        if (!this.setupSlabAtoms(slabModel)) {
             return false;
         }
 
@@ -269,153 +303,45 @@ public class SlabModelStem extends SlabModel {
         return true;
     }
 
-    private static class AtomEntry implements Comparable<AtomEntry> {
-        private double[][] lattice;
-
-        public String name;
-        public double a;
-        public double b;
-        public double c;
-        public double x;
-        public double y;
-        public double z;
-
-        public AtomEntry(double[][] lattice) {
-            if (lattice == null) {
-                throw new IllegalArgumentException("lattice is null.");
-            }
-
-            this.lattice = lattice;
-            this.name = null;
-            this.a = 0.0;
-            this.b = 0.0;
-            this.c = 0.0;
-            this.x = 0.0;
-            this.y = 0.0;
-            this.z = 0.0;
-        }
-
-        @Override
-        public int compareTo(AtomEntry other) {
-            if (other == null) {
-                return -1;
-            }
-
-            double dx;
-            double dy;
-            double dz;
-            double rr;
-
-            double dc = this.c - other.c;
-            dx = dc * this.lattice[2][0];
-            dy = dc * this.lattice[2][1];
-            dz = dc * this.lattice[2][2];
-            rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
-                if (dc > 0.0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-
-            double db = this.b - other.b;
-            dx = db * this.lattice[1][0];
-            dy = db * this.lattice[1][1];
-            dz = db * this.lattice[1][2];
-            rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
-                if (db > 0.0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-
-            double da = this.a - other.a;
-            dx = da * this.lattice[0][0];
-            dy = da * this.lattice[0][1];
-            dz = da * this.lattice[0][2];
-            rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
-                if (da > 0.0) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-
-            if (this.name == null) {
-                if (other.name == null) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-
-            return this.name.compareTo(other.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return this.name == null ? 0 : this.name.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (this.getClass() != obj.getClass()) {
-                return false;
-            }
-
-            AtomEntry other = (AtomEntry) obj;
-            if (this.name == null) {
-                if (this.name != other.name) {
-                    return false;
-                }
-            } else {
-                if (!this.name.equals(other.name)) {
-                    return false;
-                }
-            }
-
-            double da = Math.abs(this.a - other.a);
-            da = Math.min(da, Math.abs(this.a - other.a + Math.signum(0.5 - this.a)));
-
-            double db = Math.abs(this.b - other.b);
-            db = Math.min(db, Math.abs(this.b - other.b + Math.signum(0.5 - this.b)));
-
-            double dc = Math.abs(this.c - other.c);
-            dc = Math.min(dc, Math.abs(this.c - other.c + Math.signum(0.5 - this.c)));
-
-            double dx = da * this.lattice[0][0] + db * this.lattice[1][0] + dc * this.lattice[2][0];
-            double dy = da * this.lattice[0][1] + db * this.lattice[1][1] + dc * this.lattice[2][1];
-            double dz = da * this.lattice[0][2] + db * this.lattice[1][2] + dc * this.lattice[2][2];
-            double rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
     private boolean setupSlabAtoms(SlabModel slabModel) {
         if (slabModel == null) {
             return false;
         }
 
+        // check status
+        boolean sameCondition = true;
+
+        if (this.codeSlab == null || !this.codeSlab.equals(this.codeAuxi)) {
+            sameCondition = false;
+        }
+
+        if (this.objVacuum == null || Math.abs(slabModel.vacuum - this.objVacuum) > 1.0e-12) {
+            sameCondition = false;
+        }
+
+        if (this.objScaleA == null || slabModel.scaleA != this.objScaleA.intValue()) {
+            sameCondition = false;
+        }
+
+        if (this.objScaleB == null || slabModel.scaleB != this.objScaleB.intValue()) {
+            sameCondition = false;
+        }
+
+        if (sameCondition) {
+            return true;
+        }
+
+        this.codeSlab = null;
+        this.objVacuum = null;
+        this.objScaleA = null;
+        this.objScaleB = null;
+
         // lattice
-        if (this.lattUnit == null) {
+        if (this.lattAuxi == null) {
             return false;
         }
 
-        this.lattSlab = Matrix3D.copy(this.lattUnit);
+        this.lattSlab = Matrix3D.copy(this.lattAuxi);
         if (this.lattSlab == null || this.lattSlab.length < 3) {
             return false;
         }
@@ -441,8 +367,8 @@ public class SlabModelStem extends SlabModel {
         }
 
         // atoms
-        int natom = this.entryUnit.size();
-        if (this.entryUnit == null || natom < 1) {
+        int natom = this.entryAuxi.size();
+        if (this.entryAuxi == null || natom < 1) {
             return false;
         }
 
@@ -450,31 +376,154 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        for (AtomEntry entry : this.entryUnit) {
-            if (entry == null) {
-                continue;
+        this.entrySlab = new ArrayList<AtomEntry>();
+
+        double tx = 0.5 * (this.lattSlab[2][0] - this.lattAuxi[2][0]);
+        double ty = 0.5 * (this.lattSlab[2][1] - this.lattAuxi[2][1]);
+        double tz = 0.5 * (this.lattSlab[2][2] - this.lattAuxi[2][2]);
+
+        for (int ia = 0; ia < aScale; ia++) {
+            double ra = ((double) ia) / ((double) aScale);
+            for (int ib = 0; ib < bScale; ib++) {
+                double rb = ((double) ib) / ((double) bScale);
+
+                double vx = ra * this.lattSlab[0][0] + rb * this.lattSlab[1][0];
+                double vy = ra * this.lattSlab[0][1] + rb * this.lattSlab[1][1];
+
+                for (AtomEntry entry : this.entryAuxi) {
+                    if (entry == null) {
+                        continue;
+                    }
+
+                    AtomEntry entry2 = new AtomEntry(this.lattSlab);
+                    entry2.name = entry.name;
+                    entry2.x = entry.x + tx + vx;
+                    entry2.y = entry.y + ty + vy;
+                    entry2.z = entry.z + tz;
+
+                    this.entrySlab.add(entry2);
+                }
             }
-
-            double a = entry.a;
-            double b = entry.b;
-            double c = entry.c + slabModel.offset;
-            c -= Math.floor(c);
-
-            double dc = Math.abs(c - 1.0);
-            double dz = dc * this.lattUnit[2][2];
-            if (dz < CART_THR) {
-                c -= 1.0;
-            }
-
-            entry.x = a * this.lattUnit[0][0] + b * this.lattUnit[1][0] + c * this.lattUnit[2][0];
-            entry.y = a * this.lattUnit[0][1] + b * this.lattUnit[1][1] + c * this.lattUnit[2][1];
-            entry.z = a * this.lattUnit[0][2] + b * this.lattUnit[1][2] + c * this.lattUnit[2][2];
         }
 
+        // store status
+        this.codeSlab = this.codeAuxi;
+        this.objVacuum = slabModel.vacuum;
+        this.objScaleA = slabModel.scaleA;
+        this.objScaleB = slabModel.scaleB;
+
+        return true;
+    }
+
+    private boolean setupAuxiAtoms(SlabModel slabModel) {
+        if (slabModel == null) {
+            return false;
+        }
+
+        // check status
+        boolean sameCondition = true;
+
+        if (this.objOffset == null || Math.abs(slabModel.offset - this.objOffset) > 1.0e-12) {
+            sameCondition = false;
+        }
+
+        if (this.objThickness == null || Math.abs(slabModel.thickness - this.objThickness) > 1.0e-12) {
+            sameCondition = false;
+        }
+
+        if (sameCondition) {
+            return true;
+        }
+
+        this.codeAuxi = null;
+        this.objOffset = null;
+        this.objThickness = null;
+
+        // init lattice
+        if (this.lattUnit == null) {
+            return false;
+        }
+
+        this.lattAuxi = Matrix3D.copy(this.lattUnit);
+        if (this.lattAuxi == null || this.lattAuxi.length < 3) {
+            return false;
+        }
+        if (this.lattAuxi[0] == null || this.lattAuxi[0].length < 3) {
+            return false;
+        }
+        if (this.lattAuxi[1] == null || this.lattAuxi[1].length < 3) {
+            return false;
+        }
+        if (this.lattAuxi[2] == null || this.lattAuxi[2].length < 3) {
+            return false;
+        }
+
+        // init atoms
+        if (this.entryUnit == null || this.entryUnit.isEmpty()) {
+            return false;
+        }
+
+        double cThick = 1.0;
+        if (slabModel.thickness > 0.0) {
+            cThick = slabModel.thickness;
+        }
+
+        if (Math.abs(cThick - 1.0) > THICK_THR) {
+            this.entryAuxi = new ArrayList<AtomEntry>();
+        } else {
+            this.entryAuxi = this.entryUnit;
+        }
+
+        int nThick = (int) (Math.ceil(cThick) + 0.1);
+
+        for (int iThick = 0; iThick < nThick; iThick++) {
+            for (AtomEntry entry : this.entryUnit) {
+                if (entry == null) {
+                    continue;
+                }
+
+                double a = entry.a;
+                double b = entry.b;
+                double c = entry.c + slabModel.offset;
+                c -= Math.floor(c);
+
+                double dc = Math.abs(c - 1.0);
+                double dz = dc * this.lattUnit[2][2];
+                if (dz < CART_THR) {
+                    c -= 1.0;
+                }
+
+                c -= (double) iThick;
+
+                dc = c - (1.0 - cThick);
+                dz = dc * this.lattUnit[2][2];
+                if (dz < (-2.0 * CART_THR)) {
+                    continue;
+                }
+
+                AtomEntry entry2 = null;
+                if (this.entryAuxi != this.entryUnit) {
+                    entry2 = new AtomEntry(this.lattAuxi);
+                    this.entryAuxi.add(entry2);
+                } else {
+                    entry2 = entry;
+                }
+
+                entry2.x = a * this.lattUnit[0][0] + b * this.lattUnit[1][0] + c * this.lattUnit[2][0];
+                entry2.y = a * this.lattUnit[0][1] + b * this.lattUnit[1][1] + c * this.lattUnit[2][1];
+                entry2.z = a * this.lattUnit[0][2] + b * this.lattUnit[1][2] + c * this.lattUnit[2][2];
+            }
+        }
+
+        if (this.entryAuxi.size() >= ModelerBase.maxNumAtoms()) {
+            return false;
+        }
+
+        // modify lattice
         double zMax = 0.0;
         double zMin = 0.0;
         boolean zFirst = true;
-        for (AtomEntry entry : this.entryUnit) {
+        for (AtomEntry entry : this.entryAuxi) {
             if (entry == null) {
                 continue;
             }
@@ -489,46 +538,39 @@ public class SlabModelStem extends SlabModel {
             }
         }
 
-        double zScale2 = zSlab == 0.0 ? 1.0 : (0.5 * (zMax + zMin) / zSlab);
-        double tx = 0.5 * this.lattSlab[2][0] - zScale2 * this.lattUnit[2][0];
-        double ty = 0.5 * this.lattSlab[2][1] - zScale2 * this.lattUnit[2][1];
-        double tz = 0.5 * this.lattSlab[2][2] - zScale2 * this.lattUnit[2][2];
+        double zSlab = this.lattAuxi[2][2];
+        double zScale = zSlab == 0.0 ? 1.0 : ((zMax - zMin) / zSlab);
+        this.lattAuxi[2] = Matrix3D.mult(zScale, this.lattAuxi[2]);
+        if (this.lattAuxi[2] == null || lattAuxi[2].length < 3) {
+            return false;
+        }
 
-        for (AtomEntry entry : this.entryUnit) {
+        // modify atoms
+        double xMin = 0.0;
+        double yMin = 0.0;
+        if (this.lattAuxi[2][2] > 0.0) {
+            xMin = zMin * this.lattAuxi[2][0] / this.lattAuxi[2][2];
+            yMin = zMin * this.lattAuxi[2][1] / this.lattAuxi[2][2];
+        }
+
+        for (AtomEntry entry : this.entryAuxi) {
             if (entry == null) {
                 continue;
             }
 
-            entry.x += tx;
-            entry.y += ty;
-            entry.z += tz;
+            entry.x -= xMin;
+            entry.y -= yMin;
+            entry.z -= zMin;
         }
 
-        this.entrySlab = new ArrayList<AtomEntry>();
-
-        for (int ia = 0; ia < aScale; ia++) {
-            double ra = ((double) ia) / ((double) aScale);
-            for (int ib = 0; ib < bScale; ib++) {
-                double rb = ((double) ib) / ((double) bScale);
-
-                double vx = ra * this.lattSlab[0][0] + rb * this.lattSlab[1][0];
-                double vy = ra * this.lattSlab[0][1] + rb * this.lattSlab[1][1];
-
-                for (AtomEntry entry : this.entryUnit) {
-                    if (entry == null) {
-                        continue;
-                    }
-
-                    AtomEntry entry2 = new AtomEntry(this.lattSlab);
-                    entry2.name = entry.name;
-                    entry2.x = entry.x + vx;
-                    entry2.y = entry.y + vy;
-                    entry2.z = entry.z;
-
-                    this.entrySlab.add(entry2);
-                }
-            }
+        // store status
+        UUID uuid = UUID.randomUUID();
+        if (uuid != null) {
+            this.codeAuxi = uuid.toString();
         }
+
+        this.objOffset = slabModel.offset;
+        this.objThickness = slabModel.thickness;
 
         return true;
     }
@@ -950,5 +992,149 @@ public class SlabModelStem extends SlabModel {
         }
 
         return true;
+    }
+
+    private static class AtomEntry implements Comparable<AtomEntry> {
+        private double[][] lattice;
+
+        public String name;
+        public double a;
+        public double b;
+        public double c;
+        public double x;
+        public double y;
+        public double z;
+
+        public AtomEntry(double[][] lattice) {
+            if (lattice == null) {
+                throw new IllegalArgumentException("lattice is null.");
+            }
+
+            this.lattice = lattice;
+            this.name = null;
+            this.a = 0.0;
+            this.b = 0.0;
+            this.c = 0.0;
+            this.x = 0.0;
+            this.y = 0.0;
+            this.z = 0.0;
+        }
+
+        @Override
+        public int compareTo(AtomEntry other) {
+            return compareToStatic(this, other);
+        }
+
+        private static int compareToStatic(AtomEntry entry1, AtomEntry entry2) {
+            if (entry2 == null) {
+                return -1;
+            }
+
+            double dx;
+            double dy;
+            double dz;
+            double rr;
+
+            double dc = entry1.c - entry2.c;
+            dx = dc * entry1.lattice[2][0];
+            dy = dc * entry1.lattice[2][1];
+            dz = dc * entry1.lattice[2][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (dc > 0.0) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+
+            double db = entry1.b - entry2.b;
+            dx = db * entry1.lattice[1][0];
+            dy = db * entry1.lattice[1][1];
+            dz = db * entry1.lattice[1][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (db > 0.0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            double da = entry1.a - entry2.a;
+            dx = da * entry1.lattice[0][0];
+            dy = da * entry1.lattice[0][1];
+            dz = da * entry1.lattice[0][2];
+            rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                if (da > 0.0) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+
+            if (entry1.name == null) {
+                if (entry2.name == null) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+
+            return entry1.name.compareTo(entry2.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return this.name == null ? 0 : this.name.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return equalsStatic(this, obj);
+        }
+
+        private static boolean equalsStatic(AtomEntry entry, Object obj) {
+            if (entry == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (entry.getClass() != obj.getClass()) {
+                return false;
+            }
+
+            AtomEntry other = (AtomEntry) obj;
+            if (entry.name == null) {
+                if (entry.name != other.name) {
+                    return false;
+                }
+            } else {
+                if (!entry.name.equals(other.name)) {
+                    return false;
+                }
+            }
+
+            double da = Math.abs(entry.a - other.a);
+            da = Math.min(da, Math.abs(entry.a - other.a + Math.signum(0.5 - entry.a)));
+
+            double db = Math.abs(entry.b - other.b);
+            db = Math.min(db, Math.abs(entry.b - other.b + Math.signum(0.5 - entry.b)));
+
+            double dc = Math.abs(entry.c - other.c);
+            dc = Math.min(dc, Math.abs(entry.c - other.c + Math.signum(0.5 - entry.c)));
+
+            double dx = da * entry.lattice[0][0] + db * entry.lattice[1][0] + dc * entry.lattice[2][0];
+            double dy = da * entry.lattice[0][1] + db * entry.lattice[1][1] + dc * entry.lattice[2][1];
+            double dz = da * entry.lattice[0][2] + db * entry.lattice[1][2] + dc * entry.lattice[2][2];
+            double rr = dx * dx + dy * dy + dz * dz;
+            if (rr > CART_THR * CART_THR) {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
