@@ -42,12 +42,6 @@ public class SlabModeler extends ModelerBase {
             status = this.slabModel.updateCell(this.dstCell);
         }
 
-        if (status) {
-            //if (this.atomsViewer != null) {
-            //    this.atomsViewer.setCellToCenter();
-            //}
-        }
-
         return status;
     }
 
@@ -91,12 +85,6 @@ public class SlabModeler extends ModelerBase {
         boolean status = false;
         if (this.dstCell != null) {
             status = this.slabModel.updateCell(this.dstCell);
-        }
-
-        if (status) {
-            //if (this.atomsViewer != null) {
-            //    this.atomsViewer.setCellToCenter();
-            //}
         }
 
         return status;

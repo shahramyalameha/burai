@@ -27,8 +27,9 @@ public class SlabModelStem extends SlabModel {
 
     private static final double DET_THR = 1.0e-8;
     private static final double PACK_THR = 1.0e-6; // internal coordinate
-    private static final double THICK_THR = 1.0e-12; // internal coordinate
-    private static final double CART_THR = 1.0e-4; // angstrom
+    private static final double THICK_THR = 1.0e-12; // angstrom
+    private static final double POSIT_THR = 1.0e-4; // angstrom
+    private static final double VALUE_THR = 1.0e-12;
 
     private static final double STEP_FOR_GENOMS = 0.5; // angstrom
 
@@ -172,12 +173,12 @@ public class SlabModelStem extends SlabModel {
 
             double dc = Math.abs(c2 - 1.0);
             double dz = dc * this.lattUnit[2][2];
-            if (dz < CART_THR) {
+            if (dz < POSIT_THR) {
                 c2 -= 1.0;
             }
 
             dz = Math.abs(c1 - c2) * this.lattUnit[2][2];
-            if (iatom >= natom && dz > CART_THR) {
+            if (iatom >= natom && dz > POSIT_THR) {
                 iatom = i;
             }
 
@@ -310,21 +311,25 @@ public class SlabModelStem extends SlabModel {
 
         // check status
         boolean sameCondition = true;
+        boolean vacuumOnlyChanged = true;
 
         if (this.codeSlab == null || !this.codeSlab.equals(this.codeAuxi)) {
             sameCondition = false;
+            vacuumOnlyChanged = false;
         }
 
-        if (this.objVacuum == null || Math.abs(slabModel.vacuum - this.objVacuum) > 1.0e-12) {
+        if (this.objVacuum == null || Math.abs(slabModel.vacuum - this.objVacuum) > VALUE_THR) {
             sameCondition = false;
         }
 
         if (this.objScaleA == null || slabModel.scaleA != this.objScaleA.intValue()) {
             sameCondition = false;
+            vacuumOnlyChanged = false;
         }
 
         if (this.objScaleB == null || slabModel.scaleB != this.objScaleB.intValue()) {
             sameCondition = false;
+            vacuumOnlyChanged = false;
         }
 
         if (sameCondition) {
@@ -337,11 +342,22 @@ public class SlabModelStem extends SlabModel {
         this.objScaleB = null;
 
         // lattice
-        if (this.lattAuxi == null) {
+        if (this.lattUnit == null) {
+            return false;
+        }
+        if (this.lattAuxi == null || this.lattAuxi.length < 3) {
+            return false;
+        }
+        if (this.lattAuxi[2] == null || this.lattAuxi[2].length < 3) {
             return false;
         }
 
-        this.lattSlab = Matrix3D.copy(this.lattAuxi);
+        double[][] lattSlab2 = null;
+        if (vacuumOnlyChanged) {
+            lattSlab2 = this.lattSlab == null ? null : Matrix3D.copy(this.lattSlab);
+        }
+
+        this.lattSlab = Matrix3D.copy(this.lattUnit);
         if (this.lattSlab == null || this.lattSlab.length < 3) {
             return false;
         }
@@ -359,7 +375,7 @@ public class SlabModelStem extends SlabModel {
         }
 
         double zSlab = this.lattSlab[2][2];
-        double zTotal = zSlab + 2.0 * Math.max(0.0, slabModel.vacuum);
+        double zTotal = this.lattAuxi[2][2] + 2.0 * Math.max(0.0, slabModel.vacuum);
         double zScale = zSlab == 0.0 ? 1.0 : (zTotal / zSlab);
         this.lattSlab[2] = Matrix3D.mult(zScale, this.lattSlab[2]);
         if (this.lattSlab[2] == null || lattSlab[2].length < 3) {
@@ -367,41 +383,71 @@ public class SlabModelStem extends SlabModel {
         }
 
         // atoms
-        int natom = this.entryAuxi.size();
-        if (this.entryAuxi == null || natom < 1) {
-            return false;
-        }
+        if (vacuumOnlyChanged) {
+            // shift atoms
+            if (this.entrySlab == null || this.entrySlab.isEmpty()) {
+                return false;
+            }
 
-        if ((aScale * bScale * natom) >= ModelerBase.maxNumAtoms()) {
-            return false;
-        }
+            if (lattSlab2 == null || lattSlab2.length < 3) {
+                return false;
+            }
+            if (lattSlab2[2] == null || lattSlab2[2].length < 3) {
+                return false;
+            }
 
-        this.entrySlab = new ArrayList<AtomEntry>();
+            double tx = 0.5 * (this.lattSlab[2][0] - lattSlab2[2][0]);
+            double ty = 0.5 * (this.lattSlab[2][1] - lattSlab2[2][1]);
+            double tz = 0.5 * (this.lattSlab[2][2] - lattSlab2[2][2]);
 
-        double tx = 0.5 * (this.lattSlab[2][0] - this.lattAuxi[2][0]);
-        double ty = 0.5 * (this.lattSlab[2][1] - this.lattAuxi[2][1]);
-        double tz = 0.5 * (this.lattSlab[2][2] - this.lattAuxi[2][2]);
+            for (AtomEntry entry : this.entrySlab) {
+                if (entry == null) {
+                    continue;
+                }
 
-        for (int ia = 0; ia < aScale; ia++) {
-            double ra = ((double) ia) / ((double) aScale);
-            for (int ib = 0; ib < bScale; ib++) {
-                double rb = ((double) ib) / ((double) bScale);
+                entry.x += tx;
+                entry.y += ty;
+                entry.z += tz;
+            }
 
-                double vx = ra * this.lattSlab[0][0] + rb * this.lattSlab[1][0];
-                double vy = ra * this.lattSlab[0][1] + rb * this.lattSlab[1][1];
+        } else {
+            // create atoms
+            int natom = this.entryAuxi.size();
+            if (this.entryAuxi == null || natom < 1) {
+                return false;
+            }
 
-                for (AtomEntry entry : this.entryAuxi) {
-                    if (entry == null) {
-                        continue;
+            if ((aScale * bScale * natom) >= ModelerBase.maxNumAtoms()) {
+                return false;
+            }
+
+            this.entrySlab = new ArrayList<AtomEntry>();
+
+            double tx = 0.5 * (this.lattSlab[2][0] - this.lattAuxi[2][0]);
+            double ty = 0.5 * (this.lattSlab[2][1] - this.lattAuxi[2][1]);
+            double tz = 0.5 * (this.lattSlab[2][2] - this.lattAuxi[2][2]);
+
+            for (int ia = 0; ia < aScale; ia++) {
+                double ra = ((double) ia) / ((double) aScale);
+                for (int ib = 0; ib < bScale; ib++) {
+                    double rb = ((double) ib) / ((double) bScale);
+
+                    double vx = ra * this.lattSlab[0][0] + rb * this.lattSlab[1][0];
+                    double vy = ra * this.lattSlab[0][1] + rb * this.lattSlab[1][1];
+
+                    for (AtomEntry entry : this.entryAuxi) {
+                        if (entry == null) {
+                            continue;
+                        }
+
+                        AtomEntry entry2 = new AtomEntry(this.lattSlab);
+                        entry2.name = entry.name;
+                        entry2.x = entry.x + tx + vx;
+                        entry2.y = entry.y + ty + vy;
+                        entry2.z = entry.z + tz;
+
+                        this.entrySlab.add(entry2);
                     }
-
-                    AtomEntry entry2 = new AtomEntry(this.lattSlab);
-                    entry2.name = entry.name;
-                    entry2.x = entry.x + tx + vx;
-                    entry2.y = entry.y + ty + vy;
-                    entry2.z = entry.z + tz;
-
-                    this.entrySlab.add(entry2);
                 }
             }
         }
@@ -423,11 +469,11 @@ public class SlabModelStem extends SlabModel {
         // check status
         boolean sameCondition = true;
 
-        if (this.objOffset == null || Math.abs(slabModel.offset - this.objOffset) > 1.0e-12) {
+        if (this.objOffset == null || Math.abs(slabModel.offset - this.objOffset) > VALUE_THR) {
             sameCondition = false;
         }
 
-        if (this.objThickness == null || Math.abs(slabModel.thickness - this.objThickness) > 1.0e-12) {
+        if (this.objThickness == null || Math.abs(slabModel.thickness - this.objThickness) > VALUE_THR) {
             sameCondition = false;
         }
 
@@ -468,7 +514,7 @@ public class SlabModelStem extends SlabModel {
             cThick = slabModel.thickness;
         }
 
-        if (Math.abs(cThick - 1.0) > THICK_THR) {
+        if (this.lattAuxi[2][2] * Math.abs(cThick - 1.0) > THICK_THR) {
             this.entryAuxi = new ArrayList<AtomEntry>();
         } else {
             this.entryAuxi = this.entryUnit;
@@ -488,16 +534,16 @@ public class SlabModelStem extends SlabModel {
                 c -= Math.floor(c);
 
                 double dc = Math.abs(c - 1.0);
-                double dz = dc * this.lattUnit[2][2];
-                if (dz < CART_THR) {
+                double dz = dc * this.lattAuxi[2][2];
+                if (dz < POSIT_THR) {
                     c -= 1.0;
                 }
 
                 c -= (double) iThick;
 
                 dc = c - (1.0 - cThick);
-                dz = dc * this.lattUnit[2][2];
-                if (dz < (-2.0 * CART_THR)) {
+                dz = dc * this.lattAuxi[2][2];
+                if (dz < (-2.0 * POSIT_THR)) {
                     continue;
                 }
 
@@ -510,9 +556,9 @@ public class SlabModelStem extends SlabModel {
                 }
 
                 entry2.name = entry.name;
-                entry2.x = a * this.lattUnit[0][0] + b * this.lattUnit[1][0] + c * this.lattUnit[2][0];
-                entry2.y = a * this.lattUnit[0][1] + b * this.lattUnit[1][1] + c * this.lattUnit[2][1];
-                entry2.z = a * this.lattUnit[0][2] + b * this.lattUnit[1][2] + c * this.lattUnit[2][2];
+                entry2.x = a * this.lattAuxi[0][0] + b * this.lattAuxi[1][0] + c * this.lattAuxi[2][0];
+                entry2.y = a * this.lattAuxi[0][1] + b * this.lattAuxi[1][1] + c * this.lattAuxi[2][1];
+                entry2.z = a * this.lattAuxi[0][2] + b * this.lattAuxi[1][2] + c * this.lattAuxi[2][2];
             }
         }
 
@@ -540,7 +586,8 @@ public class SlabModelStem extends SlabModel {
         }
 
         double zSlab = this.lattAuxi[2][2];
-        double zScale = zSlab == 0.0 ? 1.0 : ((zMax - zMin) / zSlab);
+        double zDelta = Math.max(zMax - zMin, 0.0);
+        double zScale = zSlab == 0.0 ? 1.0 : (zDelta / zSlab);
         this.lattAuxi[2] = Matrix3D.mult(zScale, this.lattAuxi[2]);
         if (this.lattAuxi[2] == null || lattAuxi[2].length < 3) {
             return false;
@@ -549,7 +596,7 @@ public class SlabModelStem extends SlabModel {
         // modify atoms
         double xMin = 0.0;
         double yMin = 0.0;
-        if (this.lattAuxi[2][2] > 0.0) {
+        if (this.lattAuxi[2][2] > THICK_THR) {
             xMin = zMin * this.lattAuxi[2][0] / this.lattAuxi[2][2];
             yMin = zMin * this.lattAuxi[2][1] / this.lattAuxi[2][2];
         }
@@ -714,7 +761,7 @@ public class SlabModelStem extends SlabModel {
 
             double dc = Math.abs(entry.c - 1.0);
             double dz = dc * this.lattUnit[2][2];
-            if (dz < CART_THR) {
+            if (dz < POSIT_THR) {
                 entry.c -= 1.0;
             }
         }
@@ -1041,7 +1088,7 @@ public class SlabModelStem extends SlabModel {
             dy = dc * entry1.lattice[2][1];
             dz = dc * entry1.lattice[2][2];
             rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
+            if (rr > POSIT_THR * POSIT_THR) {
                 if (dc > 0.0) {
                     return -1;
                 } else {
@@ -1054,7 +1101,7 @@ public class SlabModelStem extends SlabModel {
             dy = db * entry1.lattice[1][1];
             dz = db * entry1.lattice[1][2];
             rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
+            if (rr > POSIT_THR * POSIT_THR) {
                 if (db > 0.0) {
                     return 1;
                 } else {
@@ -1067,7 +1114,7 @@ public class SlabModelStem extends SlabModel {
             dy = da * entry1.lattice[0][1];
             dz = da * entry1.lattice[0][2];
             rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
+            if (rr > POSIT_THR * POSIT_THR) {
                 if (da > 0.0) {
                     return 1;
                 } else {
@@ -1131,7 +1178,7 @@ public class SlabModelStem extends SlabModel {
             double dy = da * entry.lattice[0][1] + db * entry.lattice[1][1] + dc * entry.lattice[2][1];
             double dz = da * entry.lattice[0][2] + db * entry.lattice[1][2] + dc * entry.lattice[2][2];
             double rr = dx * dx + dy * dy + dz * dz;
-            if (rr > CART_THR * CART_THR) {
+            if (rr > POSIT_THR * POSIT_THR) {
                 return false;
             }
 

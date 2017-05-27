@@ -149,6 +149,14 @@ public class QEFXSlabEditorController extends QEFXAppController {
             if (this.modeler != null) {
                 this.modeler.initialize();
             }
+
+            if (this.slabSlider != null) {
+                this.slabSlider.setValue(SlabModel.defaultThickness());
+            }
+
+            if (this.vacuumSlider != null) {
+                this.vacuumSlider.setValue(SlabModel.defaultVacuum());
+            }
         });
     }
 
@@ -305,16 +313,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             }
 
             double rate = this.slabSlider.getValue();
-
-            boolean status = false;
             if (rate > 0.0) {
-                status = this.modeler.changeSlabWidth(rate);
-            } else if (rate == 0.0) {
-                status = true;
-            }
-
-            if (!status) {
-                this.showErrorDialog();
+                this.modeler.changeSlabWidth(rate);
             }
 
             if (this.scaleField1 != null) {
@@ -337,16 +337,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             }
 
             double vacuum = this.vacuumSlider.getValue();
-
-            boolean status = false;
             if (vacuum > 0.0) {
-                status = this.modeler.changeVacuumWidth(vacuum);
-            } else if (vacuum == 0.0) {
-                status = true;
-            }
-
-            if (!status) {
-                this.showErrorDialog();
+                this.modeler.changeVacuumWidth(vacuum);
             }
 
             if (this.scaleField1 != null) {

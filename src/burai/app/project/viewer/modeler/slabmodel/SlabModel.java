@@ -13,7 +13,17 @@ import burai.atoms.model.Cell;
 
 public abstract class SlabModel {
 
+    private static final double DEFAULT_THICKNESS = 1.0;
+
     private static final double DEFAULT_VACUUM = 10.0; // angstrom
+
+    public static double defaultThickness() {
+        return DEFAULT_THICKNESS;
+    }
+
+    public static double defaultVacuum() {
+        return DEFAULT_VACUUM;
+    }
 
     protected double offset;
 
@@ -26,7 +36,7 @@ public abstract class SlabModel {
 
     protected SlabModel() {
         this.offset = 0.0;
-        this.thickness = 1.0;
+        this.thickness = DEFAULT_THICKNESS;
         this.vacuum = DEFAULT_VACUUM;
         this.scaleA = 1;
         this.scaleB = 1;
