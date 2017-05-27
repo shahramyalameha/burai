@@ -251,7 +251,7 @@ public class SlabModelStem extends SlabModel {
             refAtoms = cell.listAtoms(true);
         }
 
-        if (refAtoms != null && refAtoms.length >= natom) {
+        if (refAtoms != null && refAtoms.length == natom) {
             for (int i = 0; i < natom; i++) {
                 AtomEntry entry = this.entrySlab.get(i);
                 if (entry == null) {
@@ -509,6 +509,7 @@ public class SlabModelStem extends SlabModel {
                     entry2 = entry;
                 }
 
+                entry2.name = entry.name;
                 entry2.x = a * this.lattUnit[0][0] + b * this.lattUnit[1][0] + c * this.lattUnit[2][0];
                 entry2.y = a * this.lattUnit[0][1] + b * this.lattUnit[1][1] + c * this.lattUnit[2][1];
                 entry2.z = a * this.lattUnit[0][2] + b * this.lattUnit[1][2] + c * this.lattUnit[2][2];

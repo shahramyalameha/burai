@@ -309,6 +309,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             boolean status = false;
             if (rate > 0.0) {
                 status = this.modeler.changeSlabWidth(rate);
+            } else if (rate == 0.0) {
+                status = true;
             }
 
             if (!status) {
@@ -339,10 +341,12 @@ public class QEFXSlabEditorController extends QEFXAppController {
             boolean status = false;
             if (vacuum > 0.0) {
                 status = this.modeler.changeVacuumWidth(vacuum);
+            } else if (vacuum == 0.0) {
+                status = true;
             }
 
             if (!status) {
-                //this.showErrorDialog();
+                this.showErrorDialog();
             }
 
             if (this.scaleField1 != null) {

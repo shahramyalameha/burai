@@ -182,7 +182,7 @@ public class ProjectExporter {
             refAtoms = cell.listAtoms(true);
         }
 
-        if (refAtoms != null && refAtoms.length >= natom) {
+        if (refAtoms != null && refAtoms.length == natom) {
             for (int i = 0; i < natom; i++) {
                 String name = this.geometry.getName(i);
                 if (name == null || name.trim().isEmpty()) {
