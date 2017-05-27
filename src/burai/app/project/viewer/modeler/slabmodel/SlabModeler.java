@@ -31,9 +31,24 @@ public class SlabModeler extends ModelerBase {
             return false;
         }
 
-        // TODO
+        if (this.slabModel == null) {
+            return false;
+        }
 
-        return false;
+        this.slabModel.setThickness(rate);
+
+        boolean status = false;
+        if (this.dstCell != null) {
+            status = this.slabModel.updateCell(this.dstCell);
+        }
+
+        if (status) {
+            //if (this.atomsViewer != null) {
+            //    this.atomsViewer.setCellToCenter();
+            //}
+        }
+
+        return status;
     }
 
     public boolean scaleSlabArea(int na, int nb) {
@@ -79,9 +94,9 @@ public class SlabModeler extends ModelerBase {
         }
 
         if (status) {
-            if (this.atomsViewer != null) {
-                this.atomsViewer.setCellToCenter();
-            }
+            //if (this.atomsViewer != null) {
+            //    this.atomsViewer.setCellToCenter();
+            //}
         }
 
         return status;
