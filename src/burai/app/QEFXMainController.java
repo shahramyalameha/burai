@@ -703,7 +703,7 @@ public class QEFXMainController implements Initializable {
 
             if (icon instanceof QEFXProjectIcon) {
                 Project project = ((QEFXProjectIcon) icon).getContent();
-                if (project != null) {
+                if (project != null && project.getCell() != null) {
                     this.showProject(project);
                 }
 
