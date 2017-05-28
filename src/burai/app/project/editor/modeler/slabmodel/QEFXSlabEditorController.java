@@ -52,11 +52,13 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
     private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
 
-    private static final double ATOMS_TILE_SIZE = 184.0;
-    private static final double ATOMS_TILE_SCLAE = 1.62;
-    private static final String ATOMS_TILE_STYLE = "-fx-background-color: -fx-focus-color";
+    private static final double ATOMS_TILE_SIZE = 175.0;
+    private static final double ATOMS_TILE_SCLAE = 1.6;
+    private static final double ATOMS_TILE_INSET = 4.0;
+    private static final String ATOMS_TILE_CLASS1 = "icon-slab";
+    private static final String ATOMS_TILE_CLASS2 = "icon-slab-selected";
     private static final double ATOMS_LABEL_INSET = 12.0;
-    private static final String ATOMS_LABEL_STYLE = "-fx-font: italic 1.166667em \"Arial Black\"";
+    private static final String ATOMS_LABEL_CLASS = "icon-slab";
 
     private QEFXProjectController projectController;
 
@@ -93,6 +95,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
     @FXML
     private Slider vacuumSlider;
 
+    private StackPane kindTile;
+
     @FXML
     private TilePane kindPane;
 
@@ -112,6 +116,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
         this.slabThread = new FXBufferedThread(SLEEP_SLAB_BUFFER, true);
         this.vacuumThread = new FXBufferedThread(SLEEP_VACUUM_BUFFER, true);
+
+        this.kindTile = null;
     }
 
     @Override
@@ -391,6 +397,24 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.kindScroll.setFocusTraversable(true);
     }
 
+    private void setupKindTile(StackPane kindTile, SlabModel slabModel) {
+        if (this.kindTile != null) {
+            if (this.kindTile.getStyleClass().contains(ATOMS_TILE_CLASS2)) {
+                this.kindTile.getStyleClass().remove(ATOMS_TILE_CLASS2);
+            }
+            this.kindTile.getStyleClass().add(ATOMS_TILE_CLASS1);
+        }
+
+        if (kindTile != null) {
+            if (kindTile.getStyleClass().contains(ATOMS_TILE_CLASS1)) {
+                kindTile.getStyleClass().remove(ATOMS_TILE_CLASS1);
+            }
+            kindTile.getStyleClass().add(ATOMS_TILE_CLASS2);
+        }
+
+        this.kindTile = kindTile;
+    }
+
     public void setSlabModels(SlabModel[] slabModels) {
         if (slabModels == null || slabModels.length < 1) {
             return;
@@ -413,24 +437,30 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
             slabModel.putOnCell(cell);
 
+            StackPane pane = new StackPane();
+            TilePane.setMargin(pane, new Insets(ATOMS_TILE_INSET));
+            pane.getStyleClass().add(ATOMS_TILE_CLASS1);
+            pane.setOnMouseClicked(event -> {
+                if (event != null && event.getClickCount() >= 2) {
+                    this.setupKindTile(pane, slabModel);
+                }
+            });
+
             AtomsVLight atomsVLight = new AtomsVLight(cell, ATOMS_TILE_SIZE, true);
             atomsVLight.appendScale(ATOMS_TILE_SCLAE);
-
-            StackPane pane = new StackPane(atomsVLight);
-            pane.setOnMouseEntered(event -> {
-                pane.setStyle(ATOMS_TILE_STYLE);
-            });
-            pane.setOnMouseExited(event -> {
-                pane.setStyle("");
-            });
+            pane.getChildren().add(atomsVLight);
 
             Label label = new Label("#" + Integer.toString(i + 1));
-            label.setStyle(ATOMS_LABEL_STYLE);
+            label.getStyleClass().add(ATOMS_LABEL_CLASS);
             StackPane.setAlignment(label, Pos.TOP_LEFT);
             StackPane.setMargin(label, new Insets(ATOMS_LABEL_INSET));
             pane.getChildren().add(label);
 
             this.kindPane.getChildren().add(pane);
+
+            if (i == 0) {
+                this.setupKindTile(pane, slabModel);
+            }
         }
     }
 
