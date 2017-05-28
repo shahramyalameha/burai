@@ -26,13 +26,16 @@ public abstract class SlabModel {
     }
 
     protected double offset;
-
     protected double thickness;
-
     protected double vacuum;
-
     protected int scaleA;
     protected int scaleB;
+
+    private double lastOffset;
+    private double lastThickness;
+    private double lastVacuum;
+    private int lastScaleA;
+    private int lastScaleB;
 
     protected SlabModel() {
         this.offset = 0.0;
@@ -40,6 +43,12 @@ public abstract class SlabModel {
         this.vacuum = DEFAULT_VACUUM;
         this.scaleA = 1;
         this.scaleB = 1;
+
+        this.lastOffset = this.offset;
+        this.lastThickness = this.thickness;
+        this.lastVacuum = this.vacuum;
+        this.lastScaleA = this.scaleA;
+        this.lastScaleB = this.scaleB;
     }
 
     public final void setOffset(double offset) {
@@ -64,6 +73,30 @@ public abstract class SlabModel {
 
     public abstract SlabModel[] getSlabModels();
 
-    public abstract boolean updateCell(Cell cell);
+    protected abstract boolean updateCell(Cell cell);
 
+    public final boolean putOnCell(Cell cell) {
+
+        boolean status = this.updateCell(cell);
+
+        if (status) {
+            this.lastOffset = this.offset;
+            this.lastThickness = this.thickness;
+            this.lastVacuum = this.vacuum;
+            this.lastScaleA = this.scaleA;
+            this.lastScaleB = this.scaleB;
+        }
+
+        return status;
+    }
+
+    public final boolean putOnLastCell(Cell cell) {
+        this.offset = this.lastOffset;
+        this.thickness = this.lastThickness;
+        this.vacuum = this.lastVacuum;
+        this.scaleA = this.lastScaleA;
+        this.scaleB = this.lastScaleB;
+
+        return this.updateCell(cell);
+    }
 }

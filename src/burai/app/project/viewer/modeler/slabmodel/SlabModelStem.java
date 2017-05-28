@@ -70,11 +70,11 @@ public class SlabModelStem extends SlabModel {
     private String codeAuxi;
     private String codeSlab;
 
-    private Double objOffset;
-    private Double objThickness;
-    private Double objVacuum;
-    private Integer objScaleA;
-    private Integer objScaleB;
+    private Double currOffset;
+    private Double currThickness;
+    private Double currVacuum;
+    private Integer currScaleA;
+    private Integer currScaleB;
 
     /**
      * cell is not changed.
@@ -105,11 +105,11 @@ public class SlabModelStem extends SlabModel {
         this.codeAuxi = null;
         this.codeSlab = null;
 
-        this.objOffset = null;
-        this.objThickness = null;
-        this.objVacuum = null;
-        this.objScaleA = null;
-        this.objScaleB = null;
+        this.currOffset = null;
+        this.currThickness = null;
+        this.currVacuum = null;
+        this.currScaleA = null;
+        this.currScaleB = null;
     }
 
     @Override
@@ -185,7 +185,7 @@ public class SlabModelStem extends SlabModel {
             }
 
             dz = Math.abs(c1 - c2) * this.lattUnit[2][2];
-            if (iatom >= natom && dz > POSIT_THR) {
+            if (iatom >= natom && dz < POSIT_THR) {
                 iatom = i;
             }
 
@@ -213,7 +213,7 @@ public class SlabModelStem extends SlabModel {
     }
 
     @Override
-    public boolean updateCell(Cell cell) {
+    protected boolean updateCell(Cell cell) {
         return this.updateCell(cell, this);
     }
 
@@ -325,16 +325,16 @@ public class SlabModelStem extends SlabModel {
             vacuumOnlyChanged = false;
         }
 
-        if (this.objVacuum == null || Math.abs(slabModel.vacuum - this.objVacuum) > VALUE_THR) {
+        if (this.currVacuum == null || Math.abs(slabModel.vacuum - this.currVacuum) > VALUE_THR) {
             sameCondition = false;
         }
 
-        if (this.objScaleA == null || slabModel.scaleA != this.objScaleA.intValue()) {
+        if (this.currScaleA == null || slabModel.scaleA != this.currScaleA.intValue()) {
             sameCondition = false;
             vacuumOnlyChanged = false;
         }
 
-        if (this.objScaleB == null || slabModel.scaleB != this.objScaleB.intValue()) {
+        if (this.currScaleB == null || slabModel.scaleB != this.currScaleB.intValue()) {
             sameCondition = false;
             vacuumOnlyChanged = false;
         }
@@ -344,9 +344,9 @@ public class SlabModelStem extends SlabModel {
         }
 
         this.codeSlab = null;
-        this.objVacuum = null;
-        this.objScaleA = null;
-        this.objScaleB = null;
+        this.currVacuum = null;
+        this.currScaleA = null;
+        this.currScaleB = null;
 
         // lattice
         if (this.lattUnit == null) {
@@ -461,9 +461,9 @@ public class SlabModelStem extends SlabModel {
 
         // store status
         this.codeSlab = this.codeAuxi;
-        this.objVacuum = slabModel.vacuum;
-        this.objScaleA = slabModel.scaleA;
-        this.objScaleB = slabModel.scaleB;
+        this.currVacuum = slabModel.vacuum;
+        this.currScaleA = slabModel.scaleA;
+        this.currScaleB = slabModel.scaleB;
 
         return true;
     }
@@ -476,11 +476,11 @@ public class SlabModelStem extends SlabModel {
         // check status
         boolean sameCondition = true;
 
-        if (this.objOffset == null || Math.abs(slabModel.offset - this.objOffset) > VALUE_THR) {
+        if (this.currOffset == null || Math.abs(slabModel.offset - this.currOffset) > VALUE_THR) {
             sameCondition = false;
         }
 
-        if (this.objThickness == null || Math.abs(slabModel.thickness - this.objThickness) > VALUE_THR) {
+        if (this.currThickness == null || Math.abs(slabModel.thickness - this.currThickness) > VALUE_THR) {
             sameCondition = false;
         }
 
@@ -489,8 +489,8 @@ public class SlabModelStem extends SlabModel {
         }
 
         this.codeAuxi = null;
-        this.objOffset = null;
-        this.objThickness = null;
+        this.currOffset = null;
+        this.currThickness = null;
 
         // init lattice
         if (this.lattUnit == null) {
@@ -658,8 +658,8 @@ public class SlabModelStem extends SlabModel {
             this.codeAuxi = uuid.toString();
         }
 
-        this.objOffset = slabModel.offset;
-        this.objThickness = slabModel.thickness;
+        this.currOffset = slabModel.offset;
+        this.currThickness = slabModel.thickness;
 
         return true;
     }

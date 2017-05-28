@@ -39,14 +39,18 @@ public class SlabModeler extends ModelerBase {
 
         boolean status = false;
         if (this.dstCell != null) {
-            status = this.slabModel.updateCell(this.dstCell);
+            status = this.slabModel.putOnCell(this.dstCell);
+        }
+
+        if (!status) {
+            this.slabModel.putOnLastCell(this.dstCell);
         }
 
         return status;
     }
 
     public boolean scaleSlabArea(int na, int nb) {
-        if (na < 1 || nb < 1 || (na * nb) < 2) {
+        if (na < 1 || nb < 1) {
             return false;
         }
 
@@ -59,13 +63,17 @@ public class SlabModeler extends ModelerBase {
 
         boolean status = false;
         if (this.dstCell != null) {
-            status = this.slabModel.updateCell(this.dstCell);
+            status = this.slabModel.putOnCell(this.dstCell);
         }
 
         if (status) {
             if (this.atomsViewer != null) {
                 this.atomsViewer.setCellToCenter();
             }
+        }
+
+        if (!status) {
+            this.slabModel.putOnLastCell(this.dstCell);
         }
 
         return status;
@@ -84,7 +92,11 @@ public class SlabModeler extends ModelerBase {
 
         boolean status = false;
         if (this.dstCell != null) {
-            status = this.slabModel.updateCell(this.dstCell);
+            status = this.slabModel.putOnCell(this.dstCell);
+        }
+
+        if (!status) {
+            this.slabModel.putOnLastCell(this.dstCell);
         }
 
         return status;

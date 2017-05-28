@@ -217,13 +217,6 @@ public class QEFXSlabEditorController extends QEFXAppController {
             if (!status) {
                 this.showErrorDialog();
             }
-
-            if (this.scaleField1 != null) {
-                this.scaleField1.setText("");
-            }
-            if (this.scaleField2 != null) {
-                this.scaleField2.setText("");
-            }
         });
     }
 
@@ -246,7 +239,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return false;
         }
 
-        return (n1 * n2) > 1;
+        return (n1 * n2) > 0;
     }
 
     private void setupScaleField(TextField textField) {
@@ -316,13 +309,6 @@ public class QEFXSlabEditorController extends QEFXAppController {
             if (rate > 0.0) {
                 this.modeler.changeSlabWidth(rate);
             }
-
-            if (this.scaleField1 != null) {
-                this.scaleField1.setText("");
-            }
-            if (this.scaleField2 != null) {
-                this.scaleField2.setText("");
-            }
         });
     }
 
@@ -339,13 +325,6 @@ public class QEFXSlabEditorController extends QEFXAppController {
             double vacuum = this.vacuumSlider.getValue();
             if (vacuum > 0.0) {
                 this.modeler.changeVacuumWidth(vacuum);
-            }
-
-            if (this.scaleField1 != null) {
-                this.scaleField1.setText("");
-            }
-            if (this.scaleField2 != null) {
-                this.scaleField2.setText("");
             }
         });
     }
@@ -390,7 +369,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 return;
             }
 
-            slabModel.updateCell(cell);
+            slabModel.putOnCell(cell);
 
             AtomsVLight atomsVLight = new AtomsVLight(cell, ATOMS_TILE_SIZE, true);
             atomsVLight.appendScale(ATOMS_TILE_SCLAE);
