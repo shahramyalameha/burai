@@ -244,6 +244,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
                     this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
                 }
             }
+
+            this.superButton.setDisable(!this.isAvailSuper());
         });
     }
 
@@ -263,6 +265,12 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
         int n2 = this.getScaleValue(this.scaleField2);
         if (n2 < 1) {
+            return false;
+        }
+
+        int m1 = this.modeler.getScaleA();
+        int m2 = this.modeler.getScaleB();
+        if (n1 == m1 && n2 == m2) {
             return false;
         }
 
