@@ -306,9 +306,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             }
 
             double rate = this.slabSlider.getValue();
-            if (rate > 0.0) {
-                this.modeler.changeSlabWidth(rate);
-            }
+            rate = Math.max(rate, 0.1);
+            this.modeler.changeSlabWidth(rate);
         });
     }
 
@@ -323,9 +322,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             }
 
             double vacuum = this.vacuumSlider.getValue();
-            if (vacuum > 0.0) {
-                this.modeler.changeVacuumWidth(vacuum);
-            }
+            vacuum = Math.max(vacuum, 1.0);
+            this.modeler.changeVacuumWidth(vacuum);
         });
     }
 
