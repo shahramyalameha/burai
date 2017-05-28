@@ -16,8 +16,9 @@ import java.util.List;
 public class SlabGenom {
 
     private static final double COORD_THR = 0.25; // angstrom
+    private static final double LAYER_THR = 0.10; // angstrom
 
-    private List<String> genom;
+    private List<Layer> layers;
 
     public SlabGenom(String[] names, double[] coords) {
         if (names == null || names.length < 1) {
@@ -32,14 +33,16 @@ public class SlabGenom {
             throw new IllegalArgumentException("names.length != coords.length.");
         }
 
-        this.setupGeom(names, coords);
+        this.setupLayers(names, coords);
     }
 
-    private void setupGeom(String[] names, double[] coords) {
-        this.genom = new ArrayList<String>();
+    private void setupLayers(String[] names, double[] coords) {
+        this.layers = new ArrayList<Layer>();
 
         int istart = 0;
         int iend = 0;
+        double coord1 = 0.0;
+        double coord2 = 0.0;
 
         while (true) {
             istart = iend;
@@ -48,9 +51,22 @@ public class SlabGenom {
                 break;
             }
 
-            String code = this.getLayerCode(istart, iend, names);
-            if (code != null && !(code.isEmpty())) {
-                this.genom.add(code);
+            coord1 = coord2;
+            coord2 = 0.0;
+            for (int i = istart; i < iend; i++) {
+                coord2 += coords[i];
+            }
+            coord2 /= (double) (iend - istart);
+
+            double distance = 0.0;
+            if (!this.layers.isEmpty()) {
+                distance = coord1 - coord2;
+            }
+
+            Layer layer = this.getLayer(istart, iend, names);
+            if (layer != null) {
+                layer.distance = distance;
+                this.layers.add(layer);
             }
         }
     }
@@ -74,9 +90,11 @@ public class SlabGenom {
         return iend;
     }
 
-    private String getLayerCode(int istart, int iend, String[] names) {
+    private Layer getLayer(int istart, int iend, String[] names) {
         if ((iend - istart) == 1) {
-            return names[istart];
+            Layer layer = new Layer();
+            layer.code = names[istart];
+            return layer;
         }
 
         String[] names2 = new String[iend - istart];
@@ -114,29 +132,33 @@ public class SlabGenom {
             }
         }
 
-        return code.toString();
+        Layer layer = new Layer();
+        layer.code = code.toString();
+        return layer;
     }
 
     @Override
     public String toString() {
-        StringBuilder allCode = new StringBuilder();
+        StringBuilder str = new StringBuilder();
 
-        if (this.genom != null) {
-            for (String code : this.genom) {
-                if (code != null) {
-                    allCode.append('{');
-                    allCode.append(code);
-                    allCode.append('}');
+        if (this.layers != null) {
+            for (Layer layer : this.layers) {
+                if (layer != null) {
+                    str.append('{');
+                    str.append(layer.code);
+                    str.append('|');
+                    str.append(layer.distance);
+                    str.append('}');
                 }
             }
         }
 
-        return allCode.length() > 0 ? allCode.toString() : "{}";
+        return str.length() > 0 ? str.toString() : "{}";
     }
 
     @Override
     public int hashCode() {
-        return this.genom == null ? 0 : this.genom.hashCode();
+        return this.layers == null ? 0 : this.layers.hashCode();
     }
 
     @Override
@@ -154,10 +176,53 @@ public class SlabGenom {
         }
 
         SlabGenom other = (SlabGenom) obj;
-        if (this.genom == null) {
-            return this.genom == other.genom;
+        if (this.layers == null) {
+            return this.layers == other.layers;
         } else {
-            return this.genom.equals(other.genom);
+            return this.layers.equals(other.layers);
+        }
+    }
+
+    private static class Layer {
+        public String code;
+        public double distance;
+
+        public Layer() {
+            // NOP
+        }
+
+        @Override
+        public int hashCode() {
+            return this.code == null ? 0 : this.code.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null) {
+                return false;
+            }
+
+            if (this.getClass() != obj.getClass()) {
+                return false;
+            }
+
+            Layer other = (Layer) obj;
+
+            if (this.code == null) {
+                if (this.code != other.code) {
+                    return false;
+                }
+            } else {
+                if (!this.code.equals(other.code)) {
+                    return false;
+                }
+            }
+
+            return Math.abs(this.distance - other.distance) <= LAYER_THR;
         }
     }
 }
