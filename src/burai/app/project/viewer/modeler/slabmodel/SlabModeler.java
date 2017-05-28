@@ -26,8 +26,28 @@ public class SlabModeler extends ModelerBase {
         this.slabModel = slabModel;
     }
 
+    public double getOffset() {
+        return this.slabModel == null ? SlabModel.defaultOffset() : this.slabModel.getOffset();
+    }
+
+    public double getThickness() {
+        return this.slabModel == null ? SlabModel.defaultThickness() : this.slabModel.getThickness();
+    }
+
+    public double getVacuum() {
+        return this.slabModel == null ? SlabModel.defaultVacuum() : this.slabModel.getVacuum();
+    }
+
+    public int getScaleA() {
+        return this.slabModel == null ? SlabModel.defaultScale() : this.slabModel.getScaleA();
+    }
+
+    public int getScaleB() {
+        return this.slabModel == null ? SlabModel.defaultScale() : this.slabModel.getScaleB();
+    }
+
     public boolean changeSlabWidth(double rate) {
-        if (rate <= 0.0) {
+        if (rate < 0.0) {
             return false;
         }
 
@@ -80,7 +100,7 @@ public class SlabModeler extends ModelerBase {
     }
 
     public boolean changeVacuumWidth(double vacuum) {
-        if (vacuum <= 0.0) {
+        if (vacuum < 0.0) {
             return false;
         }
 

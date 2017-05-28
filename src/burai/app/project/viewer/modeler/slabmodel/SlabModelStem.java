@@ -37,6 +37,8 @@ public class SlabModelStem extends SlabModel {
     private static final String STOIX_NATOM = "NAtom";
 
     private static final double STEP_FOR_GENOMS = 0.5; // angstrom
+    private static final double STEP_FOR_CTHICK = 0.05; // internal coordinate
+    private static final int MAX_FOR_CTHICK = 20;
 
     private int miller1;
     private int miller2;
@@ -516,91 +518,97 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
-        double cThick = 1.0;
-        if (slabModel.thickness > 0.0) {
-            cThick = slabModel.thickness;
-        }
+        double cThick = Math.max(0.0, slabModel.thickness);
 
-        if (this.lattAuxi[2][2] * Math.abs(cThick - 1.0) > THICK_THR) {
-            this.entryAuxi = new ArrayList<AtomEntry>();
-        } else {
-            this.entryAuxi = this.entryUnit;
-        }
+        for (int istep = 0; istep < MAX_FOR_CTHICK; istep++) {
 
-        int nThick = (int) (Math.ceil(cThick) + 0.1);
-
-        for (int iThick = 0; iThick < nThick; iThick++) {
-            List<AtomEntry> entryBuffer = null;
-            Map<String, Double> stoixBuffer = null;
-            if (iThick == (nThick - 1)) {
-                entryBuffer = new ArrayList<AtomEntry>();
-                stoixBuffer = new HashMap<String, Double>();
+            if (this.lattAuxi[2][2] * Math.abs(cThick - 1.0) > THICK_THR) {
+                this.entryAuxi = new ArrayList<AtomEntry>();
+            } else {
+                this.entryAuxi = this.entryUnit;
             }
 
-            for (AtomEntry entry : this.entryUnit) {
-                if (entry == null) {
-                    continue;
+            int nThick = (int) (Math.ceil(cThick) + 0.1);
+
+            for (int iThick = 0; iThick < nThick; iThick++) {
+                List<AtomEntry> entryBuffer = null;
+                Map<String, Double> stoixBuffer = null;
+                if (iThick == (nThick - 1)) {
+                    entryBuffer = new ArrayList<AtomEntry>();
+                    stoixBuffer = new HashMap<String, Double>();
                 }
 
-                String name = entry.name;
-                if (name == null || name.isEmpty()) {
-                    continue;
-                }
+                for (AtomEntry entry : this.entryUnit) {
+                    if (entry == null) {
+                        continue;
+                    }
 
-                double a = entry.a;
-                double b = entry.b;
-                double c = entry.c + slabModel.offset;
-                c -= Math.floor(c);
+                    String name = entry.name;
+                    if (name == null || name.isEmpty()) {
+                        continue;
+                    }
 
-                double dc = Math.abs(c - 1.0);
-                double dz = dc * this.lattAuxi[2][2];
-                if (dz < POSIT_THR) {
-                    c -= 1.0;
-                }
+                    double a = entry.a;
+                    double b = entry.b;
+                    double c = entry.c + slabModel.offset;
+                    c -= Math.floor(c);
 
-                c -= (double) iThick;
+                    double dc = Math.abs(c - 1.0);
+                    double dz = dc * this.lattAuxi[2][2];
+                    if (dz < POSIT_THR) {
+                        c -= 1.0;
+                    }
 
-                dc = c - (1.0 - cThick);
-                dz = dc * this.lattAuxi[2][2];
-                if (dz < (-2.0 * POSIT_THR)) {
-                    continue;
-                }
+                    c -= (double) iThick;
 
-                AtomEntry entry2 = null;
-                if (this.entryAuxi != this.entryUnit) {
-                    entry2 = new AtomEntry(this.lattAuxi);
-                } else {
-                    entry2 = entry;
-                }
+                    dc = c - (1.0 - cThick);
+                    dz = dc * this.lattAuxi[2][2];
+                    if (dz < (-2.0 * POSIT_THR)) {
+                        continue;
+                    }
 
-                entry2.name = name;
-                entry2.x = a * this.lattAuxi[0][0] + b * this.lattAuxi[1][0] + c * this.lattAuxi[2][0];
-                entry2.y = a * this.lattAuxi[0][1] + b * this.lattAuxi[1][1] + c * this.lattAuxi[2][1];
-                entry2.z = a * this.lattAuxi[0][2] + b * this.lattAuxi[1][2] + c * this.lattAuxi[2][2];
-
-                if (this.entryAuxi != this.entryUnit) {
-                    if (iThick < (nThick - 1)) {
-                        this.entryAuxi.add(entry2);
-
+                    AtomEntry entry2 = null;
+                    if (this.entryAuxi != this.entryUnit) {
+                        entry2 = new AtomEntry(this.lattAuxi);
                     } else {
-                        entryBuffer.add(entry2);
+                        entry2 = entry;
+                    }
 
-                        stoixBuffer.put(STOIX_NATOM, (double) entryBuffer.size());
-                        if (stoixBuffer.containsKey(name)) {
-                            double value = stoixBuffer.get(name);
-                            stoixBuffer.put(name, value + 1.0);
+                    entry2.name = name;
+                    entry2.x = a * this.lattAuxi[0][0] + b * this.lattAuxi[1][0] + c * this.lattAuxi[2][0];
+                    entry2.y = a * this.lattAuxi[0][1] + b * this.lattAuxi[1][1] + c * this.lattAuxi[2][1];
+                    entry2.z = a * this.lattAuxi[0][2] + b * this.lattAuxi[1][2] + c * this.lattAuxi[2][2];
+
+                    if (this.entryAuxi != this.entryUnit) {
+                        if (iThick < (nThick - 1)) {
+                            this.entryAuxi.add(entry2);
+
                         } else {
-                            stoixBuffer.put(name, 1.0);
-                        }
+                            entryBuffer.add(entry2);
 
-                        if (this.stoixUnit != null && this.equalsStoichiometry(this.stoixUnit, stoixBuffer)) {
-                            this.entryAuxi.addAll(entryBuffer);
-                            entryBuffer.clear();
-                            stoixBuffer.clear();
+                            stoixBuffer.put(STOIX_NATOM, (double) entryBuffer.size());
+                            if (stoixBuffer.containsKey(name)) {
+                                double value = stoixBuffer.get(name);
+                                stoixBuffer.put(name, value + 1.0);
+                            } else {
+                                stoixBuffer.put(name, 1.0);
+                            }
+
+                            if (this.stoixUnit != null && this.equalsStoichiometry(this.stoixUnit, stoixBuffer)) {
+                                this.entryAuxi.addAll(entryBuffer);
+                                entryBuffer.clear();
+                                stoixBuffer.clear();
+                            }
                         }
                     }
                 }
             }
+
+            if (!this.entryAuxi.isEmpty()) {
+                break;
+            }
+
+            cThick += STEP_FOR_CTHICK;
         }
 
         if (this.entryAuxi.size() >= ModelerBase.maxNumAtoms()) {

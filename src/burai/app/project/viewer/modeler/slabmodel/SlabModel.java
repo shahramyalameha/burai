@@ -13,9 +13,17 @@ import burai.atoms.model.Cell;
 
 public abstract class SlabModel {
 
+    private static final double DEFAULT_OFFSET = 0.0;
+
     private static final double DEFAULT_THICKNESS = 1.0;
 
     private static final double DEFAULT_VACUUM = 10.0; // angstrom
+
+    private static final int DEFAULT_SCALE = 1;
+
+    public static double defaultOffset() {
+        return DEFAULT_OFFSET;
+    }
 
     public static double defaultThickness() {
         return DEFAULT_THICKNESS;
@@ -23,6 +31,10 @@ public abstract class SlabModel {
 
     public static double defaultVacuum() {
         return DEFAULT_VACUUM;
+    }
+
+    public static int defaultScale() {
+        return DEFAULT_SCALE;
     }
 
     protected double offset;
@@ -38,11 +50,11 @@ public abstract class SlabModel {
     private int lastScaleB;
 
     protected SlabModel() {
-        this.offset = 0.0;
+        this.offset = DEFAULT_OFFSET;
         this.thickness = DEFAULT_THICKNESS;
         this.vacuum = DEFAULT_VACUUM;
-        this.scaleA = 1;
-        this.scaleB = 1;
+        this.scaleA = DEFAULT_SCALE;
+        this.scaleB = DEFAULT_SCALE;
 
         this.lastOffset = this.offset;
         this.lastThickness = this.thickness;
@@ -55,20 +67,40 @@ public abstract class SlabModel {
         this.offset = offset;
     }
 
+    protected final double getOffset() {
+        return this.offset;
+    }
+
     public final void setThickness(double thickness) {
         this.thickness = thickness;
+    }
+
+    protected final double getThickness() {
+        return this.thickness;
     }
 
     public final void setVacuum(double vacuum) {
         this.vacuum = vacuum;
     }
 
+    protected final double getVacuum() {
+        return this.vacuum;
+    }
+
     public final void setScaleA(int scaleA) {
         this.scaleA = scaleA;
     }
 
+    protected final int getScaleA() {
+        return this.scaleA;
+    }
+
     public final void setScaleB(int scaleB) {
         this.scaleB = scaleB;
+    }
+
+    protected final int getScaleB() {
+        return this.scaleB;
     }
 
     public abstract SlabModel[] getSlabModels();

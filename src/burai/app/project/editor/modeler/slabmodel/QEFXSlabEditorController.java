@@ -34,11 +34,15 @@ import burai.app.project.viewer.modeler.slabmodel.SlabModeler;
 import burai.atoms.model.Cell;
 import burai.atoms.vlight.AtomsVLight;
 import burai.com.consts.ConstantStyles;
+import burai.com.fx.FXBufferedThread;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.com.keys.KeyNames;
 
 public class QEFXSlabEditorController extends QEFXAppController {
+
+    private static final long SLEEP_SLAB_BUFFER = 300L;
+    private static final long SLEEP_VACUUM_BUFFER = 150L;
 
     private static final double CTRL_GRAPHIC_SIZE = 20.0;
     private static final String CTRL_GRAPHIC_CLASS = "piclight-button";
@@ -79,8 +83,12 @@ public class QEFXSlabEditorController extends QEFXAppController {
     @FXML
     private TextField scaleField2;
 
+    private FXBufferedThread slabThread;
+
     @FXML
     private Slider slabSlider;
+
+    private FXBufferedThread vacuumThread;
 
     @FXML
     private Slider vacuumSlider;
@@ -101,6 +109,9 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.projectController = projectController;
 
         this.modeler = modeler;
+
+        this.slabThread = new FXBufferedThread(SLEEP_SLAB_BUFFER, true);
+        this.vacuumThread = new FXBufferedThread(SLEEP_VACUUM_BUFFER, true);
     }
 
     @Override
@@ -110,9 +121,9 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.setupCenterButton();
         this.setupCenterLabel();
 
-        this.setupSuperButton();
         this.setupScaleField(this.scaleField1);
         this.setupScaleField(this.scaleField2);
+        this.setupSuperButton();
 
         this.setupSlabSlider();
         this.setupVacuumSlider();
@@ -148,6 +159,14 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.initButton.setOnAction(event -> {
             if (this.modeler != null) {
                 this.modeler.initialize();
+            }
+
+            if (this.scaleField1 != null) {
+                this.scaleField1.setText(Integer.toString(SlabModel.defaultScale()));
+            }
+
+            if (this.scaleField2 != null) {
+                this.scaleField2.setText(Integer.toString(SlabModel.defaultScale()));
             }
 
             if (this.slabSlider != null) {
@@ -195,7 +214,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        this.superButton.setDisable(true);
+        this.superButton.setDisable(!this.isAvailSuper());
         this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
         this.superButton.setGraphic(
                 SVGLibrary.getGraphic(SVGData.GEAR, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
@@ -218,11 +237,11 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 this.showErrorDialog();
 
                 if (this.scaleField1 != null) {
-                    this.scaleField1.setText("");
+                    this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
                 }
 
                 if (this.scaleField2 != null) {
-                    this.scaleField2.setText("");
+                    this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
                 }
             }
         });
@@ -255,7 +274,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
-        textField.setText("");
+        textField.setText(Integer.toString(SlabModel.defaultScale()));
+
         textField.setStyle("");
 
         textField.textProperty().addListener(o -> {
@@ -289,7 +309,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
         String text = textField.getText();
         text = text == null ? null : text.trim();
         if (text == null || text.isEmpty()) {
-            return 1;
+            return 0;
         }
 
         int value = 0;
@@ -308,14 +328,18 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
+        this.slabSlider.setValue(SlabModel.defaultThickness());
+
         this.slabSlider.valueProperty().addListener(o -> {
             if (this.modeler == null) {
                 return;
             }
 
             double rate = this.slabSlider.getValue();
-            rate = Math.max(rate, 0.1);
-            this.modeler.changeSlabWidth(rate);
+
+            this.slabThread.runLater(() -> {
+                this.modeler.changeSlabWidth(Math.max(rate, 0.0));
+            });
         });
     }
 
@@ -324,14 +348,18 @@ public class QEFXSlabEditorController extends QEFXAppController {
             return;
         }
 
+        this.vacuumSlider.setValue(SlabModel.defaultVacuum());
+
         this.vacuumSlider.valueProperty().addListener(o -> {
             if (this.modeler == null) {
                 return;
             }
 
             double vacuum = this.vacuumSlider.getValue();
-            vacuum = Math.max(vacuum, 1.0);
-            this.modeler.changeVacuumWidth(vacuum);
+
+            this.vacuumThread.runLater(() -> {
+                this.modeler.changeVacuumWidth(Math.max(vacuum, 0.0));
+            });
         });
     }
 
