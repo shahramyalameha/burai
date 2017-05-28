@@ -216,6 +216,14 @@ public class QEFXSlabEditorController extends QEFXAppController {
 
             if (!status) {
                 this.showErrorDialog();
+
+                if (this.scaleField1 != null) {
+                    this.scaleField1.setText("");
+                }
+
+                if (this.scaleField2 != null) {
+                    this.scaleField2.setText("");
+                }
             }
         });
     }
