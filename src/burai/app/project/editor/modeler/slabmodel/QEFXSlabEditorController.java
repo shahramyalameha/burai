@@ -167,22 +167,26 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 this.modeler.initialize();
             }
 
-            if (this.scaleField1 != null) {
-                this.scaleField1.setText(Integer.toString(SlabModel.defaultScale()));
-            }
-
-            if (this.scaleField2 != null) {
-                this.scaleField2.setText(Integer.toString(SlabModel.defaultScale()));
-            }
-
-            if (this.slabSlider != null) {
-                this.slabSlider.setValue(SlabModel.defaultThickness());
-            }
-
-            if (this.vacuumSlider != null) {
-                this.vacuumSlider.setValue(SlabModel.defaultVacuum());
-            }
+            this.initializeFXComponents();
         });
+    }
+
+    private void initializeFXComponents() {
+        if (this.scaleField1 != null) {
+            this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
+        }
+
+        if (this.scaleField2 != null) {
+            this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
+        }
+
+        if (this.slabSlider != null) {
+            this.slabSlider.setValue(this.modeler.getThickness());
+        }
+
+        if (this.vacuumSlider != null) {
+            this.vacuumSlider.setValue(this.modeler.getVacuum());
+        }
     }
 
     private void setupCenterButton() {
@@ -428,21 +432,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
             this.modeler.setSlabModel(null);
         }
 
-        if (this.scaleField1 != null) {
-            this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
-        }
-
-        if (this.scaleField2 != null) {
-            this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
-        }
-
-        if (this.slabSlider != null) {
-            this.slabSlider.setValue(this.modeler.getThickness());
-        }
-
-        if (this.vacuumSlider != null) {
-            this.vacuumSlider.setValue(this.modeler.getVacuum());
-        }
+        this.initializeFXComponents();
     }
 
     public void setSlabModels(SlabModel[] slabModels) {

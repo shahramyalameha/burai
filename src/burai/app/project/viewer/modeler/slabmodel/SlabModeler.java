@@ -14,26 +14,14 @@ import burai.atoms.model.Cell;
 
 public class SlabModeler extends ModelerBase {
 
+    private static final double VALUE_THR = 1.0e-12;
+
     private SlabModel slabModel;
 
     public SlabModeler(Cell srcCell) {
         super(srcCell);
 
         this.slabModel = null;
-    }
-
-    @Override
-    public void initialize() {
-        if (this.slabModel != null) {
-            this.slabModel.setThickness(SlabModel.defaultThickness());
-            this.slabModel.setVacuum(SlabModel.defaultVacuum());
-            this.slabModel.setScaleA(SlabModel.defaultScale());
-            this.slabModel.setScaleB(SlabModel.defaultScale());
-        }
-
-        if (this.atomsViewer != null) {
-            this.atomsViewer.setCellToCenter();
-        }
     }
 
     public double getOffset() {
@@ -67,6 +55,21 @@ public class SlabModeler extends ModelerBase {
         }
 
         return status;
+    }
+
+    @Override
+    public void initialize() {
+        if (this.slabModel != null) {
+            this.slabModel.setThickness(SlabModel.defaultThickness());
+            this.slabModel.setVacuum(SlabModel.defaultVacuum());
+            this.slabModel.setScaleA(SlabModel.defaultScale());
+            this.slabModel.setScaleB(SlabModel.defaultScale());
+            this.update();
+        }
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
+        }
     }
 
     public boolean setSlabModel(SlabModel slabModel) {
@@ -107,6 +110,10 @@ public class SlabModeler extends ModelerBase {
             return false;
         }
 
+        if (Math.abs(this.slabModel.getThickness() - thickness) < VALUE_THR) {
+            return true;
+        }
+
         this.slabModel.setThickness(thickness);
 
         return this.update();
@@ -121,6 +128,10 @@ public class SlabModeler extends ModelerBase {
             return false;
         }
 
+        if (Math.abs(this.slabModel.getVacuum() - vacuum) < VALUE_THR) {
+            return true;
+        }
+
         this.slabModel.setVacuum(vacuum);
 
         return this.update();
@@ -133,6 +144,10 @@ public class SlabModeler extends ModelerBase {
 
         if (this.slabModel == null) {
             return false;
+        }
+
+        if (this.slabModel.getScaleA() == na && this.slabModel.getScaleB() == nb) {
+            return true;
         }
 
         this.slabModel.setScaleA(na);
