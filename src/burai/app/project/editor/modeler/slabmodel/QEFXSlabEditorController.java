@@ -455,7 +455,9 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 return;
             }
 
-            slabModel.putOnCell(cell);
+            if (!slabModel.putOnCell(cell)) {
+                return;
+            }
 
             StackPane pane = new StackPane();
             TilePane.setMargin(pane, new Insets(ATOMS_TILE_INSET));
