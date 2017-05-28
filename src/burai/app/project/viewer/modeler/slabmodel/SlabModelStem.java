@@ -11,9 +11,11 @@ package burai.app.project.viewer.modeler.slabmodel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import burai.app.project.viewer.modeler.ModelerBase;
@@ -30,6 +32,9 @@ public class SlabModelStem extends SlabModel {
     private static final double THICK_THR = 1.0e-12; // angstrom
     private static final double POSIT_THR = 1.0e-4; // angstrom
     private static final double VALUE_THR = 1.0e-12;
+    private static final double STOIX_THR = 1.0e-6;
+
+    private static final String STOIX_NATOM = "NAtom";
 
     private static final double STEP_FOR_GENOMS = 0.5; // angstrom
 
@@ -59,6 +64,8 @@ public class SlabModelStem extends SlabModel {
     private List<AtomEntry> entryUnit;
     private List<AtomEntry> entryAuxi;
     private List<AtomEntry> entrySlab;
+
+    private Map<String, Double> stoixUnit;
 
     private String codeAuxi;
     private String codeSlab;
@@ -523,8 +530,20 @@ public class SlabModelStem extends SlabModel {
         int nThick = (int) (Math.ceil(cThick) + 0.1);
 
         for (int iThick = 0; iThick < nThick; iThick++) {
+            List<AtomEntry> entryBuffer = null;
+            Map<String, Double> stoixBuffer = null;
+            if (iThick == (nThick - 1)) {
+                entryBuffer = new ArrayList<AtomEntry>();
+                stoixBuffer = new HashMap<String, Double>();
+            }
+
             for (AtomEntry entry : this.entryUnit) {
                 if (entry == null) {
+                    continue;
+                }
+
+                String name = entry.name;
+                if (name == null || name.isEmpty()) {
                     continue;
                 }
 
@@ -550,15 +569,37 @@ public class SlabModelStem extends SlabModel {
                 AtomEntry entry2 = null;
                 if (this.entryAuxi != this.entryUnit) {
                     entry2 = new AtomEntry(this.lattAuxi);
-                    this.entryAuxi.add(entry2);
                 } else {
                     entry2 = entry;
                 }
 
-                entry2.name = entry.name;
+                entry2.name = name;
                 entry2.x = a * this.lattAuxi[0][0] + b * this.lattAuxi[1][0] + c * this.lattAuxi[2][0];
                 entry2.y = a * this.lattAuxi[0][1] + b * this.lattAuxi[1][1] + c * this.lattAuxi[2][1];
                 entry2.z = a * this.lattAuxi[0][2] + b * this.lattAuxi[1][2] + c * this.lattAuxi[2][2];
+
+                if (this.entryAuxi != this.entryUnit) {
+                    if (iThick < (nThick - 1)) {
+                        this.entryAuxi.add(entry2);
+
+                    } else {
+                        entryBuffer.add(entry2);
+
+                        stoixBuffer.put(STOIX_NATOM, (double) entryBuffer.size());
+                        if (stoixBuffer.containsKey(name)) {
+                            double value = stoixBuffer.get(name);
+                            stoixBuffer.put(name, value + 1.0);
+                        } else {
+                            stoixBuffer.put(name, 1.0);
+                        }
+
+                        if (this.stoixUnit != null && this.equalsStoichiometry(this.stoixUnit, stoixBuffer)) {
+                            this.entryAuxi.addAll(entryBuffer);
+                            entryBuffer.clear();
+                            stoixBuffer.clear();
+                        }
+                    }
+                }
             }
         }
 
@@ -767,6 +808,107 @@ public class SlabModelStem extends SlabModel {
         }
 
         Collections.sort(this.entryUnit);
+
+        // keep stoichiometry
+        this.stoixUnit = new HashMap<String, Double>();
+        if (!this.setupStoichiometry(this.entryUnit, this.stoixUnit)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean setupStoichiometry(List<AtomEntry> entryList, Map<String, Double> stoixMap) {
+        if (entryList == null || entryList.isEmpty()) {
+            return false;
+        }
+
+        if (stoixMap == null) {
+            return false;
+        }
+        if (!stoixMap.isEmpty()) {
+            stoixMap.clear();
+        }
+
+        int natom = 0;
+
+        for (AtomEntry entry : entryList) {
+            String name = entry == null ? null : entry.name;
+            if (name == null || name.isEmpty()) {
+                continue;
+            }
+
+            natom++;
+
+            if (stoixMap.containsKey(name)) {
+                double value = stoixMap.get(name);
+                stoixMap.put(name, value + 1.0);
+            } else {
+                stoixMap.put(name, 1.0);
+            }
+        }
+
+        if (natom < 1) {
+            return false;
+        }
+
+        stoixMap.put(STOIX_NATOM, (double) natom);
+
+        return true;
+    }
+
+    private boolean equalsStoichiometry(Map<String, Double> stoixMap1, Map<String, Double> stoixMap2) {
+        if (stoixMap1 == null || stoixMap1.isEmpty()) {
+            return false;
+        }
+
+        if (stoixMap2 == null || stoixMap2.isEmpty()) {
+            return false;
+        }
+
+        Set<String> names1 = stoixMap1.keySet();
+        if (names1 == null) {
+            return false;
+        }
+
+        Set<String> names2 = stoixMap2.keySet();
+        if (names2 == null) {
+            return false;
+        }
+
+        if (names1.size() != names2.size()) {
+            return false;
+        }
+
+        double natom1 = 0.0;
+        if (stoixMap1.containsKey(STOIX_NATOM)) {
+            natom1 = stoixMap1.get(STOIX_NATOM);
+        }
+
+        if (natom1 <= 0.0) {
+            return false;
+        }
+
+        double natom2 = 0.0;
+        if (stoixMap2.containsKey(STOIX_NATOM)) {
+            natom2 = stoixMap2.get(STOIX_NATOM);
+        }
+
+        if (natom2 <= 0.0) {
+            return false;
+        }
+
+        for (String name : names1) {
+            if (!stoixMap2.containsKey(name)) {
+                return false;
+            }
+
+            double value1 = stoixMap1.get(name) / natom1;
+            double value2 = stoixMap2.get(name) / natom2;
+            if (Math.abs(value1 - value2) > STOIX_THR) {
+                return false;
+            }
+        }
 
         return true;
     }
