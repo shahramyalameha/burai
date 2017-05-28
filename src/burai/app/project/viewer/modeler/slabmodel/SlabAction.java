@@ -37,7 +37,7 @@ public class SlabAction {
 
     private QEFXSlabEditor slabEditor;
 
-    private AtomsViewerInterface atomsViewer;
+    private AtomsViewer atomsViewer;
 
     public SlabAction(Cell cell, QEFXProjectController controller) {
         if (cell == null) {
@@ -64,11 +64,11 @@ public class SlabAction {
             return;
         }
 
-        this.slabModeler.initialize();
-
         if (slabModels != null && slabModels.length > 0) {
             this.slabEditor.setSlabModels(slabModels);
         }
+
+        this.atomsViewer.setCellToCenter();
 
         this.controller.setModelerSlabMode();
     }
@@ -76,9 +76,6 @@ public class SlabAction {
     private void initializeSlabModeler(SlabModel[] slabModels) {
         if (this.slabModeler == null) {
             this.slabModeler = new SlabModeler(this.cell);
-            if (slabModels != null && slabModels.length > 0 && slabModels[0] != null) {
-                this.slabModeler.setSlabModel(slabModels[0]);
-            }
         }
 
         if (this.slabEditor == null) {

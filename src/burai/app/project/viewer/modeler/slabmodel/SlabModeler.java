@@ -22,8 +22,18 @@ public class SlabModeler extends ModelerBase {
         this.slabModel = null;
     }
 
-    public void setSlabModel(SlabModel slabModel) {
-        this.slabModel = slabModel;
+    @Override
+    public void initialize() {
+        if (this.slabModel != null) {
+            this.slabModel.setThickness(SlabModel.defaultThickness());
+            this.slabModel.setVacuum(SlabModel.defaultVacuum());
+            this.slabModel.setScaleA(SlabModel.defaultScale());
+            this.slabModel.setScaleB(SlabModel.defaultScale());
+        }
+
+        if (this.atomsViewer != null) {
+            this.atomsViewer.setCellToCenter();
+        }
     }
 
     public double getOffset() {
@@ -46,17 +56,7 @@ public class SlabModeler extends ModelerBase {
         return this.slabModel == null ? SlabModel.defaultScale() : this.slabModel.getScaleB();
     }
 
-    public boolean changeSlabWidth(double rate) {
-        if (rate < 0.0) {
-            return false;
-        }
-
-        if (this.slabModel == null) {
-            return false;
-        }
-
-        this.slabModel.setThickness(rate);
-
+    private boolean update() {
         boolean status = false;
         if (this.dstCell != null) {
             status = this.slabModel.putOnCell(this.dstCell);
@@ -69,7 +69,64 @@ public class SlabModeler extends ModelerBase {
         return status;
     }
 
-    public boolean scaleSlabArea(int na, int nb) {
+    public boolean setSlabModel(SlabModel slabModel) {
+        if (slabModel != null) {
+            slabModel.setThickness(this.getThickness());
+            slabModel.setVacuum(this.getVacuum());
+            slabModel.setScaleA(this.getScaleA());
+            slabModel.setScaleB(this.getScaleB());
+        }
+
+        this.slabModel = slabModel;
+        if (this.slabModel == null) {
+            return false;
+        }
+
+        boolean status = false;
+        if (this.dstCell != null) {
+            status = this.slabModel.putOnCell(this.dstCell);
+        }
+
+        if (!status) {
+            this.slabModel.setThickness(SlabModel.defaultThickness());
+            this.slabModel.setVacuum(SlabModel.defaultVacuum());
+            this.slabModel.setScaleA(SlabModel.defaultScale());
+            this.slabModel.setScaleB(SlabModel.defaultScale());
+            this.update();
+        }
+
+        return status;
+    }
+
+    public boolean changeThickness(double thickness) {
+        if (thickness < 0.0) {
+            return false;
+        }
+
+        if (this.slabModel == null) {
+            return false;
+        }
+
+        this.slabModel.setThickness(thickness);
+
+        return this.update();
+    }
+
+    public boolean changeVacuum(double vacuum) {
+        if (vacuum < 0.0) {
+            return false;
+        }
+
+        if (this.slabModel == null) {
+            return false;
+        }
+
+        this.slabModel.setVacuum(vacuum);
+
+        return this.update();
+    }
+
+    public boolean changeArea(int na, int nb) {
         if (na < 1 || nb < 1) {
             return false;
         }
@@ -81,42 +138,12 @@ public class SlabModeler extends ModelerBase {
         this.slabModel.setScaleA(na);
         this.slabModel.setScaleB(nb);
 
-        boolean status = false;
-        if (this.dstCell != null) {
-            status = this.slabModel.putOnCell(this.dstCell);
-        }
+        boolean status = this.update();
 
         if (status) {
             if (this.atomsViewer != null) {
                 this.atomsViewer.setCellToCenter();
             }
-        }
-
-        if (!status) {
-            this.slabModel.putOnLastCell(this.dstCell);
-        }
-
-        return status;
-    }
-
-    public boolean changeVacuumWidth(double vacuum) {
-        if (vacuum < 0.0) {
-            return false;
-        }
-
-        if (this.slabModel == null) {
-            return false;
-        }
-
-        this.slabModel.setVacuum(vacuum);
-
-        boolean status = false;
-        if (this.dstCell != null) {
-            status = this.slabModel.putOnCell(this.dstCell);
-        }
-
-        if (!status) {
-            this.slabModel.putOnLastCell(this.dstCell);
         }
 
         return status;

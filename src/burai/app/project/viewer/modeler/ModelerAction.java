@@ -35,7 +35,7 @@ public class ModelerAction {
 
     private Modeler modeler;
 
-    private AtomsViewerInterface atomsViewer;
+    private AtomsViewer atomsViewer;
 
     public ModelerAction(Project project, QEFXProjectController controller) {
         this(project == null ? null : project.getCell(), controller);

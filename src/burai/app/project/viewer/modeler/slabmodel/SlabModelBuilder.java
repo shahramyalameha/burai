@@ -37,10 +37,6 @@ public class SlabModelBuilder {
             return null;
         }
 
-        if (slabModels[0] != null) {
-            slabModels[0].putOnCell(this.cell);
-        }
-
         return slabModels;
     }
 }

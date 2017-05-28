@@ -77,13 +77,13 @@ public class QEFXSlabEditorController extends QEFXAppController {
     private Label centerLabel;
 
     @FXML
-    private Button superButton;
-
-    @FXML
     private TextField scaleField1;
 
     @FXML
     private TextField scaleField2;
+
+    @FXML
+    private Button superButton;
 
     private FXBufferedThread slabThread;
 
@@ -215,74 +215,6 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.centerLabel.setText(text);
     }
 
-    private void setupSuperButton() {
-        if (this.superButton == null) {
-            return;
-        }
-
-        this.superButton.setDisable(!this.isAvailSuper());
-        this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
-        this.superButton.setGraphic(
-                SVGLibrary.getGraphic(SVGData.GEAR, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
-
-        String text = this.superButton.getText();
-        if (text != null) {
-            this.superButton.setText(text + " ");
-        }
-
-        this.superButton.setOnAction(event -> {
-            if (this.modeler == null) {
-                return;
-            }
-
-            int n1 = this.getScaleValue(this.scaleField1);
-            int n2 = this.getScaleValue(this.scaleField2);
-            boolean status = this.modeler.scaleSlabArea(n1, n2);
-
-            if (!status) {
-                this.showErrorDialog();
-
-                if (this.scaleField1 != null) {
-                    this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
-                }
-
-                if (this.scaleField2 != null) {
-                    this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
-                }
-            }
-
-            this.superButton.setDisable(!this.isAvailSuper());
-        });
-    }
-
-    private void showErrorDialog() {
-        Alert alert = new Alert(AlertType.ERROR);
-        QEFXMain.initializeDialogOwner(alert);
-        alert.setHeaderText("Error has occurred in modering.");
-        alert.setContentText("Atoms are too much.");
-        alert.showAndWait();
-    }
-
-    private boolean isAvailSuper() {
-        int n1 = this.getScaleValue(this.scaleField1);
-        if (n1 < 1) {
-            return false;
-        }
-
-        int n2 = this.getScaleValue(this.scaleField2);
-        if (n2 < 1) {
-            return false;
-        }
-
-        int m1 = this.modeler.getScaleA();
-        int m2 = this.modeler.getScaleB();
-        if (n1 == m1 && n2 == m2) {
-            return false;
-        }
-
-        return (n1 * n2) > 0;
-    }
-
     private void setupScaleField(TextField textField) {
         if (textField == null) {
             return;
@@ -315,6 +247,46 @@ public class QEFXSlabEditorController extends QEFXAppController {
         });
     }
 
+    private void setupSuperButton() {
+        if (this.superButton == null) {
+            return;
+        }
+
+        this.superButton.setDisable(!this.isAvailSuper());
+        this.superButton.getStyleClass().add(BUILD_GRAPHIC_CLASS);
+        this.superButton.setGraphic(
+                SVGLibrary.getGraphic(SVGData.GEAR, BUILD_GRAPHIC_SIZE, null, BUILD_GRAPHIC_CLASS));
+
+        String text = this.superButton.getText();
+        if (text != null) {
+            this.superButton.setText(text + " ");
+        }
+
+        this.superButton.setOnAction(event -> {
+            if (this.modeler == null) {
+                return;
+            }
+
+            int n1 = this.getScaleValue(this.scaleField1);
+            int n2 = this.getScaleValue(this.scaleField2);
+            boolean status = this.modeler.changeArea(n1, n2);
+
+            if (!status) {
+                this.showErrorDialog();
+
+                if (this.scaleField1 != null) {
+                    this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
+                }
+
+                if (this.scaleField2 != null) {
+                    this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
+                }
+            }
+
+            this.superButton.setDisable(!this.isAvailSuper());
+        });
+    }
+
     private int getScaleValue(TextField textField) {
         if (textField == null) {
             return 0;
@@ -337,6 +309,36 @@ public class QEFXSlabEditorController extends QEFXAppController {
         return value;
     }
 
+    private boolean isAvailSuper() {
+        int n1 = this.getScaleValue(this.scaleField1);
+        if (n1 < 1) {
+            return false;
+        }
+
+        int n2 = this.getScaleValue(this.scaleField2);
+        if (n2 < 1) {
+            return false;
+        }
+
+        if (this.modeler != null) {
+            int m1 = this.modeler.getScaleA();
+            int m2 = this.modeler.getScaleB();
+            if (n1 == m1 && n2 == m2) {
+                return false;
+            }
+        }
+
+        return (n1 * n2) > 0;
+    }
+
+    private void showErrorDialog() {
+        Alert alert = new Alert(AlertType.ERROR);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Error has occurred in modering.");
+        alert.setContentText("Atoms are too much.");
+        alert.showAndWait();
+    }
+
     private void setupSlabSlider() {
         if (this.slabSlider == null) {
             return;
@@ -349,10 +351,10 @@ public class QEFXSlabEditorController extends QEFXAppController {
                 return;
             }
 
-            double rate = this.slabSlider.getValue();
+            double thickness = this.slabSlider.getValue();
 
             this.slabThread.runLater(() -> {
-                this.modeler.changeSlabWidth(Math.max(rate, 0.0));
+                this.modeler.changeThickness(Math.max(thickness, 0.0));
             });
         });
     }
@@ -372,7 +374,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
             double vacuum = this.vacuumSlider.getValue();
 
             this.vacuumThread.runLater(() -> {
-                this.modeler.changeVacuumWidth(Math.max(vacuum, 0.0));
+                this.modeler.changeVacuum(Math.max(vacuum, 0.0));
             });
         });
     }
@@ -397,7 +399,7 @@ public class QEFXSlabEditorController extends QEFXAppController {
         this.kindScroll.setFocusTraversable(true);
     }
 
-    private void setupKindTile(StackPane kindTile, SlabModel slabModel) {
+    private void setupKindTile(StackPane kindTile) {
         if (this.kindTile != null) {
             if (this.kindTile.getStyleClass().contains(ATOMS_TILE_CLASS2)) {
                 this.kindTile.getStyleClass().remove(ATOMS_TILE_CLASS2);
@@ -413,6 +415,34 @@ public class QEFXSlabEditorController extends QEFXAppController {
         }
 
         this.kindTile = kindTile;
+    }
+
+    private void setSlabModel(SlabModel slabModel) {
+        if (this.modeler == null) {
+            return;
+        }
+
+        if (slabModel != null) {
+            this.modeler.setSlabModel(slabModel);
+        } else {
+            this.modeler.setSlabModel(null);
+        }
+
+        if (this.scaleField1 != null) {
+            this.scaleField1.setText(Integer.toString(this.modeler.getScaleA()));
+        }
+
+        if (this.scaleField2 != null) {
+            this.scaleField2.setText(Integer.toString(this.modeler.getScaleB()));
+        }
+
+        if (this.slabSlider != null) {
+            this.slabSlider.setValue(this.modeler.getThickness());
+        }
+
+        if (this.vacuumSlider != null) {
+            this.vacuumSlider.setValue(this.modeler.getVacuum());
+        }
     }
 
     public void setSlabModels(SlabModel[] slabModels) {
@@ -442,7 +472,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             pane.getStyleClass().add(ATOMS_TILE_CLASS1);
             pane.setOnMouseClicked(event -> {
                 if (event != null && event.getClickCount() >= 2) {
-                    this.setupKindTile(pane, slabModel);
+                    this.setupKindTile(pane);
+                    this.setSlabModel(slabModel);
                 }
             });
 
@@ -459,7 +490,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
             this.kindPane.getChildren().add(pane);
 
             if (i == 0) {
-                this.setupKindTile(pane, slabModel);
+                this.setupKindTile(pane);
+                this.setSlabModel(slabModel);
             }
         }
     }
@@ -468,5 +500,8 @@ public class QEFXSlabEditorController extends QEFXAppController {
         if (this.kindPane != null) {
             this.kindPane.getChildren().clear();
         }
+
+        this.setupKindTile(null);
+        this.setSlabModel(null);
     }
 }
