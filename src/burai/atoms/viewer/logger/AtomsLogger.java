@@ -17,6 +17,7 @@ import java.util.List;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
 
 public class AtomsLogger {
@@ -165,6 +166,12 @@ public class AtomsLogger {
                 e2.printStackTrace();
             }
         }
+
+        if (config.axis != null) {
+            this.cell.setProperty(CellProperty.AXIS, config.axis);
+        } else {
+            this.cell.removeProperty(CellProperty.AXIS);
+        }
     }
 
     private void restoreAtoms(Configuration config) {
@@ -217,6 +224,8 @@ public class AtomsLogger {
 
         public double[][] lattice;
 
+        public String axis;
+
         public String[] atomName;
 
         public double[][] atomCoord;
@@ -227,6 +236,7 @@ public class AtomsLogger {
 
         public Configuration(AtomsLogger parent) {
             this.lattice = null;
+            this.axis = null;
             this.atomName = null;
             this.atomCoord = null;
             this.atomFixed = null;
@@ -248,6 +258,8 @@ public class AtomsLogger {
             }
 
             this.lattice = parent.cell.copyLattice();
+
+            this.axis = parent.cell.stringProperty(CellProperty.AXIS);
 
             Atom[] atoms = parent.cell.listAtoms();
             if (atoms != null && atoms.length > 0) {

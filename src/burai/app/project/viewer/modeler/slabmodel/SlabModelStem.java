@@ -20,7 +20,9 @@ import java.util.UUID;
 
 import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
+import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
@@ -39,6 +41,9 @@ public class SlabModelStem extends SlabModel {
     private static final double STEP_FOR_GENOMS = 0.50; // angstrom
     private static final double STEP_FOR_CTHICK = 0.05; // internal coordinate
     private static final int MAX_FOR_CTHICK = 20;
+
+    private static final double SLAB_FIX_THR = 0.1; // angstrom
+    private static final double SLAB_FIX_RATE = 0.5; // internal coordinate
 
     private int miller1;
     private int miller2;
@@ -253,12 +258,23 @@ public class SlabModelStem extends SlabModel {
             return false;
         }
 
+        cell.setProperty(CellProperty.AXIS, "z");
+
         int natom = this.entrySlab.size();
         int natom2 = cell.numAtoms(true);
 
         Atom[] refAtoms = null;
         if (natom == natom2) {
             refAtoms = cell.listAtoms(true);
+        }
+
+        double zMax = -Double.MAX_VALUE;
+        double zMin = +Double.MAX_VALUE;
+        for (AtomEntry entry : this.entrySlab) {
+            if (entry != null) {
+                zMax = Math.max(zMax, entry.z);
+                zMin = Math.min(zMin, entry.z);
+            }
         }
 
         if (refAtoms != null && refAtoms.length == natom) {
@@ -275,7 +291,8 @@ public class SlabModelStem extends SlabModel {
 
                 Atom atom = refAtoms[i];
                 if (atom == null) {
-                    cell.addAtom(new Atom(name, entry.x, entry.y, entry.z));
+                    atom = new Atom(name, entry.x, entry.y, entry.z);
+                    cell.addAtom(atom);
 
                 } else {
                     String name2 = atom.getName();
@@ -289,6 +306,27 @@ public class SlabModelStem extends SlabModel {
                     if (Math.abs(entry.x - x2) > 0.0 || Math.abs(entry.y - y2) > 0.0 || Math.abs(entry.z - z2) > 0.0) {
                         atom.moveTo(entry.x, entry.y, entry.z);
                     }
+                }
+
+                boolean toFix = false;
+                if ((zMax - zMin) < SLAB_FIX_THR) {
+                    toFix = true;
+                } else if ((entry.z - zMin - SLAB_FIX_THR) / (zMax - zMin) < SLAB_FIX_RATE) {
+                    toFix = true;
+                }
+
+                boolean xFix = atom.booleanProperty(AtomProperty.FIXED_X);
+                boolean yFix = atom.booleanProperty(AtomProperty.FIXED_Y);
+                boolean zFix = atom.booleanProperty(AtomProperty.FIXED_Z);
+
+                if (xFix != toFix) {
+                    atom.setProperty(AtomProperty.FIXED_X, toFix);
+                }
+                if (yFix != toFix) {
+                    atom.setProperty(AtomProperty.FIXED_Y, toFix);
+                }
+                if (zFix != toFix) {
+                    atom.setProperty(AtomProperty.FIXED_Z, toFix);
                 }
             }
 
@@ -305,7 +343,19 @@ public class SlabModelStem extends SlabModel {
                     continue;
                 }
 
-                cell.addAtom(new Atom(name, entry.x, entry.y, entry.z));
+                boolean toFix = false;
+                if ((zMax - zMin) < SLAB_FIX_THR) {
+                    toFix = true;
+                } else if ((entry.z - zMin - SLAB_FIX_THR) / (zMax - zMin) < SLAB_FIX_RATE) {
+                    toFix = true;
+                }
+
+                Atom atom = new Atom(name, entry.x, entry.y, entry.z);
+                atom.setProperty(AtomProperty.FIXED_X, toFix);
+                atom.setProperty(AtomProperty.FIXED_Y, toFix);
+                atom.setProperty(AtomProperty.FIXED_Z, toFix);
+
+                cell.addAtom(atom);
             }
         }
 

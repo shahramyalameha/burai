@@ -12,6 +12,7 @@ package burai.app.project.viewer.modeler;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.atoms.viewer.AtomsViewer;
 import burai.com.consts.ConstantAtoms;
@@ -169,6 +170,13 @@ public abstract class ModelerBase {
             }
         }
 
+        String axis = this.srcCell.stringProperty(CellProperty.AXIS);
+        if (axis != null) {
+            this.dstCell.setProperty(CellProperty.AXIS, axis);
+        } else {
+            this.dstCell.removeProperty(CellProperty.AXIS);
+        }
+
         // setup atoms
         Atom[] atoms = this.srcCell.listAtoms(true);
         if (atoms != null) {
@@ -219,6 +227,13 @@ public abstract class ModelerBase {
             e.printStackTrace();
             this.srcCell.restartResolving();
             return;
+        }
+
+        String axis = this.dstCell.stringProperty(CellProperty.AXIS);
+        if (axis != null) {
+            this.srcCell.setProperty(CellProperty.AXIS, axis);
+        } else {
+            this.srcCell.removeProperty(CellProperty.AXIS);
         }
 
         // setup atoms

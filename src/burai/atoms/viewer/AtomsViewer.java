@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.viewer.logger.AtomsLogger;
 import burai.atoms.viewer.logger.AtomsLoggerPFactory;
 import burai.atoms.viewer.operation.ViewerEventManager;
@@ -92,12 +93,11 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
     }
 
     private void initialRotation() {
-        double[][] lattice = this.cell == null ? null : this.cell.copyLattice();
-        if (lattice == null) {
+        if (this.cell == null) {
             return;
         }
 
-        List<double[]> rotations = getInitialRotation(lattice);
+        List<double[]> rotations = getInitialRotation(this.cell);
         if (rotations == null || rotations.isEmpty()) {
             return;
         }
@@ -113,7 +113,12 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         }
     }
 
-    public static List<double[]> getInitialRotation(double[][] lattice) {
+    public static List<double[]> getInitialRotation(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+
+        double[][] lattice = cell.copyLattice();
         if (lattice == null || lattice.length < 3) {
             return null;
         }
@@ -136,6 +141,19 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         double z = Lattice.getZMax(lattice) - Lattice.getZMin(lattice);
         if (z <= 0.0) {
             return null;
+        }
+
+        String axis = null;
+        if (cell.hasProperty(CellProperty.AXIS)) {
+            axis = cell.stringProperty(CellProperty.AXIS);
+        }
+
+        if ("x".equalsIgnoreCase(axis)) {
+            x = Double.MAX_VALUE;
+        } else if ("y".equalsIgnoreCase(axis)) {
+            y = Double.MAX_VALUE;
+        } else if ("z".equalsIgnoreCase(axis)) {
+            z = Double.MAX_VALUE;
         }
 
         List<double[]> rotations = new ArrayList<double[]>();

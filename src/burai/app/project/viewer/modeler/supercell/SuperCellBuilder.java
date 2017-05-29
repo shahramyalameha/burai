@@ -13,6 +13,7 @@ import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.com.env.Environments;
 import burai.com.math.Matrix3D;
@@ -71,6 +72,23 @@ public class SuperCellBuilder {
             } catch (ZeroVolumCellException e) {
                 e.printStackTrace();
                 return false;
+            }
+
+            if (this.cell.hasProperty(CellProperty.AXIS)) {
+                String axis = this.cell.stringProperty(CellProperty.AXIS);
+                if ("x".equalsIgnoreCase(axis)) {
+                    if (na > 1) {
+                        this.cell.removeProperty(CellProperty.AXIS);
+                    }
+                } else if ("y".equalsIgnoreCase(axis)) {
+                    if (nb > 1) {
+                        this.cell.removeProperty(CellProperty.AXIS);
+                    }
+                } else if ("z".equalsIgnoreCase(axis)) {
+                    if (nc > 1) {
+                        this.cell.removeProperty(CellProperty.AXIS);
+                    }
+                }
             }
 
             // fill with atoms

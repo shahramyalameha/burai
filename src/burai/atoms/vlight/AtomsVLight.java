@@ -93,12 +93,11 @@ public class AtomsVLight extends Group {
     }
 
     private void initialRotation(Cell cell) {
-        double[][] lattice = cell == null ? null : cell.copyLattice();
-        if (lattice == null) {
+        if (cell == null) {
             return;
         }
 
-        List<double[]> rotations = AtomsViewer.getInitialRotation(lattice);
+        List<double[]> rotations = AtomsViewer.getInitialRotation(cell);
         if (rotations == null || rotations.isEmpty()) {
             return;
         }

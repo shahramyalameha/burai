@@ -83,7 +83,7 @@ public abstract class Model<E extends ModelEvent, L extends ModelEventListener> 
             return false;
         }
 
-        if (this.properties == null) {
+        if (this.properties == null || this.properties.isEmpty()) {
             return false;
         }
 
@@ -123,6 +123,11 @@ public abstract class Model<E extends ModelEvent, L extends ModelEventListener> 
         }
 
         return 0.0;
+    }
+
+    public String stringProperty(String key) {
+        Object obj = this.getProperty(key);
+        return obj == null ? null : obj.toString();
     }
 
     public Object getProperty(String key) {
@@ -179,6 +184,18 @@ public abstract class Model<E extends ModelEvent, L extends ModelEventListener> 
         if (property != null) {
             property.setProperty(value);
         }
+    }
+
+    public void removeProperty(String key) {
+        if (key == null) {
+            return;
+        }
+
+        if (this.properties == null || this.properties.isEmpty()) {
+            return;
+        }
+
+        this.properties.remove(key);
     }
 
     public void addPropertyListener(String key, ModelPropertyListener propertyListener) {
