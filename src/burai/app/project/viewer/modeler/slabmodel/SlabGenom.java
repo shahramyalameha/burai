@@ -15,7 +15,7 @@ import java.util.List;
 
 public class SlabGenom {
 
-    private static final double COORD_THR = 0.25; // angstrom
+    private static final double COORD_THR = 0.10; // angstrom
     private static final double LAYER_THR = 0.10; // angstrom
 
     private List<Layer> layers;

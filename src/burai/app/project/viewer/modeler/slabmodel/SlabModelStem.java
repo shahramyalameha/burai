@@ -36,7 +36,7 @@ public class SlabModelStem extends SlabModel {
 
     private static final String STOIX_NATOM = "NAtom";
 
-    private static final double STEP_FOR_GENOMS = 0.5; // angstrom
+    private static final double STEP_FOR_GENOMS = 0.50; // angstrom
     private static final double STEP_FOR_CTHICK = 0.05; // internal coordinate
     private static final int MAX_FOR_CTHICK = 20;
 
