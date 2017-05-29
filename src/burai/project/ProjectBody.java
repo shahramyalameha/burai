@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.reader.AtomsReader;
 import burai.atoms.reader.QEReader;
 import burai.input.QEBandInput;
@@ -30,6 +31,7 @@ import burai.input.QEOptInput;
 import burai.input.QESCFInput;
 import burai.input.QESecondaryInput;
 import burai.project.property.ProjectProperty;
+import burai.project.property.ProjectStatus;
 
 public class ProjectBody extends Project {
 
@@ -224,6 +226,16 @@ public class ProjectBody extends Project {
 
         if (this.getDirectoryPath() != null && this.getPrefixName() != null) {
             this.property = new ProjectProperty(this.getDirectoryPath(), this.getPrefixName());
+        }
+
+        if (this.cell != null) {
+            ProjectStatus status = this.property == null ? null : this.property.getStatus();
+            String axis = status == null ? null : status.getCellAxis();
+            if (axis != null) {
+                this.cell.setProperty(CellProperty.AXIS, axis);
+            } else {
+                this.cell.removeProperty(CellProperty.AXIS);
+            }
         }
     }
 
@@ -655,6 +667,15 @@ public class ProjectBody extends Project {
         this.saveQEInput(this.bandData.getFileName(), this.getQEInputBand());
 
         if (this.property != null) {
+            ProjectStatus status = this.property.getStatus();
+            if (status != null) {
+                if (this.cell != null && this.cell.hasProperty(CellProperty.AXIS)) {
+                    status.setCellAxis(this.cell.stringProperty(CellProperty.AXIS));
+                } else {
+                    status.setCellAxis(null);
+                }
+            }
+
             this.property.saveProperty();
         }
     }

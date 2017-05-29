@@ -34,11 +34,13 @@ public class ProjectGeometry {
 
     public ProjectGeometry() {
         this.converged = false;
+
         this.time = 0.0;
         this.energy = 0.0;
         this.totalForce = 0.0;
         this.kinetic = 0.0;
         this.temperature = 0.0;
+
         this.cell = null;
         this.stress = null;
         this.atoms = null;

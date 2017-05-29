@@ -15,6 +15,8 @@ public class ProjectStatus {
 
     private String date;
 
+    private String cellAxis;
+
     private int scfCount;
     private int optCount;
     private int mdCount;
@@ -23,6 +25,9 @@ public class ProjectStatus {
 
     public ProjectStatus() {
         this.updateDate();
+
+        this.cellAxis = null;
+
         this.scfCount = 0;
         this.optCount = 0;
         this.mdCount = 0;
@@ -37,6 +42,14 @@ public class ProjectStatus {
 
     public synchronized String getDate() {
         return this.date;
+    }
+
+    public synchronized String getCellAxis() {
+        return this.cellAxis;
+    }
+
+    public synchronized void setCellAxis(String cellAxis) {
+        this.cellAxis = cellAxis;
     }
 
     public synchronized boolean isScfDone() {
