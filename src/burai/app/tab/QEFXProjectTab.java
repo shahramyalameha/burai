@@ -45,6 +45,9 @@ public class QEFXProjectTab extends QEFXTab<Project> {
     private void setupOnCloseRequest() {
         this.setOnCloseRequest(event -> {
             if (event != null && (!event.isConsumed())) {
+                this.checkProjectWithModeler(event);
+            }
+            if (event != null && (!event.isConsumed())) {
                 this.checkProjectToBeSaved(event);
             }
             if (event != null && (!event.isConsumed())) {
@@ -78,6 +81,33 @@ public class QEFXProjectTab extends QEFXTab<Project> {
                 }
             }
         });
+    }
+
+    private void checkProjectWithModeler(Event event) {
+        if (this.projectController == null) {
+            return;
+        }
+
+        if (this.projectController.isModelerMode() || this.projectController.isModelerSlabMode()) {
+            Alert alert = new Alert(AlertType.WARNING);
+            QEFXMain.initializeDialogOwner(alert);
+            alert.setHeaderText("This project is in Modeler-mode. Do you discard the model ?");
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.getButtonTypes().add(ButtonType.NO);
+
+            Optional<ButtonType> optButtonType = alert.showAndWait();
+            if (optButtonType == null || (!optButtonType.isPresent())) {
+                return;
+            }
+
+            ButtonType buttonType = optButtonType.get();
+            if (!ButtonType.YES.equals(buttonType)) {
+                if (event != null) {
+                    event.consume();
+                }
+            }
+        }
     }
 
     private void checkProjectToBeSaved(Event event) {
