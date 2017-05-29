@@ -44,6 +44,12 @@ public class GeometryParser extends LogParser {
         }
     }
 
+    public void setCellAxis(String cellAxis) {
+        if (this.geometryList != null) {
+            this.geometryList.setCellAxis(cellAxis);
+        }
+    }
+
     @Override
     public void parse(File file) throws IOException {
         this.scfParser.parse(file);

@@ -18,6 +18,7 @@ import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.result.QEFXResultViewerController;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
 import burai.com.consts.Constants;
 import burai.com.math.Matrix3D;
@@ -234,6 +235,13 @@ public class QEFXMovieViewerController extends QEFXResultViewerController {
             e.printStackTrace();
             //this.cell.restartResolving();
             return false;
+        }
+
+        String axis = this.projectGeometryList.getCellAxis();
+        if (axis != null) {
+            this.cell.setProperty(CellProperty.AXIS, axis);
+        } else {
+            this.cell.removeProperty(CellProperty.AXIS);
         }
 
         int natom = projectGeometry.numAtoms();

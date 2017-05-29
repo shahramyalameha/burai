@@ -12,6 +12,8 @@ package burai.run;
 import java.util.ArrayList;
 import java.util.List;
 
+import burai.atoms.model.Cell;
+import burai.atoms.model.CellProperty;
 import burai.com.env.Environments;
 import burai.input.QEInput;
 import burai.input.card.QECard;
@@ -555,11 +557,19 @@ public enum RunningType {
             break;
 
         case Project.INPUT_MODE_OPTIMIZ:
-            parserList.add(new GeometryParser(projectProperty, false));
-            break;
-
         case Project.INPUT_MODE_MD:
-            parserList.add(new GeometryParser(projectProperty, true));
+            String axis = null;
+            Cell cell = project == null ? null : project.getCell();
+            if (cell != null && cell.hasProperty(CellProperty.AXIS)) {
+                axis = cell.stringProperty(CellProperty.AXIS);
+            }
+
+            GeometryParser parser = new GeometryParser(projectProperty, this.inputMode == Project.INPUT_MODE_MD);
+            if (axis != null) {
+                parser.setCellAxis(axis);
+            }
+
+            parserList.add(parser);
             break;
 
         case Project.INPUT_MODE_DOS:

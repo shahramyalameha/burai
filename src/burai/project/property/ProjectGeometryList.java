@@ -14,13 +14,25 @@ import java.util.List;
 
 public class ProjectGeometryList {
 
+    private String cellAxis;
+
     private boolean converged;
 
     private List<ProjectGeometry> geometries;
 
     public ProjectGeometryList() {
+        this.cellAxis = null;
+
         this.converged = false;
         this.geometries = null;
+    }
+
+    public synchronized String getCellAxis() {
+        return this.cellAxis;
+    }
+
+    public synchronized void setCellAxis(String cellAxis) {
+        this.cellAxis = cellAxis;
     }
 
     public synchronized boolean isConverged() {
@@ -101,6 +113,8 @@ public class ProjectGeometryList {
 
     public synchronized ProjectGeometryList copyGeometryList() {
         ProjectGeometryList other = new ProjectGeometryList();
+
+        other.cellAxis = this.cellAxis;
 
         other.converged = this.converged;
 
