@@ -20,7 +20,7 @@ import burai.atoms.visible.VisibleAtom;
 
 public class BeFixedMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Let selected atoms to be FIXED";
+    private static final String ITEM_LABEL = "Let selected atoms be FIXED";
 
     public BeFixedMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);

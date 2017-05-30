@@ -20,7 +20,7 @@ import burai.atoms.visible.VisibleAtom;
 
 public class BeMobileMenuItem extends EditorMenuItem {
 
-    private static final String ITEM_LABEL = "Let selected atoms to be MOBILE";
+    private static final String ITEM_LABEL = "Let selected atoms be MOBILE";
 
     public BeMobileMenuItem(ViewerEventManager manager) {
         super(ITEM_LABEL, manager);
