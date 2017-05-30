@@ -49,6 +49,8 @@ public class EditorMenu {
         this.itemSet.add(new MoveMenuItem(this));
         this.itemSet.add(new DeleteMenuItem(this));
         this.itemSet.add(new RenameMenuItem(this));
+        this.itemSet.add(new BeMobileMenuItem(this));
+        this.itemSet.add(new BeFixedMenuItem(this));
         this.itemSet.add(new SelectAllMenuItem(this));
         this.itemSet.add(new NotSelectAnyMenuItem(this));
         this.itemSet.add(new CenterMenuItem(this));
@@ -155,6 +157,12 @@ public class EditorMenu {
                 item.setDisable(!anyAreSelected);
 
             } else if (item instanceof RenameMenuItem) {
+                item.setDisable(!anyAreSelected);
+
+            } else if (item instanceof BeMobileMenuItem) {
+                item.setDisable(!anyAreSelected);
+
+            } else if (item instanceof BeFixedMenuItem) {
                 item.setDisable(!anyAreSelected);
 
             } else if (item instanceof SelectAllMenuItem) {
