@@ -46,7 +46,6 @@ public class EditorMenu {
     private void createItemSet() {
         this.itemSet = new LinkedHashSet<EditorMenuItem>();
         this.itemSet.add(new PutMenuItem(this));
-        //this.itemSet.add(new DetailMenuItem(this));
         this.itemSet.add(new MoveMenuItem(this));
         this.itemSet.add(new DeleteMenuItem(this));
         this.itemSet.add(new RenameMenuItem(this));
@@ -148,9 +147,6 @@ public class EditorMenu {
         for (EditorMenuItem item : this.itemSet) {
             if (item instanceof PutMenuItem) {
                 item.setDisable(atomIsPicked);
-
-            } else if (item instanceof DetailMenuItem) {
-                item.setDisable(!atomIsPicked);
 
             } else if (item instanceof MoveMenuItem) {
                 item.setDisable(!(anyAreSelected && atomIsPicked));
