@@ -60,13 +60,13 @@ public class RenameMenuItem extends EditorMenuItem {
             return;
         }
 
-        atomsViewer.storeCell();
-
         ElementButton elementButton = optElementButton.get();
         String elementName = elementButton.getText();
         if (elementName == null || elementName.isEmpty()) {
             return;
         }
+
+        atomsViewer.storeCell();
 
         for (VisibleAtom visibleAtom : visibleAtoms) {
             if (visibleAtom != null && visibleAtom.isSelected()) {
