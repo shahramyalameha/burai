@@ -29,7 +29,7 @@ import burai.project.Project;
 
 public class ModelerAction {
 
-    private Cell cell;
+    private Project project;
 
     private QEFXProjectController controller;
 
@@ -38,19 +38,15 @@ public class ModelerAction {
     private AtomsViewer atomsViewer;
 
     public ModelerAction(Project project, QEFXProjectController controller) {
-        this(project == null ? null : project.getCell(), controller);
-    }
-
-    public ModelerAction(Cell cell, QEFXProjectController controller) {
-        if (cell == null) {
-            throw new IllegalArgumentException("cell is null.");
+        if (project == null) {
+            throw new IllegalArgumentException("project is null.");
         }
 
         if (controller == null) {
             throw new IllegalArgumentException("controller is null.");
         }
 
-        this.cell = cell;
+        this.project = project;
         this.controller = controller;
 
         this.modeler = null;
@@ -72,22 +68,24 @@ public class ModelerAction {
 
     private void initializeModeler() {
         if (this.modeler == null) {
-            this.modeler = new Modeler(this.cell);
+            this.modeler = new Modeler(this.project);
+        }
+
+        QEFXModelerEditor modelerEditor = null;
+        if (this.modeler != null) {
+            try {
+                modelerEditor = new QEFXModelerEditor(this.controller, this.modeler);
+            } catch (IOException e) {
+                modelerEditor = null;
+                e.printStackTrace();
+            }
         }
 
         if (this.atomsViewer == null) {
             this.atomsViewer = this.createAtomsViewer();
         }
 
-        QEFXModelerEditor modelerEditor = null;
-        try {
-            modelerEditor = new QEFXModelerEditor(this.controller, this.modeler);
-        } catch (IOException e) {
-            modelerEditor = null;
-            e.printStackTrace();
-        }
-
-        if (this.atomsViewer != null && modelerEditor != null) {
+        if (modelerEditor != null && this.atomsViewer != null) {
             this.controller.setModelerMode();
 
             this.controller.setOnModeBacked(controller2 -> {

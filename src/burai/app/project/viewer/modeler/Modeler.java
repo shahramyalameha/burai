@@ -14,9 +14,9 @@ import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModelBuilder;
 import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Atom;
-import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.logger.AtomsLoggerProperty;
+import burai.project.Project;
 
 public class Modeler extends ModelerBase {
 
@@ -26,13 +26,21 @@ public class Modeler extends ModelerBase {
     private static final double RMIN = 1.0e-3;
     private static final double RRMIN = RMIN * RMIN;
 
+    private Project project;
+
     private double aOffset;
     private double bOffset;
     private double cOffset;
     private CellOffsetChanged onCellOffsetChanged;
 
-    public Modeler(Cell srcCell) {
-        super(srcCell);
+    public Modeler(Project project) {
+        super(project == null ? null : project.getCell());
+
+        if (project == null) {
+            throw new IllegalArgumentException("project is null.");
+        }
+
+        this.project = project;
 
         this.aOffset = 0.0;
         this.bOffset = 0.0;
@@ -128,6 +136,15 @@ public class Modeler extends ModelerBase {
         super.initialize();
 
         this.setCellOffset(0.0, 0.0, 0.0);
+    }
+
+    @Override
+    public void reflect() {
+        if (this.isToReflect()) {
+            // TODO
+        }
+
+        super.reflect();
     }
 
     public void undo() {
