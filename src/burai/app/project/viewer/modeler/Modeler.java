@@ -22,6 +22,10 @@ import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
 import burai.atoms.model.Atom;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.logger.AtomsLoggerProperty;
+import burai.input.QEInput;
+import burai.input.card.QECard;
+import burai.input.card.QEKPoints;
+import burai.input.namelist.QENamelist;
 import burai.project.Project;
 
 public class Modeler extends ModelerBase {
@@ -283,14 +287,14 @@ public class Modeler extends ModelerBase {
 
     private boolean showCorrectDialog() {
         String items = "";
-        items = items + System.lineSeparator() + " - item1";
-        items = items + System.lineSeparator() + " - item2";
-        items = items + System.lineSeparator() + " - item3";
+        items = items + System.lineSeparator() + "  - K-Points";
+        items = items + System.lineSeparator() + "  - Number of Bands";
+        items = items + System.lineSeparator() + "  - Walking on B.Z.";
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
         QEFXMain.initializeDialogOwner(alert);
         alert.setHeaderText("Correct the input-file ?");
-        alert.setContentText("Following items would be changed:" + items);
+        alert.setContentText("Following items will be corrected:" + items);
         alert.getButtonTypes().clear();
         alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
@@ -310,6 +314,48 @@ public class Modeler extends ModelerBase {
             return;
         }
 
-        // TODO
+        QEInput input = null;
+
+        // SCF
+        input = this.project.getQEInputScf();
+        if (input != null) {
+            QECard card = input.getCard(QEKPoints.CARD_NAME);
+            QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
+            if (cardKPoints != null) {
+                cardKPoints.clear();
+            }
+        }
+
+        // DOS
+        input = this.project.getQEInputDos();
+        if (input != null) {
+            QECard card = input.getCard(QEKPoints.CARD_NAME);
+            QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
+            if (cardKPoints != null) {
+                cardKPoints.clear();
+            }
+
+            QENamelist nmlSystem = input.getNamelist(QEInput.NAMELIST_SYSTEM);
+            if (nmlSystem != null) {
+                nmlSystem.removeValue("nbnd");
+            }
+        }
+
+        // Band
+        input = this.project.getQEInputBand();
+        if (input != null) {
+            QECard card = input.getCard(QEKPoints.CARD_NAME);
+            QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
+            if (cardKPoints != null) {
+                cardKPoints.clear();
+            }
+
+            QENamelist nmlSystem = input.getNamelist(QEInput.NAMELIST_SYSTEM);
+            if (nmlSystem != null) {
+                nmlSystem.removeValue("nbnd");
+            }
+        }
+
+        this.project.resolveQEInputs();
     }
 }
