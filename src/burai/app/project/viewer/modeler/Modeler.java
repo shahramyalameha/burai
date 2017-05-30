@@ -146,11 +146,16 @@ public class Modeler extends ModelerBase {
 
     @Override
     public void reflect() {
+        boolean toCorrect = false;
         if (this.isToReflect()) {
-            this.correctProjecAuto();
+            toCorrect = true;
         }
 
         super.reflect();
+
+        if (toCorrect) {
+            this.correctProjecAuto();
+        }
     }
 
     public void undo() {
