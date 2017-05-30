@@ -419,7 +419,7 @@ public class QEFXAtomsController extends QEFXInputModelController {
             return;
         }
 
-        this.indexColumn.setCellValueFactory(new PropertyValueFactory<AtomAnsatz, Integer>("index"));
+        this.indexColumn.setCellValueFactory(new PropertyValueFactory<AtomAnsatz, Integer>("index1"));
     }
 
     private void setupElementColumn() {

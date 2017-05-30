@@ -79,6 +79,7 @@ public class AtomAnsatz {
     }
 
     private IntegerProperty index;
+    private IntegerProperty index1;
     private StringProperty element;
     private StringProperty x;
     private StringProperty y;
@@ -94,6 +95,7 @@ public class AtomAnsatz {
 
     public void setIndex(int value) {
         this.indexProperty().set(value);
+        this.index1Property().set(value + 1);
     }
 
     public int getIndex() {
@@ -106,6 +108,14 @@ public class AtomAnsatz {
         }
 
         return this.index;
+    }
+
+    public IntegerProperty index1Property() {
+        if (this.index1 == null) {
+            this.index1 = new SimpleIntegerProperty(this, "index1");
+        }
+
+        return this.index1;
     }
 
     public void setElement(String value) {

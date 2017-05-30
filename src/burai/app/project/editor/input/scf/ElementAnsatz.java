@@ -18,6 +18,7 @@ import burai.com.math.Calculator;
 public class ElementAnsatz {
 
     private IntegerProperty index;
+    private IntegerProperty index1;
     private StringProperty name;
     private StringProperty magX;
     private StringProperty magY;
@@ -35,6 +36,7 @@ public class ElementAnsatz {
 
     public void setIndex(int value) {
         this.indexProperty().set(value);
+        this.index1Property().set(value + 1);
     }
 
     public int getIndex() {
@@ -47,6 +49,14 @@ public class ElementAnsatz {
         }
 
         return this.index;
+    }
+
+    public IntegerProperty index1Property() {
+        if (this.index1 == null) {
+            this.index1 = new SimpleIntegerProperty(this, "index1");
+        }
+
+        return this.index1;
     }
 
     public void setName(String value) {

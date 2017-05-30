@@ -510,7 +510,7 @@ public class QEFXMagnetizController extends QEFXInputController {
             return;
         }
 
-        this.indexColumn.setCellValueFactory(new PropertyValueFactory<ElementAnsatz, Integer>("index"));
+        this.indexColumn.setCellValueFactory(new PropertyValueFactory<ElementAnsatz, Integer>("index1"));
     }
 
     private void setupNameColumn() {
