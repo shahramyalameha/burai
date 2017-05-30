@@ -9,7 +9,13 @@
 
 package burai.app.project.viewer.modeler;
 
+import java.util.Optional;
+
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import burai.app.QEFXMain;
 import burai.app.project.viewer.modeler.slabmodel.SlabModel;
 import burai.app.project.viewer.modeler.slabmodel.SlabModelBuilder;
 import burai.app.project.viewer.modeler.supercell.SuperCellBuilder;
@@ -141,7 +147,7 @@ public class Modeler extends ModelerBase {
     @Override
     public void reflect() {
         if (this.isToReflect()) {
-            // TODO
+            this.correctProjecAuto();
         }
 
         super.reflect();
@@ -268,5 +274,37 @@ public class Modeler extends ModelerBase {
         this.setCellOffset(0.0, 0.0, 0.0);
 
         return slabModels;
+    }
+
+    private boolean showCorrectDialog() {
+        String items = "";
+        items = items + System.lineSeparator() + " - item1";
+        items = items + System.lineSeparator() + " - item2";
+        items = items + System.lineSeparator() + " - item3";
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        QEFXMain.initializeDialogOwner(alert);
+        alert.setHeaderText("Correct the input-file ?");
+        alert.setContentText("Following items would be changed:" + items);
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+        Optional<ButtonType> optButtonType = alert.showAndWait();
+        if (optButtonType == null || (!optButtonType.isPresent())) {
+            return false;
+        }
+        if (!ButtonType.YES.equals(optButtonType.get())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void correctProjecAuto() {
+        if (!this.showCorrectDialog()) {
+            return;
+        }
+
+        // TODO
     }
 }
