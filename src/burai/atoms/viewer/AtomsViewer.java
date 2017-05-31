@@ -425,6 +425,12 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         }
     }
 
+    public void clearStoredCell() {
+        if (this.logger != null) {
+            this.logger.clearConfiguration();
+        }
+    }
+
     public void storeCell() {
         if (this.logger != null) {
             this.logger.storeConfiguration();

@@ -91,7 +91,8 @@ public class QEFXProjectTab extends QEFXTab<Project> {
         if (this.projectController.isModelerMode() || this.projectController.isModelerSlabMode()) {
             Alert alert = new Alert(AlertType.WARNING);
             QEFXMain.initializeDialogOwner(alert);
-            alert.setHeaderText("This project is in Modeler-mode. Do you discard the model ?");
+            alert.setHeaderText("This project is in Modeler-mode."
+                    + System.lineSeparator() + "Do you discard the model ?");
             alert.getButtonTypes().clear();
             alert.getButtonTypes().add(ButtonType.YES);
             alert.getButtonTypes().add(ButtonType.NO);

@@ -57,6 +57,11 @@ public class AtomsLogger {
         this.propFactory = propFactory;
     }
 
+    public void clearConfiguration() {
+        this.configs.clear();
+        this.subConfigs.clear();
+    }
+
     public void storeConfiguration() {
         this.subConfigs.clear();
 

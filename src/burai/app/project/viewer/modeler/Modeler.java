@@ -314,36 +314,17 @@ public class Modeler extends ModelerBase {
             return;
         }
 
-        QEInput input = null;
+        QEInput[] inputs = {
+                this.project.getQEInputScf(),
+                this.project.getQEInputDos(),
+                this.project.getQEInputBand()
+        };
 
-        // SCF
-        input = this.project.getQEInputScf();
-        if (input != null) {
-            QECard card = input.getCard(QEKPoints.CARD_NAME);
-            QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
-            if (cardKPoints != null) {
-                cardKPoints.clear();
-            }
-        }
-
-        // DOS
-        input = this.project.getQEInputDos();
-        if (input != null) {
-            QECard card = input.getCard(QEKPoints.CARD_NAME);
-            QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
-            if (cardKPoints != null) {
-                cardKPoints.clear();
+        for (QEInput input : inputs) {
+            if (input == null) {
+                continue;
             }
 
-            QENamelist nmlSystem = input.getNamelist(QEInput.NAMELIST_SYSTEM);
-            if (nmlSystem != null) {
-                nmlSystem.removeValue("nbnd");
-            }
-        }
-
-        // Band
-        input = this.project.getQEInputBand();
-        if (input != null) {
             QECard card = input.getCard(QEKPoints.CARD_NAME);
             QEKPoints cardKPoints = (card != null && card instanceof QEKPoints) ? ((QEKPoints) card) : null;
             if (cardKPoints != null) {

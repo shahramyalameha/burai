@@ -160,6 +160,7 @@ public class ModelerAction {
         Platform.runLater(() -> {
             AtomsViewerInterface atomsViewer = this.controller.getAtomsViewer();
             if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                ((AtomsViewer) atomsViewer).clearStoredCell();
                 ((AtomsViewer) atomsViewer).setCellToCenter();
             }
         });

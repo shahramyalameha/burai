@@ -224,6 +224,7 @@ public class QEFXModelerEditorController extends QEFXAppController {
                     atomsViewer = this.projectController.getAtomsViewer();
                 }
                 if (atomsViewer != null && atomsViewer instanceof AtomsViewer) {
+                    ((AtomsViewer) atomsViewer).clearStoredCell();
                     ((AtomsViewer) atomsViewer).setCellToCenter();
                 }
             });
