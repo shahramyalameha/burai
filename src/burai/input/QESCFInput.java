@@ -14,8 +14,10 @@ import java.io.IOException;
 
 import burai.input.card.QEAtomicPositions;
 import burai.input.card.QEAtomicSpecies;
+import burai.input.card.QECard;
 import burai.input.card.QECellParameters;
 import burai.input.card.QEKPoints;
+import burai.input.card.tracer.QESpeciesTracer;
 import burai.input.correcter.QEInputCorrecter;
 import burai.input.correcter.QESCFInputCorrecter;
 import burai.input.namelist.QENamelist;
@@ -74,10 +76,20 @@ public class QESCFInput extends QESecondaryInput {
 
     @Override
     protected void setupCards(QEInputReader reader) throws IOException {
+        QECard card = this.cards.get(QEAtomicSpecies.CARD_NAME);
+        boolean hasSpeciesCards = (card != null) && (card instanceof QEAtomicSpecies);
+
         this.setupCard(new QEKPoints(), reader);
         this.setupCard(new QECellParameters(), reader);
         this.setupCard(new QEAtomicSpecies(), reader);
         this.setupCard(new QEAtomicPositions(), reader);
+
+        if (!hasSpeciesCards) {
+            QENamelist nmlSystem = this.namelists.get(NAMELIST_SYSTEM);
+            QEAtomicSpecies atomicSpecies = (QEAtomicSpecies) this.cards.get(QEAtomicSpecies.CARD_NAME);
+            QESpeciesTracer speciesTracer = new QESpeciesTracer(nmlSystem, atomicSpecies);
+            speciesTracer.traceAtomicSpecies();
+        }
     }
 
     @Override

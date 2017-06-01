@@ -12,6 +12,7 @@ package burai.app.project.editor.input.scf;
 import java.util.List;
 
 import javafx.scene.control.TableView;
+import burai.com.consts.ConstantAtoms;
 import burai.input.card.QEAtomicSpecies;
 import burai.input.card.QECardEvent;
 import burai.input.namelist.QENamelist;
@@ -20,7 +21,7 @@ import burai.input.namelist.QEValueBuffer;
 
 public class ElementAnsatzBinder {
 
-    private static final int MAX_NUM_ELEMENTS = 16;
+    private static final int MAX_NUM_ELEMENTS = ConstantAtoms.MAX_NUM_ELEMS;
 
     private TableView<ElementAnsatz> elementTable;
 
