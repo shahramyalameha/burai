@@ -25,7 +25,7 @@ Standard Setting
     "6", "Cutoff for Charge", "kinetic energy cutoff for charge density"
     "7", "Total Charge", "Total charge of the system. +1 means one electron lost from calculation cell. -1 means one electron add to calculation cell."
     "8", "Use Symmetry", "Use Symmetry"
-    "9", "K-Points", ""
+    "9", "K-Points", "Monkhorst-Pack scheme"
     "10", "Occupations", ""
     "11", "Smearing", "select smearing method"
     "12", "Smearing Width", ""
