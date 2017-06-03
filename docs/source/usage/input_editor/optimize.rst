@@ -23,3 +23,17 @@ Also, users should set the condition after or before user set scf condition.
     "7", "Pressure", "Target pressure"
     "8", "Freegom", "Select which of the cell parameters should be moved"
 
+if Variable Cell is "yes", users can input Threshold, Method, Pressure, and Freedom.
+
+|
+.. image:: ../../img/projects/imgCreateJob_OPT01.png
+   :scale: 50 %
+   :align: center
+
+In addition, users can conform input condition form input-file of left menue.
+
+|
+.. image:: ../../img/projects/imgCreateJob_CheckInputFIle.png
+   :scale: 50 %
+   :align: center
+

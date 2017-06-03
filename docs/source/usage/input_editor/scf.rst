@@ -71,3 +71,9 @@ If users would like to consider the GGA+U for system, user handles this window.
    :align: center
 
 
+In addition, users can conform input condition form input-file of left menue.
+
+|
+.. image:: ../../img/projects/imgCreateJob_CheckInputFIle.png
+   :scale: 50 %
+   :align: center
