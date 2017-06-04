@@ -3,7 +3,7 @@ Band
 
 If users calculate the band structure, user should select "Band" from right menu.
 
-.. image:: ../../img/input_editor/imgCreateJob_Band00.png
+.. image:: ../../../img/input_editor/imgCreateJob_Band00.png
    :scale: 50 %
    :align: center
 
@@ -20,8 +20,8 @@ If users calculate the band structure, user should select "Band" from right menu
 BURAI system automatically set just a recommendation k-path for the band structure plot.
 |
 In addition, users can conform input condition form input-file of left menue.
-|
-.. image:: ../../img/input_editor/imgCreateJob_CheckInputFIle.png
+
+.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
 

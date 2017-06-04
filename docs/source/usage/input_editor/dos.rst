@@ -25,7 +25,7 @@ If users calculate DOS, user should select "DOS" from right menu.
     "10", "Broadening Width", "value of the gaussian spreading"
 
 In addition, users can conform input condition form input-file of left menue.
-|
+
 .. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center

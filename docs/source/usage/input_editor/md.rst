@@ -5,7 +5,7 @@ In case users set the condition of first-principles molecular dynamics, users se
 Also, users should set the condition after or before user set scf condition.
 
 
-.. image:: ../../img/input_editor/imgCreateJob_MD00.png
+.. image:: ../../../img/input_editor/imgCreateJob_MD00.png
    :scale: 50 %
    :align: center
 
@@ -30,7 +30,7 @@ Also, users should set the condition after or before user set scf condition.
 if Control Tempe. is "yes", users can input Temperature.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_MD01.png
+.. image:: ../../../img/input_editor/imgCreateJob_MD01.png
    :scale: 50 %
    :align: center
 
@@ -38,14 +38,14 @@ if Control Tempe. is "yes", users can input Temperature.
 if Cell's Dynamics. is "yes", users can input Method, Pressure, Mass, and Freedom.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_MD02.png
+.. image:: ../../../img/input_editor/imgCreateJob_MD02.png
    :scale: 50 %
    :align: center
 
 In addition, users can conform input condition form input-file of left menue.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_CheckInputFIle.png
+.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
 
