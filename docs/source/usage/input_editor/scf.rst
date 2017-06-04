@@ -40,7 +40,7 @@ Electronic Optimization
 |
 .. csv-table:: Electronic Optimization
     :header: "No.", "group", "name"
-    :widths: 10, 10, 35
+    :widths: 10, 20, 35
 
     "1", "Convergence", "Max Steps"
     "2", "Convergence", "Threshold"
@@ -65,7 +65,7 @@ GGA+U
 -----
 
 If users would like to consider the GGA+U for system, user handles this window.
-|
+
 .. image:: ../../../img/input_editor/imgCreateJob_SCF03.png
    :scale: 50 %
    :align: center
@@ -73,7 +73,6 @@ If users would like to consider the GGA+U for system, user handles this window.
 
 In addition, users can conform input condition form input-file of left menue.
 
-|
 .. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
