@@ -1,13 +1,16 @@
 Running Calculation
 ===================
 
-When users start to calculate, they select "Run" in the left menu as shown in bellow table.
+Run jobs
+--------
+
+When users start to calculate, users select "Run" in the left menu as shown in bellow table.
 
 .. image:: ../../img/imgCreateJob_running00.png
    :scale: 40 %
    :align: center
 
-Before users calculate, they have to save a project.
+Before users calculate, users have to save a project.
 if not saved, they have to push the "Save Project".
 
 .. image:: ../../img/imgCreateJob_running01.png
@@ -20,4 +23,5 @@ Users save the project, then users push the OK button to run the calculation.
    :scale: 40 %
    :align: center
 
-
+Stop jobs
+---------

@@ -22,14 +22,11 @@ If users change the installed directory, user should set " --with-qe-source" of 
 |
 if you will use in parallel by using MPI, you should install MPI.
 
-* Windows
+* Windows and Mac
 
 Users do not need to install Quantum ESPRESSO, because BURAI system already has the Quantum ESPRESSO executables.
 These executables were compiled by BURAI team.
 if users want to use other Quantum ESPRESSO version, the users should install it.
-
-* Mac
-now making
 
 
 BURAI
