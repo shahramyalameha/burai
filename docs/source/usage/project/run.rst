@@ -6,7 +6,7 @@ Run jobs
 
 In case users start to the calculate, users select "Run" in the left menu.
 
-.. image:: ../../img/imgCreateJob_running00.png
+.. image:: ../../../img/imgCreateJob_running00.png
    :scale: 40 %
    :align: center
 
