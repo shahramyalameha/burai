@@ -5,7 +5,7 @@ In case users set the condition of optimization, users select "opt" from right m
 Also, users should set the condition after or before user set scf condition.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_OPT00.png
+.. image:: ../../../img/input_editor/imgCreateJob_OPT00.png
    :scale: 50 %
    :align: center
 
@@ -26,14 +26,14 @@ Also, users should set the condition after or before user set scf condition.
 if Variable Cell is "yes", users can input Threshold, Method, Pressure, and Freedom.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_OPT01.png
+.. image:: ../../../img/input_editor/imgCreateJob_OPT01.png
    :scale: 50 %
    :align: center
 
 In addition, users can conform input condition form input-file of left menue.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_CheckInputFIle.png
+.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
 
