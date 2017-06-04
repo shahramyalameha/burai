@@ -7,20 +7,20 @@ This chapter explain these operations.
 Replace Atom
 ------------
 We introduce the operation of replace the atom.
-The first step is selecting the atom which you want to replace.
-Then, the menu appears. You select “Rename selected atoms”
+The first step is selecting the atom which users want to replace.
+Then, the menu appears. users select “Rename selected atoms”
 
 .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom01.png
    :scale: 30 %
    :align: center
 
-The periodic table appears, and you select element which you want to replace.
+The periodic table appears, and users select element which users want to replace.
 
 .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom02.png
    :scale: 30 %
    :align: center
 
-You can replace the atom.
+users can replace the atom.
 
 .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom03.png
    :scale: 30 %
@@ -31,8 +31,8 @@ You can replace the atom.
 Delete Atom
 -----------
 We introduce the operation of delete the atom.
-The first step is selecting the atom which you want to delete.
-Then, the menu appears. You select “Delete selected atoms”
+The first step is selecting the atom which users want to delete.
+Then, the menu appears. users select “Delete selected atoms”
 
 .. image:: ../../../img/projects/imgCreateJob_DeleteAtom00.png
    :scale: 30 %
@@ -44,7 +44,7 @@ The confirmation screen appears.
    :scale: 30 %
    :align: center
 
-You select “OK”, and you can delete the atom.
+users select “OK”, and users can delete the atom.
 
 .. image:: ../../../img/projects/imgCreateJob_DeleteAtom02.png
    :scale: 30 %
@@ -54,8 +54,8 @@ You select “OK”, and you can delete the atom.
 Move Atom
 ---------
 We explain the operation that selected atom is moved.
-The first step is selecting the atom which you want to move.
-Then, the menu appears. You select “Move selected atoms”
+The first step is selecting the atom which users want to move.
+Then, the menu appears. Users select “Move selected atoms”
 
 
 .. image:: ../../../img/projects/imgCreateJob_MoveAtom00.png
@@ -68,7 +68,7 @@ The green plane surface appears on the model. The plane surface means the area t
    :scale: 30 %
    :align: center
 
-You decide the area, and you move the atom.
+Users decide the area, and users move the atom.
 
 .. image:: ../../../img/projects/imgCreateJob_MoveAtom02.png
    :scale: 30 %
@@ -82,19 +82,19 @@ You decide the area, and you move the atom.
 Add Atom
 --------
 We introduce the operation of put the atom.
-The first step is clicking the area which you want to put the atom, then menu window appears. You select “Put an atom”
+The first step is clicking the area which users want to put the atom, then menu window appears. Users select “Put an atom”
 
 .. image:: ../../../img/projects/imgCreateJob_PutAtom00.png
    :scale: 30 %
    :align: center
 
-The periodic table appears, and you select element which you want to add in the area.
+The periodic table appears, and users select element which users want to add in the area.
 
 .. image:: ../../../img/projects/imgCreateJob_PutAtom01.png
    :scale: 30 %
    :align: center
 
-After you select the element, you can put the atom.
+After users select the element, users can put the atom.
 
 .. image:: ../../../img/projects/imgCreateJob_PutAtom02.png
    :scale: 30 %
