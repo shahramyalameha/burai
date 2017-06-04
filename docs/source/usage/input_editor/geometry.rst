@@ -78,14 +78,14 @@ The psudopotential detail information was shown in the psudopotential conditions
 Aroms
 -----
 
-Atoms windows shows the coordinate and element of all atom.
+Atoms windows shows the coordinate and element of all atoms.
 
 .. image:: ../../../img/input_editor/imgCreateJob_Geometry09.png
    :scale: 50 %
    :align: center
 
 In the case that users select a column in the table of Atomic Configuration, the atom sphere that is selected, changes the sphere of grid mesh.
-|
+
 .. image:: ../../../img/input_editor/imgCreateJob_Geometry10.png
    :scale: 50 %
    :align: center
