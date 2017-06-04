@@ -1,20 +1,20 @@
 Atoms Viewer
 ============
 
-This system can replace, delete, move, and add the atom.
+BURAI platform can replace, delete, move, and add the atom.
 This chapter explain these operations.
 
 Replace Atom
 ------------
-We introduce the operation of replace the atom.
+In case users replace the atom to other element,
 The first step is selecting the atom which users want to replace.
-Then, the menu appears. users select “Rename selected atoms”
+Then, the menu appears with right click. users select “Rename selected atoms”
 
 .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom01.png
    :scale: 30 %
    :align: center
 
-The periodic table appears, and users select element which users want to replace.
+The periodic table appears, and users select element that users want to replace.
 
 .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom02.png
    :scale: 30 %
@@ -53,9 +53,9 @@ users select “OK”, and users can delete the atom.
 
 Move Atom
 ---------
-We explain the operation that selected atom is moved.
-The first step is selecting the atom which users want to move.
-Then, the menu appears. Users select “Move selected atoms”
+We explain the operation that users move the selected atom in the model.
+The first step is selecting the atom that users want to move.
+Then, the menu appears with right click. Users select “Move selected atoms”
 
 
 .. image:: ../../../img/projects/imgCreateJob_MoveAtom00.png
@@ -82,7 +82,8 @@ Users decide the area, and users move the atom.
 Add Atom
 --------
 We introduce the operation of put the atom.
-The first step is clicking the area which users want to put the atom, then menu window appears. Users select “Put an atom”
+The first step is clicking the area which users want to put the atom, then menu window appears with right click.
+Users select “Put an atom”
 
 .. image:: ../../../img/projects/imgCreateJob_PutAtom00.png
    :scale: 30 %
