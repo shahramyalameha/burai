@@ -26,6 +26,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import burai.app.QEFXMain;
+import burai.app.path.QEPath;
 import burai.app.project.viewer.ViewerActions;
 import burai.com.consts.ConstantStyles;
 import burai.com.env.Environments;
@@ -260,6 +261,19 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
         }
     }
 
+    private boolean canMPIParallel() {
+        String mpiPath = QEPath.getMPIPath();
+        if (mpiPath == null || mpiPath.trim().isEmpty()) {
+            return false;
+        }
+
+        if (this.hasTwoByteChar(this.project.getDirectoryPath())) {
+            return false;
+        }
+
+        return true;
+    }
+
     private boolean hasTwoByteChar(String str) {
         if (str == null || str.isEmpty()) {
             return false;
@@ -283,7 +297,7 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
             numMPI = Math.max(1, Environments.getIntProperty(PROP_KEY_MPI));
 
         } else {
-            if (!this.hasTwoByteChar(this.project.getDirectoryPath())) {
+            if (this.canMPIParallel()) {
                 numMPI = Math.max(1, Environments.getNumCUPs());
             } else {
                 numMPI = 1;
@@ -321,7 +335,7 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
             numOMP = Math.max(1, Environments.getIntProperty(PROP_KEY_OPENMP));
 
         } else {
-            if (this.hasTwoByteChar(this.project.getDirectoryPath())) {
+            if (!this.canMPIParallel()) {
                 numOMP = Math.max(1, Environments.getNumCUPs());
             } else {
                 numOMP = 1;

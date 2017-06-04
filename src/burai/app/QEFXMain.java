@@ -139,14 +139,8 @@ public class QEFXMain extends Application {
     }
 
     private void setBinaryPath() {
-        File dirFile = null;
         if (Environments.isWindows()) {
-            dirFile = new File("exec.WIN");
-        } else if (Environments.isMac()) {
-            dirFile = new File("exec.MAC");
-        }
-
-        if (dirFile != null) {
+            File dirFile = new File("exec.WIN");
             String qePath = QEPath.getPath();
             if (qePath == null || qePath.trim().isEmpty()) {
                 QEPath.setPath(new File(dirFile, "qe"));
@@ -155,6 +149,37 @@ public class QEFXMain extends Application {
             if (mpiPath == null || mpiPath.trim().isEmpty()) {
                 QEPath.setMPIPath(new File(dirFile, "mpi"));
             }
+
+        } else if (Environments.isMac()) {
+            File dirFile = new File("exec.MAC");
+            File mpiFile = new File("/opt/local/libexec/openmpi-gcc6");
+
+            boolean hasMPI = false;
+            try {
+                if (mpiFile.isDirectory()) {
+                    hasMPI = true;
+                }
+            } catch (Exception e) {
+                hasMPI = false;
+            }
+
+            if (hasMPI) {
+                String qePath = QEPath.getPath();
+                if (qePath == null || qePath.trim().isEmpty()) {
+                    QEPath.setPath(new File(dirFile, "qe_openmpi-gcc6"));
+                }
+                String mpiPath = QEPath.getMPIPath();
+                if (mpiPath == null || mpiPath.trim().isEmpty()) {
+                    QEPath.setMPIPath(mpiFile);
+                }
+
+            } else {
+                String qePath = QEPath.getPath();
+                if (qePath == null || qePath.trim().isEmpty()) {
+                    QEPath.setPath(new File(dirFile, "qe_serial-gcc6"));
+                }
+            }
+
         }
     }
 
