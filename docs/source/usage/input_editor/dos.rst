@@ -3,7 +3,7 @@ DOS
 
 If users calculate DOS, user should select "DOS" from right menu.
 
-.. image:: ../../img/input_editor/imgCreateJob_DOS00.png
+.. image:: ../../../img/input_editor/imgCreateJob_DOS00.png
    :scale: 50 %
    :align: center
 
@@ -26,7 +26,7 @@ If users calculate DOS, user should select "DOS" from right menu.
 
 In addition, users can conform input condition form input-file of left menue.
 |
-.. image:: ../../img/input_editor/imgCreateJob_CheckInputFIle.png
+.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
 

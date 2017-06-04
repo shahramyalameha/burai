@@ -8,7 +8,7 @@ Standard Setting
 ----------------
 
 
-.. image:: ../../img/input_editor/imgCreateJob_SCF00.png
+.. image:: ../../../img/input_editor/imgCreateJob_SCF00.png
    :scale: 50 %
    :align: center
 
@@ -33,7 +33,7 @@ Standard Setting
 Electronic Optimization
 -----------------------
 
-.. image:: ../../img/input_editor/imgCreateJob_SCF01.png
+.. image:: ../../../img/input_editor/imgCreateJob_SCF01.png
    :scale: 50 %
    :align: center
 
@@ -57,7 +57,7 @@ Magnetization
 If users would like to consider the spin for system, user handles this window.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_SCF02.png
+.. image:: ../../../img/input_editor/imgCreateJob_SCF02.png
    :scale: 50 %
    :align: center
 
@@ -66,7 +66,7 @@ GGA+U
 
 If users would like to consider the GGA+U for system, user handles this window.
 |
-.. image:: ../../img/input_editor/imgCreateJob_SCF03.png
+.. image:: ../../../img/input_editor/imgCreateJob_SCF03.png
    :scale: 50 %
    :align: center
 
@@ -74,6 +74,6 @@ If users would like to consider the GGA+U for system, user handles this window.
 In addition, users can conform input condition form input-file of left menue.
 
 |
-.. image:: ../../img/input_editor/imgCreateJob_CheckInputFIle.png
+.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
    :scale: 50 %
    :align: center
