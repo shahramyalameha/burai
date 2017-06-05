@@ -1,18 +1,35 @@
 Layout of Window
 ================
 
-This system's window consists of the menu, searching crystal structure bar, and hometab.
+This page explains the layout of BURAI platform, and summarizes its overview of each part
+(top bar, main home tub, and left sidebar of home tab).
 
-.. image:: ../../img/imgWindowStructure_window_all.png
-   :scale: 30 %
+Top bar
+-------
+
+Top bar was built of two items.
+
+1. Trigger type menu.
+2. Materials API
+
+* Trigger type menu
+
+Trigger type menu has eight items. Also > icon can open Trigger type menu.
+
+.. image:: ../../img/layout/TriggerMenu.gif
+   :scale: 50 %
    :align: center
 
-|
-.. csv-table:: Layout of BURAI's window
-    :header: "No.", "Name", "Details"
-    :widths: 10, 10, 35
+.. csv-table:: Item of Trigger type menu
+    :header: "Item", "explanation"
+    :widths: 25, 35
 
-    "1", "menu", "Initial setting, QE manual links, and proxy server setting are included."
-    "2", "Materials API", "A crystal structure is searched by using Materials project API."
-    "3", "home tab", "Management of Quantum ESPRESSO projects, Controller of that projects, Web"
+    "About BURAI", "BURAI information, version, and license are shown."
+    "Documents", "BURAI manual is shown"
+    "Links (Web)", "Quantum ESPRESSO (QE) Home page and each QE solver page links are inclued."
+    "Path of QE", "Setting and Showing QE and MPI Path."
+    "Proxy server", "Setting proxy system."
+    "Full screen", "BURAI windows size are changed full screen."
+    "Quit [Ctr +Q]", "BURAI platform are finished."
+
 
