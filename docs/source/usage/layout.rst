@@ -37,7 +37,6 @@ BURAI can get crystal structure by using `Materials API <https://materialsprojec
 Therefore, users have to enter element symbols into the bar of Materials API.
 The detailed explanation is shown in Materials API content (add link).
 
-
 Home tab
 --------
 
