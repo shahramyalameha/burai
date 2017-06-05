@@ -35,7 +35,9 @@ Trigger type menu has eight items. Also > icon can open Trigger type menu.
 
 * Materials API
 
-
+BURAI can get crystal structure by using `Materials API <https://materialsproject.org/>`_ .
+Therefore, users have to enter element symbols into the bar of Materials API.
+The detailed explanation is shown in Materials API content (add link).
 
 Home tab
 --------
