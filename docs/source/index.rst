@@ -3,12 +3,31 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-BURAI Documentation
-===================
+BURAI
+=====
 
-BURAI is a GUI system of Quantum ESPRESSO < http://www.quantum-espresso.org >.
+BURAI is a GUI system of `Quantum ESPRESSO <http://www.quantum-espresso.org>`_. You can `download <https://github.com/BURAI-team/burai/releases/tag/ver.1.2>`_ and use it freely.
+This system is developed as JavaFX application, and requires `Java Runtime Environment (JRE) <java.com/download/>`_.
 
-Contents:
+Version
+-------
+The latest version is 1.2.
+
+License
+-------
+`GNU-GPL v3 <https://www.gnu.org/licenses/>`_
+
+Runtime Environment
+-------------------
+- Windows 10 (recommended) or Mac OS X 10.12
+- JRE1.8 or later version
+
+Web Page
+--------
+http://nisihara.wixsite.com/burai
+
+Documentation
+-------------
 
 .. toctree::
    :maxdepth: 2
