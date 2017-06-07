@@ -1,7 +1,8 @@
 Usage
 =====
+In the following, it is shown how to use BURAI.
 
-Contents:
+-------------------------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2

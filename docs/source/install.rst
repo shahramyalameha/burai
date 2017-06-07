@@ -1,7 +1,8 @@
 Install
 =======
+In the following, it is shown how to install Quantum ESPRESSO and BURAI.
 
-Contents:
+-------------------------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
