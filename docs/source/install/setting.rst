@@ -1,6 +1,8 @@
 Setting
 =======
 
+This page explains how to install Quantum ESPRESSO and BURAI.
+
 Quantum ESPRESSO
 ----------------
 
