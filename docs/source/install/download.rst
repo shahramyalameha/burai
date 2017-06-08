@@ -15,7 +15,7 @@ Quantum ESPRESSO is able to be downloaded form `here <http://www.quantum-espress
 .. note::
 
     BURAI platform already contains quantum espresso executable files for Windows and Mac OS.
-    The detailed explanation is shown in setting. :docs:`./setting`
+    The detailed explanation is shown in setting. :doc:`./setting`
 
 BURAI
 -----
