@@ -16,7 +16,7 @@ BURAI
 BURAI which is a GUI system of Quantum ESPRESSO is able to be downloaded from `BURAI homepage <http://nisihara.wixsite.com/burai>`_ .
 
 
-.. image:: ../../../img/layout/download_BURAI.gif
+.. image:: ../../img/download/download_BURAI.gif
    :scale: 50 %
    :align: center
 
