@@ -18,6 +18,7 @@ Instructions for the impatient:
 .. seealso::
 
     cd espresso-X.Y.Z/
+    |
     ./configure
     make all|
     make install
@@ -39,6 +40,5 @@ The unzipped directory contains BURAI.exe file. The file boot up the BURAI platf
 
 .. note::
 
-    BURAI platform need JRE1.8 or later version.
-	Therefore, you need to install these before you start BURAI platform.
+    BURAI platform need JRE1.8 or later version. Therefore, you need to install these before you start BURAI platform.
 
