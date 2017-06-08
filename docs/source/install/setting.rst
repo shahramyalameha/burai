@@ -15,12 +15,11 @@ if users want to use other Quantum ESPRESSO version, the users should install it
 
 Instructions for the impatient:
 
-.. seealso::
-    tar -xzvf espresso-X.Y.Z.tar.gz
-    | cd espresso-X.Y.Z/
-    | ./configure
-    | make all|
-    | make install
+| tar -xzvf espresso-X.Y.Z.tar.gz
+| cd espresso-X.Y.Z/
+| ./configure
+| make all|
+| make install
 
 If users change the installed directory, user should set " --with-qe-source" of configure option.
 (./configure --with-qe-source=$HOME/espresso-X.Y.Z)
@@ -28,7 +27,7 @@ if you will use in parallel by using MPI, you should install MPI.
 
 .. warning::
 
-
+	The current BURAI platform version does not support for LINUX system.
 
 
 BURAI
