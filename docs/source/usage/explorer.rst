@@ -1,25 +1,22 @@
 Explorer
 ========
 
-Usage
------
-
-By selecting the left menu of home tab, users can control the files.
+Following items control states of the explorer.
 
 .. image:: ../../img/imgWindowStructure_leftmenu.png
    :scale: 40 %
-   :align: center
+   :align: left
 |
 .. csv-table:: Item of left sidebar
     :header: "Item", "Explanation"
-    :widths: 25, 35
+    :widths: 15, 35
 
-    "Recently Used", "The history which users used, is shown in center window."
-    "My Computer", "In the case of windows system, C drive (system drive) is shown in center window.In the case of Mac OS, users home directory is shown."
-    "My Projects", "The QE project which users saved, and Examples are shown in the center window."
-    "Calculating", "Calculating content shows the state of QE calculating."
-    "Web", "Bookmark list is saved. Google URL is set in the Web item from the begining."
-    "Downloads", "The files which users downloaded, are shown."
+    "Recently Used", "Recently used files."
+    "My Computer", "The root directory (Windows: C¥, MacOSX: /)."
+    "My Projects", "The directory where projects are saved. ($HOME/.burai/)."
+    "Calculating", "Calculating projects."
+    "Web", "Bookmarks of web sites."
+    "Downloads", "Downloaded files form web sites."
 
 | 
 Moreover, the items of center window is depicted by 4 types (List, Small Tiles, Medium Tiles and Large Tiles).
