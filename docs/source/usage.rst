@@ -7,7 +7,6 @@ In the following, it is shown how to use BURAI.
 .. toctree::
    :maxdepth: 2
 
-   usage/initialize
    usage/layout
    usage/explorer
    usage/materialsAPI
