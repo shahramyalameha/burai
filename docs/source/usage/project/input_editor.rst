@@ -1,11 +1,12 @@
 Input Editor
 ============
 
-In case users want to check the input and output files, users watch the file that is selected from file list.
+Project tab has the input editor, which can edit input file of QE.
 
-.. image:: ../../../img/projects/imgCheckFile.png
-   :scale: 50 %
-   :align: center
+This is the input editor.
 
+add image of without menu.
 
+The input editor has several modes which can be selected by following menu.
 
+add image of menu.

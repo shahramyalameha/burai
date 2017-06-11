@@ -1,45 +1,37 @@
 Input Editor (Build-in Text Editor)
 ===================================
 
-BUARI platform has a test editor.
-Users can change input computational condition by using built-in text editor.
-Also, users can make input file back to the original.
-
-
-upload
-------
-
-In case users change input computational conditions by using built-in text editor,
-Firstly, user select "Input-file" from left menu.
+Project tab has *build-in* text editor, which can edit input file of QE.
+This editor can show and modify input file with *text*.
+You select "Input-file" from left menu, to display the editor.
 
 .. image:: ../../../img/projects/imgCreateJob_CheckInputFIle.png
-   :scale: 50 %
-   :align: center
+   :scale: 30 %
+   :align: left
 
-Subsequently, users enter the value that users want to change.
-
-.. image:: ../../../img/projects/imageEditorUpload00.png
-   :scale: 50 %
-   :align: center
-
-Then users have to push the upload button to reflect such changes.
-
-.. image:: ../../../img/projects/imageEditorUpload01.png
-   :scale: 50 %
-   :align: center
-
-|
-
-.. image:: ../../../img/projects/imageEditorUpload02.png
-   :scale: 50 %
-   :align: center
-
-reload
+Upload
 ------
 
-After users changed input computational condition, the input conditions can be reverted back by pushing reload button.
+After the modification of input editor, pushing the upload button reflects it to project tab.
+
+.. image:: ../../../img/projects/imageEditorUpload00.png
+   :scale: 30 %
+   :align: left
+
+.. image:: ../../../img/projects/imageEditorUpload01.png
+   :scale: 30 %
+   :align: left
+
+.. image:: ../../../img/projects/imageEditorUpload02.png
+   :scale: 30 %
+   :align: left
+
+Reload
+------
+
+After the modification of project tab, pushing the reload button reflects it to input editor.
 
 .. image:: ../../../img/projects/imageEditorReload.png
-   :scale: 50 %
-   :align: center
+   :scale: 30 %
+   :align: left
 |
