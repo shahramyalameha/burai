@@ -10,16 +10,23 @@ By selecting the left menu of home tab, users can control the files.
    :scale: 40 %
    :align: center
 |
-.. csv-table:: Left menu of home tab
-    :header: "No.", "Name", "explanation"
-    :widths: 10, 10, 35
+.. csv-table:: Item of left sidebar
+    :header: "Item", "Explanation"
+    :widths: 25, 35
 
-    "1", "Recently Used", "lately user used or accessed projects list."
-    "2", "My Computer", "the folder list of root directory."
-    "3", "Calculating", "the state of calculation "
-    "4", "Searched", "the previous searching list"
-    "5", "Web", "the bookmarked website list"
-    "6", "Downloads", "Downloaded list"
+    "Recently Used", "The history which users used, is shown in center window."
+    "My Computer", "In the case of windows system, C drive (system drive) is shown in center window.In the case of Mac OS, users home directory is shown."
+    "My Projects", "The QE project which users saved, and Examples are shown in the center window."
+    "Calculating", "Calculating content shows the state of QE calculating."
+    "Web", "Bookmark list is saved. Google URL is set in the Web item from the begining."
+    "Downloads", "The files which users downloaded, are shown."
+
+| 
+Moreover, the items of center window is depicted by 4 types (List, Small Tiles, Medium Tiles and Large Tiles).
+
+.. image:: ../../img/layout/ShowingMethod.gif
+   :scale: 50 %
+   :align: center   
 
 |
 Right click the mouse on the file explore, users can make directory.
