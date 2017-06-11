@@ -1,9 +1,8 @@
 Creating Project
 ================
 
-Users select the calculation type in following menu to create a Quantum ESPRESSO project.
+Clicking the 3D model in the explorer open a new tab.
+The tab contains a QE project.
 
+add zu
 
-.. image:: ../../../img/input_editor/imgCreateJob_menu.png
-   :scale: 40 %
-   :align: center

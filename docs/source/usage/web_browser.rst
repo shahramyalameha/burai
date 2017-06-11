@@ -8,13 +8,14 @@ if you want to search something at the internet, you should select "Web" from me
    :scale: 30 %
    :align: left
 
+| 
 Getting Crystal Structures
 --------------------------
 
 This chapter illustrate to get the crystal structure from some web site.
 You search the crystal data from *build-in* web browser.
 Opening the link of the crystal structure pops up the window with 3D model.
-Clicking the model shows the new project tub.
+Clicking the model shows the new project tab.
 
 .. image:: ../../img/imgWeb_searchNaCl00.png
    :scale: 30 %
@@ -28,6 +29,7 @@ Clicking the model shows the new project tub.
    :scale: 30 %
    :align: left
 
+| 
 Getting Pseudopotentials
 ------------------------
 
