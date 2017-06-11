@@ -24,7 +24,7 @@ Size of icons in the explorer can be changed as:
 .. image:: ../../img/layout/ShowingMethod.gif
    :scale: 50 %
    :align: left   
-|
+| 
 
 File System
 -----------
