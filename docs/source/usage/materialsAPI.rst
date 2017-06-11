@@ -3,9 +3,10 @@ Materials API
 
 You can get crystal structure through `Materials API <https://materialsproject.org/>`_ .
 
-The element symbol and chemical formulas ware entered in the Materials API bar, 
-then this system search the crystal structure which has entered the element.
+| 
+Your enter the element symbol and chemical formulas in the Materials API bar to search.
 
+| 
 If you want to search the Fe-Cr system, you should enter "Fe Cr" or "Fe-Cr" 
 in the Materials API bar as indicated in the following figure.
 
