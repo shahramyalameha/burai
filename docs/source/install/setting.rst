@@ -1,18 +1,11 @@
 Setting
 =======
 
-This page explains how to install Quantum ESPRESSO and BURAI.
-Users do not need to install Quantum ESPRESSO, because BURAI system already has the Quantum ESPRESSO executables.
-These executables were compiled by BURAI team.
-if users want to use other Quantum ESPRESSO version, the users should install it and set the path at QE path menue.
-
-BURAI
------
-
-After :doc:`downloading <./download.rst>`, you unzip the file to any directory on your computer.
-The unzipped directory contains BURAI.exe file. The file boot up the BURAI platform.
-
-.. note::
-
-    BURAI platform need JRE1.8 or later version. Therefore, you need to install these before you start BURAI platform.
+1. unzip `the downloaded file <./download.rst>`
+2. copy it to any directory on your computer e.g.: 
+|
+   for Windows, C:¥BURAI1.2_Windows¥ 
+|
+   for MacOSX, /Applications/BURAI1.2.app
+3. install `JRE1.8 or later version <https://java.com/download/>`_, if your computer does not have it.
 

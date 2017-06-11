@@ -1,6 +1,9 @@
 Install
 =======
-In the following, it is shown how to install Quantum ESPRESSO and BURAI.
+In the following, it is shown how to install BURAI: 
+to download and set it.
+|
+Optionally, it may be possible to install Quantum ESPRESSO.
 
 -------------------------------------------------------------------------------------------------
 
@@ -9,4 +12,5 @@ In the following, it is shown how to install Quantum ESPRESSO and BURAI.
 
    install/download
    install/setting
+   install/option
 
