@@ -1,77 +1,48 @@
 Web Browser
 ===========
 
-Usage
------
-
-Users can handle BURAI as the internet explore, too.
-When users search something at the internet, users should select "Web" in this system control.
-Google URL have been resisted at bookmark as default.
+BURAI has *build-in* web browser.
+if you want to search something at the internet, you should select "Web" from menu.
 
 .. image:: ../../img/imgWeb_default.png
    :scale: 30 %
-   :align: center
-
-
-Some Links
-----------
-Users can add URL address to the favarite links of BURAI.
-if you add to the favarite links of BURAI, you should push the heart mark of BURAI.
-Then, The URL is added.
-
-.. image:: ../../img/imgWeb_FavariteURL00.png
-   :scale: 30 %
-   :align: center
-|
-.. image:: ../../img/imgWeb_FavariteURL01.png
-   :scale: 30 %
-   :align: center
-|
-.. image:: ../../img/imgWeb_FavariteURL02.png
-   :scale: 30 %
-   :align: center
-
+   :align: left
 
 Getting Crystal Structures
 --------------------------
 
-On this system, users search the crystal structure which users want to calculate, and users can easily handle as the model.
-This chapter introduces the getting the crystal data from some web site.
-Firstly, users search the crystal data from this system web explorer.
-Next, users have to click the crystal data link.
-The moment users click the link, The window which includes the  crystal model and information, appears on this system.
-Users click the model of the window, then the crystal structure is shown in this system.
+This chapter illustrate to get the crystal structure from some web site.
+You search the crystal data from *build-in* web browser.
+Opening the link of the crystal structure pops up the window with 3D model.
+Clicking the model shows the new project tub.
 
 .. image:: ../../img/imgWeb_searchNaCl00.png
    :scale: 30 %
-   :align: center
+   :align: left
 
 .. image:: ../../img/imgWeb_searchNaCl01.png
    :scale: 30 %
-   :align: center
+   :align: left
 
 .. image:: ../../img/imgWeb_searchNaCl02.png
    :scale: 30 %
-   :align: center
+   :align: left
 
 Getting Pseudopotentials
 ------------------------
 
-Users can download and get pseudopotentials like Getting Crystal Structures.
-This chapter introduces the getting the pseudopotential from some web site.
-
+You can get pseudopotentials from the web site of `QE <http://www.quantum-espresso.org/pseudopotentials/>`_.
 
 .. image:: ../../img/imgWeb_searchPP00.png
    :scale: 30 %
-   :align: center
-
+   :align: left
 
 .. image:: ../../img/imgWeb_searchPP01.png
    :scale: 30 %
-   :align: center
+   :align: left
 
 .. image:: ../../img/imgWeb_searchPP02.png
    :scale: 30 %
-   :align: center
+   :align: left
 
 
