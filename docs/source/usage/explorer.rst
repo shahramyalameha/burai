@@ -19,25 +19,20 @@ Following items control states of the explorer.
     "Downloads", "Downloaded files form web sites."
 
 | 
-Moreover, the items of center window is depicted by 4 types (List, Small Tiles, Medium Tiles and Large Tiles).
+Size of icons in the explorer can be changed as: 
 
 .. image:: ../../img/layout/ShowingMethod.gif
    :scale: 50 %
-   :align: center   
-
+   :align: left   
 |
-Right click the mouse on the file explore, users can make directory.
-Right click the mouse on the directory or bookmark, users can delete or open it by selecting menu.
 
 File System
 -----------
 
-In the case of Quantum ESPRESSO projects or crystal structure data folder, the crystal structure is shown instead of folder image.
+The explorer shows file system.
+Especially, crystal structures are shown as 3D models, if their file formats are  
+.cif `(Crystallographic Information Framework) <http://www.iucr.org/resources/cif>`_ or 
+.xyz `(XYZ chemical file format) <https://en.wikipedia.org/wiki/XYZ_file_format>`_ or
+.in (QE input file).
 
 
-
-File Format
------------
-
-This system is supporting at `CIF format <https://en.wikipedia.org/wiki/Crystallographic_Information_File>`_, `XYZ format <https://en.wikipedia.org/wiki/XYZ_file_format>`_, and Quantum ESPRESSO input file.
-Also, this system is applied to the drag-and-drop. Therefore, you can do drag-and-drop the file which you want to calculate.

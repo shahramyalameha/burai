@@ -35,17 +35,21 @@ Main menu, which is symbolized ">" icon, has eight items.
 
 * Materials API
 
-You can get crystal structure through `Materials API <https://materialsproject.org/>`_.
+You can get crystal structure through `Materials API <https://materialsproject.org/>`_. 
+
 | Please see `here <materialsAPI.html>`_ for the details.
 
-.. image:: ../../img/layout/Material_API.png
-   :scale: 50 %
+.. image:: ../../img/layout/Materials_API.png
+   :scale: 100 %
    :align: left
+
+| 
 
 Home tab
 --------
 
-Home tab, which is located under header bar, has explorer system.
+Home tab, which is located under header bar, has explorer system. 
+
 | Please see `here <explorer.html>`_ for the details of the explorer.
 
 .. image:: ../../img/layout/HomeTab.png
