@@ -12,7 +12,7 @@ You select "Input-file" from left menu, to display the editor.
 Upload
 ------
 
-After the modification of input editor, pushing the upload button reflects it to project tab.
+After the modification of text editor, pushing the upload button reflects it to project tab.
 
 .. image:: ../../../img/projects/imageEditorUpload00.png
    :scale: 30 %
@@ -29,7 +29,7 @@ After the modification of input editor, pushing the upload button reflects it to
 Reload
 ------
 
-After the modification of project tab, pushing the reload button reflects it to input editor.
+After the modification of project tab, pushing the reload button reflects it to text editor.
 
 .. image:: ../../../img/projects/imageEditorReload.png
    :scale: 30 %

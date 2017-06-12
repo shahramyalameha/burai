@@ -10,3 +10,5 @@ add image of without menu.
 The input editor has several modes which can be selected by following menu.
 
 add image of menu.
+
+Pleas see `here <input_editor.html>`_ for the details.
