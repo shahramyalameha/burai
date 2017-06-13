@@ -1,5 +1,6 @@
 Install
 =======
+
 In the following it is shown how to install BURAI: 
 to download it and to set it.
 

@@ -1,12 +1,12 @@
 Setting
 =======
 
-1. Unzip `the downloaded file <download.html>`_
+1. Unzip :doc:`the downloaded file <download>`
 
 2. Copy it to any directory on your computer e.g.:
 
-  - for Windows, C:¥BURAI1.2_Windows¥
-  - for Mac OS X, /Applications/BURAI1.2.app
+  - "C:\\BURAI1.2_Windows\\" for Windows
+  - "/Applications/BURAI1.2.app" for Max OSX
 
 3. Install `JRE1.8 or later version <https://java.com/download/>`_, if your computer does not have it.
 

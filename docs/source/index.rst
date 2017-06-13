@@ -5,6 +5,7 @@
 
 BURAI
 =====
+
 | BURAI is a GUI system of `Quantum ESPRESSO <http://www.quantum-espresso.org>`_.
   You can `download <https://github.com/BURAI-team/burai/releases/tag/ver.1.2>`_ and use it freely.
 | This system is developed as JavaFX application,
@@ -12,19 +13,23 @@ BURAI
 
 Version
 -------
+
 The latest version is 1.2.
 
 License
 -------
+
 `GNU-GPL v3 <https://www.gnu.org/licenses/>`_
 
 Runtime Environment
 -------------------
+
 - Windows 10 (recommended) or Mac OS X 10.12
 - JRE1.8 or later version
 
 Web Page
 --------
+
 http://nisihara.wixsite.com/burai
 
 -------------------------------------------------------------------------------------------------

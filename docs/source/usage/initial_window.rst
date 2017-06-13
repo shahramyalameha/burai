@@ -3,7 +3,7 @@ Initial Window
 
 This page shows the initial window of BURAI.
 
-Header bar
+Header Bar
 ----------
 
 Header bar has two items:
@@ -11,49 +11,59 @@ Header bar has two items:
 1. Main menu.
 2. Materials API
 
-* Main menu
+| 
 
-Main menu, which is symbolized by ">" icon, has eight items.
+- Main menu
 
-.. image:: ../../img/layout/TriggerMenu.gif
-   :scale: 50 %
-   :align: left
+  Main menu, which is symbolized by ">" icon, has eight items.
+
+  +--------------------------------------------------------------------------+
+  | .. image:: ../../img/layout/TriggerMenu.gif                              |
+  |    :scale: 50 %                                                          |
+  |    :align: left                                                          |
+  +--------------------------------------------------------------------------+
+  | |                                                                        |
+  | | Items of main menu                                                     |
+  +===============+==========================================================+
+  | About BURAI   | BURAI information, where version and license are shown.  |
+  +---------------+----------------------------------------------------------+
+  | Documents     | This documantation is shown.                             |
+  +---------------+----------------------------------------------------------+
+  | Links (Web)   | Some links (QE web page, psudopotential page ...)        |
+  +---------------+----------------------------------------------------------+
+  | Path of QE    | Set and Show QE and MPI paths.                           |
+  +---------------+----------------------------------------------------------+
+  | Proxy server  | Set proxy system.                                        |
+  +---------------+----------------------------------------------------------+
+  | Full screen   | BURAI windows size are changed full screen.              |
+  +---------------+----------------------------------------------------------+
+  | Quit [Ctr+Q]  | Quit the system of BURAI.                                |
+  +---------------+----------------------------------------------------------+
 
 | 
 
-.. csv-table:: Items of main menu
-    :header: "Item", "Explanation"
-    :widths: 15, 35
+- Materials API
 
-    "About BURAI", "BURAI information, where version and license are shown."
-    "Documents", "This documantation is shown."
-    "Links (Web)", "Some links (QE web page, psudopotential page ...)"
-    "Path of QE", "Set and Show QE and MPI paths."
-    "Proxy server", "Set proxy system."
-    "Full screen", "BURAI windows size are changed full screen."
-    "Quit [Ctr + Q]", "Quit the system of BURAI."
+  You can get crystal structure through `Materials API <https://materialsproject.org/>`_. 
+  Please see :doc:`here <materialsAPI>` for the details.
 
-
-* Materials API
-
-You can get crystal structure through `Materials API <https://materialsproject.org/>`_. 
-
-| Please see `here <materialsAPI.html>`_ for the details.
-
-.. image:: ../../img/layout/Materials_API.png
-   :scale: 100 %
-   :align: left
+  +--------------------------------------------------------------------------+
+  | .. image:: ../../img/layout/Materials_API.png                            |
+  |    :scale: 100 %                                                         |
+  |    :align: left                                                          |
+  +--------------------------------------------------------------------------+
 
 | 
 
-Home tab
+Home Tab
 --------
 
 Home tab, which is located under header bar, has explorer system. 
+Please see :doc:`here <explorer>` for the details of the explorer.
 
-| Please see `here <explorer.html>`_ for the details of the explorer.
-
-.. image:: ../../img/layout/HomeTab.png
-   :scale: 50 %
-   :align: left
++--------------------------------------------------------------------------+
+| .. image:: ../../img/layout/HomeTab.png                                  |
+|    :scale: 50 %                                                          |
+|    :align: left                                                          |
++--------------------------------------------------------------------------+
 
