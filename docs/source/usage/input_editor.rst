@@ -1,7 +1,9 @@
 Input Editor in Project
 =======================
 
-Contents:
+In the following the details of the input editor are shown.
+
+-------------------------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2

@@ -1,7 +1,10 @@
 Project of Quantum ESPRESSO
 ===========================
 
-Contents:
+Input and output files of Quantum ESPRESSO is managed by a project,
+which is corresponding with a tab. Some calculations are able to run in a project.
+
+-------------------------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
