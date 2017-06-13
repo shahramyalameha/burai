@@ -1,7 +1,7 @@
 Atoms Viewer
 ============
 
-A project tab has an *atoms viewer*, which can edit atoms in a model.
+Project tab has *atoms viewer*, which can edit atoms in a model.
 It has the following operations.
 
 Rename Atom

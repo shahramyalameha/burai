@@ -1,7 +1,7 @@
 Input Editor
 ============
 
-A project tab has an input editor, which can edit input files of QE.
+Project tab has input editor, which can edit input files of QE.
 This is the input editor.
 
 +-----------------------------------------------------------+
