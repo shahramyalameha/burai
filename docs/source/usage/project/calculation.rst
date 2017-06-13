@@ -1,12 +1,12 @@
 Calculation
 ===========
 
-In project tab you can post a calculation, as the following.
+In a project tab you can post a calculation, as the following.
 
-Post a Calculation
-------------------
+Post Calculation
+----------------
 
-Selecting "Run" from the menu of the left-hand side, you can post a calculation.
+Selecting "Run" from the menu of the left-hand side.
 
 +----------------------------------------------------------------+
 | .. image:: ../../../img/projects/imgCreateJob_running00.png    |
@@ -42,7 +42,7 @@ Posted jobs will be executed one after another.
 
 +------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imgCreateJob_running03.png      |
-|    :scale: 40 %                                                  |
+|    :scale: 35 %                                                  |
 |    :align: center                                                |
 +------------------------------------------------------------------+
 | |                                                                |
@@ -57,19 +57,25 @@ Posted jobs will be executed one after another.
 
 | 
 
-Stop a Calculation
-------------------
+Stop Calculation
+----------------
 
-In case users want to stop the calculating,
+| You can stop a running or posted calculation.
+| After selecting "Result" from the menu of the left-hand side, press "Stop Calculation".
 
-.. image:: ../../../img/projects/imgResult01.png
-   :scale: 40 %
-   :align: center
-|
-user should push "Stop Calculation"
-
-.. image:: ../../../img/projects/imgStopJobs00.png
-   :scale: 40 %
-   :align: center
-
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step1**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgResult01.png                   |
+|    :scale: 40 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step2**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgStopJobs00.png                 |
+|    :scale: 40 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
 
