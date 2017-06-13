@@ -15,10 +15,10 @@ if you want to search something at the internet, you should select "Web" from me
 Getting Crystal Structures
 --------------------------
 
-This chapter illustrates to get the crystal structure from a web site.
-You can search the crystal data with *build-in* web browser.
-Opening an URL of the crystal structure pops up a window with 3D model.
-Clicking the model shows a new project tab.
+| This chapter illustrates to get the crystal structure from a web site.
+  You can search the crystal data with *build-in* web browser.
+| Opening an URL of the crystal structure pops up a window with 3D model.
+  Clicking the model shows a new project tab.
 
 +-------------------------------------------------------+
 | |                                                     |

@@ -1,9 +1,9 @@
 Input Editor (Build-in Text Editor)
 ===================================
 
-Project tab has *build-in* text editor, which can edit input files of QE.
-This editor can show and modify an input file with *text*.
-Selecting "Input-file" from the menu of the left-hand side, to display the editor.
+| Project tab has *build-in* text editor, which can edit input files of QE.
+  This editor can show and modify an input file with *text*.
+| Selecting "Input-file" from the menu of the left-hand side, to display the editor.
 
 +----------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imgCreateJob_CheckInputFIle.png     |
