@@ -1,6 +1,6 @@
 Usage
 =====
-In the following, it is shown how to use BURAI.
+In the following it is shown how to use BURAI.
 
 -------------------------------------------------------------------------------------------------
 

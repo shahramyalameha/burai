@@ -1,7 +1,7 @@
 Install
 =======
-In the following, it is shown how to install BURAI: 
-to download and set it.
+In the following it is shown how to install BURAI: 
+to download it and to set it.
 
 | Optionally, it may be possible to install Quantum ESPRESSO.
 
