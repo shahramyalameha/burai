@@ -1,7 +1,7 @@
-Layout of Window
-================
+Initial Window
+==============
 
-This page shows the initial window of BURAI as
+This page shows the initial window of BURAI.
 
 Header bar
 ----------
@@ -13,13 +13,14 @@ Header bar has two items:
 
 * Main menu
 
-Main menu, which is symbolized ">" icon, has eight items.
+Main menu, which is symbolized by ">" icon, has eight items.
 
 .. image:: ../../img/layout/TriggerMenu.gif
    :scale: 50 %
    :align: left
 
 | 
+
 .. csv-table:: Items of main menu
     :header: "Item", "Explanation"
     :widths: 15, 35
@@ -55,8 +56,4 @@ Home tab, which is located under header bar, has explorer system.
 .. image:: ../../img/layout/HomeTab.png
    :scale: 50 %
    :align: left
-
-
-
-
 
