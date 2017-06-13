@@ -5,7 +5,7 @@ Following items control states of the explorer.
 
 +---------------------------------------------------------------------------+
 | .. image:: ../../img/imgWindowStructure_leftmenu.png                      |
-|    :scale: 40 %                                                           |
+|    :scale: 55 %                                                           |
 |    :align: center                                                         |
 +---------------------------------------------------------------------------+
 | |                                                                         |
@@ -30,7 +30,7 @@ Size of icons in the explorer can be changed as:
 
 +--------------------------------------------------------------------------+
 | .. image:: ../../img/layout/ShowingMethod.gif                            |
-|    :scale: 50 %                                                          |
+|    :scale: 40 %                                                          |
 |    :align: center                                                        |
 +--------------------------------------------------------------------------+
 

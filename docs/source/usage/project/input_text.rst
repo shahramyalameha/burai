@@ -7,7 +7,7 @@ Selecting "Input-file" from the menu of the left-hand side, to display the edito
 
 +----------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imgCreateJob_CheckInputFIle.png     |
-|    :scale: 30 %                                                      |
+|    :scale: 40 %                                                      |
 |    :align: center                                                    |
 +----------------------------------------------------------------------+
 
@@ -23,14 +23,14 @@ After the modification of text editor, pushing the upload button reflects it to 
 | | **Step1**                                                        |
 +--------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imageEditorUpload00.png           |
-|    :scale: 30 %                                                    |
+|    :scale: 40 %                                                    |
 |    :align: center                                                  |
 +--------------------------------------------------------------------+
 | |                                                                  |
 | | **Step2**                                                        |
 +--------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imageEditorUpload01.png           |
-|    :scale: 60 %                                                    |
+|    :scale: 75 %                                                    |
 |    :align: center                                                  |
 +--------------------------------------------------------------------+
 
@@ -46,14 +46,14 @@ After the modification of project tab, pushing the reload button reflects it to 
 | | **Step1**                                                        |
 +--------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imageEditorUpload02.png           |
-|    :scale: 30 %                                                    |
+|    :scale: 40 %                                                    |
 |    :align: center                                                  |
 +--------------------------------------------------------------------+
 | |                                                                  |
 | | **Step2**                                                        |
 +--------------------------------------------------------------------+
 | .. image:: ../../../img/projects/imageEditorReload.png             |
-|    :scale: 60 %                                                    |
+|    :scale: 75 %                                                    |
 |    :align: center                                                  |
 +--------------------------------------------------------------------+
 

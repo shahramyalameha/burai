@@ -13,6 +13,6 @@ which is corresponding with a tab. Some calculations are able to run in a projec
    project/atoms_viewer
    project/input_editor
    project/input_text
-   project/run
+   project/calculation
    project/result
 
