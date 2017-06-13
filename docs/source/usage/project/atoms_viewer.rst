@@ -1,94 +1,132 @@
 Atoms Viewer
 ============
 
-Project tab has the atoms viewer, which can edit atoms in the model.
+A project tab has an *atoms viewer*, which can edit atoms in a model.
 It has the following operations.
 
 Rename Atom
 ------------
+
 You can rename an atom to another atom.
-The first step is selecting the atom with right click.
-Then, you select “Rename selected atoms” from menu.
+Selecting the atom with right click,
+and choose "Rename selected atoms" of menu:
 
-.. image:: ../../../img/projects/imgCreateJob_ReplaceAtom01.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_ReplaceAtom02.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_ReplaceAtom03.png
-   :scale: 30 %
-   :align: left
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step1**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom01.png    |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step2**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom02.png    |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step3**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_ReplaceAtom03.png    |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
 
 | 
 
 Delete Atom
 -----------
+
 You can delete an atom.
-The first step is selecting the atom with right click.
-Then, you select “Delete selected atoms” from menu.
+Selecting the atom with right click,
+and choose "Delete selected atoms" of menu:
 
-.. image:: ../../../img/projects/imgCreateJob_DeleteAtom00.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_DeleteAtom01.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_DeleteAtom02.png
-   :scale: 30 %
-   :align: left
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step1**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_DeleteAtom00.png     |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step2**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_DeleteAtom01.png     |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step3**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_DeleteAtom02.png     |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
 
 | 
 
 Move Atom
 ---------
+
 You can move an atom.
-The first step is selecting the atom with right click.
-Then, you select “Move selected atoms” from menu.
+Selecting the atom with right click,
+and choose "Move selected atoms" of menu:
 
-.. image:: ../../../img/projects/imgCreateJob_MoveAtom00.png
-   :scale: 30 %
-   :align: left
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step1**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_MoveAtom00.png       |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step2**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_MoveAtom01.png       |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step3**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_MoveAtom03.png       |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
 
-.. image:: ../../../img/projects/imgCreateJob_MoveAtom01.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_MoveAtom02.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_MoveAtom03.png
-   :scale: 30 %
-   :align: left
-   
-|
+| 
 
 Put Atom
 --------
+
 You can put an atom.
-The first step is selecting the atom with right click.
-Then, you select Put an atom” from menu.
+Selecting the void position to put the atom with right click,
+and choose "Put selected atoms" of menu.
 
-.. image:: ../../../img/projects/imgCreateJob_PutAtom00.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_PutAtom01.png
-   :scale: 30 %
-   :align: left
-
-.. image:: ../../../img/projects/imgCreateJob_PutAtom02.png
-   :scale: 30 %
-   :align: left
-
-
-
-
-
-
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step1**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_PutAtom00.png        |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step2**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_PutAtom01.png        |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
+| |                                                                  |
+| | **Step3**                                                        |
++--------------------------------------------------------------------+
+| .. image:: ../../../img/projects/imgCreateJob_PutAtom02.png        |
+|    :scale: 30 %                                                    |
+|    :align: center                                                  |
++--------------------------------------------------------------------+
 
