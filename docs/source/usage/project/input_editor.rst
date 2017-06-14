@@ -12,7 +12,7 @@ This is the input editor.
 
 | 
 
-The input editor has several modes which can be selected by following menu.
+The input editor has several modes which can be selected by the menu of the right-hand side.
 
 +-----------------------------------------------------------+
 | .. image:: ../../../img/input_editor/OpenMenu.png         |
