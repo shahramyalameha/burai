@@ -31,21 +31,21 @@ SCF input editor has four windows:
 | |                                                                      |
 | | **Electronic Optimization**                                      |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/projects/Menu02_ElectronicOptimization.png      |
+| .. image:: ../../../img/projects/scf/Menu02_ElectronicOptimization.png      |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
 | |                                                                      |
 | | **Magnetization**                                                  |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/projects/Menu03_Magnetization.png              |
+| .. image:: ../../../img/projects/scf/Menu03_Magnetization.png              |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
 | |                                                                      |
 | | **GGA+U**                                                           |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/projects/Menu04_GGAplusU.png                   |
+| .. image:: ../../../img/projects/scf/Menu04_GGAplusU.png                   |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
