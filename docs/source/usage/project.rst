@@ -1,7 +1,7 @@
 Project of Quantum ESPRESSO
 ===========================
 
-Input and output files of Quantum ESPRESSO is managed by a project,
+Input and output files of Quantum ESPRESSO are managed by a project,
 which is corresponding with a tab. Some calculations are able to run in a project.
 
 -------------------------------------------------------------------------------------------------
