@@ -1,7 +1,7 @@
 Calculation
 ===========
 
-In a project tab you can post a calculation, as the following.
+In project tab you can post a calculation, as the following.
 
 Post Calculation
 ----------------
