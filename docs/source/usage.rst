@@ -13,5 +13,5 @@ In the following it is shown how to use BURAI.
    usage/materialsAPI
    usage/web_browser
    usage/project
-   usage/input_editor
+..   usage/input_editor
 

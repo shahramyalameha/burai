@@ -22,4 +22,4 @@ The input editor has several modes which can be selected by the menu of the righ
 
 | 
 
-Pleas see :doc:`here <../input_editor>` for the details.
+.. Pleas see :doc:`here <../input_editor>` for the details.
