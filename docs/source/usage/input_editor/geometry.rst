@@ -3,9 +3,18 @@ Geometry
 
 After clicking the 3D model, the geometry input editor is opened in home tab.
 Also, Selecting "Geometry" form right menu of the project tab opens Geometry input editor, too.
-In this geometry input editor, you can edit the crystal structure.
 
 |
+
++-------------------------------------------------------------------+
+| .. image:: ../../../img/input_editor/geometry/selectGeometry.png  |
+|    :scale: 30 %                                                   |
+|    :align: center                                                 |
++-------------------------------------------------------------------+
+
+|
+
+In this geometry input editor, you can edit the crystal structure.
 
 |
 
@@ -18,23 +27,23 @@ Geometry input editor has three windows:
 
 +------------------------------------------------------------------------+
 | |                                                                      |
-| | **Cell**                                              |
+| | **Cell**                                                            |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/input_editor/geometry/Menu01_Cell.png    |
+| .. image:: ../../../img/input_editor/geometry/Menu01_Cell.png          |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
 | |                                                                      |
-| | **Element**                                      |
+| | **Element**                                                        |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/input_editor/geometry/Menu02_Element.png     |
+| .. image:: ../../../img/input_editor/geometry/Menu02_Element.png       |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
 | |                                                                      |
-| | **Atoms**                                                  |
+| | **Atoms**                                                           |
 +------------------------------------------------------------------------+
-| .. image:: ../../../img/input_editor/geometry/Menu03_Atoms.png              |
+| .. image:: ../../../img/input_editor/geometry/Menu03_Atoms.png         |
 |    :scale: 30 %                                                        |
 |    :align: center                                                      |
 +------------------------------------------------------------------------+
