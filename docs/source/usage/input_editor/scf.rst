@@ -4,6 +4,8 @@ SCF
 After creating project, you can make a project file of SCF calculation.
 Selecting "SCF" from right menu of the project tab automatically makes a SCF input file.
 
+| 
+
 +-------------------------------------------------------------------+
 | .. image:: ../../../img/input_editor/scf/selectSCF.png            |
 |    :scale: 30 %                                                   |

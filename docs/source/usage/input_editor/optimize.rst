@@ -1,39 +1,30 @@
 Optimize
 ========
 
-In case users set the condition of optimization, users select "opt" from right menu.
-Also, users should set the condition after or before user set scf condition.
-
-
-.. image:: ../../../img/input_editor/imgCreateJob_OPT00.png
-   :scale: 50 %
-   :align: center
+After creating project, you can make a project file of optimization.
+Selecting "Optimize" from right menu of the project tab automatically makes a optimize input file.
 
 |
-.. csv-table:: Optimize
-    :header: "No.", "Name", "Details"
-    :widths: 10, 10, 35
 
-    "1", "Restart Mode", "if users would like to to continue an interrupted calculation, users select yes."
-    "2", "Max Time", "Job stops after users set CPU time."
-    "3", "Max Steps", "number of structural optimization steps"
-    "4", "Variable Cell", "whether optimize cell size or not"
-    "5", "Threshold", "Convergence threshold on forces for ionic minimization"
-    "6", "Method", "the type of ionic dynamics"
-    "7", "Pressure", "Target pressure"
-    "8", "Freegom", "Select which of the cell parameters should be moved"
++-------------------------------------------------------------------+
+| .. image:: ../../../img/input_editor/optimize/selectOptimize.png  |
+|    :scale: 30 %                                                   |
+|    :align: center                                                 |
++-------------------------------------------------------------------+
 
-if Variable Cell is "yes", users can input Threshold, Method, Pressure, and Freedom.
+|
 
+This is the Optimize input editor.
 
-.. image:: ../../../img/input_editor/imgCreateJob_OPT01.png
-   :scale: 50 %
-   :align: center
+|
 
-In addition, users can conform input condition form input-file of left menue.
++------------------------------------------------------------------------+
+| |                                                                      |
+| | **Optimize**                                                       |
++------------------------------------------------------------------------+
+| .. image:: ../../../img/input_editor/optimize/Menu_Optimize.png        |
+|    :scale: 30 %                                                        |
+|    :align: center                                                      |
++------------------------------------------------------------------------+
 
-
-.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
-   :scale: 50 %
-   :align: center
-
+You need to set "SCF", too.
