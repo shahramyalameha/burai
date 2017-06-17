@@ -1,27 +1,33 @@
 Band
 ====
 
-If users calculate the band structure, user should select "Band" from right menu.
-
-.. image:: ../../../img/input_editor/imgCreateJob_Band00.png
-   :scale: 50 %
-   :align: center
-
+After creating project, you can make a project file of Band.
+Selecting "Band" from right menu of the project tab automatically makes a band input file.
 
 |
-.. csv-table:: Band
-    :header: "No.", "Name", "Details"
-    :widths: 10, 10, 35
 
-    "1", "#Band", "Number of electronic states to be calculated"
-    "2", "Symmetry of Bands", "If "yes" the bands are classified according to the irreducible representations of the small group of k"
-    "3", "Walking on B.Z.", "k-path for band structure spaghetti plot"
++-------------------------------------------------------------------+
+| .. image:: ../../../img/input_editor/band/selectBand.png          |
+|    :scale: 30 %                                                   |
+|    :align: center                                                 |
++-------------------------------------------------------------------+
 
-BURAI system automatically set just a recommendation k-path for the band structure plot.
 |
-In addition, users can conform input condition form input-file of left menue.
 
-.. image:: ../../../img/input_editor/imgCreateJob_CheckInputFIle.png
-   :scale: 50 %
-   :align: center
+This is the Band input editor.
+The k-point path of crystal structure is automatically set in the table of "Walking on B.Z."
+
+|
+
++------------------------------------------------------------------------+
+| |                                                                      |
+| | **Band**                                                            |
++------------------------------------------------------------------------+
+| .. image:: ../../../img/input_editor/band/Menu_Band.png                |
+|    :scale: 30 %                                                        |
+|    :align: center                                                      |
++------------------------------------------------------------------------+
+
+You need to set "SCF", too.
+
 
