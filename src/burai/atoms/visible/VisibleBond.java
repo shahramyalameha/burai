@@ -61,12 +61,14 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
         double y1 = atom1.getY();
         double z1 = atom1.getZ();
         double rad1 = Math.sqrt(atom1.getRadius());
+        int anum1 = atom1.getAtomNum();
 
         Atom atom2 = this.model.getAtom2();
         double x2 = atom2.getX();
         double y2 = atom2.getY();
         double z2 = atom2.getZ();
         double rad2 = Math.sqrt(atom2.getRadius());
+        int anum2 = atom2.getAtomNum();
 
         double dx = x2 - x1;
         double dy = y2 - y1;
@@ -76,23 +78,27 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
         double rate1 = rad1 / (rad1 + rad2);
         double rate2 = 1.0 - rate1;
+        if (anum1 == anum2) {
+            rate1 = 0.999;
+            rate2 = 0.001;
+        }
 
         Point3D ax1 = new Point3D(dz, 0.0, -dx);
         Point3D ax2 = new Point3D(-dz, 0.0, dx);
         double theta1 = Math.acos(Math.min(Math.max(-1.0, dy / r), 1.0));
         double theta2 = Math.PI - theta1;
 
+        this.bondCylinder1.setHeight(rate1 * r);
         this.bondCylinder1.setTranslateX(x1 + 0.5 * rate1 * dx);
         this.bondCylinder1.setTranslateY(y1 + 0.5 * rate1 * dy);
         this.bondCylinder1.setTranslateZ(z1 + 0.5 * rate1 * dz);
-        this.bondCylinder1.setHeight(rate1 * r);
         this.bondCylinder1.setRotationAxis(ax1);
         this.bondCylinder1.setRotate((180.0 / Math.PI) * theta1);
 
+        this.bondCylinder2.setHeight(rate2 * r);
         this.bondCylinder2.setTranslateX(x2 - 0.5 * rate2 * dx);
         this.bondCylinder2.setTranslateY(y2 - 0.5 * rate2 * dy);
         this.bondCylinder2.setTranslateZ(z2 - 0.5 * rate2 * dz);
-        this.bondCylinder2.setHeight(rate2 * r);
         this.bondCylinder2.setRotationAxis(ax2);
         this.bondCylinder2.setRotate((180.0 / Math.PI) * theta2);
     }
