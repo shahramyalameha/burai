@@ -161,6 +161,25 @@ public enum RunningType {
             nmlControl.setValue("pseudo_dir = '" + Environments.getPseudosPath() + "'");
         }
 
+        QENamelist nmlSystem = input.getNamelist(QEInput.NAMELIST_SYSTEM);
+        if (nmlSystem != null) {
+            QEValue ibravValue = nmlSystem.getValue("ibrav");
+            if (ibravValue != null && ibravValue.getIntegerValue() == 0) {
+                nmlSystem.removeValue("a");
+                nmlSystem.removeValue("b");
+                nmlSystem.removeValue("c");
+                nmlSystem.removeValue("cosab");
+                nmlSystem.removeValue("cosac");
+                nmlSystem.removeValue("cosbc");
+                nmlSystem.removeValue("celldm(1)");
+                nmlSystem.removeValue("celldm(2)");
+                nmlSystem.removeValue("celldm(3)");
+                nmlSystem.removeValue("celldm(4)");
+                nmlSystem.removeValue("celldm(5)");
+                nmlSystem.removeValue("celldm(6)");
+            }
+        }
+
         QENamelist nmlDos = input.getNamelist(QEInput.NAMELIST_DOS);
         if (nmlDos != null) {
             if (prefix != null && (!prefix.isEmpty())) {
