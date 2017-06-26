@@ -60,6 +60,15 @@ public abstract class QEInput {
         };
     }
 
+    private static final Map<Class<? extends QECard>, String> CARD_KEY_MAP;
+    static {
+        CARD_KEY_MAP = new HashMap<Class<? extends QECard>, String>();
+        CARD_KEY_MAP.put(QEKPoints.class, QEKPoints.CARD_NAME);
+        CARD_KEY_MAP.put(QECellParameters.class, QECellParameters.CARD_NAME);
+        CARD_KEY_MAP.put(QEAtomicSpecies.class, QEAtomicSpecies.CARD_NAME);
+        CARD_KEY_MAP.put(QEAtomicPositions.class, QEAtomicPositions.CARD_NAME);
+    }
+
     protected Map<String, QENamelist> namelists;
 
     protected Map<String, QECard> cards;
@@ -209,6 +218,22 @@ public abstract class QEInput {
         }
 
         return this.cards.get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends QECard> T getCard(Class<T> cardClass) {
+        String key = CARD_KEY_MAP.get(cardClass);
+
+        if (!this.cards.containsKey(key)) {
+            return null;
+        }
+
+        QECard card = this.cards.get(key);
+        if (card != null && card.getClass() == cardClass) {
+            return (T) card;
+        }
+
+        return null;
     }
 
     protected QEInputCorrecter getInputCorrector() {

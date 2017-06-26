@@ -16,7 +16,7 @@ import burai.atoms.model.Cell;
 import burai.atoms.model.CellProperty;
 import burai.com.env.Environments;
 import burai.input.QEInput;
-import burai.input.card.QECard;
+import burai.input.card.QECellParameters;
 import burai.input.card.QEKPoint;
 import burai.input.card.QEKPoints;
 import burai.input.namelist.QENamelist;
@@ -165,13 +165,18 @@ public enum RunningType {
         if (nmlSystem != null) {
             QEValue ibravValue = nmlSystem.getValue("ibrav");
             if (ibravValue != null && ibravValue.getIntegerValue() == 0) {
-                nmlSystem.removeValue("a");
+
+                QECellParameters cellParam = input.getCard(QECellParameters.class);
+                if (cellParam != null && (cellParam.isBohr() || cellParam.isAngstrom())) {
+                    nmlSystem.removeValue("a");
+                    nmlSystem.removeValue("celldm(1)");
+                }
+
                 nmlSystem.removeValue("b");
                 nmlSystem.removeValue("c");
                 nmlSystem.removeValue("cosab");
                 nmlSystem.removeValue("cosac");
                 nmlSystem.removeValue("cosbc");
-                nmlSystem.removeValue("celldm(1)");
                 nmlSystem.removeValue("celldm(2)");
                 nmlSystem.removeValue("celldm(3)");
                 nmlSystem.removeValue("celldm(4)");
@@ -690,12 +695,7 @@ public enum RunningType {
             return;
         }
 
-        QEKPoints kpoints = null;
-        QECard card = input.getCard(QEKPoints.CARD_NAME);
-        if (card != null && card instanceof QEKPoints) {
-            kpoints = (QEKPoints) card;
-        }
-
+        QEKPoints kpoints = input.getCard(QEKPoints.class);
         if (kpoints == null || kpoints.numKPoints() < 1) {
             return;
         }
