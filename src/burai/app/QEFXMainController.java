@@ -53,6 +53,7 @@ import burai.app.matapi.QEFXMatAPIDialog;
 import burai.app.onclose.QEFXSavingDialog;
 import burai.app.path.QEFXPathDialog;
 import burai.app.proxy.QEFXProxyDialog;
+import burai.app.ssh.QEFXSSHDialog;
 import burai.app.tab.QEFXTabManager;
 import burai.com.env.Environments;
 import burai.com.graphic.svg.SVGLibrary;
@@ -119,6 +120,9 @@ public class QEFXMainController implements Initializable {
 
     @FXML
     private MenuItem proxyMItem;
+
+    @FXML
+    private MenuItem remoteMItem;
 
     @FXML
     private MenuItem fullScrMItem;
@@ -293,6 +297,13 @@ public class QEFXMainController implements Initializable {
             this.proxyMItem.setOnAction(event -> {
                 QEFXProxyDialog dialog = new QEFXProxyDialog();
                 dialog.showAndSetProperties();
+            });
+        }
+
+        if (this.remoteMItem != null) {
+            this.remoteMItem.setOnAction(event -> {
+                QEFXSSHDialog dialog = new QEFXSSHDialog();
+                dialog.showAndWait();
             });
         }
 

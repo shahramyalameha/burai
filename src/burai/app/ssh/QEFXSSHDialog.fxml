@@ -23,7 +23,7 @@
             </Label>
          </left>
          <padding>
-            <Insets top="10.0" />
+            <Insets left="30.0" right="5.0" top="10.0" />
          </padding>
       </BorderPane>
       <GridPane hgap="5.0" prefWidth="430.0" vgap="5.0">
@@ -41,7 +41,7 @@
          <children>
             <StackPane>
                <children>
-                  <ComboBox prefWidth="285.0" />
+                  <ComboBox prefWidth="280.0" />
                </children>
             </StackPane>
             <StackPane GridPane.columnIndex="1">

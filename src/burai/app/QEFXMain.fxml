@@ -55,6 +55,7 @@
                         </Menu>
                         <MenuItem fx:id="pathMItem" mnemonicParsing="false" text="Path of QE" />
                         <MenuItem fx:id="proxyMItem" mnemonicParsing="false" text="Proxy server" />
+                        <MenuItem fx:id="remoteMItem" mnemonicParsing="false" text="Remote conf." />
                         <MenuItem fx:id="fullScrMItem" mnemonicParsing="false" text="Full screen" />
                         <MenuItem fx:id="quitMItem" mnemonicParsing="false" text="Quit [Ctr+Q]" />
                   </items>

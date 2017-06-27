@@ -11,7 +11,6 @@ package burai.app.ssh;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -25,8 +24,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import burai.app.QEFXMain;
-import burai.app.proxy.ProxyServer;
-import burai.com.env.Environments;
 
 public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 
@@ -82,7 +79,6 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.setupPortField();
         this.setupUserField();
         this.setupPassField();
-        this.setupPassCheck();
     }
 
     private void setupHostField() {
@@ -90,12 +86,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
             return;
         }
 
-        String hostStr = Environments.getProperty(ProxyServer.PROP_KEY_HOST);
-        if (hostStr == null) {
-            this.hostField.setText("");
-        } else {
-            this.hostField.setText(hostStr);
-        }
+        // TODO
     }
 
     private void setupPortField() {
@@ -103,12 +94,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
             return;
         }
 
-        String portStr = Environments.getProperty(ProxyServer.PROP_KEY_PORT);
-        if (portStr == null) {
-            this.portField.setText("");
-        } else {
-            this.portField.setText(portStr);
-        }
+        // TODO
     }
 
     private void setupUserField() {
@@ -116,12 +102,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
             return;
         }
 
-        String userStr = Environments.getProperty(ProxyServer.PROP_KEY_USER);
-        if (userStr == null) {
-            this.userField.setText("");
-        } else {
-            this.userField.setText(userStr);
-        }
+        // TODO
     }
 
     private void setupPassField() {
@@ -129,107 +110,6 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
             return;
         }
 
-        String passStr = Environments.getProperty(ProxyServer.PROP_KEY_PASSWORD);
-        if (passStr == null) {
-            this.passField.setText("");
-        } else {
-            this.passField.setText(passStr);
-        }
-    }
-
-    private void setupPassCheck() {
-        if (this.passCheck == null) {
-            return;
-        }
-
-        this.passCheck.setSelected(Environments.getBoolProperty(ProxyServer.PROP_KEY_SAVEPASSWORD));
-    }
-
-    public void showAndSetProperties() {
-        Optional<ButtonType> optButtonType = this.showAndWait();
-        if (optButtonType == null || !optButtonType.isPresent()) {
-            return;
-        }
-        if (optButtonType.get() != ButtonType.OK) {
-            return;
-        }
-
-        String hostStr = this.getHost();
-        String portStr = this.getPort();
-        String userStr = this.getUser();
-        String passStr = this.getPassword();
-        boolean passSaved = this.isPasswordSaved();
-
-        if (hostStr != null && (!hostStr.isEmpty())) {
-            Environments.setProperty(ProxyServer.PROP_KEY_HOST, hostStr);
-        } else {
-            Environments.removeProperty(ProxyServer.PROP_KEY_HOST);
-        }
-
-        if (portStr != null && (!portStr.isEmpty())) {
-            Environments.setProperty(ProxyServer.PROP_KEY_PORT, portStr);
-        } else {
-            Environments.removeProperty(ProxyServer.PROP_KEY_PORT);
-        }
-
-        if (userStr != null && (!userStr.isEmpty())) {
-            Environments.setProperty(ProxyServer.PROP_KEY_USER, userStr);
-        } else {
-            Environments.removeProperty(ProxyServer.PROP_KEY_USER);
-        }
-
-        if (passSaved && passStr != null && (!passStr.isEmpty())) {
-            Environments.setProperty(ProxyServer.PROP_KEY_PASSWORD, passStr);
-        } else {
-            Environments.removeProperty(ProxyServer.PROP_KEY_PASSWORD);
-        }
-
-        Environments.setProperty(ProxyServer.PROP_KEY_SAVEPASSWORD, passSaved);
-
-        ProxyServer.initProxyServer(passStr);
-    }
-
-    private String getHost() {
-        if (this.hostField == null) {
-            return null;
-        }
-
-        String value = this.hostField.getText();
-        return value == null ? null : value.trim();
-    }
-
-    private String getPort() {
-        if (this.portField == null) {
-            return null;
-        }
-
-        String value = this.portField.getText();
-        return value == null ? null : value.trim();
-    }
-
-    private String getUser() {
-        if (this.userField == null) {
-            return null;
-        }
-
-        String value = this.userField.getText();
-        return value == null ? null : value.trim();
-    }
-
-    private String getPassword() {
-        if (this.passField == null) {
-            return null;
-        }
-
-        String value = this.passField.getText();
-        return value == null ? null : value.trim();
-    }
-
-    private boolean isPasswordSaved() {
-        if (this.passCheck == null) {
-            return false;
-        }
-
-        return this.passCheck.isSelected();
+        // TODO
     }
 }
