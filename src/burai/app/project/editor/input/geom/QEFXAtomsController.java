@@ -51,7 +51,7 @@ public class QEFXAtomsController extends QEFXInputModelController {
     private static final String UNIT_ANGSTROM = "Angstrom";
     private static final String UNIT_CRYSTAL = "Crystal";
 
-    public static final double PLUS_GRAPHIC_SIZE = 18.0;
+    public static final double PLUS_GRAPHIC_SIZE = 20.0;
     public static final String PLUS_GRAPHIC_CLASS = "piclight-button";
 
     private static final String CELL_STYLE_MOBILE = "-fx-text-fill: -fx-text-background-color";
