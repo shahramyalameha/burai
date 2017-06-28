@@ -37,6 +37,8 @@ public final class Environments {
 
     private static final String PROPERTIES_NAME = ".properties";
 
+    private static final String SSHDATA_NAME = ".ssh";
+
     private static EnvFile recentsEnvFile = null;
 
     private static EnvFile websitesEnvFile = null;
@@ -738,5 +740,21 @@ public final class Environments {
 
     public static void removeProperty(String key) {
         setProperty(key, (String) null);
+    }
+
+    public static String getSSHDataName() {
+        return SSHDATA_NAME;
+    }
+
+    public static String getSSHDataPath() {
+        File sshFile = null;
+        String parentPath = getProjectsPath();
+        if (parentPath == null) {
+            sshFile = new File(SSHDATA_NAME);
+        } else {
+            sshFile = new File(parentPath, SSHDATA_NAME);
+        }
+
+        return sshFile.getPath();
     }
 }
