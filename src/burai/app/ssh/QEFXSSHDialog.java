@@ -169,6 +169,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 
                 this.selectCombo.getItems().add(sshServer);
                 this.selectCombo.setValue(sshServer);
+                this.selectCombo.requestFocus();
             }
         });
     }
@@ -211,6 +212,8 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
                         selectionMode.selectFirst();
                     }
                 }
+
+                this.selectCombo.requestFocus();
             }
         });
     }
