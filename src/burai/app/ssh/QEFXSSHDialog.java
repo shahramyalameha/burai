@@ -98,10 +98,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.setupSelectCombo();
         this.setupAddButton();
         this.setupDelButton();
-        this.setupHostField();
-        this.setupPortField();
-        this.setupUserField();
-        this.setupPassField();
+        this.setupSSHProperties();
     }
 
     private SSHServer getSSHServer() {
@@ -133,12 +130,8 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 
         this.selectCombo.setOnAction(event -> {
             SSHServer sshServer = this.getSSHServer();
-            if (sshServer == null) {
-                return;
-            }
-
-            // TODO
-            });
+            this.updateSSHProperties(sshServer);
+        });
     }
 
     private void setupAddButton() {
@@ -222,35 +215,107 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         });
     }
 
-    private void setupHostField() {
+    private void setupSSHProperties() {
+        SSHServer sshServer = this.getSSHServer();
+        this.updateSSHProperties(sshServer);
+
+        if (this.hostField != null) {
+            this.hostField.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setHost(this.getHost());
+                }
+            });
+        }
+
+        if (this.portField != null) {
+            this.portField.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setPort(this.getPort());
+                }
+            });
+        }
+
+        if (this.userField != null) {
+            this.userField.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setUser(this.getUser());
+                }
+            });
+        }
+
+        if (this.passField != null) {
+            this.passField.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setPassword(this.getPassword());
+                }
+            });
+        }
+    }
+
+    private void updateSSHProperties(SSHServer sshServer) {
+        if (this.hostField != null) {
+            String host = sshServer == null ? null : sshServer.getHost();
+            this.hostField.setText(host == null ? "" : host.trim());
+        }
+
+        if (this.portField != null) {
+            String port = sshServer == null ? null : sshServer.getPort();
+            this.portField.setText(port == null ? "" : port.trim());
+        }
+
+        if (this.userField != null) {
+            String user = sshServer == null ? null : sshServer.getUser();
+            this.userField.setText(user == null ? "" : user.trim());
+        }
+
+        if (this.passField != null) {
+            String pass = sshServer == null ? null : sshServer.getPassword();
+            this.passField.setText(pass == null ? "" : pass.trim());
+        }
+    }
+
+    private String getHost() {
         if (this.hostField == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.hostField.getText();
+        return value == null ? null : value.trim();
     }
 
-    private void setupPortField() {
+    private String getPort() {
         if (this.portField == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.portField.getText();
+        return value == null ? null : value.trim();
     }
 
-    private void setupUserField() {
+    private String getUser() {
         if (this.userField == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.userField.getText();
+        return value == null ? null : value.trim();
     }
 
-    private void setupPassField() {
+    private String getPassword() {
         if (this.passField == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.passField.getText();
+        return value == null ? null : value.trim();
+    }
+
+    public void showAndSetProperties() {
+        this.showAndWait();
+        SSHServerList.getInstance().saveToFile();
     }
 }
