@@ -42,7 +42,7 @@
          <children>
             <StackPane>
                <children>
-                  <ComboBox fx:id="selectCombo" prefWidth="285.0" promptText="no remote configuration" />
+                  <ComboBox fx:id="selectCombo" prefWidth="285.0" promptText="not any remote configurations" />
                </children>
             </StackPane>
             <StackPane GridPane.columnIndex="1">

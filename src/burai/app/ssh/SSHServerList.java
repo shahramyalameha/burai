@@ -138,7 +138,7 @@ public class SSHServerList {
         return null;
     }
 
-    private SSHServer getSSHServer(SSHServer sshServer) {
+    public SSHServer getSSHServer(SSHServer sshServer) {
         if (sshServer == null) {
             return null;
         }
@@ -146,6 +146,22 @@ public class SSHServerList {
         int index = this.sshServers.indexOf(sshServer);
 
         return index < 0 ? null : this.sshServers.get(index);
+    }
+
+    public boolean hasSSHServer(String title) {
+        if (title != null && !title.isEmpty()) {
+            return this.hasSSHServer(new SSHServer(title));
+        }
+
+        return false;
+    }
+
+    public boolean hasSSHServer(SSHServer sshServer) {
+        if (sshServer == null) {
+            return false;
+        }
+
+        return this.sshServers.contains(sshServer);
     }
 
     public SSHServer[] listSSHServers() {

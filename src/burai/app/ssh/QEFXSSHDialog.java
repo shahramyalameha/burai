@@ -11,12 +11,15 @@ package burai.app.ssh;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -24,6 +27,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import burai.app.QEFXMain;
 import burai.com.graphic.svg.SVGLibrary;
@@ -100,12 +104,41 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.setupPassField();
     }
 
+    private SSHServer getSSHServer() {
+        if (this.selectCombo == null) {
+            return null;
+        }
+
+        return this.selectCombo.getValue();
+    }
+
     private void setupSelectCombo() {
         if (this.selectCombo == null) {
             return;
         }
 
-        // TODO
+        SSHServer[] sshServers = SSHServerList.getInstance().listSSHServers();
+        if (sshServers != null && sshServers.length > 0) {
+            for (SSHServer sshServer : sshServers) {
+                if (sshServer != null) {
+                    this.selectCombo.getItems().add(sshServer);
+                }
+            }
+
+            SingleSelectionModel<SSHServer> selectionMode = this.selectCombo.getSelectionModel();
+            if (selectionMode != null) {
+                selectionMode.selectFirst();
+            }
+        }
+
+        this.selectCombo.setOnAction(event -> {
+            SSHServer sshServer = this.getSSHServer();
+            if (sshServer == null) {
+                return;
+            }
+
+            // TODO
+            });
     }
 
     private void setupAddButton() {
@@ -117,7 +150,34 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.addButton.getStyleClass().add(GRAPHIC_CLASS);
         this.addButton.setGraphic(SVGLibrary.getGraphic(SVGData.PLUS, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
-        // TODO
+        this.addButton.setOnAction(event -> {
+            QEFXNewConfDialog dialog = new QEFXNewConfDialog();
+            Optional<String> optName = dialog.showAndWait();
+            if (optName == null || (!optName.isPresent())) {
+                return;
+            }
+
+            String name = optName.get();
+            name = name == null ? null : name.trim();
+            if (name == null || name.isEmpty()) {
+                return;
+            }
+
+            SSHServer sshServer = new SSHServer(name);
+            if (SSHServerList.getInstance().hasSSHServer(sshServer)) {
+                return;
+            }
+
+            SSHServerList.getInstance().addSSHServer(sshServer);
+
+            if (this.selectCombo != null) {
+                while (this.selectCombo.getItems().remove(sshServer)) {
+                }
+
+                this.selectCombo.getItems().add(sshServer);
+                this.selectCombo.setValue(sshServer);
+            }
+        });
     }
 
     private void setupDelButton() {
@@ -129,12 +189,37 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.delButton.getStyleClass().add(GRAPHIC_CLASS);
         this.delButton.setGraphic(SVGLibrary.getGraphic(SVGData.MINUS, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
-        // TODO
+        this.delButton.setOnAction(event -> {
+            SSHServer sshServer = this.getSSHServer();
+            if (sshServer == null) {
+                return;
+            }
 
-        SSHServer sshServer = this.getSSHServer();
-        if (sshServer != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            QEFXMain.initializeDialogOwner(alert);
+            alert.setHeaderText("'" + sshServer.toString() + "' will be deleted.");
+            Optional<ButtonType> optButtonType = alert.showAndWait();
+            if (optButtonType == null || (!optButtonType.isPresent())) {
+                return;
+            }
+            if (!ButtonType.OK.equals(optButtonType.get())) {
+                return;
+            }
+
             SSHServerList.getInstance().removeSSHServer(sshServer);
-        }
+
+            if (this.selectCombo != null) {
+                while (this.selectCombo.getItems().remove(sshServer)) {
+                }
+
+                if (!this.selectCombo.getItems().isEmpty()) {
+                    SingleSelectionModel<SSHServer> selectionMode = this.selectCombo.getSelectionModel();
+                    if (selectionMode != null && selectionMode.getSelectedIndex() < 0) {
+                        selectionMode.selectFirst();
+                    }
+                }
+            }
+        });
     }
 
     private void setupHostField() {
@@ -167,13 +252,5 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         }
 
         // TODO
-    }
-
-    private SSHServer getSSHServer() {
-        if (this.selectCombo == null) {
-            return null;
-        }
-
-        return this.selectCombo.getValue();
     }
 }
