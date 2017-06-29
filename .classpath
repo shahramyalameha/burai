@@ -14,5 +14,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jcodec-0.2.0.jar" sourcepath="lib/jcodec-0.2.0-sources.zip"/>
 	<classpathentry kind="lib" path="lib/jcodec-javase-0.2.0.jar" sourcepath="lib/jcodec-javase-0.2.0-sources.zip"/>
+	<classpathentry kind="lib" path="lib/jsch-0.1.54.jar" sourcepath="lib/jsch-0.1.54.zip"/>
 	<classpathentry kind="output" path="class"/>
 </classpath>
