@@ -21,6 +21,8 @@ public class SSHServer {
 
     private String password;
 
+    private String keyPath;
+
     protected SSHServer(String title) {
         if (title == null || title.isEmpty()) {
             throw new IllegalArgumentException("title is empty.");
@@ -31,6 +33,7 @@ public class SSHServer {
         this.port = null;
         this.user = null;
         this.password = null;
+        this.keyPath = null;
     }
 
     public String getTitle() {
@@ -67,6 +70,14 @@ public class SSHServer {
 
     protected void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKeyPath() {
+        return this.keyPath;
+    }
+
+    protected void setKeyPath(String keyPath) {
+        this.keyPath = keyPath;
     }
 
     @Override

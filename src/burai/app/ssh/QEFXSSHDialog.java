@@ -9,6 +9,7 @@
 
 package burai.app.ssh;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -29,7 +30,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import burai.app.QEFXMain;
+import burai.app.QEFXMainController;
+import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 
@@ -37,6 +43,11 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 
     private static final double GRAPHIC_SIZE = 20.0;
     private static final String GRAPHIC_CLASS = "piclight-button";
+
+    private static final String DEFAULT_KEY_TEXT = "Select File";
+    public static final String ERROR_KEY_STYLE = ConstantStyles.ERROR_COLOR;
+
+    private QEFXMainController controller;
 
     @FXML
     private ComboBox<SSHServer> selectCombo;
@@ -59,8 +70,17 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
     @FXML
     private PasswordField passField;
 
-    public QEFXSSHDialog() {
+    @FXML
+    private Button keyButton;
+
+    public QEFXSSHDialog(QEFXMainController controller) {
         super();
+
+        if (controller == null) {
+            throw new IllegalArgumentException("controller is null.");
+        }
+
+        this.controller = controller;
 
         DialogPane dialogPane = this.getDialogPane();
         QEFXMain.initializeStyleSheets(dialogPane.getStylesheets());
@@ -257,6 +277,41 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
                 }
             });
         }
+
+        if (this.keyButton != null) {
+            SSHServer sshServer_ = this.getSSHServer();
+            this.keyButton.setOnAction(event -> this.actionKeyButton(sshServer_));
+        }
+    }
+
+    private void actionKeyButton(SSHServer sshServer) {
+        String initPath = this.getKeyPath();
+        File initFile = initPath == null ? null : new File(initPath);
+        File initDir = initFile == null ? null : initFile.getParentFile();
+        String initName = initFile == null ? null : initFile.getName();
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Path of SSH private key");
+
+        if (initDir != null) {
+            chooser.setInitialDirectory(initDir);
+        }
+        if (initName != null && !initName.isEmpty()) {
+            chooser.setInitialFileName(initName);
+        }
+
+        Stage stage = this.controller.getStage();
+        File keyFile = stage == null ? null : chooser.showOpenDialog(stage);
+        String keyPath = keyFile == null ? null : keyFile.getPath();
+        keyPath = keyPath == null ? null : keyPath.trim();
+
+        if (keyPath != null && !(keyPath.isEmpty())) {
+            this.updateKeyButton(keyPath);
+
+            if (sshServer != null) {
+                sshServer.setKeyPath(this.getKeyPath());
+            }
+        }
     }
 
     private void updateSSHProperties(SSHServer sshServer) {
@@ -278,6 +333,39 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         if (this.passField != null) {
             String pass = sshServer == null ? null : sshServer.getPassword();
             this.passField.setText(pass == null ? "" : pass.trim());
+        }
+
+        if (this.keyButton != null) {
+            String keyPath = sshServer == null ? null : sshServer.getKeyPath();
+            this.updateKeyButton(keyPath == null ? null : keyPath.trim());
+        }
+    }
+
+    private void updateKeyButton(String keyPath) {
+        if (this.keyButton == null) {
+            return;
+        }
+
+        if (keyPath == null || keyPath.isEmpty()) {
+            this.keyButton.setText(DEFAULT_KEY_TEXT);
+            this.keyButton.setTooltip(null);
+            this.keyButton.setStyle("");
+            return;
+        }
+
+        this.keyButton.setText(keyPath);
+        this.keyButton.setTooltip(new Tooltip(keyPath));
+
+        try {
+            File file = new File(keyPath);
+            if (file.isFile()) {
+                this.keyButton.setStyle("");
+            } else {
+                this.keyButton.setStyle(ERROR_KEY_STYLE);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -314,6 +402,19 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         }
 
         String value = this.passField.getText();
+        return value == null ? null : value.trim();
+    }
+
+    private String getKeyPath() {
+        if (this.keyButton == null) {
+            return null;
+        }
+
+        String value = this.keyButton.getText();
+        if (DEFAULT_KEY_TEXT.equals(value)) {
+            value = null;
+        }
+
         return value == null ? null : value.trim();
     }
 

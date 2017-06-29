@@ -302,7 +302,7 @@ public class QEFXMainController implements Initializable {
 
         if (this.remoteMItem != null) {
             this.remoteMItem.setOnAction(event -> {
-                QEFXSSHDialog dialog = new QEFXSSHDialog();
+                QEFXSSHDialog dialog = new QEFXSSHDialog(this);
                 dialog.showAndSetProperties();
             });
         }
