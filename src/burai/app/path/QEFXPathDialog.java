@@ -211,6 +211,7 @@ public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable 
 
         if (path == null || path.isEmpty()) {
             button.setText(DEFAULT_TEXT);
+            button.setTooltip(null);
             button.setStyle("");
             return;
         }
