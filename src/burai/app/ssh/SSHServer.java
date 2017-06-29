@@ -30,7 +30,7 @@ public class SSHServer {
 
         this.title = title;
         this.host = null;
-        this.port = null;
+        this.port = "22";
         this.user = null;
         this.password = null;
         this.keyPath = null;
