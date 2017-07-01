@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.ssh;
+package burai.ssh;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -173,7 +173,7 @@ public class SSHServerList {
         return this.sshServers.toArray(sshArray);
     }
 
-    protected void addSSHServer(SSHServer sshServer) {
+    public void addSSHServer(SSHServer sshServer) {
         if (sshServer == null) {
             return;
         }
@@ -185,7 +185,7 @@ public class SSHServerList {
         this.sshServers.add(sshServer);
     }
 
-    protected void removeSSHServer(SSHServer sshServer) {
+    public void removeSSHServer(SSHServer sshServer) {
         if (sshServer == null) {
             return;
         }
@@ -195,7 +195,7 @@ public class SSHServerList {
         }
     }
 
-    protected void saveToFile() {
+    public void saveToFile() {
         String path = Environments.getSSHDataPath();
 
         if (path != null && !path.isEmpty()) {

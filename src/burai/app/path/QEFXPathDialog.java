@@ -32,6 +32,7 @@ import burai.app.QEFXMain;
 import burai.app.QEFXMainController;
 import burai.com.consts.ConstantStyles;
 import burai.com.env.Environments;
+import burai.com.path.QEPath;
 import burai.run.RunningCommand.RunningCommandType;
 
 public class QEFXPathDialog extends Dialog<ButtonType> implements Initializable {

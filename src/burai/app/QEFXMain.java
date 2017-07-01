@@ -23,11 +23,11 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import burai.app.explorer.QEFXExplorer;
 import burai.app.icon.web.WebEngineFactory;
-import burai.app.path.QEPath;
 import burai.app.proxy.ProxyServer;
 import burai.com.env.Environments;
 import burai.com.file.FileTools;
 import burai.com.life.Life;
+import burai.com.path.QEPath;
 import burai.pseudo.PseudoLibrary;
 
 public class QEFXMain extends Application {

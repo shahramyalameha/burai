@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.path;
+package burai.com.path;
 
 import java.io.File;
 

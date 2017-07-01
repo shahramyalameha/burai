@@ -38,6 +38,8 @@ import burai.app.QEFXMainController;
 import burai.com.consts.ConstantStyles;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import burai.ssh.SSHServer;
+import burai.ssh.SSHServerList;
 
 public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 

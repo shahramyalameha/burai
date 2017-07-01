@@ -23,6 +23,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import burai.app.QEFXMain;
+import burai.ssh.SSHServerList;
 
 public class QEFXNewConfDialog extends Dialog<String> implements Initializable {
 

@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.app.ssh;
+package burai.ssh;
 
 public class SSHServer {
 
@@ -23,7 +23,7 @@ public class SSHServer {
 
     private String keyPath;
 
-    protected SSHServer(String title) {
+    public SSHServer(String title) {
         if (title == null || title.isEmpty()) {
             throw new IllegalArgumentException("title is empty.");
         }
@@ -44,7 +44,7 @@ public class SSHServer {
         return this.host;
     }
 
-    protected void setHost(String host) {
+    public void setHost(String host) {
         this.host = host;
     }
 
@@ -52,7 +52,7 @@ public class SSHServer {
         return this.port;
     }
 
-    protected void setPort(String port) {
+    public void setPort(String port) {
         this.port = port;
     }
 
@@ -60,7 +60,7 @@ public class SSHServer {
         return this.user;
     }
 
-    protected void setUser(String user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -68,7 +68,7 @@ public class SSHServer {
         return this.password;
     }
 
-    protected void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -76,7 +76,7 @@ public class SSHServer {
         return this.keyPath;
     }
 
-    protected void setKeyPath(String keyPath) {
+    public void setKeyPath(String keyPath) {
         this.keyPath = keyPath;
     }
 
