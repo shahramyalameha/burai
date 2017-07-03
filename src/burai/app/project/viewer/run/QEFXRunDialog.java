@@ -34,6 +34,9 @@ import burai.project.FilePathChanged;
 import burai.project.Project;
 import burai.run.RunningNode;
 import burai.run.RunningType;
+import burai.ssh.SSHJob;
+import burai.ssh.SSHServer;
+import burai.ssh.SSHServerList;
 
 public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
 
@@ -41,6 +44,8 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
     private static final String PROP_KEY_OPENMP = "number_of_threads";
 
     private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
+
+    private static final String NAME_LOCAL_HOST = "Local Host";
 
     private Project project;
 
@@ -56,6 +61,9 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
 
     @FXML
     private TextField ompField;
+
+    @FXML
+    private ComboBox<String> hostCombo;
 
     @FXML
     private Button saveButton;
@@ -99,8 +107,14 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
                 RunningNode runningNode = this.createRunningNode();
                 if (runningNode != null) {
                     this.saveEnvProperties();
+                    return new RunEvent(runningNode);
                 }
-                return runningNode == null ? null : new RunEvent(runningNode);
+
+                SSHJob sshJob = this.createSSHJob();
+                if (sshJob != null) {
+                    this.saveEnvProperties();
+                    return new RunEvent(sshJob);
+                }
             }
 
             return null;
@@ -214,7 +228,15 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
         Environments.setProperty(PROP_KEY_OPENMP, numOMP);
     }
 
+    private boolean canRunningNode() {
+        return this.hostCombo == null || NAME_LOCAL_HOST.equals(this.hostCombo.getValue());
+    }
+
     private RunningNode createRunningNode() {
+        if (!this.canRunningNode()) {
+            return null;
+        }
+
         RunningType runningType = null;
         if (this.jobCombo != null) {
             runningType = this.jobCombo.getValue();
@@ -233,11 +255,22 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
         return runningNode;
     }
 
+    private SSHJob createSSHJob() {
+        if (this.canRunningNode()) {
+            return null;
+        }
+
+        // TODO
+
+        return null;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.setupJobCombo();
         this.setupMPIField();
         this.setupOpenMPField();
+        this.setupHostCombo();
         this.setupSaveButton();
         this.resetButtonTypes();
     }
@@ -361,6 +394,26 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
             this.resetButtonTypes();
             this.ompField.requestFocus();
         });
+    }
+
+    private void setupHostCombo() {
+        if (this.hostCombo == null) {
+            return;
+        }
+
+        this.hostCombo.getItems().add(NAME_LOCAL_HOST);
+
+        SSHServer[] sshServers = SSHServerList.getInstance().listSSHServers();
+        if (sshServers != null) {
+            for (SSHServer sshServer : sshServers) {
+                String sshName = sshServer == null ? null : sshServer.getTitle();
+                if (sshName != null && (!sshName.isEmpty())) {
+                    this.hostCombo.getItems().add(sshName);
+                }
+            }
+        }
+
+        this.hostCombo.setValue(NAME_LOCAL_HOST);
     }
 
     private void setupSaveButton() {
