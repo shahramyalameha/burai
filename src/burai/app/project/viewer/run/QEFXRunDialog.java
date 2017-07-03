@@ -35,7 +35,7 @@ import burai.project.Project;
 import burai.run.RunningNode;
 import burai.run.RunningType;
 
-public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable {
+public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
 
     private static final String PROP_KEY_MPI = "number_of_processes";
     private static final String PROP_KEY_OPENMP = "number_of_threads";
@@ -100,7 +100,7 @@ public class QEFXRunDialog extends Dialog<RunningNode> implements Initializable 
                 if (runningNode != null) {
                     this.saveEnvProperties();
                 }
-                return runningNode;
+                return runningNode == null ? null : new RunEvent(runningNode);
             }
 
             return null;

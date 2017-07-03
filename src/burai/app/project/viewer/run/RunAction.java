@@ -11,8 +11,9 @@ package burai.app.project.viewer.run;
 
 import burai.app.QEFXMainController;
 import burai.app.project.QEFXProjectController;
-import burai.run.RunningNode;
 import burai.run.RunningManager;
+import burai.run.RunningNode;
+import burai.ssh.SSHJob;
 
 public class RunAction {
 
@@ -26,7 +27,20 @@ public class RunAction {
         this.controller = controller;
     }
 
-    public void runCalculation(RunningNode runningNode) {
+    public void runCalculation(RunEvent runEvent) {
+        if (runEvent == null) {
+            return;
+        }
+
+        if (runEvent.getRunningNode() != null) {
+            this.runOnLocalMachine(runEvent.getRunningNode());
+
+        } else if (runEvent.getSSHJob() != null) {
+            this.runOnSSHServer(runEvent.getSSHJob());
+        }
+    }
+
+    private void runOnLocalMachine(RunningNode runningNode) {
         if (runningNode == null) {
             return;
         }
@@ -45,5 +59,13 @@ public class RunAction {
         });
 
         mainController.showHome();
+    }
+
+    private void runOnSSHServer(SSHJob sshJob) {
+        if (sshJob == null) {
+            return;
+        }
+
+        sshJob.postJobToServer();
     }
 }

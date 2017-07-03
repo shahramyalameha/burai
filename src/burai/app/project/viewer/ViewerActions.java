@@ -23,10 +23,10 @@ import burai.app.project.viewer.modeler.ModelerAction;
 import burai.app.project.viewer.result.ResultAction;
 import burai.app.project.viewer.run.QEFXRunDialog;
 import burai.app.project.viewer.run.RunAction;
+import burai.app.project.viewer.run.RunEvent;
 import burai.app.project.viewer.save.SaveAction;
 import burai.app.project.viewer.screenshot.QEFXScreenshotDialog;
 import burai.project.Project;
-import burai.run.RunningNode;
 
 public class ViewerActions extends ProjectActions<Node> {
 
@@ -219,13 +219,13 @@ public class ViewerActions extends ProjectActions<Node> {
         this.project.resolveQEInputs();
 
         QEFXRunDialog dialog = new QEFXRunDialog(this.project, this);
-        Optional<RunningNode> optButtonType = dialog.showAndWait();
+        Optional<RunEvent> optButtonType = dialog.showAndWait();
 
         if (optButtonType != null && optButtonType.isPresent()) {
-            RunningNode runningNode = optButtonType.get();
-            if (runningNode != null) {
+            RunEvent runEvent = optButtonType.get();
+            if (runEvent != null) {
                 RunAction runAction = new RunAction(controller);
-                runAction.runCalculation(runningNode);
+                runAction.runCalculation(runEvent);
             }
         }
     }
