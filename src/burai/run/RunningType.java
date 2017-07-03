@@ -483,6 +483,48 @@ public enum RunningType {
         return editorList;
     }
 
+    public List<String> getInpNameList(Project project) {
+        if (project == null) {
+            return null;
+        }
+
+        List<String> inpList = new ArrayList<String>();
+
+        switch (this.inputMode) {
+        case Project.INPUT_MODE_SCF:
+            inpList.add(project.getInpFileName("scf"));
+            break;
+
+        case Project.INPUT_MODE_OPTIMIZ:
+            inpList.add(project.getInpFileName("opt"));
+            break;
+
+        case Project.INPUT_MODE_MD:
+            inpList.add(project.getInpFileName("md"));
+            break;
+
+        case Project.INPUT_MODE_DOS:
+            inpList.add(project.getInpFileName("scf"));
+            inpList.add(project.getInpFileName("nscf"));
+            inpList.add(project.getInpFileName("dos"));
+            inpList.add(project.getInpFileName("pdos"));
+            break;
+
+        case Project.INPUT_MODE_BAND:
+            inpList.add(project.getInpFileName("scf"));
+            inpList.add(project.getInpFileName("bands"));
+            inpList.add(project.getInpFileName("band.up"));
+            inpList.add(project.getInpFileName("band.down"));
+            break;
+
+        default:
+            // NOP
+            break;
+        }
+
+        return inpList;
+    }
+
     public List<String> getLogNameList(Project project) {
         if (project == null) {
             return null;
