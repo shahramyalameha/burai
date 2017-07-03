@@ -101,6 +101,20 @@ public class SSHJob {
         }
     }
 
+    public void postJobToServer() {
+        this.setupCommands();
+
+        if (this.inpFiles == null || this.inpFiles.isEmpty()) {
+            return;
+        }
+
+        if (this.commands == null || this.commands.isEmpty()) {
+            return;
+        }
+
+        // TODO
+    }
+
     private void setupCommands() {
 
         if (this.inpFiles == null) {
@@ -201,6 +215,27 @@ public class SSHJob {
                 continue;
             }
 
+            String command0 = null;
+            for (String token : command) {
+                token = token == null ? null : token.trim();
+                if (token == null || token.isEmpty()) {
+                    continue;
+                }
+                if (DUMMY_INP_NAME.equals(token)) {
+                    token = inpName;
+                }
+                if (command0 == null) {
+                    command0 = token;
+                } else {
+                    command0 = command0 + " " + token;
+                }
+            }
+
+            command0 = command0 == null ? null : command0.trim();
+            if (command0 == null || command0.isEmpty()) {
+                continue;
+            }
+
             File inpFile = new File(directory, inpName);
             boolean inpStatus = this.writeQEInput(input2, inpFile);
             if (!inpStatus) {
@@ -210,6 +245,9 @@ public class SSHJob {
             File logFile = new File(directory, logName);
             File errFile = new File(directory, errName);
             this.deleteLogFiles(logFile, errFile);
+
+            this.inpFiles.add(inpFile);
+            this.commands.add(command0);
         }
     }
 
