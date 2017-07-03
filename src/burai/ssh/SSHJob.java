@@ -112,6 +112,11 @@ public class SSHJob {
             return;
         }
 
+        System.out.println("post -> " + sshServer);
+        for (String command : this.commands) {
+            System.out.println(command);
+        }
+
         // TODO
     }
 
