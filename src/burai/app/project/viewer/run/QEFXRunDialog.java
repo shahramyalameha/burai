@@ -260,9 +260,32 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
             return null;
         }
 
-        // TODO
+        String title = this.hostCombo == null ? null : this.hostCombo.getValue();
+        if (title == null || title.isEmpty()) {
+            return null;
+        }
 
-        return null;
+        SSHServer sshServer = SSHServerList.getInstance().getSSHServer(title);
+        if (sshServer == null) {
+            return null;
+        }
+
+        RunningType runningType = null;
+        if (this.jobCombo != null) {
+            runningType = this.jobCombo.getValue();
+        }
+        if (runningType == null) {
+            runningType = RunningType.SCF;
+        }
+
+        int numMPI = this.textFiledToInteger(this.mpiField, 1);
+        int numOMP = this.textFiledToInteger(this.ompField, 1);
+
+        SSHJob sshJob = new SSHJob(this.project, sshServer);
+        sshJob.setType(runningType);
+        sshJob.setNumProcesses(numMPI);
+        sshJob.setNumThreads(numOMP);
+        return sshJob;
     }
 
     @Override
