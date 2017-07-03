@@ -335,7 +335,11 @@ public abstract class Project {
 
     public abstract String getPrefixName();
 
-    public abstract String getInpFileName();
+    public abstract String getInpFileName(String ext);
+
+    public String getInpFileName() {
+        return this.getInpFileName(null);
+    }
 
     public abstract String getLogFileName(String ext);
 

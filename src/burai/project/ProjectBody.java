@@ -396,8 +396,13 @@ public class ProjectBody extends Project {
     }
 
     @Override
-    public String getInpFileName() {
-        return this.inpFileName;
+    public String getInpFileName(String ext) {
+        String ext_ = ext == null ? null : ext.trim();
+        if (ext_ == null || ext_.isEmpty()) {
+            return this.inpFileName;
+        } else {
+            return this.inpFileName + "." + ext_;
+        }
     }
 
     @Override

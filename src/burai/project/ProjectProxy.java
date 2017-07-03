@@ -125,8 +125,8 @@ public class ProjectProxy extends Project {
     }
 
     @Override
-    public String getInpFileName() {
-        return this.getNetProject() == null ? null : this.netProject.getInpFileName();
+    public String getInpFileName(String ext) {
+        return this.getNetProject() == null ? null : this.netProject.getInpFileName(ext);
     }
 
     @Override
