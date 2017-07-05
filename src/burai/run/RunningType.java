@@ -222,6 +222,18 @@ public enum RunningType {
     }
 
     public List<String[]> getCommandList(String fileName, int numProc) {
+        return this.getCommandList(fileName, numProc, false);
+    }
+
+    public List<String[]> getUnixCommandList(String fileName) {
+        return this.getUnixCommandList(fileName, 1);
+    }
+
+    public List<String[]> getUnixCommandList(String fileName, int numProc) {
+        return this.getCommandList(fileName, numProc, true);
+    }
+
+    private List<String[]> getCommandList(String fileName, int numProc, boolean unixServer) {
         String fileName2 = fileName == null ? null : fileName.trim();
         if (fileName2 == null || fileName2.isEmpty()) {
             return null;
@@ -237,7 +249,7 @@ public enum RunningType {
         case Project.INPUT_MODE_OPTIMIZ:
         case Project.INPUT_MODE_MD:
             // pw.x
-            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -246,25 +258,25 @@ public enum RunningType {
 
         case Project.INPUT_MODE_DOS:
             // pw.x (scf)
-            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // pw.x (nscf)
-            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // dos.x
-            command = this.createCommand(RunningCommandType.DOS, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.DOS, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // projwfc.x
-            command = this.createCommand(RunningCommandType.PROJWFC, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PROJWFC, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -273,25 +285,25 @@ public enum RunningType {
 
         case Project.INPUT_MODE_BAND:
             // pw.x (scf)
-            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // pw.x (bands)
-            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.PWSCF, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // bands.x (up spin)
-            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
 
             // bands.x (down spin)
-            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2);
+            command = this.createCommand(RunningCommandType.BAND, fileName2, numProc2, unixServer);
             if (command != null && command.length > 0) {
                 commandList.add(command);
             }
@@ -306,7 +318,7 @@ public enum RunningType {
         return commandList;
     }
 
-    private String[] createCommand(RunningCommandType commandType, String fileName, int numProc) {
+    private String[] createCommand(RunningCommandType commandType, String fileName, int numProc, boolean unixServer) {
         if (commandType == null) {
             return null;
         }
@@ -322,7 +334,7 @@ public enum RunningType {
         RunningCommand command = new RunningCommand(commandType);
         command.setInput(fileName);
         command.setProcess(numProc);
-        return command.getCommand();
+        return command.getCommand(unixServer);
     }
 
     public List<RunningCondition> getConditionList() {

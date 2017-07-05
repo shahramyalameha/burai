@@ -36,6 +36,11 @@ public class RunningCommand {
             return command == null ? null : command.trim();
         }
 
+        public String getUnixCommand() {
+            String command = Environments.getUnixProperty(this.propKey);
+            return command == null ? null : command.trim();
+        }
+
         public void setCommand(String command) {
             if (command == null || command.trim().isEmpty()) {
                 Environments.removeProperty(this.propKey);
@@ -88,27 +93,47 @@ public class RunningCommand {
     }
 
     public String[] getCommand() {
+        return this.getCommand(false);
+    }
+
+    public String[] getCommand(boolean unixServer) {
         int iProc = this.intProcess();
         int iKpara = this.intKParallel();
 
         String mpiCommand = null;
         if (iProc != 1) {
-            mpiCommand = RunningCommandType.MPIRUN.getCommand();
+            if (unixServer) {
+                mpiCommand = RunningCommandType.MPIRUN.getUnixCommand();
+            } else {
+                mpiCommand = RunningCommandType.MPIRUN.getCommand();
+            }
         }
 
         String mainCommand = null;
         if (this.commandType != RunningCommandType.MPIRUN) {
-            mainCommand = this.commandType.getCommand();
+            if (unixServer) {
+                mainCommand = this.commandType.getUnixCommand();
+            } else {
+                mainCommand = this.commandType.getCommand();
+            }
         }
 
         List<String> mpiCommandList = null;
         if (mpiCommand != null && !(mpiCommand.isEmpty())) {
-            mpiCommandList = this.splitCommand(mpiCommand, QEPath.getMPIPath());
+            if (unixServer) {
+                mpiCommandList = this.splitCommand(mpiCommand, null);
+            } else {
+                mpiCommandList = this.splitCommand(mpiCommand, QEPath.getMPIPath());
+            }
         }
 
         List<String> mainCommandList = null;
         if (mainCommand != null && !(mainCommand.isEmpty())) {
-            mainCommandList = this.splitCommand(mainCommand, QEPath.getPath());
+            if (unixServer) {
+                mainCommandList = this.splitCommand(mainCommand, null);
+            } else {
+                mainCommandList = this.splitCommand(mainCommand, QEPath.getPath());
+            }
         }
 
         List<String> commandList = null;

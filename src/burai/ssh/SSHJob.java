@@ -145,7 +145,7 @@ public class SSHJob {
             return;
         }
 
-        List<String[]> commandList = this.type.getCommandList(DUMMY_INP_NAME, this.numProcesses);
+        List<String[]> commandList = this.type.getUnixCommandList(DUMMY_INP_NAME, this.numProcesses);
         if (commandList == null || commandList.isEmpty()) {
             return;
         }
