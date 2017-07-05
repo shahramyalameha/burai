@@ -29,6 +29,8 @@ public final class Environments {
 
     private static final String MATERIALSAPI_NAME = ".materialsapi";
 
+    private static final String SSHDATA_NAME = ".ssh";
+
     private static final String RECENTS_NAME = ".recent";
 
     private static final String WEBDATA_NAME = ".webdata";
@@ -37,15 +39,15 @@ public final class Environments {
 
     private static final String PROPERTIES_NAME = ".properties";
 
-    private static final String SSHDATA_NAME = ".ssh";
-
     private static EnvFile recentsEnvFile = null;
 
     private static EnvFile websitesEnvFile = null;
 
+    private static Map<String, String> websiteTitles = null;
+
     private static EnvProperties envProperties = null;
 
-    private static Map<String, String> websiteTitles = null;
+    private static EnvProperties unixProperties = null;
 
     private Environments() {
         // NOP
@@ -286,32 +288,20 @@ public final class Environments {
         return matapiFile.getPath();
     }
 
-    public static String getDocumentsWebsite() {
-        return getProperty("documents_website");
+    public static String getSSHDataName() {
+        return SSHDATA_NAME;
     }
 
-    public static String getEspressoWebsite() {
-        return getProperty("espresso_website");
-    }
+    public static String getSSHDataPath() {
+        File sshFile = null;
+        String parentPath = getProjectsPath();
+        if (parentPath == null) {
+            sshFile = new File(SSHDATA_NAME);
+        } else {
+            sshFile = new File(parentPath, SSHDATA_NAME);
+        }
 
-    public static String getPseudoWebsite() {
-        return getProperty("pseudos_website");
-    }
-
-    public static String getManPwscfWebsite() {
-        return getProperty("man_pwscf_website");
-    }
-
-    public static String getManDosWebsite() {
-        return getProperty("man_dos_website");
-    }
-
-    public static String getManProjwfcWebsite() {
-        return getProperty("man_projwfc_website");
-    }
-
-    public static String getManBandsWebsite() {
-        return getProperty("man_bands_website");
+        return sshFile.getPath();
     }
 
     public static String getRecentsName() {
@@ -742,19 +732,65 @@ public final class Environments {
         setProperty(key, (String) null);
     }
 
-    public static String getSSHDataName() {
-        return SSHDATA_NAME;
+    public static String getDocumentsWebsite() {
+        return getProperty("documents_website");
     }
 
-    public static String getSSHDataPath() {
-        File sshFile = null;
-        String parentPath = getProjectsPath();
-        if (parentPath == null) {
-            sshFile = new File(SSHDATA_NAME);
-        } else {
-            sshFile = new File(parentPath, SSHDATA_NAME);
+    public static String getEspressoWebsite() {
+        return getProperty("espresso_website");
+    }
+
+    public static String getPseudoWebsite() {
+        return getProperty("pseudos_website");
+    }
+
+    public static String getManPwscfWebsite() {
+        return getProperty("man_pwscf_website");
+    }
+
+    public static String getManDosWebsite() {
+        return getProperty("man_dos_website");
+    }
+
+    public static String getManProjwfcWebsite() {
+        return getProperty("man_projwfc_website");
+    }
+
+    public static String getManBandsWebsite() {
+        return getProperty("man_bands_website");
+    }
+
+    private static EnvProperties getUnixProperties() {
+        if (unixProperties == null) {
+            unixProperties = new EnvProperties("Environments.unix.prop");
         }
 
-        return sshFile.getPath();
+        return unixProperties;
+    }
+
+    public static boolean hasUnixProperty(String key) {
+        return getUnixProperty(key) != null;
+    }
+
+    public static String getUnixProperty(String key) {
+        return getUnixProperty(key, null);
+    }
+
+    public static String getUnixProperty(String key, String def) {
+        if (key == null) {
+            return def;
+        }
+
+        String key2 = key.trim();
+        if (key2.isEmpty()) {
+            return def;
+        }
+
+        EnvProperties unixProperties = getUnixProperties();
+        if (unixProperties != null) {
+            return unixProperties.getProperty(key2);
+        }
+
+        return def;
     }
 }
