@@ -29,6 +29,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
@@ -74,6 +75,12 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
 
     @FXML
     private Button keyButton;
+
+    @FXML
+    private TextField postField;
+
+    @FXML
+    private TextArea scriptArea;
 
     public QEFXSSHDialog(QEFXMainController controller) {
         super();
@@ -121,6 +128,8 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.setupAddButton();
         this.setupDelButton();
         this.setupSSHProperties();
+        this.setupPostField();
+        this.setupScriptArea();
     }
 
     private SSHServer getSSHServer() {
@@ -418,6 +427,22 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         }
 
         return value == null ? null : value.trim();
+    }
+
+    private void setupPostField() {
+        if (this.postField == null) {
+            return;
+        }
+
+        // TODO
+    }
+
+    private void setupScriptArea() {
+        if (this.scriptArea == null) {
+            return;
+        }
+
+        // TODO
     }
 
     public void showAndSetProperties() {
