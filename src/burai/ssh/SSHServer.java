@@ -11,6 +11,12 @@ package burai.ssh;
 
 public class SSHServer {
 
+    private static final String WORD_JOB_SCRIPT = "JOB_SCRIPT";
+
+    private static final String WORD_QE_COMMAND = "QUANTUM_ESPRESSO_COMMAND";
+
+    private static final int DEFAULT_PORT = 22;
+
     private String title;
 
     private String host;
@@ -23,6 +29,10 @@ public class SSHServer {
 
     private String keyPath;
 
+    private String jobCommand;
+
+    private String jobScript;
+
     public SSHServer(String title) {
         if (title == null || title.isEmpty()) {
             throw new IllegalArgumentException("title is empty.");
@@ -30,10 +40,12 @@ public class SSHServer {
 
         this.title = title;
         this.host = null;
-        this.port = "22";
+        this.port = Integer.toString(DEFAULT_PORT);
         this.user = null;
         this.password = null;
         this.keyPath = null;
+        this.initializeJobCommand();
+        this.initializeJobScript();
     }
 
     public String getTitle() {
@@ -50,6 +62,19 @@ public class SSHServer {
 
     public String getPort() {
         return this.port;
+    }
+
+    public int intPort() {
+        int iport = 0;
+
+        try {
+            iport = this.port == null ? DEFAULT_PORT : Integer.parseInt(this.port);
+
+        } catch (NumberFormatException e) {
+            iport = DEFAULT_PORT;
+        }
+
+        return iport;
     }
 
     public void setPort(String port) {
@@ -78,6 +103,31 @@ public class SSHServer {
 
     public void setKeyPath(String keyPath) {
         this.keyPath = keyPath;
+    }
+
+    public String getJobCommand() {
+        return this.jobCommand;
+    }
+
+    public void setJobCommand(String jobCommand) {
+        this.jobCommand = jobCommand;
+    }
+
+    private void initializeJobCommand() {
+        this.jobCommand = "qsub ${" + WORD_JOB_SCRIPT + "}";
+    }
+
+    public String getJobScript() {
+        return this.jobScript;
+    }
+
+    public void setJobScript(String jobScript) {
+        this.jobScript = jobScript;
+    }
+
+    private void initializeJobScript() {
+        this.jobScript = "#!/bin/sh";
+        // TODO
     }
 
     @Override

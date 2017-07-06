@@ -128,8 +128,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.setupAddButton();
         this.setupDelButton();
         this.setupSSHProperties();
-        this.setupPostField();
-        this.setupScriptArea();
+        this.setupCommandProperties();
     }
 
     private SSHServer getSSHServer() {
@@ -162,6 +161,7 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         this.selectCombo.setOnAction(event -> {
             SSHServer sshServer = this.getSSHServer();
             this.updateSSHProperties(sshServer);
+            this.updateCommandProperties(sshServer);
         });
     }
 
@@ -380,6 +380,41 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         }
     }
 
+    private void setupCommandProperties() {
+        SSHServer sshServer = this.getSSHServer();
+        this.updateCommandProperties(sshServer);
+
+        if (this.postField != null) {
+            this.postField.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setJobCommand(this.getPostCommand());
+                }
+            });
+        }
+
+        if (this.scriptArea != null) {
+            this.scriptArea.textProperty().addListener(o -> {
+                SSHServer sshServer_ = this.getSSHServer();
+                if (sshServer_ != null) {
+                    sshServer_.setJobScript(this.getScriptText());
+                }
+            });
+        }
+    }
+
+    private void updateCommandProperties(SSHServer sshServer) {
+        if (this.postField != null) {
+            String postCommand = sshServer == null ? null : sshServer.getJobCommand();
+            this.postField.setText(postCommand == null ? "" : postCommand.trim());
+        }
+
+        if (this.scriptArea != null) {
+            String scriptText = sshServer == null ? null : sshServer.getJobScript();
+            this.scriptArea.setText(scriptText == null ? "" : scriptText);
+        }
+    }
+
     private String getHost() {
         if (this.hostField == null) {
             return null;
@@ -429,20 +464,22 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         return value == null ? null : value.trim();
     }
 
-    private void setupPostField() {
+    private String getPostCommand() {
         if (this.postField == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.postField.getText();
+        return value == null ? null : value.trim();
     }
 
-    private void setupScriptArea() {
+    private String getScriptText() {
         if (this.scriptArea == null) {
-            return;
+            return null;
         }
 
-        // TODO
+        String value = this.scriptArea.getText();
+        return value == null ? null : value.trim();
     }
 
     public void showAndSetProperties() {
