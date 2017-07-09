@@ -112,7 +112,7 @@ public class SSHJob {
             return;
         }
 
-        System.out.println(this.sshServer.getJobScript(this.commands));
+        System.out.println(this.sshServer.getJobScript(this.commands, this.numProcesses, this.numThreads));
 
         // TODO
     }

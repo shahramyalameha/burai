@@ -14,8 +14,10 @@ import java.util.List;
 public class SSHServer {
 
     private static final String WORD_JOB_SCRIPT = "JOB_SCRIPT";
-
     private static final String WORD_QE_COMMAND = "QUANTUM_ESPRESSO_COMMAND";
+    private static final String WORD_NUM_CPUS = "NCPU";
+    private static final String WORD_NUM_MPIS = "NMPI";
+    private static final String WORD_NUM_OMPS = "NOMP";
 
     private static final int DEFAULT_PORT = 22;
 
@@ -112,15 +114,15 @@ public class SSHServer {
     }
 
     public String getJobCommand(String scriptName) {
+        String jobCommand_ = this.jobCommand;
+
         String scriptName_ = scriptName == null ? null : scriptName.trim();
-        if (scriptName_ == null || scriptName_.isEmpty()) {
-            return this.jobCommand;
+        if (scriptName_ != null && (!scriptName_.isEmpty())) {
+            jobCommand_ = jobCommand_.replaceAll("\\$" + WORD_JOB_SCRIPT, scriptName_);
+            jobCommand_ = jobCommand_.replaceAll("\\$\\(" + WORD_JOB_SCRIPT + "\\)", scriptName_);
+            jobCommand_ = jobCommand_.replaceAll("\\$\\{" + WORD_JOB_SCRIPT + "\\}", scriptName_);
         }
 
-        String jobCommand_ = this.jobCommand;
-        jobCommand_.replaceAll("\\$" + WORD_JOB_SCRIPT, scriptName_);
-        jobCommand_.replaceAll("\\$\\(" + WORD_JOB_SCRIPT + "\\)", scriptName_);
-        jobCommand_.replaceAll("\\$\\{" + WORD_JOB_SCRIPT + "\\}", scriptName_);
         return jobCommand_;
     }
 
@@ -133,25 +135,47 @@ public class SSHServer {
     }
 
     public String getJobScript() {
-        return this.getJobScript((String) null);
+        return this.getJobScript((String) null, -1, -1);
     }
 
-    public String getJobScript(String qeCommand) {
+    public String getJobScript(String qeCommand, int numMPI, int numOMP) {
+        String jobScript_ = this.jobScript;
+
         String qeCommand_ = qeCommand == null ? null : qeCommand.trim();
-        if (qeCommand_ == null || qeCommand_.isEmpty()) {
-            return this.jobScript;
+        if (qeCommand_ != null && (!qeCommand_.isEmpty())) {
+            jobScript_ = jobScript_.replaceAll("\\$" + WORD_QE_COMMAND, qeCommand_);
+            jobScript_ = jobScript_.replaceAll("\\$\\(" + WORD_QE_COMMAND + "\\)", qeCommand_);
+            jobScript_ = jobScript_.replaceAll("\\$\\{" + WORD_QE_COMMAND + "\\}", qeCommand_);
         }
 
-        String jobScript_ = this.jobScript;
-        jobScript_.replaceAll("\\$" + WORD_QE_COMMAND, qeCommand_);
-        jobScript_.replaceAll("\\$\\(" + WORD_QE_COMMAND + "\\)", qeCommand_);
-        jobScript_.replaceAll("\\$\\{" + WORD_QE_COMMAND + "\\}", qeCommand_);
+        String strMPI = numMPI < 1 ? null : Integer.toString(numMPI);
+        if (strMPI != null && (!strMPI.isEmpty())) {
+            jobScript_ = jobScript_.replaceAll("\\$" + WORD_NUM_MPIS, strMPI);
+            jobScript_ = jobScript_.replaceAll("\\$\\(" + WORD_NUM_MPIS + "\\)", strMPI);
+            jobScript_ = jobScript_.replaceAll("\\$\\{" + WORD_NUM_MPIS + "\\}", strMPI);
+        }
+
+        String strOMP = numOMP < 1 ? null : Integer.toString(numOMP);
+        if (strOMP != null && (!strOMP.isEmpty())) {
+            jobScript_ = jobScript_.replaceAll("\\$" + WORD_NUM_OMPS, strOMP);
+            jobScript_ = jobScript_.replaceAll("\\$\\(" + WORD_NUM_OMPS + "\\)", strOMP);
+            jobScript_ = jobScript_.replaceAll("\\$\\{" + WORD_NUM_OMPS + "\\}", strOMP);
+        }
+
+        int numCPU = Math.max(0, numMPI) * Math.max(0, numOMP);
+        String strCPU = numCPU < 1 ? null : Integer.toString(numCPU);
+        if (strCPU != null && (!strCPU.isEmpty())) {
+            jobScript_ = jobScript_.replaceAll("\\$" + WORD_NUM_CPUS, strCPU);
+            jobScript_ = jobScript_.replaceAll("\\$\\(" + WORD_NUM_CPUS + "\\)", strCPU);
+            jobScript_ = jobScript_.replaceAll("\\$\\{" + WORD_NUM_CPUS + "\\}", strCPU);
+        }
+
         return jobScript_;
     }
 
-    public String getJobScript(List<String> qeCommands) {
+    public String getJobScript(List<String> qeCommands, int numMPI, int numOMP) {
         if (qeCommands == null) {
-            return this.getJobScript((String) null);
+            return this.getJobScript((String) null, numMPI, numOMP);
         }
 
         StringBuilder strBuilder = new StringBuilder();
@@ -163,7 +187,7 @@ public class SSHServer {
             strBuilder.append(System.lineSeparator());
         }
 
-        return this.getJobScript(strBuilder.toString());
+        return this.getJobScript(strBuilder.toString(), numMPI, numOMP);
     }
 
     public void setJobScript(String jobScript) {
@@ -176,7 +200,10 @@ public class SSHServer {
         strBuilder.append(System.lineSeparator());
         strBuilder.append("#PBS -q QUEUE");
         strBuilder.append(System.lineSeparator());
-        strBuilder.append("#PBS -l select=1:ncpus=8:mpiprocs=4:ompthreads=2");
+        strBuilder.append("#PBS -l select=1:" +
+                "ncpus=${" + WORD_NUM_CPUS + "}:" +
+                "mpiprocs=${" + WORD_NUM_MPIS + "}:" +
+                "ompthreads=${" + WORD_NUM_OMPS + "}");
         strBuilder.append(System.lineSeparator());
         strBuilder.append("#PBS -l walltime=0:30:00");
         strBuilder.append(System.lineSeparator());
@@ -184,9 +211,9 @@ public class SSHServer {
         strBuilder.append(System.lineSeparator());
         strBuilder.append(System.lineSeparator());
 
-        strBuilder.append("if [ -z \"${PBS_O_WORKDIR}\" ]; then");
+        strBuilder.append("if [ ! -z \"${PBS_O_WORKDIR}\" ]; then");
         strBuilder.append(System.lineSeparator());
-        strBuilder.append("cd ${PBS_O_WORKDIR}");
+        strBuilder.append("  cd ${PBS_O_WORKDIR}");
         strBuilder.append(System.lineSeparator());
         strBuilder.append("fi");
         strBuilder.append(System.lineSeparator());
