@@ -112,10 +112,7 @@ public class SSHJob {
             return;
         }
 
-        System.out.println("post -> " + sshServer);
-        for (String command : this.commands) {
-            System.out.println(command);
-        }
+        System.out.println(this.sshServer.getJobScript(this.commands));
 
         // TODO
     }
@@ -240,6 +237,10 @@ public class SSHJob {
             if (command0 == null || command0.isEmpty()) {
                 continue;
             }
+
+            command0 = command0 + " </dev/null";
+            command0 = command0 + " 1>" + logName;
+            command0 = command0 + " 2>" + errName;
 
             File inpFile = new File(directory, inpName);
             boolean inpStatus = this.writeQEInput(input2, inpFile);
