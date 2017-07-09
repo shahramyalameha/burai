@@ -115,9 +115,44 @@ public class SSHJob {
             return false;
         }
 
+        this.ftpFile(this.scriptFile);
+
+        if (this.inpFiles != null) {
+            for (File inpFile : this.inpFiles) {
+                if (inpFile != null) {
+                    this.ftpFile(inpFile);
+                }
+            }
+        }
+
+        if (this.pseudoFiles != null) {
+            for (File pseudoFile : this.pseudoFiles) {
+                if (pseudoFile != null) {
+                    this.ftpFile(pseudoFile);
+                }
+            }
+        }
+
         // TODO
 
         return true;
+    }
+
+    private void ftpFile(File file) {
+        if (file == null) {
+            return;
+        }
+
+        try {
+            if (!file.isFile()) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // TODO
     }
 
     private void setupFiles() {
