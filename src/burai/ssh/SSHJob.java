@@ -15,11 +15,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import burai.com.file.FileTools;
 import burai.input.QEInput;
+import burai.input.card.QEAtomicSpecies;
 import burai.project.Project;
+import burai.pseudo.PseudoPotential;
 import burai.run.InputEditor;
 import burai.run.RunningCondition;
 import burai.run.RunningType;
@@ -38,9 +42,11 @@ public class SSHJob {
 
     private int numThreads;
 
+    private File scriptFile;
+
     private List<File> inpFiles;
 
-    private List<String> commands;
+    private Set<File> pseudoFiles;
 
     public SSHJob(Project project, SSHServer sshServer) {
         if (project == null) {
@@ -59,8 +65,9 @@ public class SSHJob {
         this.numProcesses = 1;
         this.numThreads = 1;
 
+        this.scriptFile = null;
         this.inpFiles = null;
-        this.commands = null;
+        this.pseudoFiles = null;
     }
 
     public Project getProject() {
@@ -101,23 +108,21 @@ public class SSHJob {
         }
     }
 
-    public void postJobToServer() {
-        this.setupCommands();
+    public boolean postJobToServer() {
+        this.setupFiles();
 
-        if (this.inpFiles == null || this.inpFiles.isEmpty()) {
-            return;
+        if (this.scriptFile == null) {
+            return false;
         }
-
-        if (this.commands == null || this.commands.isEmpty()) {
-            return;
-        }
-
-        System.out.println(this.sshServer.getJobScript(this.commands, this.numProcesses, this.numThreads));
 
         // TODO
+
+        return true;
     }
 
-    private void setupCommands() {
+    private void setupFiles() {
+
+        this.scriptFile = null;
 
         if (this.inpFiles == null) {
             this.inpFiles = new ArrayList<File>();
@@ -125,10 +130,10 @@ public class SSHJob {
             this.inpFiles.clear();
         }
 
-        if (this.commands == null) {
-            this.commands = new ArrayList<String>();
+        if (this.pseudoFiles == null) {
+            this.pseudoFiles = new HashSet<File>();
         } else {
-            this.commands.clear();
+            this.pseudoFiles.clear();
         }
 
         File directory = this.getDirectory();
@@ -173,6 +178,8 @@ public class SSHJob {
         }
 
         this.deleteExitFile(directory);
+
+        List<String> qeCommands = new ArrayList<String>();
 
         for (int i = 0; i < commandList.size(); i++) {
             String[] command = commandList.get(i);
@@ -252,8 +259,25 @@ public class SSHJob {
             File errFile = new File(directory, errName);
             this.deleteLogFiles(logFile, errFile);
 
+            qeCommands.add(command0);
+
             this.inpFiles.add(inpFile);
-            this.commands.add(command0);
+
+            QEAtomicSpecies atomicSpecies = input2.getCard(QEAtomicSpecies.class);
+            if (atomicSpecies != null) {
+                int numSpec = atomicSpecies.numSpecies();
+                for (int iSpec = 0; iSpec < numSpec; iSpec++) {
+                    PseudoPotential pseudoPot = atomicSpecies.getPseudoPotential(iSpec);
+                    File pseudoFile = pseudoPot == null ? null : pseudoPot.getFile();
+                    if (pseudoFile != null) {
+                        this.pseudoFiles.add(pseudoFile);
+                    }
+                }
+            }
+        }
+
+        if (qeCommands != null && (!qeCommands.isEmpty())) {
+            this.scriptFile = this.writeScript(directory, qeCommands);
         }
     }
 
@@ -308,6 +332,56 @@ public class SSHJob {
         }
 
         return true;
+    }
+
+    private File writeScript(File directory, List<String> commands) {
+        if (directory == null) {
+            return null;
+        }
+
+        if (commands == null || commands.isEmpty()) {
+            return null;
+        }
+
+        String scriptContent = this.sshServer.getJobScript(commands, this.numProcesses, this.numThreads);
+        if (scriptContent == null || scriptContent.isEmpty()) {
+            return null;
+        }
+
+        String ext = ".sh";
+        if (scriptContent.startsWith("#!/bin/sh")) {
+            ext = ".sh";
+        } else if (scriptContent.startsWith("#!/bin/bash")) {
+            ext = ".bash";
+        } else if (scriptContent.startsWith("#!/bin/csh")) {
+            ext = ".csh";
+        } else if (scriptContent.startsWith("#!/bin/tcsh")) {
+            ext = ".tcsh";
+        } else if (scriptContent.startsWith("#!/bin/zsh")) {
+            ext = ".zsh";
+        }
+
+        String name = this.project.getPrefixName();
+        name = name == null ? null : name.trim() + ext;
+        File file = new File(directory, name);
+
+        PrintWriter writer = null;
+
+        try {
+            writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            writer.print(scriptContent.replaceAll("[\\r\\n]+", "\\n"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+
+        return file;
     }
 
     private void deleteExitFile(File directory) {
