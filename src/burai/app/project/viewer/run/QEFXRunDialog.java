@@ -42,6 +42,7 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
 
     private static final String PROP_KEY_MPI = "number_of_processes";
     private static final String PROP_KEY_OPENMP = "number_of_threads";
+    private static final String PROP_KEY_HOST = "host_name";
 
     private static final String ERROR_STYLE = ConstantStyles.ERROR_COLOR;
 
@@ -226,6 +227,14 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
         int numOMP = this.textFiledToInteger(this.ompField, 1);
         Environments.setProperty(PROP_KEY_MPI, numMPI);
         Environments.setProperty(PROP_KEY_OPENMP, numOMP);
+
+        String hostName = this.hostCombo == null ? null : this.hostCombo.getValue();
+        hostName = hostName == null ? null : hostName.trim();
+        if (hostName == null || hostName.isEmpty()) {
+            Environments.removeProperty(PROP_KEY_HOST);
+        } else {
+            Environments.setProperty(PROP_KEY_HOST, hostName);
+        }
     }
 
     private boolean canRunningNode() {
@@ -260,12 +269,13 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
             return null;
         }
 
-        String title = this.hostCombo == null ? null : this.hostCombo.getValue();
-        if (title == null || title.isEmpty()) {
+        String hostName = this.hostCombo == null ? null : this.hostCombo.getValue();
+        hostName = hostName == null ? null : hostName.trim();
+        if (hostName == null || hostName.isEmpty()) {
             return null;
         }
 
-        SSHServer sshServer = SSHServerList.getInstance().getSSHServer(title);
+        SSHServer sshServer = SSHServerList.getInstance().getSSHServer(hostName);
         if (sshServer == null) {
             return null;
         }
@@ -436,7 +446,13 @@ public class QEFXRunDialog extends Dialog<RunEvent> implements Initializable {
             }
         }
 
-        this.hostCombo.setValue(NAME_LOCAL_HOST);
+        String hostName = Environments.getProperty(PROP_KEY_HOST);
+        hostName = hostName == null ? null : hostName.trim();
+        if (hostName == null || hostName.isEmpty()) {
+            this.hostCombo.setValue(NAME_LOCAL_HOST);
+        } else {
+            this.hostCombo.setValue(hostName);
+        }
     }
 
     private void setupSaveButton() {
