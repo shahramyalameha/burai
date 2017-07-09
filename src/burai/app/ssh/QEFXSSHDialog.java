@@ -329,26 +329,31 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         if (this.hostField != null) {
             String host = sshServer == null ? null : sshServer.getHost();
             this.hostField.setText(host == null ? "" : host.trim());
+            this.hostField.setDisable(sshServer == null);
         }
 
         if (this.portField != null) {
             String port = sshServer == null ? null : sshServer.getPort();
             this.portField.setText(port == null ? "" : port.trim());
+            this.postField.setDisable(sshServer == null);
         }
 
         if (this.userField != null) {
             String user = sshServer == null ? null : sshServer.getUser();
             this.userField.setText(user == null ? "" : user.trim());
+            this.userField.setDisable(sshServer == null);
         }
 
         if (this.passField != null) {
             String pass = sshServer == null ? null : sshServer.getPassword();
             this.passField.setText(pass == null ? "" : pass.trim());
+            this.passField.setDisable(sshServer == null);
         }
 
         if (this.keyButton != null) {
             String keyPath = sshServer == null ? null : sshServer.getKeyPath();
             this.updateKeyButton(keyPath == null ? null : keyPath.trim());
+            this.keyButton.setDisable(sshServer == null);
         }
     }
 
@@ -407,11 +412,13 @@ public class QEFXSSHDialog extends Dialog<ButtonType> implements Initializable {
         if (this.postField != null) {
             String postCommand = sshServer == null ? null : sshServer.getJobCommand();
             this.postField.setText(postCommand == null ? "" : postCommand.trim());
+            this.portField.setDisable(sshServer == null);
         }
 
         if (this.scriptArea != null) {
             String scriptText = sshServer == null ? null : sshServer.getJobScript();
             this.scriptArea.setText(scriptText == null ? "" : scriptText);
+            this.scriptArea.setDisable(sshServer == null);
         }
     }
 
