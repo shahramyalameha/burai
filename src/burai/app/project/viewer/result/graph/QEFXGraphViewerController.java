@@ -15,6 +15,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.result.QEFXResultViewerController;
+import burai.app.project.viewer.result.graph.tools.QEFXGraphLegend;
+import burai.app.project.viewer.result.graph.tools.QEFXGraphNote;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -29,10 +33,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import burai.app.project.QEFXProjectController;
-import burai.app.project.viewer.result.QEFXResultViewerController;
-import burai.app.project.viewer.result.graph.tools.QEFXGraphLegend;
-import burai.app.project.viewer.result.graph.tools.QEFXGraphNote;
 
 public abstract class QEFXGraphViewerController extends QEFXResultViewerController {
 
@@ -136,7 +136,29 @@ public abstract class QEFXGraphViewerController extends QEFXResultViewerControll
 
         if (this.projectController != null) {
             try {
-                QEFXGraphNote note = new QEFXGraphNote(this.projectController, node);
+                boolean maximized = true;
+                if (this.property != null && pos != null) {
+                    maximized = this.property.isNoteMaximized(pos.toString());
+                }
+
+                QEFXGraphNote note = new QEFXGraphNote(this.projectController, node, maximized);
+
+                note.setOnNoteMaximized(maximized_ -> {
+                    if (this.property == null || pos == null) {
+                        return;
+                    }
+
+                    this.property.setNoteMaximized(pos.toString(), maximized_);
+
+                    if (this.propertyFile != null) {
+                        try {
+                            this.property.writeFile(this.propertyFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 Node noteNode = note.getNode();
                 if (noteNode != null) {
                     if (pos != null) {

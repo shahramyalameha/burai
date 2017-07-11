@@ -12,6 +12,10 @@ package burai.app.project.viewer.result.graph.tools;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import burai.app.QEFXAppController;
+import burai.app.project.QEFXProjectController;
+import burai.com.graphic.svg.SVGLibrary;
+import burai.com.graphic.svg.SVGLibrary.SVGData;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -21,10 +25,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import burai.app.QEFXAppController;
-import burai.app.project.QEFXProjectController;
-import burai.com.graphic.svg.SVGLibrary;
-import burai.com.graphic.svg.SVGLibrary.SVGData;
 
 public class QEFXGraphNoteController extends QEFXAppController {
 
@@ -53,7 +53,13 @@ public class QEFXGraphNoteController extends QEFXAppController {
 
     private Button maxButton;
 
-    public QEFXGraphNoteController(QEFXProjectController projectController, Node content) {
+    private boolean maximized;
+
+    private boolean initMaximized;
+
+    private NoteMaximized onNoteMaximized;
+
+    public QEFXGraphNoteController(QEFXProjectController projectController, Node content, boolean initMaximized) {
         super(projectController == null ? null : projectController.getMainController());
 
         if (projectController == null) {
@@ -68,6 +74,49 @@ public class QEFXGraphNoteController extends QEFXAppController {
         this.content = content;
 
         this.maxButton = null;
+        this.maximized = true;
+        this.initMaximized = initMaximized;
+        this.onNoteMaximized = null;
+    }
+
+    public void setOnNoteMaximized(NoteMaximized onNoteMaximized) {
+        this.onNoteMaximized = onNoteMaximized;
+    }
+
+    public void minimize() {
+        if (!this.maximized) {
+            return;
+        }
+
+        if (this.baseGroup != null && this.maxButton != null) {
+            ToolBar toolBar = new ToolBar(this.maxButton);
+            toolBar.getStyleClass().add(NOTE_CLASS);
+            this.baseGroup.getChildren().clear();
+            this.baseGroup.getChildren().add(toolBar);
+
+            this.maximized = false;
+
+            if (this.onNoteMaximized != null) {
+                this.onNoteMaximized.onNoteMaximized(false);
+            }
+        }
+    }
+
+    public void maximize() {
+        if (this.maximized) {
+            return;
+        }
+
+        if (this.baseGroup != null && this.basePane != null) {
+            this.baseGroup.getChildren().clear();
+            this.baseGroup.getChildren().add(this.basePane);
+
+            this.maximized = true;
+
+            if (this.onNoteMaximized != null) {
+                this.onNoteMaximized.onNoteMaximized(true);
+            }
+        }
     }
 
     @Override
@@ -77,6 +126,12 @@ public class QEFXGraphNoteController extends QEFXAppController {
         this.setupScreenButton();
         this.setupMinButton();
         this.setupMaxButton();
+
+        if (this.initMaximized) {
+            this.maximize();
+        } else {
+            this.minimize();
+        }
     }
 
     private void setupBaseGroup() {
@@ -124,14 +179,7 @@ public class QEFXGraphNoteController extends QEFXAppController {
 
         this.minButton.setTooltip(new Tooltip("minimize"));
 
-        this.minButton.setOnAction(event -> {
-            if (this.baseGroup != null && this.maxButton != null) {
-                ToolBar toolBar = new ToolBar(this.maxButton);
-                toolBar.getStyleClass().add(NOTE_CLASS);
-                this.baseGroup.getChildren().clear();
-                this.baseGroup.getChildren().add(toolBar);
-            }
-        });
+        this.minButton.setOnAction(event -> this.minimize());
     }
 
     private void setupMaxButton() {
@@ -144,11 +192,6 @@ public class QEFXGraphNoteController extends QEFXAppController {
 
         this.maxButton.setTooltip(new Tooltip("maximize"));
 
-        this.maxButton.setOnAction(event -> {
-            if (this.baseGroup != null && this.basePane != null) {
-                this.baseGroup.getChildren().clear();
-                this.baseGroup.getChildren().add(this.basePane);
-            }
-        });
+        this.maxButton.setOnAction(event -> this.maximize());
     }
 }

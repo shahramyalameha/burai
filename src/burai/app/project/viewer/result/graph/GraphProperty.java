@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.Gson;
 
@@ -53,6 +56,8 @@ public class GraphProperty {
 
     private List<SeriesProperty> seriesList;
 
+    private Map<String, Boolean> noteMap;
+
     public GraphProperty() {
         this.avail = true;
         this.calcID = -1;
@@ -68,6 +73,7 @@ public class GraphProperty {
         this.yUpper = 0.0;
         this.yTick = -1.0;
         this.seriesList = null;
+        this.noteMap = null;
     }
 
     public int getCalcID() {
@@ -198,6 +204,31 @@ public class GraphProperty {
         this.seriesList.add(series);
     }
 
+    public boolean isNoteMaximized(String key) {
+        if (key == null) {
+            return true;
+        }
+
+        if (this.noteMap == null || this.noteMap.isEmpty()) {
+            return true;
+        }
+
+        Boolean objMaximized = this.noteMap.get(key);
+        return objMaximized == null ? true : objMaximized.booleanValue();
+    }
+
+    public void setNoteMaximized(String key, boolean maximized) {
+        if (key == null) {
+            return;
+        }
+
+        if (this.noteMap == null) {
+            this.noteMap = new HashMap<String, Boolean>();
+        }
+
+        this.noteMap.put(key, maximized);
+    }
+
     @Override
     public String toString() {
         return this.title;
@@ -269,6 +300,22 @@ public class GraphProperty {
                     series1.setWidth(series2.getWidth());
                     series1.setDash(series2.getDash());
                     series1.setWithSymbol(series2.isWithSymbol());
+                }
+            }
+
+            if (obj.noteMap != null && !(obj.noteMap.isEmpty())) {
+                if (this.noteMap == null) {
+                    this.noteMap = new HashMap<String, Boolean>();
+                }
+
+                Set<String> keys = obj.noteMap.keySet();
+                if (keys != null) {
+                    for (String key : keys) {
+                        Boolean value = key == null ? null : obj.noteMap.get(key);
+                        if (value != null) {
+                            this.noteMap.put(key, value);
+                        }
+                    }
                 }
             }
         }
