@@ -560,6 +560,12 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             this.linkedViewers = new ArrayList<AtomsViewer>();
         }
 
+        if (this.linkedViewers.contains(atomsViewer)) {
+            return;
+        }
+
         this.linkedViewers.add(atomsViewer);
+
+        atomsViewer.linkAtomsViewer(this);
     }
 }
