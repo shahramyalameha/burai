@@ -18,6 +18,7 @@ public class ViewerItemSet {
     private ViewerItem modelerItem;
     private ViewerItem saveFileItem;
     private ViewerItem saveAsFileItem;
+    private ViewerItem designerItem;
     private ViewerItem screenShotItem;
     private ViewerItem runItem;
     private ViewerItem resultItem;
@@ -28,6 +29,7 @@ public class ViewerItemSet {
         this.modelerItem = new ViewerItem(SVGData.TOOL, "Modeler");
         this.saveFileItem = new ViewerItem(SVGData.SAVE, "Save");
         this.saveAsFileItem = new ViewerItem(SVGData.SAVE, "Save as ...");
+        this.designerItem = new ViewerItem(SVGData.COLORS, "Designer");
         this.screenShotItem = new ViewerItem(SVGData.CAMERA, "Screen-shot");
         this.runItem = new ViewerItem(SVGData.RUN, "Run");
         this.resultItem = new ViewerItem(SVGData.RESULT, "Result");
@@ -40,6 +42,7 @@ public class ViewerItemSet {
                 this.modelerItem,
                 this.saveFileItem,
                 this.saveAsFileItem,
+                this.designerItem,
                 this.screenShotItem,
                 this.runItem,
                 this.resultItem
@@ -64,6 +67,10 @@ public class ViewerItemSet {
 
     public ViewerItem getSaveAsFileItem() {
         return this.saveAsFileItem;
+    }
+
+    public ViewerItem getDesignerItem() {
+        return this.designerItem;
     }
 
     public ViewerItem getScreenShotItem() {

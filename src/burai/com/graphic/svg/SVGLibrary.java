@@ -34,6 +34,7 @@ public final class SVGLibrary {
         CENTER(SVGItemCenter.WIDTH, SVGItemCenter.HEIGHT, SVGItemCenter.CONTENT),
         CHECK(SVGItemCheck.WIDTH, SVGItemCheck.HEIGHT, SVGItemCheck.CONTENT),
         CLOSE(SVGItemClose.WIDTH, SVGItemClose.HEIGHT, SVGItemClose.CONTENT),
+        COLORS(SVGItemColors.WIDTH, SVGItemColors.HEIGHT, SVGItemColors.STYLES, SVGItemColors.CONTENTS),
         CONTROL(SVGItemControl.WIDTH, SVGItemControl.HEIGHT, SVGItemControl.CONTENT),
         CROSS(SVGItemPlus.WIDTH, SVGItemPlus.HEIGHT, 45.0, SVGItemPlus.CONTENT),
         CRYSTAL(SVGItemCrystal.WIDTH, SVGItemCrystal.HEIGHT, SVGItemCrystal.CONTENT),
@@ -87,6 +88,9 @@ public final class SVGLibrary {
         private double angle;
         private String content;
 
+        private String[] styles;
+        private String[] contents;
+
         private SVGData(double width, double height, String content) {
             this(width, height, 0.0, content);
         }
@@ -108,7 +112,41 @@ public final class SVGLibrary {
             this.height = height;
             this.angle = angle;
             this.content = content;
+
+            this.styles = null;
+            this.contents = null;
         }
+
+        private SVGData(double width, double height, String[] styles, String[] contents) {
+            this(width, height, 0.0, styles, contents);
+        }
+
+        private SVGData(double width, double height, double angle, String[] styles, String[] contents) {
+            if (width <= 0.0) {
+                throw new IllegalArgumentException("width is not positive.");
+            }
+
+            if (height <= 0.0) {
+                throw new IllegalArgumentException("height is not positive.");
+            }
+
+            if (styles == null || styles.length < 1) {
+                throw new IllegalArgumentException("styles is empty.");
+            }
+
+            if (contents == null || contents.length < 1) {
+                throw new IllegalArgumentException("contents is empty.");
+            }
+
+            this.width = width;
+            this.height = height;
+            this.angle = angle;
+            this.content = null;
+
+            this.styles = styles;
+            this.contents = contents;
+        }
+
     }
 
     public static Node getGraphic(SVGData svgData, double size) {
@@ -128,24 +166,63 @@ public final class SVGLibrary {
             throw new IllegalArgumentException("size is not positive.");
         }
 
-        SVGPath svgPath = new SVGPath();
-
-        if (styleClass != null && (!styleClass.isEmpty())) {
-            svgPath.getStyleClass().add(styleClass);
-        }
-
-        if (style != null && (!style.isEmpty())) {
-            svgPath.setStyle(style);
-        }
-
-        svgPath.setContent(svgData.content);
-        svgPath.getTransforms().add(new Scale(size / svgData.width, size / svgData.height, 0.0, 0.0));
-        if (svgData.angle != 0.0) {
-            svgPath.getTransforms().add(new Rotate(svgData.angle, 0.5 * svgData.width, 0.5 * svgData.height));
-        }
-
-        Pane pane = new Pane(svgPath);
+        Pane pane = new Pane();
         pane.setPrefSize(size, size);
+
+        if (svgData.content != null) {
+
+            SVGPath svgPath = new SVGPath();
+
+            if (styleClass != null && (!styleClass.isEmpty())) {
+                svgPath.getStyleClass().add(styleClass);
+            }
+
+            if (style != null && (!style.isEmpty())) {
+                svgPath.setStyle(style);
+            }
+
+            svgPath.setContent(svgData.content);
+            svgPath.getTransforms().add(new Scale(size / svgData.width, size / svgData.height, 0.0, 0.0));
+            if (svgData.angle != 0.0) {
+                svgPath.getTransforms().add(new Rotate(svgData.angle, 0.5 * svgData.width, 0.5 * svgData.height));
+            }
+
+            pane.getChildren().add(svgPath);
+
+        } else if (svgData.contents != null) {
+
+            for (int i = 0; i < svgData.contents.length; i++) {
+                String style0 = svgData.styles[i];
+                String content0 = svgData.contents[i];
+
+                if (content0 == null || content0.isEmpty()) {
+                    continue;
+                }
+
+                SVGPath svgPath = new SVGPath();
+
+                if (styleClass != null && (!styleClass.isEmpty())) {
+                    svgPath.getStyleClass().add(styleClass);
+                }
+
+                if (style0 != null && (!style0.isEmpty())) {
+                    svgPath.setStyle(style0);
+
+                } else if (style != null && (!style.isEmpty())) {
+                    svgPath.setStyle(style);
+                }
+
+                svgPath.setContent(content0);
+                svgPath.getTransforms().add(new Scale(size / svgData.width, size / svgData.height, 0.0, 0.0));
+                if (svgData.angle != 0.0) {
+                    svgPath.getTransforms().add(new Rotate(svgData.angle, 0.5 * svgData.width, 0.5 * svgData.height));
+                }
+
+                pane.getChildren().add(svgPath);
+            }
+
+        }
+
         Group group = new Group(pane);
         return group;
     }
