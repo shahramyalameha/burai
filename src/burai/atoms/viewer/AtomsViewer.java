@@ -12,11 +12,6 @@ package burai.atoms.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.input.KeyEvent;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.CellProperty;
@@ -26,6 +21,11 @@ import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
 import burai.atoms.visible.VisibleCell;
 import burai.com.math.Lattice;
+import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 
 public class AtomsViewer extends AtomsViewerBase<Group> {
 
@@ -37,6 +37,9 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
     private ViewerCompass viewerCompass;
 
     private AtomsLogger logger;
+
+    private boolean busyLinkedViewers;
+    private List<AtomsViewer> linkedViewers;
 
     public AtomsViewer(Cell cell, double size) {
         this(cell, size, size);
@@ -60,11 +63,18 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         this.viewerXYZAxis = new ViewerXYZAxis(this);
         if (!silent) {
             this.viewerCompass = new ViewerCompass(this.viewerCell);
+        } else {
+            this.viewerCompass = null;
         }
 
         if (!silent) {
             this.logger = new AtomsLogger(this.cell);
+        } else {
+            this.logger = null;
         }
+
+        this.busyLinkedViewers = false;
+        this.linkedViewers = null;
 
         this.sceneRoot.getChildren().add(this.viewerCell.getNode());
         this.sceneRoot.getChildren().add(this.viewerSample.getNode());
@@ -245,13 +255,33 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             return;
         }
 
+        if (this.busyLinkedViewers) {
+            return;
+        }
+
         if (this.viewerCell != null) {
             this.viewerCell.appendScale(scale);
         }
+
+        this.busyLinkedViewers = true;
+
+        if (this.linkedViewers != null) {
+            for (AtomsViewer atomsViewer : this.linkedViewers) {
+                if (atomsViewer != null) {
+                    atomsViewer.appendCellScale(scale);
+                }
+            }
+        }
+
+        this.busyLinkedViewers = false;
     }
 
     public void appendCellRotation(double angle, double axisX, double axisY, double axisZ) {
         if (this.compassMode) {
+            return;
+        }
+
+        if (this.busyLinkedViewers) {
             return;
         }
 
@@ -262,6 +292,18 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         if (this.viewerXYZAxis != null) {
             this.viewerXYZAxis.appendRotation(angle, axisX, axisY, axisZ);
         }
+
+        this.busyLinkedViewers = true;
+
+        if (this.linkedViewers != null) {
+            for (AtomsViewer atomsViewer : this.linkedViewers) {
+                if (atomsViewer != null) {
+                    atomsViewer.appendCellRotation(angle, axisX, axisY, axisZ);
+                }
+            }
+        }
+
+        this.busyLinkedViewers = false;
     }
 
     public void appendCellTranslation(double x, double y, double z) {
@@ -269,9 +311,37 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             return;
         }
 
+        if (this.busyLinkedViewers) {
+            return;
+        }
+
+        double scale1 = 1.0;
         if (this.viewerCell != null) {
+            scale1 = this.viewerCell.getScale();
             this.viewerCell.appendTranslation(x, y, z);
         }
+
+        this.busyLinkedViewers = true;
+
+        if (this.linkedViewers != null) {
+            for (AtomsViewer atomsViewer : this.linkedViewers) {
+                if (atomsViewer == null) {
+                    continue;
+                }
+
+                double scale2 = 1.0;
+                if (atomsViewer.viewerCell != null) {
+                    scale2 = atomsViewer.viewerCell.getScale();
+                }
+
+                double x2 = x * scale2 / scale1;
+                double y2 = y * scale2 / scale1;
+                double z2 = z * scale2 / scale1;
+                atomsViewer.appendCellTranslation(x2, y2, z2);
+            }
+        }
+
+        this.busyLinkedViewers = false;
     }
 
     public void appendCompassRotation(double angle, double axisX, double axisY, double axisZ) {
@@ -479,5 +549,17 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         if (this.logger != null) {
             this.logger.subRestoreConfiguration();
         }
+    }
+
+    public void linkAtomsViewer(AtomsViewer atomsViewer) {
+        if (atomsViewer == null) {
+            return;
+        }
+
+        if (this.linkedViewers == null) {
+            this.linkedViewers = new ArrayList<AtomsViewer>();
+        }
+
+        this.linkedViewers.add(atomsViewer);
     }
 }

@@ -51,6 +51,10 @@ public abstract class ViewerComponentBase<A, N extends Node> {
         return this.node;
     }
 
+    public double getScale() {
+        return this.affine == null ? 1.0 : this.affine.getMxx();
+    }
+
     public void appendScale(double scale) {
         if (this.affine != null) {
             this.affine.prependScale(
