@@ -12,14 +12,14 @@ package burai.app.project.menu.teeth;
 import java.util.ArrayList;
 import java.util.List;
 
+import burai.app.project.menu.QEFXCloseMenuItem;
+import burai.app.project.menu.QEFXMenu;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.util.Duration;
-import burai.app.project.menu.QEFXCloseMenuItem;
-import burai.app.project.menu.QEFXMenu;
 
 public class QEFXTeethMenu extends QEFXMenu<Node> {
 
@@ -28,7 +28,7 @@ public class QEFXTeethMenu extends QEFXMenu<Node> {
     private static final double BETWEEN_TEETH = 2.5;
 
     private static final double CLOSE_ITEM_X = 7.0;
-    private static final double CLOSE_ITEM_Y = INITIAL_BOTTOM + 0.5;
+    private static final double CLOSE_ITEM_Y = INITIAL_BOTTOM + 5.0;
 
     private static final double OVER_RUNNING = 0.02;
 
