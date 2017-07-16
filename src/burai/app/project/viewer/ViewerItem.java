@@ -9,6 +9,8 @@
 
 package burai.app.project.viewer;
 
+import burai.com.graphic.svg.SVGLibrary;
+import burai.com.graphic.svg.SVGLibrary.SVGData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,12 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import burai.com.graphic.svg.SVGLibrary;
-import burai.com.graphic.svg.SVGLibrary.SVGData;
 
 public class ViewerItem extends BorderPane {
 
-    private static final double GRAPHIC_SIZE = 32.0;
+    private static final double GRAPHIC_SIZE = 28.0;
     private static final String GRAPHIC_CLASS = "teeth-menu-icon";
 
     private static final double CAPTION_MARGIN = 16.0;

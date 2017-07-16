@@ -11,6 +11,7 @@ package burai.app.project.menu.teeth;
 
 import java.util.List;
 
+import burai.app.project.menu.QEFXMenuItem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -22,15 +23,14 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import javafx.scene.transform.Affine;
-import burai.app.project.menu.QEFXMenuItem;
 
 public class QEFXTeethMenuItem extends QEFXMenuItem<Node> {
 
     private static final double WIDTH_RANDOM = 0.02;
 
-    private static final double GRAPHIC_MARGIN = 26.0;
+    private static final double GRAPHIC_MARGIN = 24.0;
 
-    private static final double SELECTED_X_SHIFT = 5.0;
+    private static final double SELECTED_X_SHIFT = 4.0;
 
     private static final int BLUR_ITER = 2;
     private static final double BLUR_RADIUS = 1.7;

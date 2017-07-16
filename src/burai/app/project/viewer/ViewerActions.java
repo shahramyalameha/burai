@@ -12,8 +12,6 @@ package burai.app.project.viewer;
 import java.io.IOException;
 import java.util.Optional;
 
-import javafx.scene.Node;
-import javafx.scene.control.ButtonType;
 import burai.app.project.ProjectAction;
 import burai.app.project.ProjectActions;
 import burai.app.project.QEFXProjectController;
@@ -27,6 +25,8 @@ import burai.app.project.viewer.run.RunEvent;
 import burai.app.project.viewer.save.SaveAction;
 import burai.app.project.viewer.screenshot.QEFXScreenshotDialog;
 import burai.project.Project;
+import javafx.scene.Node;
+import javafx.scene.control.ButtonType;
 
 public class ViewerActions extends ProjectActions<Node> {
 
@@ -119,6 +119,9 @@ public class ViewerActions extends ProjectActions<Node> {
             } else if (item == this.itemSet.getSaveAsFileItem()) {
                 this.actions.put(item, controller2 -> this.actionSaveAsFile(controller2));
 
+            } else if (item == this.itemSet.getDesignerItem()) {
+                this.actions.put(item, controller2 -> this.actionDesigner(controller2));
+
             } else if (item == this.itemSet.getScreenShotItem()) {
                 this.actions.put(item, controller2 -> this.actionScreenShot(controller2, null));
 
@@ -192,6 +195,16 @@ public class ViewerActions extends ProjectActions<Node> {
 
         SaveAction saveAction = new SaveAction(this.project, controller);
         saveAction.saveProjectAsNew();
+    }
+
+    private void actionDesigner(QEFXProjectController controller) {
+        if (controller == null) {
+            return;
+        }
+
+        // TODO
+        // TODO
+        // TODO
     }
 
     private void actionScreenShot(QEFXProjectController controller, Node subject) {

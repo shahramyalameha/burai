@@ -18,16 +18,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import burai.app.QEFXAppController;
 import burai.app.QEFXMainController;
 import burai.app.project.editor.EditorActions;
@@ -38,6 +28,16 @@ import burai.app.project.viewer.ViewerActions;
 import burai.atoms.viewer.AtomsViewerInterface;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 public class QEFXProjectController extends QEFXAppController {
 
@@ -45,7 +45,7 @@ public class QEFXProjectController extends QEFXAppController {
     private static final String GRAPHIC_CLASS = "pictured-button";
 
     private static final double TEETH_WIDTH = 285.0;
-    private static final double TEETH_HEIGHT = 56.0;
+    private static final double TEETH_HEIGHT = 50.0;
 
     private static final double FAN_RADIUS = 180.0;
     private static final double FAN_WIDTH = 140.0;
