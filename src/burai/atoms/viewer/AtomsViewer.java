@@ -468,6 +468,10 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             return;
         }
 
+        if (this.busyLinkedViewers) {
+            return;
+        }
+
         if (this.viewerCell != null) {
             this.viewerCell.initialize();
         }
@@ -477,6 +481,19 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         }
 
         this.initialRotation();
+
+        this.busyLinkedViewers = true;
+
+        if (this.linkedViewers != null) {
+            for (AtomsViewer atomsViewer : this.linkedViewers) {
+                if (atomsViewer != null) {
+                    atomsViewer.setCellToCenter();
+                }
+            }
+        }
+
+        this.busyLinkedViewers = false;
+
     }
 
     public void setCompassToCenter() {
