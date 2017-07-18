@@ -16,6 +16,7 @@ import burai.app.project.ProjectAction;
 import burai.app.project.ProjectActions;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.atoms.AtomsAction;
+import burai.app.project.viewer.designer.DesignerAction;
 import burai.app.project.viewer.inputfile.QEFXInputFile;
 import burai.app.project.viewer.modeler.ModelerAction;
 import burai.app.project.viewer.result.ResultAction;
@@ -36,6 +37,8 @@ public class ViewerActions extends ProjectActions<Node> {
 
     private ModelerAction modelerAction;
 
+    private DesignerAction designerAction;
+
     private ResultAction resultAction;
 
     public ViewerActions(Project project, QEFXProjectController controller) {
@@ -44,6 +47,8 @@ public class ViewerActions extends ProjectActions<Node> {
         this.itemSet = new ViewerItemSet();
 
         this.atomsAction = null;
+        this.modelerAction = null;
+        this.designerAction = null;
         this.resultAction = null;
 
         this.setupOnViewerSelected();
@@ -202,9 +207,13 @@ public class ViewerActions extends ProjectActions<Node> {
             return;
         }
 
-        // TODO
-        // TODO
-        // TODO
+        if (this.designerAction == null || controller != this.designerAction.getController()) {
+            this.designerAction = new DesignerAction(this.project, controller);
+        }
+
+        if (this.designerAction != null) {
+            this.designerAction.showDesigner();
+        }
     }
 
     private void actionScreenShot(QEFXProjectController controller, Node subject) {
