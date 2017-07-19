@@ -56,6 +56,7 @@ public class QEFXProjectController extends QEFXAppController {
     private static final int MODE_RESULT_VIEWER = 2;
     private static final int MODE_MODELER = 3;
     private static final int MODE_MODELER_SLAB = 4;
+    private static final int MODE_DESIGNER = 5;
 
     @FXML
     private Pane basePane;
@@ -420,6 +421,10 @@ public class QEFXProjectController extends QEFXAppController {
                 // shift modeler-slab -> modeler
                 this.setModelerMode();
                 break;
+            case MODE_DESIGNER:
+                // shift designer -> normal
+                this.setNormalMode();
+                break;
             }
         });
     }
@@ -597,6 +602,19 @@ public class QEFXProjectController extends QEFXAppController {
 
     public void setModelerSlabMode(ModeRestored restoredAction) {
         this.setAbnormalMode(MODE_MODELER_SLAB, restoredAction);
+    }
+
+    // Modeler mode
+    public boolean isDesignerMode() {
+        return this.projectMode == MODE_DESIGNER;
+    }
+
+    public void setDesignerMode() {
+        this.setDesignerMode(null);
+    }
+
+    public void setDesignerMode(ModeRestored restoredAction) {
+        this.setAbnormalMode(MODE_DESIGNER, restoredAction);
     }
 
     private void setAbnormalMode(int projectMode, ModeRestored restoredAction) {

@@ -11,7 +11,7 @@ package burai.app.project.viewer.designer;
 
 import burai.atoms.viewer.AtomsViewer;
 
-public abstract class Designer {
+public class Designer {
 
     protected AtomsViewer atomsViewer;
 

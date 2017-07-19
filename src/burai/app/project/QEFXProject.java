@@ -11,13 +11,13 @@ package burai.app.project;
 
 import java.io.IOException;
 
-import javafx.scene.input.KeyCode;
 import burai.app.QEFXAppComponent;
 import burai.app.QEFXMainController;
 import burai.app.project.editor.EditorActions;
 import burai.app.project.editor.input.InputEditorActions;
 import burai.app.project.viewer.ViewerActions;
 import burai.project.Project;
+import javafx.scene.input.KeyCode;
 
 public class QEFXProject extends QEFXAppComponent<QEFXProjectController> {
 
@@ -67,7 +67,7 @@ public class QEFXProject extends QEFXAppComponent<QEFXProjectController> {
 
             } else if (KeyCode.PRINTSCREEN.equals(event.getCode())) {
                 // PrintScreen
-                if (!this.controller.isResultExplorerMode()) {
+                if (!(this.controller.isResultExplorerMode() || this.controller.isDesignerMode())) {
                     this.controller.sceenShot();
                 }
             }
