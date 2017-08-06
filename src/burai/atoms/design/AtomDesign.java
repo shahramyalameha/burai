@@ -9,7 +9,6 @@
 
 package burai.atoms.design;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,9 @@ public class AtomDesign {
 
     private static final int MAX_COUNT_LISTENERS = 16;
 
-    private int countListeners;
+    private int countAdaptors;
 
-    private List<WeakReference<AtomDesignListener>> listeners;
+    private List<AtomDesignAdaptor> adaptors;
 
     private double radius;
 
@@ -37,8 +36,8 @@ public class AtomDesign {
             throw new IllegalArgumentException("color is null.");
         }
 
-        this.countListeners = 0;
-        this.listeners = null;
+        this.countAdaptors = 0;
+        this.adaptors = null;
 
         this.radius = radius;
         this.color = color;
@@ -52,38 +51,37 @@ public class AtomDesign {
         this(ElementUtil.getCovalentRadius(name), ElementUtil.getColor(name));
     }
 
-    public void addListener(AtomDesignListener listener) {
-        if (listener == null) {
+    public void addAdaptor(AtomDesignAdaptor adaptor) {
+        if (adaptor == null) {
             return;
         }
 
-        if (this.listeners == null) {
-            this.listeners = new ArrayList<>();
+        if (this.adaptors == null) {
+            this.adaptors = new ArrayList<>();
         }
 
-        this.refreshListeners();
+        this.refreshAdaptors();
 
-        this.listeners.add(new WeakReference<AtomDesignListener>(listener));
+        this.adaptors.add(adaptor);
     }
 
-    private void refreshListeners() {
-        if (this.listeners == null || this.listeners.isEmpty()) {
+    private void refreshAdaptors() {
+        if (this.adaptors == null || this.adaptors.isEmpty()) {
             return;
         }
 
-        if (this.countListeners < MAX_COUNT_LISTENERS) {
-            this.countListeners++;
+        if (this.countAdaptors < MAX_COUNT_LISTENERS) {
+            this.countAdaptors++;
             return;
         }
 
-        this.countListeners = 0;
+        this.countAdaptors = 0;
 
-        int numListeners = this.listeners.size();
-        for (int i = (numListeners - 1); i >= 0; i--) {
-            WeakReference<AtomDesignListener> weakListener = this.listeners.get(i);
-            AtomDesignListener listener = weakListener == null ? null : weakListener.get();
-            if (listener == null) {
-                this.listeners.remove(i);
+        int numAdaptors = this.adaptors.size();
+        for (int i = (numAdaptors - 1); i >= 0; i--) {
+            AtomDesignAdaptor adaptor = this.adaptors.get(i);
+            if (adaptor == null || !adaptor.isToBe()) {
+                this.adaptors.remove(i);
             }
         }
     }
@@ -99,9 +97,12 @@ public class AtomDesign {
 
         this.radius = radius;
 
-        if (this.listeners != null && !this.listeners.isEmpty()) {
-            for (WeakReference<AtomDesignListener> weakListener : this.listeners) {
-                AtomDesignListener listener = weakListener == null ? null : weakListener.get();
+        if (this.adaptors != null && !this.adaptors.isEmpty()) {
+            for (AtomDesignAdaptor adaptor : this.adaptors) {
+                AtomDesignListener listener = null;
+                if (adaptor != null && adaptor.isToBe()) {
+                    listener = adaptor.getListener();
+                }
                 if (listener != null) {
                     listener.onRadiusChanged(radius);
                 }
@@ -120,9 +121,12 @@ public class AtomDesign {
 
         this.color = color;
 
-        if (this.listeners != null && !this.listeners.isEmpty()) {
-            for (WeakReference<AtomDesignListener> weakListener : this.listeners) {
-                AtomDesignListener listener = weakListener == null ? null : weakListener.get();
+        if (this.adaptors != null && !this.adaptors.isEmpty()) {
+            for (AtomDesignAdaptor adaptor : this.adaptors) {
+                AtomDesignListener listener = null;
+                if (adaptor != null && adaptor.isToBe()) {
+                    listener = adaptor.getListener();
+                }
                 if (listener != null) {
                     listener.onColorChanged(color);
                 }
