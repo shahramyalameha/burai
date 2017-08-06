@@ -77,7 +77,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         }
 
         if (this.atomDesignAdaptor != null) {
-            this.atomDesignAdaptor.notToBe();
+            this.atomDesignAdaptor.detach();
         }
 
         if (this.atomDesign != null) {
@@ -181,14 +181,14 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     @Override
-    public void onRadiusChanged(double radius) {
+    public void onAtomicRadiusChanged(double radius) {
         if (radius > 0.0) {
             this.updateRadiusOfSphere();
         }
     }
 
     @Override
-    public void onColorChanged(Color color) {
+    public void onAtomicColorChanged(Color color) {
         if (color != null) {
             this.updateColorOfSphere();
         }

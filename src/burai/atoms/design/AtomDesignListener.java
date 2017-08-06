@@ -13,8 +13,8 @@ import javafx.scene.paint.Color;
 
 public interface AtomDesignListener {
 
-    public abstract void onRadiusChanged(double radius);
+    public abstract void onAtomicRadiusChanged(double radius);
 
-    public abstract void onColorChanged(Color color);
+    public abstract void onAtomicColorChanged(Color color);
 
 }

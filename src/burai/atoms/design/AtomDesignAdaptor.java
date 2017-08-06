@@ -27,15 +27,15 @@ public class AtomDesignAdaptor {
         this.weakListener = new WeakReference<AtomDesignListener>(listener);
     }
 
-    public boolean isToBe() {
+    protected boolean isAlive() {
         return this.alive && (this.weakListener.get() != null);
     }
 
-    public void notToBe() {
+    public void detach() {
         this.alive = false;
     }
 
-    public AtomDesignListener getListener() {
+    protected AtomDesignListener getListener() {
         return this.weakListener.get();
     }
 

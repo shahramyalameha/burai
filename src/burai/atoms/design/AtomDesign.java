@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 public class AtomDesign {
 
-    private static final int MAX_COUNT_LISTENERS = 16;
+    private static final int MAX_COUNT_LISTENERS = 32;
 
     private int countAdaptors;
 
@@ -80,7 +80,7 @@ public class AtomDesign {
         int numAdaptors = this.adaptors.size();
         for (int i = (numAdaptors - 1); i >= 0; i--) {
             AtomDesignAdaptor adaptor = this.adaptors.get(i);
-            if (adaptor == null || !adaptor.isToBe()) {
+            if (adaptor == null || !adaptor.isAlive()) {
                 this.adaptors.remove(i);
             }
         }
@@ -100,11 +100,11 @@ public class AtomDesign {
         if (this.adaptors != null && !this.adaptors.isEmpty()) {
             for (AtomDesignAdaptor adaptor : this.adaptors) {
                 AtomDesignListener listener = null;
-                if (adaptor != null && adaptor.isToBe()) {
+                if (adaptor != null && adaptor.isAlive()) {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onRadiusChanged(radius);
+                    listener.onAtomicRadiusChanged(radius);
                 }
             }
         }
@@ -124,11 +124,11 @@ public class AtomDesign {
         if (this.adaptors != null && !this.adaptors.isEmpty()) {
             for (AtomDesignAdaptor adaptor : this.adaptors) {
                 AtomDesignListener listener = null;
-                if (adaptor != null && adaptor.isToBe()) {
+                if (adaptor != null && adaptor.isAlive()) {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onColorChanged(color);
+                    listener.onAtomicColorChanged(color);
                 }
             }
         }
