@@ -9,21 +9,24 @@
 
 package burai.atoms.visible;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Group;
+import burai.atoms.design.ViewerDesign;
 import burai.atoms.model.Model;
 import burai.atoms.model.event.ModelEvent;
 import burai.atoms.model.event.ModelEventListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Group;
 
 public abstract class Visible<M extends Model<? extends ModelEvent, ? extends ModelEventListener>> extends Group
         implements ModelEventListener {
 
     protected M model;
 
+    protected ViewerDesign viewerDesign;
+
     private BooleanProperty toBeFlushed;
 
-    protected Visible(M model) {
+    protected Visible(M model, ViewerDesign viewerDesign) {
         super();
 
         if (model == null) {
@@ -31,6 +34,7 @@ public abstract class Visible<M extends Model<? extends ModelEvent, ? extends Mo
         }
 
         this.model = model;
+        this.viewerDesign = viewerDesign;
         this.toBeFlushed = null;
     }
 

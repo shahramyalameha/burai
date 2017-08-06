@@ -11,17 +11,18 @@ package burai.atoms.visible;
 
 import java.util.List;
 
-import javafx.geometry.Point3D;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
+import burai.atoms.design.ViewerDesign;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Bond;
 import burai.atoms.model.Cell;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.com.math.Matrix3D;
+import javafx.geometry.Point3D;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Cylinder;
 
 public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
@@ -33,12 +34,12 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
     private Cylinder[] latticeCylinders;
 
-    public VisibleCell(Cell cell) {
-        this(cell, false);
+    public VisibleCell(Cell cell, ViewerDesign viewerDesign) {
+        this(cell, viewerDesign, false);
     }
 
-    public VisibleCell(Cell cell, boolean boldMode) {
-        super(cell);
+    public VisibleCell(Cell cell, ViewerDesign viewerDesign, boolean boldMode) {
+        super(cell, viewerDesign);
 
         this.model.addListener(this);
 
@@ -67,13 +68,13 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
             disableToSelect = true;
         }
 
-        VisibleAtom visibleAtom = new VisibleAtom(atom, disableToSelect, this.boldMode);
+        VisibleAtom visibleAtom = new VisibleAtom(atom, this.viewerDesign, disableToSelect, this.boldMode);
         this.toBeFlushedProperty().addListener(o -> visibleAtom.setToBeFlushed(this.isToBeFlushed()));
         return visibleAtom;
     }
 
     private VisibleBond createVisibleBond(Bond bond) {
-        VisibleBond visibleBond = new VisibleBond(bond, this.boldMode);
+        VisibleBond visibleBond = new VisibleBond(bond, this.viewerDesign, this.boldMode);
         this.toBeFlushedProperty().addListener(o -> visibleBond.setToBeFlushed(this.isToBeFlushed()));
         return visibleBond;
     }

@@ -9,13 +9,13 @@
 
 package burai.atoms.viewer;
 
-import javafx.geometry.Point3D;
-import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
 import burai.atoms.model.Cell;
 import burai.atoms.visible.VisibleCell;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
+import javafx.geometry.Point3D;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 
 public class ViewerCell extends ViewerComponent<VisibleCell> {
 
@@ -91,7 +91,7 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
 
     @Override
     protected VisibleCell createNode() {
-        return new VisibleCell(this.cell);
+        return new VisibleCell(this.cell, this.atomsViewer.getViewerDesign());
     }
 
     public boolean isInCell(double sceneX, double sceneY, double sceneZ) {

@@ -12,10 +12,7 @@ package burai.atoms.visible;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import burai.atoms.design.ViewerDesign;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
@@ -24,6 +21,10 @@ import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class AtomsSample extends Group implements AtomEventListener, CellEventListener {
 
@@ -33,10 +34,12 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
     private Cell cell;
 
+    private ViewerDesign viewerDesign;
+
     private List<Atom> sampleAtoms;
     private List<Text> sampleTexts;
 
-    public AtomsSample(Cell cell) {
+    public AtomsSample(Cell cell, ViewerDesign viewerDesign) {
         super();
 
         if (cell == null) {
@@ -44,6 +47,7 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
         }
 
         this.cell = cell;
+        this.viewerDesign = viewerDesign;
         this.initializeSampleAtoms();
         this.setOneselfAsListener();
     }
@@ -138,7 +142,7 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
         Atom sampleAtom = new Atom(name2, 0.0, y, 0.0);
         this.sampleAtoms.add(sampleAtom);
-        this.getChildren().add(new VisibleAtom(sampleAtom, true));
+        this.getChildren().add(new VisibleAtom(sampleAtom, this.viewerDesign, true));
 
         int lenName = name2.length();
         StringBuilder nameBuilder = new StringBuilder();

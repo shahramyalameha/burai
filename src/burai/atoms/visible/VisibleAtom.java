@@ -9,16 +9,20 @@
 
 package burai.atoms.visible;
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
+import burai.atoms.design.AtomDesign;
+import burai.atoms.design.AtomDesignAdaptor;
+import burai.atoms.design.AtomDesignListener;
+import burai.atoms.design.ViewerDesign;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
 import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.AtomEventListener;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 
-public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
+public class VisibleAtom extends Visible<Atom> implements AtomEventListener, AtomDesignListener {
 
     private static final String KEY_SELECTED = AtomProperty.SELECTED;
 
@@ -34,16 +38,19 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
 
     private boolean disableToSelect;
 
-    public VisibleAtom(Atom atom) {
-        this(atom, false);
+    private AtomDesign atomDesign;
+    private AtomDesignAdaptor atomDesignAdaptor;
+
+    public VisibleAtom(Atom atom, ViewerDesign viewerDesign) {
+        this(atom, viewerDesign, false);
     }
 
-    public VisibleAtom(Atom atom, boolean disableToSelect) {
-        this(atom, disableToSelect, false);
+    public VisibleAtom(Atom atom, ViewerDesign viewerDesign, boolean disableToSelect) {
+        this(atom, viewerDesign, disableToSelect, false);
     }
 
-    public VisibleAtom(Atom atom, boolean disableToSelect, boolean boldMode) {
-        super(atom);
+    public VisibleAtom(Atom atom, ViewerDesign viewerDesign, boolean disableToSelect, boolean boldMode) {
+        super(atom, viewerDesign);
 
         this.model.addListener(this);
         this.model.addPropertyListener(KEY_SELECTED, o -> this.updateSelected());
@@ -52,6 +59,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
         this.atomSphere = new AtomicSphere(this, !this.boldMode);
         this.disableToSelect = disableToSelect;
 
+        this.atomDesign = null;
+        this.atomDesignAdaptor = null;
+
+        this.updateAtomDesign();
         this.updateRadiusOfSphere();
         this.updateXYZOfSphere();
         this.updateColorOfSphere();
@@ -59,9 +70,36 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
         this.getChildren().add(this.atomSphere);
     }
 
+    private void updateAtomDesign() {
+        this.atomDesign = null;
+        if (this.viewerDesign != null) {
+            this.atomDesign = this.viewerDesign.getAtomDesign(this.model.getName());
+        }
+
+        if (this.atomDesignAdaptor != null) {
+            this.atomDesignAdaptor.notToBe();
+        }
+
+        if (this.atomDesign != null) {
+            this.atomDesignAdaptor = new AtomDesignAdaptor(this);
+            this.atomDesign.addAdaptor(this.atomDesignAdaptor);
+        }
+    }
+
     private void updateRadiusOfSphere() {
         double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
-        double radius = scale * this.model.getRadius();
+
+        double radius = -1.0;
+        if (this.atomDesign != null) {
+            radius = this.atomDesign.getRadius();
+        }
+
+        if (radius <= 0.0) {
+            radius = this.model.getRadius();
+        }
+
+        radius *= scale;
+
         if (this.isSelected()) {
             double radiusMin = scale * 0.80;
             radius = Math.max(1.05 * radius, radiusMin);
@@ -78,7 +116,16 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
 
     private void updateColorOfSphere() {
         PhongMaterial material = new PhongMaterial();
-        Color diffuseColor = ElementUtil.getColor(this.model.getName());
+
+        Color diffuseColor = null;
+        if (this.atomDesign != null) {
+            diffuseColor = this.atomDesign.getColor();
+        }
+
+        if (diffuseColor == null) {
+            diffuseColor = ElementUtil.getColor(this.model.getName());
+        }
+
         material.setDiffuseColor(diffuseColor);
         material.setSpecularColor(Color.SILVER);
         this.atomSphere.setMaterial(material);
@@ -111,6 +158,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
             return;
         }
 
+        this.updateAtomDesign();
         this.updateRadiusOfSphere();
         this.updateColorOfSphere();
     }
@@ -130,6 +178,20 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener {
         }
 
         this.updateXYZOfSphere();
+    }
+
+    @Override
+    public void onRadiusChanged(double radius) {
+        if (radius > 0.0) {
+            this.updateRadiusOfSphere();
+        }
+    }
+
+    @Override
+    public void onColorChanged(Color color) {
+        if (color != null) {
+            this.updateColorOfSphere();
+        }
     }
 
     public void setSelected(boolean selected) {

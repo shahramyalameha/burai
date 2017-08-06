@@ -9,16 +9,17 @@
 
 package burai.atoms.visible;
 
-import javafx.geometry.Point3D;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
+import burai.atoms.design.ViewerDesign;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Bond;
 import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.BondEvent;
 import burai.atoms.model.event.BondEventListener;
+import javafx.geometry.Point3D;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Cylinder;
 
 public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
@@ -34,12 +35,12 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
     private Cylinder bondCylinder1;
     private Cylinder bondCylinder2;
 
-    public VisibleBond(Bond bond) {
-        this(bond, false);
+    public VisibleBond(Bond bond, ViewerDesign viewerDesign) {
+        this(bond, viewerDesign, false);
     }
 
-    public VisibleBond(Bond bond, boolean boldMode) {
-        super(bond);
+    public VisibleBond(Bond bond, ViewerDesign viewerDesign, boolean boldMode) {
+        super(bond, viewerDesign);
 
         this.model.addListener(this);
 
