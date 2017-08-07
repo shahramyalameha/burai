@@ -49,13 +49,13 @@ public class Design {
         this.atomsStyle = AtomsStyle.BALL_STICK;
         this.onAtomsStyleChanged = null;
 
-        this.backColor = null;
+        this.backColor = Color.TRANSPARENT;
         this.onBackColorChanged = null;
 
-        this.fontColor = null;
+        this.fontColor = Color.BLACK;
         this.onFontColorChanged = null;
 
-        this.cellColor = null;
+        this.cellColor = Color.BLACK;
         this.onCellColorChanged = null;
 
         this.showingLegend = true;

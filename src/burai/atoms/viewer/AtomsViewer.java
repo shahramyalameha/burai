@@ -77,6 +77,11 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         }
 
         this.design = new Design();
+        this.design.setOnBackColorChanged(color -> {
+            if (color != null) {
+                this.subScene.setFill(color);
+            }
+        });
 
         this.busyLinkedViewers = false;
         this.linkedViewers = null;
