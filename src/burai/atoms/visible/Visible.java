@@ -9,7 +9,7 @@
 
 package burai.atoms.visible;
 
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.Design;
 import burai.atoms.model.Model;
 import burai.atoms.model.event.ModelEvent;
 import burai.atoms.model.event.ModelEventListener;
@@ -22,11 +22,11 @@ public abstract class Visible<M extends Model<? extends ModelEvent, ? extends Mo
 
     protected M model;
 
-    protected ViewerDesign viewerDesign;
+    protected Design design;
 
     private BooleanProperty toBeFlushed;
 
-    protected Visible(M model, ViewerDesign viewerDesign) {
+    protected Visible(M model, Design design) {
         super();
 
         if (model == null) {
@@ -34,7 +34,7 @@ public abstract class Visible<M extends Model<? extends ModelEvent, ? extends Mo
         }
 
         this.model = model;
-        this.viewerDesign = viewerDesign;
+        this.design = design;
         this.toBeFlushed = null;
     }
 

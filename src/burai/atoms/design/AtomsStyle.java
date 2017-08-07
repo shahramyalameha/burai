@@ -12,7 +12,9 @@ package burai.atoms.design;
 public enum AtomsStyle {
 
     BALL,
+
     STICK,
+
     BALL_STICK;
 
 }

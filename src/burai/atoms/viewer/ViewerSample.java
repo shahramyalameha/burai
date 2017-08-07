@@ -49,6 +49,6 @@ public class ViewerSample extends ViewerComponent<AtomsSample> {
 
     @Override
     protected AtomsSample createNode() {
-        return new AtomsSample(this.cell, this.atomsViewer.getViewerDesign());
+        return new AtomsSample(this.cell, this.atomsViewer.getDesign());
     }
 }

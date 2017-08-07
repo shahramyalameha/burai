@@ -104,7 +104,7 @@ public class AtomDesign {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onAtomicRadiusChanged(radius);
+                    listener.onAtomicRadiusChanged(this, radius);
                 }
             }
         }
@@ -128,7 +128,7 @@ public class AtomDesign {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onAtomicColorChanged(color);
+                    listener.onAtomicColorChanged(this, color);
                 }
             }
         }

@@ -12,7 +12,7 @@ package burai.atoms.visible;
 import burai.atoms.design.AtomDesign;
 import burai.atoms.design.AtomDesignAdaptor;
 import burai.atoms.design.AtomDesignListener;
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.AtomProperty;
@@ -41,16 +41,16 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     private AtomDesign atomDesign;
     private AtomDesignAdaptor atomDesignAdaptor;
 
-    public VisibleAtom(Atom atom, ViewerDesign viewerDesign) {
-        this(atom, viewerDesign, false);
+    public VisibleAtom(Atom atom, Design design) {
+        this(atom, design, false);
     }
 
-    public VisibleAtom(Atom atom, ViewerDesign viewerDesign, boolean disableToSelect) {
-        this(atom, viewerDesign, disableToSelect, false);
+    public VisibleAtom(Atom atom, Design design, boolean disableToSelect) {
+        this(atom, design, disableToSelect, false);
     }
 
-    public VisibleAtom(Atom atom, ViewerDesign viewerDesign, boolean disableToSelect, boolean boldMode) {
-        super(atom, viewerDesign);
+    public VisibleAtom(Atom atom, Design design, boolean disableToSelect, boolean boldMode) {
+        super(atom, design);
 
         this.model.addListener(this);
         this.model.addPropertyListener(KEY_SELECTED, o -> this.updateSelected());
@@ -72,8 +72,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     private void updateAtomDesign() {
         this.atomDesign = null;
-        if (this.viewerDesign != null) {
-            this.atomDesign = this.viewerDesign.getAtomDesign(this.model.getName());
+        if (this.design != null) {
+            this.atomDesign = this.design.getAtomDesign(this.model.getName());
         }
 
         if (this.atomDesignAdaptor != null) {
@@ -181,15 +181,15 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     @Override
-    public void onAtomicRadiusChanged(double radius) {
-        if (radius > 0.0) {
+    public void onAtomicRadiusChanged(AtomDesign atomDesign, double radius) {
+        if (atomDesign == this.atomDesign && radius > 0.0) {
             this.updateRadiusOfSphere();
         }
     }
 
     @Override
-    public void onAtomicColorChanged(Color color) {
-        if (color != null) {
+    public void onAtomicColorChanged(AtomDesign atomDesign, Color color) {
+        if (atomDesign == this.atomDesign && color != null) {
             this.updateColorOfSphere();
         }
     }

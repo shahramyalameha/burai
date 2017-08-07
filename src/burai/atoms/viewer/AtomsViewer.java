@@ -12,7 +12,7 @@ package burai.atoms.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.Design;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
 import burai.atoms.model.CellProperty;
@@ -39,7 +39,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
 
     private AtomsLogger logger;
 
-    private ViewerDesign viewerDesign;
+    private Design design;
 
     private boolean busyLinkedViewers;
     private List<AtomsViewer> linkedViewers;
@@ -76,7 +76,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             this.logger = null;
         }
 
-        this.viewerDesign = new ViewerDesign();
+        this.design = new Design();
 
         this.busyLinkedViewers = false;
         this.linkedViewers = null;
@@ -573,8 +573,8 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         }
     }
 
-    public ViewerDesign getViewerDesign() {
-        return this.viewerDesign;
+    public Design getDesign() {
+        return this.design;
     }
 
     public void linkAtomsViewer(AtomsViewer atomsViewer) {

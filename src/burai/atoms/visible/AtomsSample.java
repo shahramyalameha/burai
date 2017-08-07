@@ -12,7 +12,7 @@ package burai.atoms.visible;
 import java.util.ArrayList;
 import java.util.List;
 
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
@@ -34,12 +34,12 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
     private Cell cell;
 
-    private ViewerDesign viewerDesign;
+    private Design design;
 
     private List<Atom> sampleAtoms;
     private List<Text> sampleTexts;
 
-    public AtomsSample(Cell cell, ViewerDesign viewerDesign) {
+    public AtomsSample(Cell cell, Design design) {
         super();
 
         if (cell == null) {
@@ -47,7 +47,7 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
         }
 
         this.cell = cell;
-        this.viewerDesign = viewerDesign;
+        this.design = design;
         this.initializeSampleAtoms();
         this.setOneselfAsListener();
     }
@@ -142,7 +142,7 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
         Atom sampleAtom = new Atom(name2, 0.0, y, 0.0);
         this.sampleAtoms.add(sampleAtom);
-        this.getChildren().add(new VisibleAtom(sampleAtom, this.viewerDesign, true));
+        this.getChildren().add(new VisibleAtom(sampleAtom, this.design, true));
 
         int lenName = name2.length();
         StringBuilder nameBuilder = new StringBuilder();

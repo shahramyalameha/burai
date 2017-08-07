@@ -11,7 +11,7 @@ package burai.atoms.visible;
 
 import java.util.List;
 
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.Design;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Bond;
 import burai.atoms.model.Cell;
@@ -34,12 +34,12 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
     private Cylinder[] latticeCylinders;
 
-    public VisibleCell(Cell cell, ViewerDesign viewerDesign) {
-        this(cell, viewerDesign, false);
+    public VisibleCell(Cell cell, Design design) {
+        this(cell, design, false);
     }
 
-    public VisibleCell(Cell cell, ViewerDesign viewerDesign, boolean boldMode) {
-        super(cell, viewerDesign);
+    public VisibleCell(Cell cell, Design design, boolean boldMode) {
+        super(cell, design);
 
         this.model.addListener(this);
 
@@ -68,13 +68,13 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
             disableToSelect = true;
         }
 
-        VisibleAtom visibleAtom = new VisibleAtom(atom, this.viewerDesign, disableToSelect, this.boldMode);
+        VisibleAtom visibleAtom = new VisibleAtom(atom, this.design, disableToSelect, this.boldMode);
         this.toBeFlushedProperty().addListener(o -> visibleAtom.setToBeFlushed(this.isToBeFlushed()));
         return visibleAtom;
     }
 
     private VisibleBond createVisibleBond(Bond bond) {
-        VisibleBond visibleBond = new VisibleBond(bond, this.viewerDesign, this.boldMode);
+        VisibleBond visibleBond = new VisibleBond(bond, this.design, this.boldMode);
         this.toBeFlushedProperty().addListener(o -> visibleBond.setToBeFlushed(this.isToBeFlushed()));
         return visibleBond;
     }

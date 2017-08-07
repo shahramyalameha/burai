@@ -9,7 +9,10 @@
 
 package burai.atoms.visible;
 
-import burai.atoms.design.ViewerDesign;
+import burai.atoms.design.AtomDesign;
+import burai.atoms.design.AtomDesignAdaptor;
+import burai.atoms.design.AtomDesignListener;
+import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Bond;
@@ -21,7 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 
-public class VisibleBond extends Visible<Bond> implements BondEventListener {
+public class VisibleBond extends Visible<Bond> implements BondEventListener, AtomDesignListener {
 
     private static final double CYLINDER_RADIUS_NORM = 0.10;
     private static final double CYLINDER_RADIUS_BOLD = 0.12;
@@ -35,12 +38,17 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
     private Cylinder bondCylinder1;
     private Cylinder bondCylinder2;
 
-    public VisibleBond(Bond bond, ViewerDesign viewerDesign) {
-        this(bond, viewerDesign, false);
+    private AtomDesign atomDesign1;
+    private AtomDesign atomDesign2;
+    private AtomDesignAdaptor atomDesignAdaptor1;
+    private AtomDesignAdaptor atomDesignAdaptor2;
+
+    public VisibleBond(Bond bond, Design design) {
+        this(bond, design, false);
     }
 
-    public VisibleBond(Bond bond, ViewerDesign viewerDesign, boolean boldMode) {
-        super(bond, viewerDesign);
+    public VisibleBond(Bond bond, Design design, boolean boldMode) {
+        super(bond, design);
 
         this.model.addListener(this);
 
@@ -50,26 +58,84 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
         this.bondCylinder1 = new Cylinder(radius, 1.0, CYLINDER_DIV);
         this.bondCylinder2 = new Cylinder(radius, 1.0, CYLINDER_DIV);
 
+        this.atomDesign1 = null;
+        this.atomDesign2 = null;
+        this.atomDesignAdaptor1 = null;
+        this.atomDesignAdaptor1 = null;
+
+        this.updateAtomDesign(true, true);
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();
         this.getChildren().add(this.bondCylinder1);
         this.getChildren().add(this.bondCylinder2);
     }
 
+    private void updateAtomDesign(boolean toDoAtom1, boolean toDoAtom2) {
+        if (toDoAtom1) {
+            this.atomDesign1 = null;
+            if (this.design != null) {
+                Atom atom1 = this.model.getAtom1();
+                this.atomDesign1 = this.design.getAtomDesign(atom1.getName());
+            }
+
+            if (this.atomDesignAdaptor1 != null) {
+                this.atomDesignAdaptor1.detach();
+            }
+
+            if (this.atomDesign1 != null) {
+                this.atomDesignAdaptor1 = new AtomDesignAdaptor(this);
+                this.atomDesign1.addAdaptor(this.atomDesignAdaptor1);
+            }
+        }
+
+        if (toDoAtom2) {
+            this.atomDesign2 = null;
+            if (this.design != null) {
+                Atom atom2 = this.model.getAtom2();
+                this.atomDesign2 = this.design.getAtomDesign(atom2.getName());
+            }
+
+            if (this.atomDesignAdaptor2 != null) {
+                this.atomDesignAdaptor2.detach();
+            }
+
+            if (this.atomDesign2 != null) {
+                this.atomDesignAdaptor2 = new AtomDesignAdaptor(this);
+                this.atomDesign2.addAdaptor(this.atomDesignAdaptor2);
+            }
+        }
+    }
+
     private void updateXYZOfCylinder() {
         Atom atom1 = this.model.getAtom1();
+        int anum1 = atom1.getAtomNum();
         double x1 = atom1.getX();
         double y1 = atom1.getY();
         double z1 = atom1.getZ();
-        double rad1 = Math.sqrt(atom1.getRadius());
-        int anum1 = atom1.getAtomNum();
+
+        double rad1 = -1.0;
+        if (this.atomDesign1 != null) {
+            rad1 = this.atomDesign1.getRadius();
+        }
+        if (rad1 <= 0.0) {
+            rad1 = atom1.getRadius();
+        }
+        rad1 = Math.sqrt(Math.max(rad1, 0.0));
 
         Atom atom2 = this.model.getAtom2();
+        int anum2 = atom2.getAtomNum();
         double x2 = atom2.getX();
         double y2 = atom2.getY();
         double z2 = atom2.getZ();
-        double rad2 = Math.sqrt(atom2.getRadius());
-        int anum2 = atom2.getAtomNum();
+
+        double rad2 = -1.0;
+        if (this.atomDesign2 != null) {
+            rad2 = this.atomDesign2.getRadius();
+        }
+        if (rad2 <= 0.0) {
+            rad2 = atom2.getRadius();
+        }
+        rad2 = Math.sqrt(Math.max(rad2, 0.0));
 
         double dx = x2 - x1;
         double dy = y2 - y1;
@@ -106,14 +172,32 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
 
     private void updateColorOfCylinder() {
         Atom atom1 = this.model.getAtom1();
+
+        Color color1 = null;
+        if (this.atomDesign1 != null) {
+            color1 = this.atomDesign1.getColor();
+        }
+        if (color1 == null) {
+            color1 = ElementUtil.getColor(atom1.getName());
+        }
+
         PhongMaterial material1 = new PhongMaterial();
-        material1.setDiffuseColor(ElementUtil.getColor(atom1.getName()));
+        material1.setDiffuseColor(color1);
         material1.setSpecularColor(Color.SILVER);
         this.bondCylinder1.setMaterial(material1);
 
         Atom atom2 = this.model.getAtom2();
+
+        Color color2 = null;
+        if (this.atomDesign2 != null) {
+            color2 = this.atomDesign2.getColor();
+        }
+        if (color2 == null) {
+            color2 = ElementUtil.getColor(atom2.getName());
+        }
+
         PhongMaterial material2 = new PhongMaterial();
-        material2.setDiffuseColor(ElementUtil.getColor(atom2.getName()));
+        material2.setDiffuseColor(color2);
         material2.setSpecularColor(Color.SILVER);
         this.bondCylinder2.setMaterial(material2);
     }
@@ -129,6 +213,13 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
         String name2 = atomEvent.getName();
         if (name1 != null && name1.equals(name2)) {
             return;
+        }
+
+        Atom srcAtom = event.getAtom();
+        if (srcAtom == this.model.getAtom1()) {
+            this.updateAtomDesign(true, false);
+        } else if (srcAtom == this.model.getAtom2()) {
+            this.updateAtomDesign(false, true);
         }
 
         this.updateXYZOfCylinder();
@@ -151,6 +242,24 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener {
         }
 
         this.updateXYZOfCylinder();
+    }
+
+    @Override
+    public void onAtomicRadiusChanged(AtomDesign atomDesign, double radius) {
+        if (atomDesign == this.atomDesign1 || atomDesign == this.atomDesign2) {
+            if (radius > 0.0) {
+                this.updateXYZOfCylinder();
+            }
+        }
+    }
+
+    @Override
+    public void onAtomicColorChanged(AtomDesign atomDesign, Color color) {
+        if (atomDesign == this.atomDesign1 || atomDesign == this.atomDesign2) {
+            if (color != null) {
+                this.updateColorOfCylinder();
+            }
+        }
     }
 
 }

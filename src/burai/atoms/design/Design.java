@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javafx.scene.paint.Color;
 
-public class ViewerDesign {
+public class Design {
 
     private AtomsStyle atomsStyle;
 
@@ -36,7 +36,7 @@ public class ViewerDesign {
 
     private Map<String, AtomDesign> atomDesigns;
 
-    public ViewerDesign() {
+    public Design() {
         this.atomsStyle = AtomsStyle.BALL_STICK;
         this.backColor = null;
         this.fontColor = null;

@@ -91,7 +91,7 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
 
     @Override
     protected VisibleCell createNode() {
-        return new VisibleCell(this.cell, this.atomsViewer.getViewerDesign());
+        return new VisibleCell(this.cell, this.atomsViewer.getDesign());
     }
 
     public boolean isInCell(double sceneX, double sceneY, double sceneZ) {
