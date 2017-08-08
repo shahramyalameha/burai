@@ -11,6 +11,7 @@ package burai.atoms.design;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javafx.scene.paint.Color;
 
@@ -236,4 +237,17 @@ public class Design {
         return this.atomDesigns.get(name);
     }
 
+    public String[] namesOfAtoms() {
+        if (this.atomDesigns == null || this.atomDesigns.isEmpty()) {
+            return null;
+        }
+
+        Set<String> nameSet = this.atomDesigns.keySet();
+        if (nameSet == null || nameSet.isEmpty()) {
+            return null;
+        }
+
+        String[] names = new String[nameSet.size()];
+        return nameSet.toArray(names);
+    }
 }

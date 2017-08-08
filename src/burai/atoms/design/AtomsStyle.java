@@ -11,10 +11,34 @@ package burai.atoms.design;
 
 public enum AtomsStyle {
 
-    BALL,
+    BALL(0),
 
-    STICK,
+    STICK(1),
 
-    BALL_STICK;
+    BALL_STICK(2);
 
+    private int id;
+
+    private AtomsStyle(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public static AtomsStyle getInstance(int id) {
+        AtomsStyle[] atomsStyles = values();
+        if (atomsStyles == null || atomsStyles.length < 1) {
+            return null;
+        }
+
+        for (AtomsStyle atomsStyle : atomsStyles) {
+            if (atomsStyle != null && id == atomsStyle.getId()) {
+                return atomsStyle;
+            }
+        }
+
+        return null;
+    }
 }
