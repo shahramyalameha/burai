@@ -19,7 +19,8 @@ import burai.app.project.viewer.atoms.AtomsAction;
 import burai.atoms.design.Design;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
-import javafx.application.Platform;
+import burai.atoms.viewer.NodeWrapper;
+import burai.com.fx.FXBufferedThread;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -49,6 +50,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
 
     private QEFXDesignerWindow dualWindow;
 
+    private FXBufferedThread dualWindowThread;
+
     public QEFXDesignerViewerController(QEFXProjectController projectController, Cell cell) {
         super(projectController == null ? null : projectController.getMainController());
 
@@ -69,6 +72,23 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         } catch (IOException e) {
             this.dualWindow = null;
             e.printStackTrace();
+        }
+
+        this.dualWindowThread = null;
+        if (this.dualWindow != null) {
+            this.dualWindowThread = new FXBufferedThread(true);
+        }
+    }
+
+    public void addExclusiveNode(Node node) {
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.addExclusiveNode(node);
+        }
+    }
+
+    public void addExclusiveNode(NodeWrapper nodeWrapper) {
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.addExclusiveNode(nodeWrapper);
         }
     }
 
@@ -112,12 +132,12 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             this.dualPane.setPrefHeight(this.dualMode ? (0.5 * height) : 0.0);
         }
 
-        Platform.runLater(() -> {
-            if (this.dualWindow != null) {
+        if (this.dualWindow != null && this.dualWindow != null) {
+            this.dualWindowThread.runLater(() -> {
                 this.dualWindow.setWidth(this.dualMode ? (0.5 * width) : (WIN_SCALE_WIDTH * width));
                 this.dualWindow.setHeight(this.dualMode ? (0.5 * height) : (WIN_SCALE_HEIGHT * height));
-            }
-        });
+            });
+        }
     }
 
     private void setupPrimPane() {
@@ -149,6 +169,44 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         Node dualNode = this.dualWindow.getNode();
         if (this.basePane != null) {
             this.basePane.getChildren().add(dualNode);
+        }
+
+        this.dualWindow.setOnWindowMaximized(maximized -> {
+            if (maximized) {
+                this.toBeDualMode();
+            } else {
+                this.toBeSingleMode();
+            }
+        });
+    }
+
+    private void toBeDualMode() {
+        this.dualMode = true;
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.startExclusiveMode();
+        }
+
+        // TODO
+        this.resizePanes();
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.stopExclusiveMode();
+        }
+    }
+
+    private void toBeSingleMode() {
+        this.dualMode = false;
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.startExclusiveMode();
+        }
+
+        // TODO
+        this.resizePanes();
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.stopExclusiveMode();
         }
     }
 }
