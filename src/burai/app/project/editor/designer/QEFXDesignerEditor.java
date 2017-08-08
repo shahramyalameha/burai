@@ -13,14 +13,15 @@ import java.io.IOException;
 
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.designer.QEFXDesignerViewer;
 import burai.com.keys.PriorKeyEvent;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 
 public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorController> {
 
-    public QEFXDesignerEditor(QEFXProjectController projectController) throws IOException {
-        super("QEFXDesignerEditor.fxml", new QEFXDesignerEditorController(projectController));
+    public QEFXDesignerEditor(QEFXProjectController projectController, QEFXDesignerViewer viewer) throws IOException {
+        super("QEFXDesignerEditor.fxml", new QEFXDesignerEditorController(projectController, viewer));
 
         if (this.node != null) {
             this.node.setOnMouseReleased(event -> this.node.requestFocus());
@@ -45,9 +46,18 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
                 return;
             }
 
-            if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
-                // Shortcut + C
+            if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
+                if (!event.isShiftDown()) {
+                    // Shortcut + Z
+                    // TODO
 
+                } else {
+                    // Shortcut + Shift + Z
+                    // TODO
+                }
+
+            } else if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
+                // Shortcut + C
                 // TODO
             }
         });

@@ -73,9 +73,9 @@ public class DesignerAction {
         }
 
         QEFXDesignerEditor designerEditor = null;
-        if (this.design != null) {
+        if (this.designerViewer != null) {
             try {
-                designerEditor = new QEFXDesignerEditor(this.controller);
+                designerEditor = new QEFXDesignerEditor(this.controller, this.designerViewer);
             } catch (IOException e) {
                 designerEditor = null;
                 e.printStackTrace();

@@ -24,6 +24,12 @@ public class QEFXDesignerViewer extends QEFXAppComponent<QEFXDesignerViewerContr
         super("QEFXDesignerViewer.fxml", new QEFXDesignerViewerController(projectController, cell));
     }
 
+    public void centerAtomsViewer() {
+        if (this.controller != null) {
+            this.controller.centerAtomsViewer();
+        }
+    }
+
     public void addExclusiveNode(Node node) {
         if (this.controller != null) {
             this.controller.addExclusiveNode(node);

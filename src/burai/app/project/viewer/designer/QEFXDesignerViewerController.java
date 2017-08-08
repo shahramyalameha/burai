@@ -91,6 +91,12 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         }
     }
 
+    public void centerAtomsViewer() {
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.setCellToCenter();
+        }
+    }
+
     public void addExclusiveNode(Node node) {
         if (this.atomsViewerPrim != null) {
             this.atomsViewerPrim.addExclusiveNode(node);
