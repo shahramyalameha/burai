@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import burai.atoms.model.Cell;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.DepthTest;
@@ -26,7 +27,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import burai.atoms.model.Cell;
 
 public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInterface {
 
@@ -120,6 +120,13 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
     @Override
     public double getSceneHeight() {
         return this.height;
+    }
+
+    @Override
+    public void setSceneStyle(String style) {
+        if (this.subScene != null) {
+            this.subScene.setStyle(style);
+        }
     }
 
     @Override

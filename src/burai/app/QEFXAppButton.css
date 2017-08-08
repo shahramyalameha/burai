@@ -139,3 +139,13 @@
     -fx-fill: derive(mediumseagreen, 20.0%);
 }
 
+.designer-button {
+    -fx-fill: -fx-dark-text-color;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.666667em;
+    -fx-border-color: -fx-dark-text-color;
+    -fx-border-radius: 0.666667em;
+    -fx-border-width: 0.166667em;
+    -fx-focus-traversable: false;
+}
+

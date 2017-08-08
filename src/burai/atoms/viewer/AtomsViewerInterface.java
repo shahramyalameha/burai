@@ -9,10 +9,10 @@
 
 package burai.atoms.viewer;
 
+import burai.atoms.model.Cell;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import burai.atoms.model.Cell;
 
 public abstract class AtomsViewerInterface extends Group {
 
@@ -25,6 +25,8 @@ public abstract class AtomsViewerInterface extends Group {
     public abstract double getSceneWidth();
 
     public abstract double getSceneHeight();
+
+    public abstract void setSceneStyle(String style);
 
     public abstract void addExclusiveNode(Node node);
 

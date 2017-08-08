@@ -28,12 +28,10 @@ import javafx.scene.layout.StackPane;
 
 public class QEFXDesignerWindowController extends QEFXAppController {
 
-    private static final double INSETS_SIZE = 2.0;
+    private static final double INSETS_SIZE = 4.0;
 
-    private static final double GRAPHIC_SIZE = 20.0;
-    private static final String GRAPHIC_CLASS = "piclight-button";
-
-    private QEFXProjectController projectController;
+    private static final double GRAPHIC_SIZE = 22.0;
+    private static final String GRAPHIC_CLASS = "designer-button";
 
     private AtomsViewer atomsViewer;
 
@@ -52,15 +50,9 @@ public class QEFXDesignerWindowController extends QEFXAppController {
     public QEFXDesignerWindowController(QEFXProjectController projectController, AtomsViewer atomsViewer) {
         super(projectController == null ? null : projectController.getMainController());
 
-        if (projectController == null) {
-            throw new IllegalArgumentException("projectController is null.");
-        }
-
         if (atomsViewer == null) {
             throw new IllegalArgumentException("atomsViewer is null.");
         }
-
-        this.projectController = projectController;
 
         this.atomsViewer = atomsViewer;
 
@@ -128,6 +120,8 @@ public class QEFXDesignerWindowController extends QEFXAppController {
             return;
         }
 
+        this.scaleButton.setText("");
+        this.scaleButton.getStyleClass().add(GRAPHIC_CLASS);
         this.updateScaleButton(!this.maximized);
 
         this.scaleButton.setOnAction(event -> {
@@ -147,13 +141,11 @@ public class QEFXDesignerWindowController extends QEFXAppController {
         }
 
         if (toMaximize) {
-            this.scaleButton.setText("");
             this.scaleButton.setTooltip(new Tooltip("maximize"));
             this.scaleButton.setGraphic(
                     SVGLibrary.getGraphic(SVGData.MAXIMIZE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
 
         } else {
-            this.scaleButton.setText("");
             this.scaleButton.setTooltip(new Tooltip("minimize"));
             this.scaleButton.setGraphic(
                     SVGLibrary.getGraphic(SVGData.MINIMIZE, GRAPHIC_SIZE, null, GRAPHIC_CLASS));
