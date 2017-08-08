@@ -9,7 +9,7 @@
 
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <StackPane fx:id="basePane" style="-fx-background-color: cyan;" BorderPane.alignment="CENTER">
+      <StackPane fx:id="basePane" BorderPane.alignment="CENTER">
          <children>
             <GridPane>
               <columnConstraints>
@@ -21,8 +21,8 @@
                 <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Pane fx:id="primPane" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: red;" GridPane.columnIndex="1" />
-                  <Pane fx:id="dualPane" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: blue;" GridPane.rowIndex="1" />
+                  <Pane fx:id="primPane" prefHeight="200.0" prefWidth="300.0" GridPane.columnIndex="1" />
+                  <Pane fx:id="dualPane" prefHeight="200.0" prefWidth="300.0" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>

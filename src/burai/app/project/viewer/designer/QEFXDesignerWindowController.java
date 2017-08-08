@@ -37,6 +37,9 @@ public class QEFXDesignerWindowController extends QEFXAppController {
 
     private AtomsViewer atomsViewer;
 
+    private boolean maximized;
+    private WindowMaximized onWindowMaximized;
+
     @FXML
     private Group baseGroup;
 
@@ -60,6 +63,33 @@ public class QEFXDesignerWindowController extends QEFXAppController {
         this.projectController = projectController;
 
         this.atomsViewer = atomsViewer;
+
+        this.maximized = false;
+        this.onWindowMaximized = null;
+    }
+
+    public void setWidth(double width) {
+        if (width <= 0.0) {
+            return;
+        }
+
+        if (this.mainPane != null) {
+            this.mainPane.setPrefWidth(width);
+        }
+    }
+
+    public void setHeight(double height) {
+        if (height <= 0.0) {
+            return;
+        }
+
+        if (this.mainPane != null) {
+            this.mainPane.setPrefHeight(height);
+        }
+    }
+
+    public void setOnWindowMaximized(WindowMaximized onWindowMaximized) {
+        this.onWindowMaximized = onWindowMaximized;
     }
 
     @Override
@@ -83,8 +113,6 @@ public class QEFXDesignerWindowController extends QEFXAppController {
             return;
         }
 
-        this.mainPane.setPrefWidth(500.0);
-        this.mainPane.setPrefHeight(500.0);
         this.mainPane.getChildren().clear();
 
         if (this.atomsViewer != null) {
@@ -98,7 +126,17 @@ public class QEFXDesignerWindowController extends QEFXAppController {
             return;
         }
 
-        this.updateScaleButton(true);
+        this.updateScaleButton(!this.maximized);
+
+        this.scaleButton.setOnAction(event -> {
+            this.maximized = !this.maximized;
+
+            if (this.onWindowMaximized != null) {
+                this.onWindowMaximized.onWindowMaximized(this.maximized);
+            }
+
+            this.updateScaleButton(!this.maximized);
+        });
     }
 
     private void updateScaleButton(boolean toMaximize) {

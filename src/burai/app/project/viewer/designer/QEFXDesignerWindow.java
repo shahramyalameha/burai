@@ -21,4 +21,21 @@ public class QEFXDesignerWindow extends QEFXAppComponent<QEFXDesignerWindowContr
         super("QEFXDesignerWindow.fxml", new QEFXDesignerWindowController(projectController, atomsViewer));
     }
 
+    public void setWidth(double width) {
+        if (this.controller != null) {
+            this.controller.setWidth(width);
+        }
+    }
+
+    public void setHeight(double height) {
+        if (this.controller != null) {
+            this.controller.setHeight(height);
+        }
+    }
+
+    public void setOnWindowMaximized(WindowMaximized onWindowMaximized) {
+        if (this.controller != null) {
+            this.controller.setOnWindowMaximized(onWindowMaximized);
+        }
+    }
 }
