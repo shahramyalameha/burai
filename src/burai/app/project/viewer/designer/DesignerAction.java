@@ -17,6 +17,7 @@ import burai.atoms.design.Design;
 import burai.atoms.model.Cell;
 import burai.project.Project;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 
 public class DesignerAction {
 
@@ -60,9 +61,7 @@ public class DesignerAction {
     private void initializeDesigner() {
         if (this.designerViewer == null) {
             try {
-                Cell cell = this.project.getCell();
-                this.designerViewer = cell == null ? null : new QEFXDesignerViewer(this.controller, cell);
-
+                this.designerViewer = this.createDesignerViewer();
             } catch (IOException e) {
                 this.designerViewer = null;
                 e.printStackTrace();
@@ -98,4 +97,32 @@ public class DesignerAction {
             }
         }
     }
+
+    private QEFXDesignerViewer createDesignerViewer() throws IOException {
+        Cell cell = this.project.getCell();
+        if (cell == null) {
+            return null;
+        }
+
+        QEFXDesignerViewer designerViewer = new QEFXDesignerViewer(this.controller, cell);
+
+        final BorderPane projectPane;
+        if (this.controller != null) {
+            projectPane = this.controller.getProjectPane();
+        } else {
+            projectPane = null;
+        }
+
+        if (projectPane != null) {
+            designerViewer.addExclusiveNode(() -> {
+                return projectPane.getRight();
+            });
+            designerViewer.addExclusiveNode(() -> {
+                return projectPane.getBottom();
+            });
+        }
+
+        return designerViewer;
+    }
+
 }

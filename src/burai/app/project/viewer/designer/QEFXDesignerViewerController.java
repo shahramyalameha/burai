@@ -165,6 +165,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             this.basePane.getChildren().add(dualNode);
         }
 
+        this.addExclusiveNode(dualNode);
+
         this.dualWindow.setOnWindowMaximized(maximized -> {
             if (maximized) {
                 this.changeDualMode(true);

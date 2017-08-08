@@ -15,11 +15,25 @@ import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
 import burai.atoms.design.Design;
 import burai.atoms.model.Cell;
+import burai.atoms.viewer.NodeWrapper;
+import javafx.scene.Node;
 
 public class QEFXDesignerViewer extends QEFXAppComponent<QEFXDesignerViewerController> {
 
     public QEFXDesignerViewer(QEFXProjectController projectController, Cell cell) throws IOException {
         super("QEFXDesignerViewer.fxml", new QEFXDesignerViewerController(projectController, cell));
+    }
+
+    public void addExclusiveNode(Node node) {
+        if (this.controller != null) {
+            this.controller.addExclusiveNode(node);
+        }
+    }
+
+    public void addExclusiveNode(NodeWrapper nodeWrapper) {
+        if (this.controller != null) {
+            this.controller.addExclusiveNode(nodeWrapper);
+        }
     }
 
     public Design getDesign() {
