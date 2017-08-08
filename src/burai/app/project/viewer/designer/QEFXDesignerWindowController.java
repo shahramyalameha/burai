@@ -113,6 +113,8 @@ public class QEFXDesignerWindowController extends QEFXAppController {
             return;
         }
 
+        this.mainPane.setPrefWidth(0.0);
+        this.mainPane.setPrefHeight(0.0);
         this.mainPane.getChildren().clear();
 
         if (this.atomsViewer != null) {

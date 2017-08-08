@@ -21,12 +21,21 @@ import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.NodeWrapper;
 import burai.com.fx.FXBufferedThread;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 public class QEFXDesignerViewerController extends QEFXAppController {
+
+    private static final long ANIMATION_TIME1 = 550L;
+    private static final long ANIMATION_TIME2 = 650L;
 
     private static final double WIN_SCALE_WIDTH = 0.32;
     private static final double WIN_SCALE_HEIGHT = 0.32;
@@ -34,6 +43,7 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     private QEFXProjectController projectController;
 
     private boolean dualMode;
+    private boolean modeChanging;
 
     private AtomsViewer atomsViewerPrim;
 
@@ -62,6 +72,7 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         this.projectController = projectController;
 
         this.dualMode = false;
+        this.modeChanging = false;
 
         this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
         this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
@@ -102,7 +113,7 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         this.setupPrimPane();
         this.setupDualPane();
         this.setupDualWindow();
-        this.resizePanes();
+        this.resizePanes(this.dualMode ? 1.0 : 0.0, true);
     }
 
     private void setupBasePane() {
@@ -110,34 +121,17 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             return;
         }
 
-        this.basePane.widthProperty().addListener(o -> this.resizePanes());
-        this.basePane.heightProperty().addListener(o -> this.resizePanes());
-    }
+        this.basePane.widthProperty().addListener(o -> {
+            if (!this.modeChanging) {
+                this.resizePanes(this.dualMode ? 1.0 : 0.0, true);
+            }
+        });
 
-    private void resizePanes() {
-        if (this.basePane == null) {
-            return;
-        }
-
-        double width = this.basePane.getWidth();
-        double height = this.basePane.getHeight();
-
-        if (this.primPane != null) {
-            this.primPane.setPrefWidth(this.dualMode ? (0.5 * width) : width);
-            this.primPane.setPrefHeight(this.dualMode ? (0.5 * height) : height);
-        }
-
-        if (this.dualPane != null) {
-            this.dualPane.setPrefWidth(this.dualMode ? (0.5 * width) : 0.0);
-            this.dualPane.setPrefHeight(this.dualMode ? (0.5 * height) : 0.0);
-        }
-
-        if (this.dualWindow != null && this.dualWindow != null) {
-            this.dualWindowThread.runLater(() -> {
-                this.dualWindow.setWidth(this.dualMode ? (0.5 * width) : (WIN_SCALE_WIDTH * width));
-                this.dualWindow.setHeight(this.dualMode ? (0.5 * height) : (WIN_SCALE_HEIGHT * height));
-            });
-        }
+        this.basePane.heightProperty().addListener(o -> {
+            if (!this.modeChanging) {
+                this.resizePanes(this.dualMode ? 1.0 : 0.0, true);
+            }
+        });
     }
 
     private void setupPrimPane() {
@@ -173,40 +167,88 @@ public class QEFXDesignerViewerController extends QEFXAppController {
 
         this.dualWindow.setOnWindowMaximized(maximized -> {
             if (maximized) {
-                this.toBeDualMode();
+                this.changeDualMode(true);
             } else {
-                this.toBeSingleMode();
+                this.changeDualMode(false);
             }
         });
     }
 
-    private void toBeDualMode() {
-        this.dualMode = true;
+    private void changeDualMode(boolean toDual) {
+        this.dualMode = toDual;
+
+        this.modeChanging = true;
 
         if (this.atomsViewerPrim != null) {
             this.atomsViewerPrim.startExclusiveMode();
         }
 
-        // TODO
-        this.resizePanes();
+        DoubleProperty rateProperty = new SimpleDoubleProperty(0.0);
+        rateProperty.addListener(o -> {
+            double rate = rateProperty.get();
+            rate = Math.sin(0.5 * Math.PI * rate);
 
-        if (this.atomsViewerPrim != null) {
-            this.atomsViewerPrim.stopExclusiveMode();
-        }
+            if (toDual) {
+                this.resizePanes(rate, false);
+            } else {
+                this.resizePanes(1.0 - rate, false);
+            }
+        });
+
+        KeyValue keyValue = new KeyValue(rateProperty, 1.0);
+        KeyFrame keyFrame = new KeyFrame(
+                Duration.millis(toDual ? ANIMATION_TIME1 : ANIMATION_TIME2), keyValue);
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setOnFinished(event -> {
+            if (this.atomsViewerPrim != null) {
+                this.atomsViewerPrim.stopExclusiveMode();
+            }
+
+            this.modeChanging = false;
+        });
+
+        timeline.playFromStart();
     }
 
-    private void toBeSingleMode() {
-        this.dualMode = false;
-
-        if (this.atomsViewerPrim != null) {
-            this.atomsViewerPrim.startExclusiveMode();
+    private void resizePanes(double rate, boolean async) {
+        if (this.basePane == null) {
+            return;
         }
 
-        // TODO
-        this.resizePanes();
+        double width = this.basePane.getWidth();
+        double height = this.basePane.getHeight();
 
-        if (this.atomsViewerPrim != null) {
-            this.atomsViewerPrim.stopExclusiveMode();
+        if (this.primPane != null) {
+            double scale = 1.0 - 0.5 * rate;
+            this.primPane.setPrefWidth(scale * width);
+            this.primPane.setPrefHeight(scale * height);
+        }
+
+        if (this.dualPane != null) {
+            double scale = 0.5 * rate;
+            this.dualPane.setPrefWidth(scale * width);
+            this.dualPane.setPrefHeight(scale * height);
+        }
+
+        if (this.dualWindow != null) {
+            double scale1 = (0.5 - WIN_SCALE_WIDTH) * rate + WIN_SCALE_WIDTH;
+            double scale2 = (0.5 - WIN_SCALE_HEIGHT) * rate + WIN_SCALE_HEIGHT;
+
+            if (!async) {
+                this.dualWindow.setWidth(scale1 * width);
+                this.dualWindow.setHeight(scale2 * height);
+
+            } else {
+                if (this.dualWindowThread != null) {
+                    this.dualWindowThread.runLater(() -> {
+                        this.dualWindow.setWidth(scale1 * width);
+                        this.dualWindow.setHeight(scale2 * height);
+                    });
+                }
+            }
         }
     }
 }
