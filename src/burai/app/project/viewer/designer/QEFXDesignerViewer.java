@@ -13,11 +13,17 @@ import java.io.IOException;
 
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
+import burai.atoms.design.Design;
+import burai.atoms.model.Cell;
 
 public class QEFXDesignerViewer extends QEFXAppComponent<QEFXDesignerViewerController> {
 
-    public QEFXDesignerViewer(QEFXProjectController projectController) throws IOException {
-        super("QEFXDesignerViewer.fxml", new QEFXDesignerViewerController(projectController));
+    public QEFXDesignerViewer(QEFXProjectController projectController, Cell cell) throws IOException {
+        super("QEFXDesignerViewer.fxml", new QEFXDesignerViewerController(projectController, cell));
+    }
+
+    public Design getDesign() {
+        return this.controller == null ? null : this.controller.getDesign();
     }
 
 }

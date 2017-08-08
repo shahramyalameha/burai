@@ -13,6 +13,8 @@ import java.io.IOException;
 
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.designer.QEFXDesignerEditor;
+import burai.atoms.design.Design;
+import burai.atoms.model.Cell;
 import burai.project.Project;
 import javafx.scene.Node;
 
@@ -22,7 +24,7 @@ public class DesignerAction {
 
     private QEFXProjectController controller;
 
-    private Designer designer;
+    private Design design;
 
     private QEFXDesignerViewer designerViewer;
 
@@ -38,7 +40,7 @@ public class DesignerAction {
         this.project = project;
         this.controller = controller;
 
-        this.designer = null;
+        this.design = null;
         this.designerViewer = null;
     }
 
@@ -47,7 +49,7 @@ public class DesignerAction {
     }
 
     public void showDesigner() {
-        if (this.designer == null || this.designerViewer == null) {
+        if (this.design == null || this.designerViewer == null) {
             this.initializeDesigner();
             return;
         }
@@ -56,25 +58,27 @@ public class DesignerAction {
     }
 
     private void initializeDesigner() {
-        if (this.designer == null) {
-            this.designer = new Designer();
-        }
-
-        QEFXDesignerEditor designerEditor = null;
-        if (this.designer != null) {
+        if (this.designerViewer == null) {
             try {
-                designerEditor = new QEFXDesignerEditor(this.controller);
+                Cell cell = this.project.getCell();
+                this.designerViewer = cell == null ? null : new QEFXDesignerViewer(this.controller, cell);
+
             } catch (IOException e) {
-                designerEditor = null;
+                this.designerViewer = null;
                 e.printStackTrace();
             }
         }
 
-        if (this.designerViewer == null) {
+        if (this.design == null) {
+            this.design = this.designerViewer == null ? null : this.designerViewer.getDesign();
+        }
+
+        QEFXDesignerEditor designerEditor = null;
+        if (this.design != null) {
             try {
-                this.designerViewer = new QEFXDesignerViewer(this.controller);
+                designerEditor = new QEFXDesignerEditor(this.controller);
             } catch (IOException e) {
-                this.designerViewer = null;
+                designerEditor = null;
                 e.printStackTrace();
             }
         }

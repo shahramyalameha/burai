@@ -12,15 +12,23 @@ package burai.app.project.viewer.designer;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import burai.app.QEFXAppController;
+import burai.app.project.QEFXProjectController;
+import burai.app.project.viewer.atoms.AtomsAction;
+import burai.atoms.design.Design;
+import burai.atoms.model.Cell;
+import burai.atoms.viewer.AtomsViewer;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import burai.app.QEFXAppController;
-import burai.app.project.QEFXProjectController;
 
 public class QEFXDesignerViewerController extends QEFXAppController {
 
     private QEFXProjectController projectController;
+
+    private AtomsViewer atomsViewerPrim;
+
+    private AtomsViewer atomsViewerDual;
 
     @FXML
     private Pane primPane;
@@ -31,10 +39,21 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     @FXML
     private StackPane basePane;
 
-    public QEFXDesignerViewerController(QEFXProjectController projectController) {
+    public QEFXDesignerViewerController(QEFXProjectController projectController, Cell cell) {
         super(projectController == null ? null : projectController.getMainController());
 
+        if (cell == null) {
+            throw new IllegalArgumentException("cell is null.");
+        }
+
         this.projectController = projectController;
+
+        this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
+        this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
+    }
+
+    public Design getDesign() {
+        return this.atomsViewerPrim == null ? null : this.atomsViewerPrim.getDesign();
     }
 
     @Override
@@ -49,7 +68,12 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        this.primPane.getChildren().clear();
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.bindSceneTo(this.primPane);
+            this.primPane.getChildren().add(this.atomsViewerPrim);
+        }
     }
 
     private void setupDualPane() {
@@ -57,7 +81,12 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        this.dualPane.getChildren().clear();
+
+        if (this.atomsViewerDual != null) {
+            this.atomsViewerDual.bindSceneTo(this.dualPane);
+            this.dualPane.getChildren().add(this.atomsViewerDual);
+        }
     }
 
     private void setupBasePane() {
