@@ -37,3 +37,10 @@
     -fx-opacity: 0.75;
 }
 
+/* DesignerWindow */
+
+.designerwin-pane {
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, derive(black, 15.0%), 4.5, 0.15, 0.333333em, 0.5em);
+}
+

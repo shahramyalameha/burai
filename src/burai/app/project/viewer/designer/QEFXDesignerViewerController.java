@@ -48,8 +48,10 @@ public class QEFXDesignerViewerController extends QEFXAppController {
 
         this.projectController = projectController;
 
-        this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
-        this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize());
+        this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
+        this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
+
+        this.atomsViewerPrim.linkAtomsViewer(this.atomsViewerDual);
     }
 
     public Design getDesign() {
@@ -68,6 +70,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             return;
         }
 
+        this.primPane.setPrefWidth(500.0);
+        this.primPane.setPrefHeight(500.0);
         this.primPane.getChildren().clear();
 
         if (this.atomsViewerPrim != null) {
@@ -81,12 +85,14 @@ public class QEFXDesignerViewerController extends QEFXAppController {
             return;
         }
 
+        this.dualPane.setPrefWidth(0.0);
+        this.dualPane.setPrefHeight(0.0);
         this.dualPane.getChildren().clear();
 
-        if (this.atomsViewerDual != null) {
-            this.atomsViewerDual.bindSceneTo(this.dualPane);
-            this.dualPane.getChildren().add(this.atomsViewerDual);
-        }
+        //        if (this.atomsViewerDual != null) {
+        //            this.atomsViewerDual.bindSceneTo(this.dualPane);
+        //            this.dualPane.getChildren().add(this.atomsViewerDual);
+        //        }
     }
 
     private void setupBasePane() {
