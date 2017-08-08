@@ -30,7 +30,7 @@ public class QEFXDesignerWindowController extends QEFXAppController {
 
     private static final double INSETS_SIZE = 4.0;
 
-    private static final double GRAPHIC_SIZE = 22.0;
+    private static final double GRAPHIC_SIZE = 20.0;
     private static final String GRAPHIC_CLASS = "designer-button";
 
     private AtomsViewer atomsViewer;
