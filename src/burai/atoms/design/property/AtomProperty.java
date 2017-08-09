@@ -9,18 +9,18 @@
 
 package burai.atoms.design.property;
 
-public class AtomDesignProperty {
+public class AtomProperty {
 
     private double radius;
 
     private double[] color;
 
-    public AtomDesignProperty() {
+    protected AtomProperty() {
         this.radius = 0.0;
         this.color = null;
     }
 
-    public double getRadius() {
+    protected double getRadius() {
         return this.radius;
     }
 
@@ -28,7 +28,7 @@ public class AtomDesignProperty {
         this.radius = radius;
     }
 
-    public double[] getColor() {
+    protected double[] getColor() {
         return this.color;
     }
 

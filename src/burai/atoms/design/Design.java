@@ -13,65 +13,52 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import burai.atoms.element.ElementUtil;
 import javafx.scene.paint.Color;
 
 public class Design {
 
     private AtomsStyle atomsStyle;
-    private AtomsStyleChanged onAtomsStyleChanged;
-
     private Color backColor;
-    private ColorChanged onBackColorChanged;
-
     private Color fontColor;
-    private ColorChanged onFontColorChanged;
-
     private Color cellColor;
-    private ColorChanged onCellColorChanged;
-
     private boolean showingLegend;
-    private ShowingChanged onShowingLegendChanged;
-
     private boolean showingAxis;
-    private ShowingChanged onShowingAxisChanged;
-
     private boolean showingCell;
-    private ShowingChanged onShowingCellChanged;
-
     private double bondWidth;
-    private ValueChanged onBondWidthChanged;
-
     private double cellWidth;
+
+    private AtomsStyleChanged onAtomsStyleChanged;
+    private ColorChanged onBackColorChanged;
+    private ColorChanged onFontColorChanged;
+    private ColorChanged onCellColorChanged;
+    private ShowingChanged onShowingLegendChanged;
+    private ShowingChanged onShowingAxisChanged;
+    private ShowingChanged onShowingCellChanged;
+    private ValueChanged onBondWidthChanged;
     private ValueChanged onCellWidthChanged;
 
     private Map<String, AtomDesign> atomDesigns;
 
     public Design() {
         this.atomsStyle = AtomsStyle.BALL_STICK;
-        this.onAtomsStyleChanged = null;
-
-        this.backColor = Color.TRANSPARENT;
-        this.onBackColorChanged = null;
-
+        this.backColor = Color.DIMGRAY;
         this.fontColor = Color.BLACK;
-        this.onFontColorChanged = null;
-
         this.cellColor = Color.BLACK;
-        this.onCellColorChanged = null;
-
         this.showingLegend = true;
-        this.onShowingLegendChanged = null;
-
         this.showingAxis = true;
-        this.onShowingAxisChanged = null;
-
         this.showingCell = true;
-        this.onShowingCellChanged = null;
-
         this.bondWidth = 1.0;
-        this.onBondWidthChanged = null;
-
         this.cellWidth = 1.0;
+
+        this.onAtomsStyleChanged = null;
+        this.onBackColorChanged = null;
+        this.onFontColorChanged = null;
+        this.onCellColorChanged = null;
+        this.onShowingLegendChanged = null;
+        this.onShowingAxisChanged = null;
+        this.onShowingCellChanged = null;
+        this.onBondWidthChanged = null;
         this.onCellWidthChanged = null;
 
         this.atomDesigns = null;
@@ -226,15 +213,20 @@ public class Design {
             return null;
         }
 
+        String name2 = ElementUtil.toElementName(name);
+        if (name2 == null || name2.isEmpty()) {
+            return null;
+        }
+
         if (this.atomDesigns == null) {
             this.atomDesigns = new HashMap<>();
         }
 
-        if (!this.atomDesigns.containsKey(name)) {
-            this.atomDesigns.put(name, new AtomDesign(name));
+        if (!this.atomDesigns.containsKey(name2)) {
+            this.atomDesigns.put(name2, new AtomDesign(name2));
         }
 
-        return this.atomDesigns.get(name);
+        return this.atomDesigns.get(name2);
     }
 
     public String[] namesOfAtoms() {

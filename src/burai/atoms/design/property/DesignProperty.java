@@ -49,7 +49,7 @@ public class DesignProperty {
 
     private double cellWidth;
 
-    private Map<String, AtomDesignProperty> atomProperties;
+    private Map<String, AtomProperty> atomProperties;
 
     public DesignProperty(String path) throws IOException {
         if (path == null) {
@@ -181,7 +181,7 @@ public class DesignProperty {
             this.atomProperties = new HashMap<>();
         }
 
-        AtomDesignProperty atomProperty = new AtomDesignProperty();
+        AtomProperty atomProperty = new AtomProperty();
         atomProperty.setRadius(atomDesign.getRadius());
         atomProperty.setColor(this.colorToDoubles(atomDesign.getColor()));
 
@@ -197,7 +197,7 @@ public class DesignProperty {
             return;
         }
 
-        AtomDesignProperty atomProperty = this.atomProperties.get(name);
+        AtomProperty atomProperty = this.atomProperties.get(name);
         if (atomProperty == null) {
             return;
         }
