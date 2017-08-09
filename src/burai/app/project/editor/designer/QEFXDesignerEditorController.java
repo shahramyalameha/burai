@@ -18,6 +18,7 @@ import burai.app.project.editor.input.items.QEFXItem;
 import burai.app.project.viewer.designer.QEFXDesignerViewer;
 import burai.atoms.design.AtomsStyle;
 import burai.atoms.design.Design;
+import burai.com.graphic.ToggleGraphics;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.com.keys.KeyNames;
@@ -33,6 +34,14 @@ public class QEFXDesignerEditorController extends QEFXAppController {
 
     private static final double CTRL_GRAPHIC_SIZE = 20.0;
     private static final String CTRL_GRAPHIC_CLASS = "piclight-button";
+
+    private static final String TOGGLE_STYLE = "-fx-base: transparent";
+    private static final String TOGGLE_STYLE_YES = "toggle-graphic-on";
+    private static final String TOGGLE_STYLE_NO = "toggle-graphic-off";
+    private static final String TOGGLE_TEXT_YES = "yes";
+    private static final String TOGGLE_TEXT_NO = "no";
+    private static final double TOGGLE_WIDTH = 185.0;
+    private static final double TOGGLE_HEIGHT = 24.0;
 
     private QEFXProjectController projectController;
 
@@ -117,6 +126,20 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.setupShowAxis();
 
         // TODO
+    }
+
+    private void updateToggleGraphics(ToggleButton toggle) {
+        if (toggle == null) {
+            return;
+        }
+
+        if (toggle.isSelected()) {
+            toggle.setGraphic(ToggleGraphics.getGraphic(
+                    TOGGLE_WIDTH, TOGGLE_HEIGHT, true, TOGGLE_TEXT_YES, TOGGLE_STYLE_YES));
+        } else {
+            toggle.setGraphic(ToggleGraphics.getGraphic(
+                    TOGGLE_WIDTH, TOGGLE_HEIGHT, false, TOGGLE_TEXT_NO, TOGGLE_STYLE_NO));
+        }
     }
 
     private void setupUndoButton() {
@@ -271,11 +294,45 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     }
 
     private void setupShowLegend() {
-        // TODO
+        if (this.legendToggle == null) {
+            return;
+        }
+
+        this.legendToggle.setText("");
+        this.legendToggle.setStyle(TOGGLE_STYLE);
+        this.legendToggle.setSelected(this.design == null ? false : this.design.isShowingLegend());
+        this.updateToggleGraphics(this.legendToggle);
+        this.legendToggle.selectedProperty().addListener(o -> {
+            this.updateToggleGraphics(this.legendToggle);
+        });
+
+        if (this.legendButton != null) {
+            QEFXItem.setupDefaultButton(this.legendButton);
+            this.legendButton.setOnAction(event -> {
+                this.legendToggle.setSelected(true);
+            });
+        }
     }
 
     private void setupShowAxis() {
-        // TODO
+        if (this.axisToggle == null) {
+            return;
+        }
+
+        this.axisToggle.setText("");
+        this.axisToggle.setStyle(TOGGLE_STYLE);
+        this.axisToggle.setSelected(this.design == null ? false : this.design.isShowingAxis());
+        this.updateToggleGraphics(this.axisToggle);
+        this.axisToggle.selectedProperty().addListener(o -> {
+            this.updateToggleGraphics(this.axisToggle);
+        });
+
+        if (this.axisButton != null) {
+            QEFXItem.setupDefaultButton(this.axisButton);
+            this.axisButton.setOnAction(event -> {
+                this.axisToggle.setSelected(true);
+            });
+        }
     }
 
 }
