@@ -10,23 +10,30 @@
 package burai.app.project.editor.designer;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import burai.app.QEFXAppController;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.input.items.QEFXItem;
 import burai.app.project.viewer.designer.QEFXDesignerViewer;
+import burai.atoms.design.AtomDesign;
 import burai.atoms.design.AtomsStyle;
 import burai.atoms.design.Design;
+import burai.atoms.element.ElementUtil;
 import burai.com.graphic.ToggleGraphics;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
 import burai.com.keys.KeyNames;
+import burai.com.periodic.ElementButton;
+import burai.com.periodic.PeriodicTable;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 
@@ -42,6 +49,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private static final String TOGGLE_TEXT_NO = "no";
     private static final double TOGGLE_WIDTH = 185.0;
     private static final double TOGGLE_HEIGHT = 24.0;
+
+    private static final String ELEMENT_EMPTY_TEXT = "no element";
 
     private QEFXDesignerViewer viewer;
 
@@ -75,13 +84,13 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private ColorPicker backColorPicker;
 
     @FXML
-    private Button backButton;
+    private Button backColorButton;
 
     @FXML
     private ColorPicker fontColorPicker;
 
     @FXML
-    private Button fontButton;
+    private Button fontColorButton;
 
     @FXML
     private ToggleButton legendToggle;
@@ -94,6 +103,47 @@ public class QEFXDesignerEditorController extends QEFXAppController {
 
     @FXML
     private Button axisButton;
+
+    private String elemName;
+
+    @FXML
+    private Button elemButton;
+
+    @FXML
+    private ColorPicker atomColorPicker;
+
+    @FXML
+    private Button atomColorButton;
+
+    @FXML
+    private TextField atomRadiusField;
+
+    @FXML
+    private Button atomRadiusButton;
+
+    @FXML
+    private TextField bondWidthField;
+
+    @FXML
+    private Button bondWidthButton;
+
+    @FXML
+    private ToggleButton cellToggle;
+
+    @FXML
+    private Button cellButton;
+
+    @FXML
+    private ColorPicker cellColorPicker;
+
+    @FXML
+    private Button cellColorButton;
+
+    @FXML
+    private TextField cellWidthField;
+
+    @FXML
+    private Button cellWidthButton;
 
     public QEFXDesignerEditorController(QEFXProjectController projectController, QEFXDesignerViewer viewer) {
         super(projectController == null ? null : projectController.getMainController());
@@ -121,7 +171,15 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.setupShowLegend();
         this.setupShowAxis();
 
-        // TODO
+        this.setupElement();
+        this.setupAtomColor();
+        this.setupAtomRadius();
+
+        this.setupBondWidth();
+
+        this.setupShowCell();
+        this.setupCellColor();
+        this.setupCellWidth();
     }
 
     private void updateToggleGraphics(ToggleButton toggle) {
@@ -260,9 +318,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             }
         });
 
-        if (this.backButton != null) {
-            QEFXItem.setupDefaultButton(this.backButton);
-            this.backButton.setOnAction(event -> {
+        if (this.backColorButton != null) {
+            QEFXItem.setupDefaultButton(this.backColorButton);
+            this.backColorButton.setOnAction(event -> {
                 this.backColorPicker.setValue(Color.DIMGRAY);
             });
         }
@@ -281,9 +339,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             }
         });
 
-        if (this.fontButton != null) {
-            QEFXItem.setupDefaultButton(this.fontButton);
-            this.fontButton.setOnAction(event -> {
+        if (this.fontColorButton != null) {
+            QEFXItem.setupDefaultButton(this.fontColorButton);
+            this.fontColorButton.setOnAction(event -> {
                 this.fontColorPicker.setValue(Color.BLACK);
             });
         }
@@ -300,6 +358,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.updateToggleGraphics(this.legendToggle);
         this.legendToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.legendToggle);
+            if (this.design != null) {
+                this.design.setShowingLegend(this.legendToggle.isSelected());
+            }
         });
 
         if (this.legendButton != null) {
@@ -321,6 +382,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.updateToggleGraphics(this.axisToggle);
         this.axisToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.axisToggle);
+            if (this.design != null) {
+                this.design.setShowingAxis(this.axisToggle.isSelected());
+            }
         });
 
         if (this.axisButton != null) {
@@ -331,4 +395,173 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         }
     }
 
+    private void setupElement() {
+        this.elemName = null;
+
+        if (this.elemButton == null) {
+            return;
+        }
+
+        String text = null;
+        String[] names = this.design.namesOfAtoms();
+        if (names != null && names.length > 0) {
+            Arrays.sort(names);
+            text = ElementUtil.toElementName(names[0]);
+        }
+        if (text != null) {
+            text = text.trim();
+        }
+        if (text == null || text.isEmpty()) {
+            text = ELEMENT_EMPTY_TEXT;
+        }
+
+        this.elemButton.setText(text);
+        this.updateElemName();
+
+        this.elemButton.setOnAction(event -> {
+            PeriodicTable periodicTable = new PeriodicTable();
+            Optional<ElementButton> optElement = periodicTable.showAndWait();
+            if (optElement == null || !optElement.isPresent()) {
+                return;
+            }
+
+            ElementButton element = optElement.get();
+            String name = element.getName();
+            if (name != null) {
+                name = name.trim();
+            }
+
+            if (name != null && !name.isEmpty()) {
+                this.elemButton.setText(name);
+                this.updateElemName();
+            }
+        });
+    }
+
+    private void updateElemName() {
+        this.elemName = null;
+
+        String text = this.elemButton == null ? null : this.elemButton.getText();
+        if (text == null) {
+            return;
+        }
+
+        text = text.trim();
+        if (text.isEmpty()) {
+            return;
+        }
+
+        if (ELEMENT_EMPTY_TEXT.equals(text)) {
+            return;
+        }
+
+        this.elemName = text;
+    }
+
+    private AtomDesign getAtomDesign() {
+        if (this.design == null || this.elemName == null) {
+            return null;
+        }
+
+        return this.design.getAtomDesign(this.elemName);
+    }
+
+    private void setupAtomColor() {
+        if (this.atomColorPicker == null) {
+            return;
+        }
+
+        AtomDesign atomDesign = this.getAtomDesign();
+        this.atomColorPicker.setValue(atomDesign == null ? null : atomDesign.getColor());
+
+        this.atomColorPicker.valueProperty().addListener(o -> {
+            AtomDesign atomDesign_ = this.getAtomDesign();
+            if (atomDesign_ == null) {
+                return;
+            }
+
+            Color color = this.atomColorPicker.getValue();
+            if (color != null) {
+                atomDesign_.setColor(color);
+            }
+        });
+
+        if (this.atomColorButton != null) {
+            QEFXItem.setupDefaultButton(this.atomColorButton);
+            this.atomColorButton.setOnAction(event -> {
+                if (this.elemName != null) {
+                    this.atomColorPicker.setValue(ElementUtil.getColor(this.elemName));
+                }
+            });
+        }
+    }
+
+    private void setupAtomRadius() {
+        if (this.atomRadiusField == null) {
+            return;
+        }
+
+        // TODO
+    }
+
+    private void setupBondWidth() {
+        if (this.bondWidthField == null) {
+            return;
+        }
+
+        // TODO
+    }
+
+    private void setupShowCell() {
+        if (this.cellToggle == null) {
+            return;
+        }
+
+        this.cellToggle.setText("");
+        this.cellToggle.setStyle(TOGGLE_STYLE);
+        this.cellToggle.setSelected(this.design == null ? false : this.design.isShowingCell());
+        this.updateToggleGraphics(this.cellToggle);
+        this.cellToggle.selectedProperty().addListener(o -> {
+            this.updateToggleGraphics(this.cellToggle);
+            if (this.design != null) {
+                this.design.setShowingCell(this.cellToggle.isSelected());
+            }
+        });
+
+        if (this.cellButton != null) {
+            QEFXItem.setupDefaultButton(this.cellButton);
+            this.cellButton.setOnAction(event -> {
+                this.cellToggle.setSelected(true);
+            });
+        }
+    }
+
+    private void setupCellColor() {
+        if (this.cellColorPicker == null) {
+            return;
+        }
+
+        this.cellColorPicker.setValue(this.design == null ? null : this.design.getCellColor());
+        this.cellColorPicker.valueProperty().addListener(o -> {
+            Color color = this.cellColorPicker.getValue();
+            if (this.design != null && color != null) {
+                this.design.setCellColor(color);
+            }
+        });
+
+        if (this.cellColorButton != null) {
+            QEFXItem.setupDefaultButton(this.cellColorButton);
+            this.cellColorButton.setOnAction(event -> {
+                this.cellColorPicker.setValue(Color.BLACK);
+            });
+        }
+    }
+
+    private void setupCellWidth() {
+        if (this.cellWidthField == null) {
+            return;
+        }
+
+        // TODO
+    }
 }

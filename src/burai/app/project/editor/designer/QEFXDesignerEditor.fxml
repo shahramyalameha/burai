@@ -115,8 +115,8 @@
                     <ToggleButton fx:id="legendToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     <ToggleButton fx:id="axisToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     <Button fx:id="styleButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
-                  <Button fx:id="backButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                    <Button fx:id="fontButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button fx:id="backColorButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                    <Button fx:id="fontColorButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                     <Button fx:id="legendButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <Button fx:id="axisButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                 </children>
@@ -147,11 +147,11 @@
                   <Label text="Select Element" />
                   <Label text="Atomic Color" GridPane.rowIndex="1" />
                   <Label text="Atomic Radius" GridPane.rowIndex="2" />
-                  <ComboBox prefWidth="200.0" GridPane.columnIndex="1" />
-                  <ColorPicker prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="elemButton" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" />
+                  <ColorPicker fx:id="atomColorPicker" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <GridPane prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <TextField fx:id="totchargeField1" prefWidth="200.0" />
+                        <TextField fx:id="atomRadiusField" prefWidth="200.0" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints prefWidth="200.0" />
@@ -160,9 +160,8 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
-                  <Button fx:id="ecutrhoButton2" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
-                  <Button fx:id="ecutrhoButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button fx:id="ecutwfcButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button fx:id="atomColorButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="atomRadiusButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="120.0" />
@@ -201,7 +200,7 @@
                   <Label text="Bond Width" />
                   <GridPane prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <TextField fx:id="totchargeField" prefWidth="200.0" />
+                        <TextField fx:id="bondWidthField" prefWidth="200.0" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints prefWidth="200.0" />
@@ -210,7 +209,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
-                  <Button fx:id="totchargeButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
+                  <Button fx:id="bondWidthButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="120.0" />
@@ -247,11 +246,11 @@
                   <Label text="Show Cell ?" />
                   <Label text="Cell Color" GridPane.rowIndex="1" />
                   <Label text="Cell Width" GridPane.rowIndex="2" />
-                  <ToggleButton fx:id="forceToggle1" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" />
-                  <ColorPicker prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ToggleButton fx:id="cellToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" />
+                  <ColorPicker fx:id="cellColorPicker" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <GridPane prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <TextField fx:id="totchargeField11" prefWidth="200.0" />
+                        <TextField fx:id="cellWidthField" prefWidth="200.0" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints prefWidth="200.0" />
@@ -260,9 +259,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
-                  <Button fx:id="ecutrhoButton11" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
-                  <Button fx:id="ecutrhoButton1" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button fx:id="ecutwfcButton1" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button fx:id="cellButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
+                  <Button fx:id="cellColorButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="cellWidthButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" prefWidth="120.0" />
