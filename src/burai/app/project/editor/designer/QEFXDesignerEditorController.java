@@ -144,7 +144,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
                 SVGLibrary.getGraphic(SVGData.CENTER, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
 
         this.centerButton.setOnAction(event -> {
-            this.viewer.centerAtomsViewer();
+            if (this.viewer != null) {
+                this.viewer.centerAtomsViewer();
+            }
         });
     }
 

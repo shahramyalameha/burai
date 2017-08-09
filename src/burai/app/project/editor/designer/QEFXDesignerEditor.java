@@ -14,6 +14,7 @@ import java.io.IOException;
 import burai.app.QEFXAppComponent;
 import burai.app.project.QEFXProjectController;
 import burai.app.project.viewer.designer.QEFXDesignerViewer;
+import burai.atoms.design.Design;
 import burai.com.keys.PriorKeyEvent;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -28,11 +29,11 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
         }
 
         if (this.node != null) {
-            this.setupKeys(this.node);
+            this.setupKeys(this.node, viewer);
         }
     }
 
-    private void setupKeys(Node node) {
+    private void setupKeys(Node node, QEFXDesignerViewer viewer) {
         if (node == null) {
             return;
         }
@@ -47,18 +48,26 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
             }
 
             if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
+                Design design = viewer == null ? null : viewer.getDesign();
+
                 if (!event.isShiftDown()) {
                     // Shortcut + Z
-                    // TODO
+                    if (design != null) {
+                        // TODO
+                    }
 
                 } else {
                     // Shortcut + Shift + Z
-                    // TODO
+                    if (design != null) {
+                        // TODO
+                    }
                 }
 
             } else if (event.isShortcutDown() && KeyCode.C.equals(event.getCode())) {
                 // Shortcut + C
-                // TODO
+                if (viewer != null) {
+                    viewer.centerAtomsViewer();
+                }
             }
         });
     }

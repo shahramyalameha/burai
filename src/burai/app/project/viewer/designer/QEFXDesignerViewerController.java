@@ -34,11 +34,13 @@ import javafx.util.Duration;
 
 public class QEFXDesignerViewerController extends QEFXAppController {
 
-    private static final long ANIMATION_TIME1 = 550L;
-    private static final long ANIMATION_TIME2 = 650L;
+    private static final long ANIMATION_TIME1 = 450L;
+    private static final long ANIMATION_TIME2 = 550L;
 
     private static final double WIN_SCALE_WIDTH = 0.32;
     private static final double WIN_SCALE_HEIGHT = 0.32;
+    private static final double OFF_SCALE_WIDTH = 0.04;
+    private static final double OFF_SCALE_HEIGHT = 0.04;
 
     private QEFXProjectController projectController;
 
@@ -230,15 +232,17 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         double height = this.basePane.getHeight();
 
         if (this.primPane != null) {
-            double scale = 1.0 - 0.5 * rate;
-            this.primPane.setPrefWidth(scale * width);
-            this.primPane.setPrefHeight(scale * height);
+            double scale1 = 1.0 - (0.5 - OFF_SCALE_WIDTH) * rate - OFF_SCALE_WIDTH;
+            double scale2 = 1.0 - (0.5 - OFF_SCALE_HEIGHT) * rate - OFF_SCALE_HEIGHT;
+            this.primPane.setPrefWidth(scale1 * width);
+            this.primPane.setPrefHeight(scale2 * height);
         }
 
         if (this.dualPane != null) {
-            double scale = 0.5 * rate;
-            this.dualPane.setPrefWidth(scale * width);
-            this.dualPane.setPrefHeight(scale * height);
+            double scale1 = (0.5 - OFF_SCALE_WIDTH) * rate + OFF_SCALE_WIDTH;
+            double scale2 = (0.5 - OFF_SCALE_HEIGHT) * rate + OFF_SCALE_HEIGHT;
+            this.dualPane.setPrefWidth(scale1 * width);
+            this.dualPane.setPrefHeight(scale2 * height);
         }
 
         if (this.dualWindow != null) {
