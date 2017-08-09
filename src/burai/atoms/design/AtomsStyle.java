@@ -11,16 +11,19 @@ package burai.atoms.design;
 
 public enum AtomsStyle {
 
-    BALL(0),
+    BALL_STICK(0, "Ball & Stick"),
 
-    STICK(1),
+    BALL(1, "Ball"),
 
-    BALL_STICK(2);
+    STICK(2, "Stick");
 
     private int id;
 
-    private AtomsStyle(int id) {
+    private String label;
+
+    private AtomsStyle(int id, String label) {
         this.id = id;
+        this.label = label;
     }
 
     public int getId() {
@@ -40,5 +43,10 @@ public enum AtomsStyle {
         }
 
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return this.label;
     }
 }

@@ -109,16 +109,16 @@
                     <Label text="Font Color" GridPane.rowIndex="2" />
                     <Label text="Show Legend ?" GridPane.rowIndex="3" />
                   <Label text="Show Axis ?" GridPane.rowIndex="4" />
-                  <ComboBox prefWidth="200.0" GridPane.columnIndex="1" />
-                  <ColorPicker prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ColorPicker prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                    <ToggleButton fx:id="stressToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                    <ToggleButton fx:id="forceToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                    <Button fx:id="restartButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
-                  <Button fx:id="maxtimeButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                    <Button fx:id="forceButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                    <Button fx:id="stressButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <Button fx:id="stressButton1" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="styleCombo" prefWidth="200.0" GridPane.columnIndex="1" />
+                  <ColorPicker fx:id="backColorPicker" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ColorPicker fx:id="fontColorPicker" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <ToggleButton fx:id="legendToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <ToggleButton fx:id="axisToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <Button fx:id="styleButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" />
+                  <Button fx:id="backButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                    <Button fx:id="fontButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                    <Button fx:id="legendButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Button fx:id="axisButton" mnemonicParsing="false" text="\@" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                 </children>
                 <padding>
                     <Insets left="10.0" />
