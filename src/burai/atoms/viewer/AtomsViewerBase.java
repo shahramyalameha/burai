@@ -26,11 +26,8 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInterface {
-
-    private static final Color BACKGROUND_COLOR = Color.DIMGRAY;
 
     protected Cell cell;
 
@@ -99,7 +96,6 @@ public abstract class AtomsViewerBase<R extends Parent> extends AtomsViewerInter
     private void createSubScene() {
         this.subScene = new SubScene(this.sceneRoot, this.width, this.height, true, SceneAntialiasing.BALANCED);
         this.subScene.getStyleClass().add("atoms-viewer");
-        this.subScene.setFill(BACKGROUND_COLOR);
         this.subScene.setCamera(this.camera);
         this.subScene.setManaged(false);
         this.subScene.setOnMouseClicked(event -> this.subScene.requestFocus());

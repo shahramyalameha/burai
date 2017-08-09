@@ -27,6 +27,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 
 public class AtomsViewer extends AtomsViewerBase<Group> {
 
@@ -40,6 +41,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
     private AtomsLogger logger;
 
     private Design design;
+    private List<Node> backgroundNodes;
 
     private boolean busyLinkedViewers;
     private List<AtomsViewer> linkedViewers;
@@ -76,12 +78,8 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             this.logger = null;
         }
 
-        this.design = new Design();
-        this.design.setOnBackColorChanged(color -> {
-            if (color != null) {
-                this.subScene.setFill(color);
-            }
-        });
+        this.design = this.createDesign();
+        this.backgroundNodes = null;
 
         this.busyLinkedViewers = false;
         this.linkedViewers = null;
@@ -110,6 +108,41 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
         });
 
         this.initialRotation();
+    }
+
+    private Design createDesign() {
+        Design design = new Design();
+
+        this.subScene.setFill(design.getBackColor());
+        design.setOnBackColorChanged(color -> {
+            if (color == null) {
+                return;
+            }
+
+            this.subScene.setFill(color);
+
+            if (this.backgroundNodes != null && !this.backgroundNodes.isEmpty()) {
+                String strColor = color.toString();
+                strColor = strColor == null ? null : strColor.replaceAll("0x", "#");
+                if (strColor != null) {
+                    for (Node node : this.backgroundNodes) {
+                        node.setStyle("-fx-background-color: " + strColor);
+                    }
+                }
+            }
+        });
+
+        this.viewerSample.getNode().setVisible(design.isShowingLegend());
+        design.setOnShowingLegendChanged(showing -> {
+            this.viewerSample.getNode().setVisible(showing);
+        });
+
+        this.viewerXYZAxis.getNode().setVisible(design.isShowingAxis());
+        design.setOnShowingAxisChanged(showing -> {
+            this.viewerXYZAxis.getNode().setVisible(showing);
+        });
+
+        return design;
     }
 
     private void initialRotation() {
@@ -580,6 +613,25 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
 
     public Design getDesign() {
         return this.design;
+    }
+
+    public void addBackgroundNode(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        if (this.backgroundNodes == null) {
+            this.backgroundNodes = new ArrayList<Node>();
+        }
+
+        Color color = this.design.getBackColor();
+        String strColor = color == null ? null : color.toString();
+        strColor = strColor == null ? null : strColor.replaceAll("0x", "#");
+        if (strColor != null) {
+            node.setStyle("-fx-background-color: " + strColor);
+        }
+
+        this.backgroundNodes.add(node);
     }
 
     public void linkAtomsViewer(AtomsViewer atomsViewer) {

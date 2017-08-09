@@ -37,10 +37,11 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     private static final long ANIMATION_TIME1 = 450L;
     private static final long ANIMATION_TIME2 = 550L;
 
+    private static final double DUAL_SCALE = 0.55;
     private static final double WIN_SCALE_WIDTH = 0.32;
     private static final double WIN_SCALE_HEIGHT = 0.32;
-    private static final double OFF_SCALE_WIDTH = 0.04;
-    private static final double OFF_SCALE_HEIGHT = 0.04;
+    private static final double OFF_SCALE_WIDTH = 0.02;
+    private static final double OFF_SCALE_HEIGHT = 0.02;
 
     private QEFXProjectController projectController;
 
@@ -140,6 +141,10 @@ public class QEFXDesignerViewerController extends QEFXAppController {
                 this.resizePanes(this.dualMode ? 1.0 : 0.0, true);
             }
         });
+
+        if (this.atomsViewerPrim != null) {
+            this.atomsViewerPrim.addBackgroundNode(this.basePane);
+        }
     }
 
     private void setupPrimPane() {
@@ -232,22 +237,22 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         double height = this.basePane.getHeight();
 
         if (this.primPane != null) {
-            double scale1 = 1.0 - (0.5 - OFF_SCALE_WIDTH) * rate - OFF_SCALE_WIDTH;
-            double scale2 = 1.0 - (0.5 - OFF_SCALE_HEIGHT) * rate - OFF_SCALE_HEIGHT;
+            double scale1 = 1.0 - (1.0 - DUAL_SCALE - OFF_SCALE_WIDTH) * rate - OFF_SCALE_WIDTH;
+            double scale2 = 1.0 - (1.0 - DUAL_SCALE - OFF_SCALE_HEIGHT) * rate - OFF_SCALE_HEIGHT;
             this.primPane.setPrefWidth(scale1 * width);
             this.primPane.setPrefHeight(scale2 * height);
         }
 
         if (this.dualPane != null) {
-            double scale1 = (0.5 - OFF_SCALE_WIDTH) * rate + OFF_SCALE_WIDTH;
-            double scale2 = (0.5 - OFF_SCALE_HEIGHT) * rate + OFF_SCALE_HEIGHT;
+            double scale1 = (1.0 - DUAL_SCALE - OFF_SCALE_WIDTH) * rate + OFF_SCALE_WIDTH;
+            double scale2 = (1.0 - DUAL_SCALE - OFF_SCALE_HEIGHT) * rate + OFF_SCALE_HEIGHT;
             this.dualPane.setPrefWidth(scale1 * width);
             this.dualPane.setPrefHeight(scale2 * height);
         }
 
         if (this.dualWindow != null) {
-            double scale1 = (0.5 - WIN_SCALE_WIDTH) * rate + WIN_SCALE_WIDTH;
-            double scale2 = (0.5 - WIN_SCALE_HEIGHT) * rate + WIN_SCALE_HEIGHT;
+            double scale1 = (DUAL_SCALE - WIN_SCALE_WIDTH) * rate + WIN_SCALE_WIDTH;
+            double scale2 = (DUAL_SCALE - WIN_SCALE_HEIGHT) * rate + WIN_SCALE_HEIGHT;
 
             if (!async) {
                 this.dualWindow.setWidth(scale1 * width);
