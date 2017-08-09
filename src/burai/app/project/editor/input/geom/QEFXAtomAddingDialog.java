@@ -29,10 +29,10 @@ import burai.app.QEFXMain;
 import burai.app.project.editor.input.items.QEFXItem;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.exception.IncorrectAtomNameException;
-import burai.atoms.viewer.operation.editor.ElementButton;
-import burai.atoms.viewer.operation.editor.PeriodicTable;
 import burai.com.graphic.ToggleGraphics;
 import burai.com.math.Calculator;
+import burai.com.periodic.ElementButton;
+import burai.com.periodic.PeriodicTable;
 
 public class QEFXAtomAddingDialog extends Dialog<AtomAnsatz> implements Initializable {
 

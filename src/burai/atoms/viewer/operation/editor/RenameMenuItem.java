@@ -18,6 +18,8 @@ import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;
 import burai.com.keys.KeyNames;
+import burai.com.periodic.ElementButton;
+import burai.com.periodic.PeriodicTable;
 
 public class RenameMenuItem extends EditorMenuItem {
 

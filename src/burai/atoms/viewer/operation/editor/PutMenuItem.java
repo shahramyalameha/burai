@@ -18,6 +18,8 @@ import burai.app.QEFXMain;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.viewer.operation.mouse.MouseEventHandler;
+import burai.com.periodic.ElementButton;
+import burai.com.periodic.PeriodicTable;
 
 public class PutMenuItem extends EditorMenuItem {
 

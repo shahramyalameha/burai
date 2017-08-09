@@ -7,7 +7,7 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.atoms.viewer.operation.editor;
+package burai.com.periodic;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;

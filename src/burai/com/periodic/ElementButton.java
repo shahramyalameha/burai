@@ -7,12 +7,12 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.atoms.viewer.operation.editor;
+package burai.com.periodic;
 
+import burai.atoms.element.ElementUtil;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.text.Font;
-import burai.atoms.element.ElementUtil;
 
 public final class ElementButton extends Button {
 
@@ -49,7 +49,7 @@ public final class ElementButton extends Button {
         this.setPrefHeight(2.5 * TEXT_SIZE);
     }
 
-    public void setDialog(Dialog<ElementButton> dialog) {
+    protected void setDialog(Dialog<ElementButton> dialog) {
         if (dialog == null) {
             return;
         }
@@ -66,11 +66,15 @@ public final class ElementButton extends Button {
         });
     }
 
-    public int getX() {
+    public String getName() {
+        return this.name;
+    }
+
+    protected int getX() {
         return this.x;
     }
 
-    public int getY() {
+    protected int getY() {
         return this.y;
     }
 

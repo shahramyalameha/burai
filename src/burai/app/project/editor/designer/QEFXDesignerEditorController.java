@@ -43,8 +43,6 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private static final double TOGGLE_WIDTH = 185.0;
     private static final double TOGGLE_HEIGHT = 24.0;
 
-    private QEFXProjectController projectController;
-
     private QEFXDesignerViewer viewer;
 
     private Design design;
@@ -103,8 +101,6 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         if (viewer == null) {
             throw new IllegalArgumentException("viewer is null.");
         }
-
-        this.projectController = projectController;
 
         this.viewer = viewer;
         this.design = viewer.getDesign();
