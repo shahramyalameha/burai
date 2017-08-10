@@ -16,9 +16,9 @@
                <StackPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </StackPane.margin></Button>
-            <Label style="-fx-font-family: monospace; -fx-font-weight: bold; -fx-font-size: 1.333333em;" text="origin" StackPane.alignment="TOP_CENTER">
+            <Label fx:id="headLabel" style="-fx-font-family: monospace; -fx-font-weight: bold; -fx-font-size: 1.333333em;" text="origin" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </StackPane.margin>
             </Label>
          </children>

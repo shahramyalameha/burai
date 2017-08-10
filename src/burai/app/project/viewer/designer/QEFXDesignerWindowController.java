@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 
 import burai.app.QEFXAppController;
 import burai.app.project.QEFXProjectController;
+import burai.atoms.design.Design;
 import burai.atoms.viewer.AtomsViewer;
 import burai.com.graphic.svg.SVGLibrary;
 import burai.com.graphic.svg.SVGLibrary.SVGData;
@@ -22,9 +23,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class QEFXDesignerWindowController extends QEFXAppController {
 
@@ -43,6 +46,9 @@ public class QEFXDesignerWindowController extends QEFXAppController {
 
     @FXML
     private Pane mainPane;
+
+    @FXML
+    private Label headLabel;
 
     @FXML
     private Button scaleButton;
@@ -88,6 +94,7 @@ public class QEFXDesignerWindowController extends QEFXAppController {
     public void initialize(URL location, ResourceBundle resources) {
         this.setupBaseGroup();
         this.setupMainPane();
+        this.setupHeadLabel();
         this.setupScaleButton();
     }
 
@@ -113,6 +120,28 @@ public class QEFXDesignerWindowController extends QEFXAppController {
             this.atomsViewer.bindSceneTo(this.mainPane);
             this.mainPane.getChildren().add(this.atomsViewer);
         }
+    }
+
+    private void setupHeadLabel() {
+        if (this.headLabel == null) {
+            return;
+        }
+
+        Design design = this.atomsViewer == null ? null : this.atomsViewer.getDesign();
+        if (design == null) {
+            return;
+        }
+
+        Color color = design.getFontColor();
+        if (color != null) {
+            this.headLabel.setTextFill(color);
+        }
+
+        design.addOnFontColorChanged(color_ -> {
+            if (color_ != null) {
+                this.headLabel.setTextFill(color_);
+            }
+        });
     }
 
     private void setupScaleButton() {
