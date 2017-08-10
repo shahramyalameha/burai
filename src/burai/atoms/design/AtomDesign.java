@@ -27,7 +27,9 @@ public class AtomDesign {
 
     private Color color;
 
-    public AtomDesign(double radius, Color color) {
+    private AtomsStyle atomsStyle;
+
+    public AtomDesign(double radius, Color color, AtomsStyle atomsStyle) {
         if (radius <= 0.0) {
             throw new IllegalArgumentException("radius is not positive.");
         }
@@ -36,19 +38,24 @@ public class AtomDesign {
             throw new IllegalArgumentException("color is null.");
         }
 
+        if (atomsStyle == null) {
+            throw new IllegalArgumentException("atomsStyle is null.");
+        }
+
         this.countAdaptors = 0;
         this.adaptors = null;
 
         this.radius = radius;
         this.color = color;
+        this.atomsStyle = atomsStyle;
     }
 
-    public AtomDesign(double radius, double red, double green, double blue) {
-        this(radius, Color.color(red, green, blue));
+    public AtomDesign(double radius, double red, double green, double blue, AtomsStyle atomsStyle) {
+        this(radius, Color.color(red, green, blue), atomsStyle);
     }
 
-    public AtomDesign(String name) {
-        this(ElementUtil.getCovalentRadius(name), ElementUtil.getColor(name));
+    public AtomDesign(String name, AtomsStyle atomsStyle) {
+        this(ElementUtil.getCovalentRadius(name), ElementUtil.getColor(name), atomsStyle);
     }
 
     public void addAdaptor(AtomDesignAdaptor adaptor) {
@@ -104,7 +111,7 @@ public class AtomDesign {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onAtomicRadiusChanged(this, radius);
+                    listener.onAtomicRadiusChanged(this, this.radius);
                 }
             }
         }
@@ -128,10 +135,33 @@ public class AtomDesign {
                     listener = adaptor.getListener();
                 }
                 if (listener != null) {
-                    listener.onAtomicColorChanged(this, color);
+                    listener.onAtomicColorChanged(this, this.color);
                 }
             }
         }
     }
 
+    public AtomsStyle getAtomsStyle() {
+        return this.atomsStyle;
+    }
+
+    public void setAtomsStyle(AtomsStyle atomsStyle) {
+        if (this.atomsStyle == null) {
+            return;
+        }
+
+        this.atomsStyle = atomsStyle;
+
+        if (this.adaptors != null && !this.adaptors.isEmpty()) {
+            for (AtomDesignAdaptor adaptor : this.adaptors) {
+                AtomDesignListener listener = null;
+                if (adaptor != null && adaptor.isAlive()) {
+                    listener = adaptor.getListener();
+                }
+                if (listener != null) {
+                    listener.onAtomsStyleChanged(this, this.atomsStyle);
+                }
+            }
+        }
+    }
 }

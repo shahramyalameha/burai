@@ -12,6 +12,7 @@ package burai.atoms.visible;
 import burai.atoms.design.AtomDesign;
 import burai.atoms.design.AtomDesignAdaptor;
 import burai.atoms.design.AtomDesignListener;
+import burai.atoms.design.AtomsStyle;
 import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
@@ -146,6 +147,51 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         }
     }
 
+    public void setSelected(boolean selected) {
+        Atom masterAtom = this.model.getMasterAtom();
+        if (masterAtom == null) {
+            return;
+        }
+
+        masterAtom.setProperty(KEY_SELECTED, selected);
+    }
+
+    public boolean isSelected() {
+        if (!this.model.hasProperty(KEY_SELECTED)) {
+            return this.initializeSelected();
+        }
+
+        return this.model.booleanProperty(KEY_SELECTED);
+    }
+
+    private boolean initializeSelected() {
+        Atom masterAtom = this.model.getMasterAtom();
+        if (masterAtom == null) {
+            this.model.setProperty(KEY_SELECTED, false);
+            return false;
+        }
+
+        boolean selected = masterAtom.booleanProperty(KEY_SELECTED);
+        this.model.setProperty(KEY_SELECTED, selected);
+        return selected;
+    }
+
+    public double getRadius() {
+        return this.atomSphere.getRadius();
+    }
+
+    public double getX() {
+        return this.atomSphere.getTranslateX();
+    }
+
+    public double getY() {
+        return this.atomSphere.getTranslateY();
+    }
+
+    public double getZ() {
+        return this.atomSphere.getTranslateZ();
+    }
+
     @Override
     public void onAtomRenamed(AtomEvent event) {
         if (event == null) {
@@ -194,48 +240,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         }
     }
 
-    public void setSelected(boolean selected) {
-        Atom masterAtom = this.model.getMasterAtom();
-        if (masterAtom == null) {
-            return;
+    @Override
+    public void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle) {
+        if (atomDesign == this.atomDesign && atomsStyle != null) {
+            // TODO
         }
-
-        masterAtom.setProperty(KEY_SELECTED, selected);
-    }
-
-    public boolean isSelected() {
-        if (!this.model.hasProperty(KEY_SELECTED)) {
-            return this.initializeSelected();
-        }
-
-        return this.model.booleanProperty(KEY_SELECTED);
-    }
-
-    private boolean initializeSelected() {
-        Atom masterAtom = this.model.getMasterAtom();
-        if (masterAtom == null) {
-            this.model.setProperty(KEY_SELECTED, false);
-            return false;
-        }
-
-        boolean selected = masterAtom.booleanProperty(KEY_SELECTED);
-        this.model.setProperty(KEY_SELECTED, selected);
-        return selected;
-    }
-
-    public double getRadius() {
-        return this.atomSphere.getRadius();
-    }
-
-    public double getX() {
-        return this.atomSphere.getTranslateX();
-    }
-
-    public double getY() {
-        return this.atomSphere.getTranslateY();
-    }
-
-    public double getZ() {
-        return this.atomSphere.getTranslateZ();
     }
 }

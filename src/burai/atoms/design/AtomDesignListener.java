@@ -17,4 +17,6 @@ public interface AtomDesignListener {
 
     public abstract void onAtomicColorChanged(AtomDesign atomDesign, Color color);
 
+    public abstract void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle);
+
 }

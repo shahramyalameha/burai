@@ -9,7 +9,10 @@
 
 package burai.atoms.design;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,15 +31,14 @@ public class Design {
     private double bondWidth;
     private double cellWidth;
 
-    private AtomsStyleChanged onAtomsStyleChanged;
-    private ColorChanged onBackColorChanged;
-    private ColorChanged onFontColorChanged;
-    private ColorChanged onCellColorChanged;
-    private ShowingChanged onShowingLegendChanged;
-    private ShowingChanged onShowingAxisChanged;
-    private ShowingChanged onShowingCellChanged;
-    private ValueChanged onBondWidthChanged;
-    private ValueChanged onCellWidthChanged;
+    private List<ColorChanged> onBackColorChangedList;
+    private List<ColorChanged> onFontColorChangedList;
+    private List<ColorChanged> onCellColorChangedList;
+    private List<ShowingChanged> onShowingLegendChangedList;
+    private List<ShowingChanged> onShowingAxisChangedList;
+    private List<ShowingChanged> onShowingCellChangedList;
+    private List<ValueChanged> onBondWidthChangedList;
+    private List<ValueChanged> onCellWidthChangedList;
 
     private Map<String, AtomDesign> atomDesigns;
 
@@ -51,15 +53,14 @@ public class Design {
         this.bondWidth = 1.0;
         this.cellWidth = 1.0;
 
-        this.onAtomsStyleChanged = null;
-        this.onBackColorChanged = null;
-        this.onFontColorChanged = null;
-        this.onCellColorChanged = null;
-        this.onShowingLegendChanged = null;
-        this.onShowingAxisChanged = null;
-        this.onShowingCellChanged = null;
-        this.onBondWidthChanged = null;
-        this.onCellWidthChanged = null;
+        this.onBackColorChangedList = null;
+        this.onFontColorChangedList = null;
+        this.onCellColorChangedList = null;
+        this.onShowingLegendChangedList = null;
+        this.onShowingAxisChangedList = null;
+        this.onShowingCellChangedList = null;
+        this.onBondWidthChangedList = null;
+        this.onCellWidthChangedList = null;
 
         this.atomDesigns = null;
     }
@@ -69,15 +70,20 @@ public class Design {
     }
 
     public void setAtomsStyle(AtomsStyle atomsStyle) {
+        if (atomsStyle == null) {
+            return;
+        }
+
         this.atomsStyle = atomsStyle;
 
-        if (this.onAtomsStyleChanged != null) {
-            this.onAtomsStyleChanged.onAtomsStyleChanged(this.atomsStyle);
+        Collection<AtomDesign> atomDesignColl = this.atomDesigns == null ? null : this.atomDesigns.values();
+        if (atomDesignColl != null && !atomDesignColl.isEmpty()) {
+            for (AtomDesign atomDesign : atomDesignColl) {
+                if (atomDesign != null) {
+                    atomDesign.setAtomsStyle(this.atomsStyle);
+                }
+            }
         }
-    }
-
-    public void setOnAtomsStyleChanged(AtomsStyleChanged onAtomsStyleChanged) {
-        this.onAtomsStyleChanged = onAtomsStyleChanged;
     }
 
     public Color getBackColor() {
@@ -85,15 +91,29 @@ public class Design {
     }
 
     public void setBackColor(Color backColor) {
+        if (backColor == null) {
+            return;
+        }
+
         this.backColor = backColor;
 
-        if (this.onBackColorChanged != null) {
-            this.onBackColorChanged.onColorChanged(this.backColor);
+        if (this.onBackColorChangedList != null) {
+            for (ColorChanged onBackColorChanged : this.onBackColorChangedList) {
+                onBackColorChanged.onColorChanged(this.backColor);
+            }
         }
     }
 
-    public void setOnBackColorChanged(ColorChanged onBackColorChanged) {
-        this.onBackColorChanged = onBackColorChanged;
+    public void addOnBackColorChanged(ColorChanged onBackColorChanged) {
+        if (onBackColorChanged == null) {
+            return;
+        }
+
+        if (this.onBackColorChangedList == null) {
+            this.onBackColorChangedList = new ArrayList<>();
+        }
+
+        this.onBackColorChangedList.add(onBackColorChanged);
     }
 
     public Color getFontColor() {
@@ -101,15 +121,29 @@ public class Design {
     }
 
     public void setFontColor(Color fontColor) {
+        if (fontColor == null) {
+            return;
+        }
+
         this.fontColor = fontColor;
 
-        if (this.onFontColorChanged != null) {
-            this.onFontColorChanged.onColorChanged(this.fontColor);
+        if (this.onFontColorChangedList != null) {
+            for (ColorChanged onFontColorChanged : this.onFontColorChangedList) {
+                onFontColorChanged.onColorChanged(this.fontColor);
+            }
         }
     }
 
-    public void setOnFontColorChanged(ColorChanged onFontColorChanged) {
-        this.onFontColorChanged = onFontColorChanged;
+    public void addOnFontColorChanged(ColorChanged onFontColorChanged) {
+        if (onFontColorChanged == null) {
+            return;
+        }
+
+        if (this.onFontColorChangedList == null) {
+            this.onFontColorChangedList = new ArrayList<>();
+        }
+
+        this.onFontColorChangedList.add(onFontColorChanged);
     }
 
     public Color getCellColor() {
@@ -117,15 +151,29 @@ public class Design {
     }
 
     public void setCellColor(Color cellColor) {
+        if (cellColor == null) {
+            return;
+        }
+
         this.cellColor = cellColor;
 
-        if (this.onCellColorChanged != null) {
-            this.onCellColorChanged.onColorChanged(this.cellColor);
+        if (this.onCellColorChangedList != null) {
+            for (ColorChanged onCellColorChanged : this.onCellColorChangedList) {
+                onCellColorChanged.onColorChanged(this.cellColor);
+            }
         }
     }
 
-    public void setOnCellColorChanged(ColorChanged onCellColorChanged) {
-        this.onCellColorChanged = onCellColorChanged;
+    public void addOnCellColorChanged(ColorChanged onCellColorChanged) {
+        if (onCellColorChanged == null) {
+            return;
+        }
+
+        if (this.onCellColorChangedList == null) {
+            this.onCellColorChangedList = new ArrayList<>();
+        }
+
+        this.onCellColorChangedList.add(onCellColorChanged);
     }
 
     public boolean isShowingLegend() {
@@ -135,13 +183,23 @@ public class Design {
     public void setShowingLegend(boolean showingLegend) {
         this.showingLegend = showingLegend;
 
-        if (this.onShowingLegendChanged != null) {
-            this.onShowingLegendChanged.onShowingChanged(this.showingLegend);
+        if (this.onShowingLegendChangedList != null) {
+            for (ShowingChanged onShowingLegendChanged : this.onShowingLegendChangedList) {
+                onShowingLegendChanged.onShowingChanged(this.showingLegend);
+            }
         }
     }
 
-    public void setOnShowingLegendChanged(ShowingChanged onShowingLegendChanged) {
-        this.onShowingLegendChanged = onShowingLegendChanged;
+    public void addOnShowingLegendChanged(ShowingChanged onShowingLegendChanged) {
+        if (onShowingLegendChanged == null) {
+            return;
+        }
+
+        if (this.onShowingLegendChangedList == null) {
+            this.onShowingLegendChangedList = new ArrayList<>();
+        }
+
+        this.onShowingLegendChangedList.add(onShowingLegendChanged);
     }
 
     public boolean isShowingAxis() {
@@ -151,13 +209,23 @@ public class Design {
     public void setShowingAxis(boolean showingAxis) {
         this.showingAxis = showingAxis;
 
-        if (this.onShowingAxisChanged != null) {
-            this.onShowingAxisChanged.onShowingChanged(this.showingAxis);
+        if (this.onShowingAxisChangedList != null) {
+            for (ShowingChanged onShowingAxisChanged : this.onShowingAxisChangedList) {
+                onShowingAxisChanged.onShowingChanged(this.showingAxis);
+            }
         }
     }
 
-    public void setOnShowingAxisChanged(ShowingChanged onShowingAxisChanged) {
-        this.onShowingAxisChanged = onShowingAxisChanged;
+    public void addOnShowingAxisChanged(ShowingChanged onShowingAxisChanged) {
+        if (onShowingAxisChanged == null) {
+            return;
+        }
+
+        if (this.onShowingAxisChangedList == null) {
+            this.onShowingAxisChangedList = new ArrayList<>();
+        }
+
+        this.onShowingAxisChangedList.add(onShowingAxisChanged);
     }
 
     public boolean isShowingCell() {
@@ -167,13 +235,23 @@ public class Design {
     public void setShowingCell(boolean showingCell) {
         this.showingCell = showingCell;
 
-        if (this.onShowingCellChanged != null) {
-            this.onShowingCellChanged.onShowingChanged(this.showingCell);
+        if (this.onShowingCellChangedList != null) {
+            for (ShowingChanged onShowingCellChanged : this.onShowingCellChangedList) {
+                onShowingCellChanged.onShowingChanged(this.showingCell);
+            }
         }
     }
 
-    public void setOnShowingCellChanged(ShowingChanged onShowingCellChanged) {
-        this.onShowingCellChanged = onShowingCellChanged;
+    public void addOnShowingCellChanged(ShowingChanged onShowingCellChanged) {
+        if (onShowingCellChanged == null) {
+            return;
+        }
+
+        if (this.onShowingCellChangedList == null) {
+            this.onShowingCellChangedList = new ArrayList<>();
+        }
+
+        this.onShowingCellChangedList.add(onShowingCellChanged);
     }
 
     public double getBondWidth() {
@@ -181,15 +259,29 @@ public class Design {
     }
 
     public void setBondWidth(double bondWidth) {
+        if (bondWidth <= 0.0) {
+            return;
+        }
+
         this.bondWidth = bondWidth;
 
-        if (this.onBondWidthChanged != null) {
-            this.onBondWidthChanged.onValueChanged(this.bondWidth);
+        if (this.onBondWidthChangedList != null) {
+            for (ValueChanged onBondWidthChanged : this.onBondWidthChangedList) {
+                onBondWidthChanged.onValueChanged(this.bondWidth);
+            }
         }
     }
 
-    public void setOnBondWidthChanged(ValueChanged onBondWidthChanged) {
-        this.onBondWidthChanged = onBondWidthChanged;
+    public void addOnBondWidthChanged(ValueChanged onBondWidthChanged) {
+        if (onBondWidthChanged == null) {
+            return;
+        }
+
+        if (this.onBondWidthChangedList == null) {
+            this.onBondWidthChangedList = new ArrayList<>();
+        }
+
+        this.onBondWidthChangedList.add(onBondWidthChanged);
     }
 
     public double getCellWidth() {
@@ -197,15 +289,29 @@ public class Design {
     }
 
     public void setCellWidth(double cellWidth) {
+        if (cellWidth <= 0.0) {
+            return;
+        }
+
         this.cellWidth = cellWidth;
 
-        if (this.onCellWidthChanged != null) {
-            this.onCellWidthChanged.onValueChanged(this.cellWidth);
+        if (this.onCellWidthChangedList != null) {
+            for (ValueChanged onCellWidthChanged : this.onCellWidthChangedList) {
+                onCellWidthChanged.onValueChanged(this.cellWidth);
+            }
         }
     }
 
-    public void setOnCellWidthChanged(ValueChanged onCellWidthChanged) {
-        this.onCellWidthChanged = onCellWidthChanged;
+    public void addOnCellWidthChanged(ValueChanged onCellWidthChanged) {
+        if (onCellWidthChanged == null) {
+            return;
+        }
+
+        if (this.onCellWidthChangedList == null) {
+            this.onCellWidthChangedList = new ArrayList<>();
+        }
+
+        this.onCellWidthChangedList.add(onCellWidthChanged);
     }
 
     public AtomDesign getAtomDesign(String name) {
@@ -223,7 +329,11 @@ public class Design {
         }
 
         if (!this.atomDesigns.containsKey(name2)) {
-            this.atomDesigns.put(name2, new AtomDesign(name2));
+            if (this.atomsStyle != null) {
+                this.atomDesigns.put(name2, new AtomDesign(name2, this.atomsStyle));
+            } else {
+                this.atomDesigns.put(name2, new AtomDesign(name2, AtomsStyle.BALL_STICK));
+            }
         }
 
         return this.atomDesigns.get(name2);

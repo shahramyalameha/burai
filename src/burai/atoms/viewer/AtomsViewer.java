@@ -114,7 +114,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
     private Design createDesign() {
         Design design = new Design();
 
-        design.setOnBackColorChanged(color -> {
+        design.addOnBackColorChanged(color -> {
             if (color == null) {
                 return;
             }
@@ -132,11 +132,11 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             }
         });
 
-        design.setOnShowingLegendChanged(showing -> {
+        design.addOnShowingLegendChanged(showing -> {
             this.viewerSample.getNode().setVisible(showing);
         });
 
-        design.setOnShowingAxisChanged(showing -> {
+        design.addOnShowingAxisChanged(showing -> {
             this.viewerXYZAxis.getNode().setVisible(showing);
         });
 

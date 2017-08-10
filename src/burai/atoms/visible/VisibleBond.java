@@ -12,6 +12,7 @@ package burai.atoms.visible;
 import burai.atoms.design.AtomDesign;
 import burai.atoms.design.AtomDesignAdaptor;
 import burai.atoms.design.AtomDesignListener;
+import burai.atoms.design.AtomsStyle;
 import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
@@ -262,4 +263,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         }
     }
 
+    @Override
+    public void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle) {
+        // TODO 自動生成されたメソッド・スタブ
+    }
 }
