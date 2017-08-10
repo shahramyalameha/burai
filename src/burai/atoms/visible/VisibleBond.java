@@ -27,8 +27,8 @@ import javafx.scene.shape.Cylinder;
 
 public class VisibleBond extends Visible<Bond> implements BondEventListener, AtomDesignListener {
 
-    private static final double CYLINDER_RADIUS_NORM = 0.10;
-    private static final double CYLINDER_RADIUS_BOLD = 0.12;
+    private static final double CYLINDER_SCALE_NORM = 0.10;
+    private static final double CYLINDER_SCALE_BOLD = 0.12;
     private static final int CYLINDER_DIV = 12;
 
     private static final double RMIN = 5.0e-3;
@@ -64,9 +64,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         this.boldMode = boldMode;
 
-        double radius = this.boldMode ? CYLINDER_RADIUS_BOLD : CYLINDER_RADIUS_NORM;
-        this.bondCylinder1 = new Cylinder(radius, 1.0, CYLINDER_DIV);
-        this.bondCylinder2 = new Cylinder(radius, 1.0, CYLINDER_DIV);
+        this.bondCylinder1 = new Cylinder(0.1, 1.0, CYLINDER_DIV);
+        this.bondCylinder2 = new Cylinder(0.1, 1.0, CYLINDER_DIV);
 
         this.currentRadius1 = -1.0;
         this.currentRadius2 = -1.0;
@@ -84,6 +83,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         this.updateAtomDesign(true, true);
         this.updateVisibleCylinder();
+        this.updateWidthOfCylinder();
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();
         this.getChildren().add(this.bondCylinder1);
@@ -135,6 +135,14 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
     private boolean isBallStyle(AtomDesign atomDesign) {
         return atomDesign != null && atomDesign.getAtomsStyle() == AtomsStyle.BALL;
+    }
+
+    private void updateWidthOfCylinder() {
+        double scale = this.boldMode ? CYLINDER_SCALE_BOLD : CYLINDER_SCALE_NORM;
+        this.currentBond1 = this.atomDesign1 == null ? 1.0 : this.atomDesign1.getBondWidth();
+        this.currentBond2 = this.atomDesign2 == null ? 1.0 : this.atomDesign2.getBondWidth();
+        this.bondCylinder1.setRadius(scale * this.currentBond1);
+        this.bondCylinder2.setRadius(scale * this.currentBond2);
     }
 
     private void updateXYZOfCylinder() {
@@ -344,6 +352,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         }
 
         if (this.currentStyle1 && this.currentStyle2) {
+            this.updateWidthOfCylinder();
             this.updateXYZOfCylinder();
             this.updateColorOfCylinder();
         }
@@ -353,6 +362,22 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
     @Override
     public void onBondWidthChanged(AtomDesign atomDesign, double bondWidth) {
-        // TODO 自動生成されたメソッド・スタブ
+        if (bondWidth <= 0.0) {
+            return;
+        } else if (atomDesign == this.atomDesign1) {
+            if (CYLINDER_SCALE_NORM * Math.abs(bondWidth - this.currentBond1) < RMIN) {
+                return;
+            }
+        } else if (atomDesign == this.atomDesign2) {
+            if (CYLINDER_SCALE_NORM * Math.abs(bondWidth - this.currentBond2) < RMIN) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+            this.updateWidthOfCylinder();
+        }
     }
 }
