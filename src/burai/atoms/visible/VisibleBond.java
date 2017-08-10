@@ -39,6 +39,13 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     private Cylinder bondCylinder1;
     private Cylinder bondCylinder2;
 
+    private double currentRadius1;
+    private double currentRadius2;
+    private Color currentColor1;
+    private Color currentColor2;
+    private AtomsStyle currentStyle1;
+    private AtomsStyle currentStyle2;
+
     private AtomDesign atomDesign1;
     private AtomDesign atomDesign2;
     private AtomDesignAdaptor atomDesignAdaptor1;
@@ -58,6 +65,13 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         double radius = this.boldMode ? CYLINDER_RADIUS_BOLD : CYLINDER_RADIUS_NORM;
         this.bondCylinder1 = new Cylinder(radius, 1.0, CYLINDER_DIV);
         this.bondCylinder2 = new Cylinder(radius, 1.0, CYLINDER_DIV);
+
+        this.currentRadius1 = -1.0;
+        this.currentRadius2 = -1.0;
+        this.currentColor1 = null;
+        this.currentColor2 = null;
+        this.currentStyle1 = null;
+        this.currentStyle2 = null;
 
         this.atomDesign1 = null;
         this.atomDesign2 = null;
@@ -121,6 +135,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (rad1 <= 0.0) {
             rad1 = atom1.getRadius();
         }
+
+        this.currentRadius1 = rad1;
         rad1 = Math.sqrt(Math.max(rad1, 0.0));
 
         Atom atom2 = this.model.getAtom2();
@@ -136,6 +152,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (rad2 <= 0.0) {
             rad2 = atom2.getRadius();
         }
+
+        this.currentRadius2 = rad2;
         rad2 = Math.sqrt(Math.max(rad2, 0.0));
 
         double dx = x2 - x1;
@@ -182,6 +200,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             color1 = ElementUtil.getColor(atom1.getName());
         }
 
+        this.currentColor1 = color1;
+
         PhongMaterial material1 = new PhongMaterial();
         material1.setDiffuseColor(color1);
         material1.setSpecularColor(Color.SILVER);
@@ -196,6 +216,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (color2 == null) {
             color2 = ElementUtil.getColor(atom2.getName());
         }
+
+        this.currentColor2 = color2;
 
         PhongMaterial material2 = new PhongMaterial();
         material2.setDiffuseColor(color2);
@@ -247,24 +269,58 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
     @Override
     public void onAtomicRadiusChanged(AtomDesign atomDesign, double radius) {
-        if (atomDesign == this.atomDesign1 || atomDesign == this.atomDesign2) {
-            if (radius > 0.0) {
-                this.updateXYZOfCylinder();
+        if (radius <= 0.0) {
+            return;
+        } else if (atomDesign == this.atomDesign1) {
+            if (Math.abs(radius - this.currentRadius1) < RMIN) {
+                return;
             }
+        } else if (atomDesign == this.atomDesign2) {
+            if (Math.abs(radius - this.currentRadius2) < RMIN) {
+                return;
+            }
+        } else {
+            return;
         }
+
+        this.updateXYZOfCylinder();
     }
 
     @Override
     public void onAtomicColorChanged(AtomDesign atomDesign, Color color) {
-        if (atomDesign == this.atomDesign1 || atomDesign == this.atomDesign2) {
-            if (color != null) {
-                this.updateColorOfCylinder();
+        if (color == null) {
+            return;
+        } else if (atomDesign == this.atomDesign1) {
+            if (color.equals(this.currentColor1)) {
+                return;
             }
+        } else if (atomDesign == this.atomDesign2) {
+            if (color.equals(this.currentColor2)) {
+                return;
+            }
+        } else {
+            return;
         }
+
+        this.updateColorOfCylinder();
     }
 
     @Override
     public void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle) {
-        // TODO 自動生成されたメソッド・スタブ
+        if (atomsStyle == null) {
+            return;
+        } else if (atomDesign == this.atomDesign1) {
+            if (atomsStyle == this.currentStyle1) {
+                return;
+            }
+        } else if (atomDesign == this.atomDesign2) {
+            if (atomsStyle == this.currentStyle2) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        // TODO
     }
 }

@@ -39,6 +39,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     private boolean disableToSelect;
 
+    private double currentRadius;
+    private Color currentColor;
+    private AtomsStyle currentStyle;
+
     private AtomDesign atomDesign;
     private AtomDesignAdaptor atomDesignAdaptor;
 
@@ -59,6 +63,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         this.boldMode = boldMode;
         this.atomSphere = new AtomicSphere(this, !this.boldMode);
         this.disableToSelect = disableToSelect;
+
+        this.currentRadius = -1.0;
+        this.currentColor = null;
+        this.currentStyle = null;
 
         this.atomDesign = null;
         this.atomDesignAdaptor = null;
@@ -99,6 +107,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
             radius = this.model.getRadius();
         }
 
+        this.currentRadius = radius;
+
         radius *= scale;
 
         if (this.isSelected()) {
@@ -126,6 +136,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         if (diffuseColor == null) {
             diffuseColor = ElementUtil.getColor(this.model.getName());
         }
+
+        this.currentColor = diffuseColor;
 
         material.setDiffuseColor(diffuseColor);
         material.setSpecularColor(Color.SILVER);
@@ -228,22 +240,37 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     @Override
     public void onAtomicRadiusChanged(AtomDesign atomDesign, double radius) {
-        if (atomDesign == this.atomDesign && radius > 0.0) {
-            this.updateRadiusOfSphere();
+        if (atomDesign != this.atomDesign || radius <= 0.0) {
+            return;
         }
+        if (Math.abs(radius - this.currentRadius) < RMIN) {
+            return;
+        }
+
+        this.updateRadiusOfSphere();
     }
 
     @Override
     public void onAtomicColorChanged(AtomDesign atomDesign, Color color) {
-        if (atomDesign == this.atomDesign && color != null) {
-            this.updateColorOfSphere();
+        if (atomDesign != this.atomDesign || color == null) {
+            return;
         }
+        if (color.equals(this.currentColor)) {
+            return;
+        }
+
+        this.updateColorOfSphere();
     }
 
     @Override
     public void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle) {
-        if (atomDesign == this.atomDesign && atomsStyle != null) {
-            // TODO
+        if (atomDesign != this.atomDesign || atomsStyle == null) {
+            return;
         }
+        if (atomsStyle == this.currentStyle) {
+            return;
+        }
+
+        // TODO
     }
 }
