@@ -78,7 +78,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             this.logger = null;
         }
 
-        this.createDesign();
+        this.design = this.createDesign();
         this.backgroundNodes = null;
 
         this.busyLinkedViewers = false;
@@ -107,14 +107,14 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             }
         });
 
+        this.applyDesign();
         this.initialRotation();
     }
 
-    private void createDesign() {
-        this.design = new Design();
+    private Design createDesign() {
+        Design design = new Design();
 
-        this.subScene.setFill(this.design.getBackColor());
-        this.design.setOnBackColorChanged(color -> {
+        design.setOnBackColorChanged(color -> {
             if (color == null) {
                 return;
             }
@@ -132,15 +132,21 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
             }
         });
 
-        this.viewerSample.getNode().setVisible(this.design.isShowingLegend());
-        this.design.setOnShowingLegendChanged(showing -> {
+        design.setOnShowingLegendChanged(showing -> {
             this.viewerSample.getNode().setVisible(showing);
         });
 
-        this.viewerXYZAxis.getNode().setVisible(this.design.isShowingAxis());
-        this.design.setOnShowingAxisChanged(showing -> {
+        design.setOnShowingAxisChanged(showing -> {
             this.viewerXYZAxis.getNode().setVisible(showing);
         });
+
+        return design;
+    }
+
+    private void applyDesign() {
+        this.subScene.setFill(this.design.getBackColor());
+        this.viewerSample.getNode().setVisible(this.design.isShowingLegend());
+        this.viewerXYZAxis.getNode().setVisible(this.design.isShowingAxis());
     }
 
     private void initialRotation() {
