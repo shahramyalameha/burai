@@ -30,6 +30,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     private static final double RADIUS_SCALE_NORM = 0.5;
     private static final double RADIUS_SCALE_BOLD = 0.7;
 
+    private static final double BOND_SCALE = 0.1;
+
     private static final double RMIN = 5.0e-3;
     private static final double RRMIN = RMIN * RMIN;
 
@@ -41,7 +43,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     private double currentRadius;
     private Color currentColor;
-    private AtomsStyle currentStyle;
+    private boolean currentStyle;
+    private double currentBond;
 
     private AtomDesign atomDesign;
     private AtomDesignAdaptor atomDesignAdaptor;
@@ -66,7 +69,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
         this.currentRadius = -1.0;
         this.currentColor = null;
-        this.currentStyle = null;
+        this.currentStyle = false;
+        this.currentBond = -1.0;
 
         this.atomDesign = null;
         this.atomDesignAdaptor = null;
@@ -96,19 +100,25 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     private void updateRadiusOfSphere() {
-        double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
+        this.currentStyle = this.isStickStyle();
 
         double radius = -1.0;
-        if (this.atomDesign != null) {
-            radius = this.atomDesign.getRadius();
+        if (this.currentStyle) {
+            double bond = this.atomDesign.getBondWidth();
+            radius = BOND_SCALE * bond;
+            this.currentBond = bond;
+
+        } else {
+            if (this.atomDesign != null) {
+                radius = this.atomDesign.getRadius();
+            }
+            if (radius <= 0.0) {
+                radius = this.model.getRadius();
+            }
+            this.currentRadius = radius;
         }
 
-        if (radius <= 0.0) {
-            radius = this.model.getRadius();
-        }
-
-        this.currentRadius = radius;
-
+        double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
         radius *= scale;
 
         if (this.isSelected()) {
@@ -119,6 +129,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         this.atomSphere.setRadius(radius);
     }
 
+    private boolean isStickStyle() {
+        return this.atomDesign != null && this.atomDesign.getAtomsStyle() == AtomsStyle.STICK;
+    }
+
     private void updateXYZOfSphere() {
         this.atomSphere.setTranslateX(this.model.getX());
         this.atomSphere.setTranslateY(this.model.getY());
@@ -126,19 +140,16 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     private void updateColorOfSphere() {
-        PhongMaterial material = new PhongMaterial();
-
         Color diffuseColor = null;
         if (this.atomDesign != null) {
             diffuseColor = this.atomDesign.getColor();
         }
-
         if (diffuseColor == null) {
             diffuseColor = ElementUtil.getColor(this.model.getName());
         }
-
         this.currentColor = diffuseColor;
 
+        PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(diffuseColor);
         material.setSpecularColor(Color.SILVER);
         this.atomSphere.setMaterial(material);
@@ -247,7 +258,9 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
             return;
         }
 
-        this.updateRadiusOfSphere();
+        if (!this.isStickStyle()) {
+            this.updateRadiusOfSphere();
+        }
     }
 
     @Override
@@ -267,10 +280,24 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         if (atomDesign != this.atomDesign || atomsStyle == null) {
             return;
         }
-        if (atomsStyle == this.currentStyle) {
+        if (this.isStickStyle() == this.currentStyle) {
             return;
         }
 
-        // TODO
+        this.updateRadiusOfSphere();
+    }
+
+    @Override
+    public void onBondWidthChanged(AtomDesign atomDesign, double bondWidth) {
+        if (atomDesign != this.atomDesign || bondWidth <= 0.0) {
+            return;
+        }
+        if (BOND_SCALE * Math.abs(bondWidth - this.currentBond) < RMIN) {
+            return;
+        }
+
+        if (this.isStickStyle()) {
+            this.updateRadiusOfSphere();
+        }
     }
 }

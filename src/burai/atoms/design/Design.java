@@ -37,7 +37,6 @@ public class Design {
     private List<ShowingChanged> onShowingLegendChangedList;
     private List<ShowingChanged> onShowingAxisChangedList;
     private List<ShowingChanged> onShowingCellChangedList;
-    private List<ValueChanged> onBondWidthChangedList;
     private List<ValueChanged> onCellWidthChangedList;
 
     private Map<String, AtomDesign> atomDesigns;
@@ -59,7 +58,6 @@ public class Design {
         this.onShowingLegendChangedList = null;
         this.onShowingAxisChangedList = null;
         this.onShowingCellChangedList = null;
-        this.onBondWidthChangedList = null;
         this.onCellWidthChangedList = null;
 
         this.atomDesigns = null;
@@ -325,32 +323,13 @@ public class Design {
 
         this.bondWidth = bondWidth;
 
-        if (this.onBondWidthChangedList != null) {
-            for (ValueChanged onBondWidthChanged : this.onBondWidthChangedList) {
-                onBondWidthChanged.onValueChanged(this.bondWidth);
+        Collection<AtomDesign> atomDesignColl = this.atomDesigns == null ? null : this.atomDesigns.values();
+        if (atomDesignColl != null && !atomDesignColl.isEmpty()) {
+            for (AtomDesign atomDesign : atomDesignColl) {
+                if (atomDesign != null) {
+                    atomDesign.setBondWidth(this.bondWidth);
+                }
             }
-        }
-    }
-
-    public void addOnBondWidthChanged(ValueChanged onBondWidthChanged) {
-        if (onBondWidthChanged == null) {
-            return;
-        }
-
-        if (this.onBondWidthChangedList == null) {
-            this.onBondWidthChangedList = new ArrayList<>();
-        }
-
-        this.onBondWidthChangedList.add(onBondWidthChanged);
-    }
-
-    public void removeOnBondWidthChanged(ValueChanged onBondWidthChanged) {
-        if (onBondWidthChanged == null) {
-            return;
-        }
-
-        if (this.onBondWidthChangedList != null) {
-            this.onBondWidthChangedList.remove(onBondWidthChanged);
         }
     }
 
@@ -409,11 +388,10 @@ public class Design {
         }
 
         if (!this.atomDesigns.containsKey(name2)) {
-            if (this.atomsStyle != null) {
-                this.atomDesigns.put(name2, new AtomDesign(name2, this.atomsStyle));
-            } else {
-                this.atomDesigns.put(name2, new AtomDesign(name2, AtomsStyle.BALL_STICK));
-            }
+            AtomDesign atomDesign = new AtomDesign(name2);
+            atomDesign.setAtomsStyle(this.atomsStyle);
+            atomDesign.setBondWidth(this.bondWidth);
+            this.atomDesigns.put(name2, atomDesign);
         }
 
         return this.atomDesigns.get(name2);

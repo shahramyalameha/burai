@@ -43,8 +43,10 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     private double currentRadius2;
     private Color currentColor1;
     private Color currentColor2;
-    private AtomsStyle currentStyle1;
-    private AtomsStyle currentStyle2;
+    private boolean currentStyle1;
+    private boolean currentStyle2;
+    private double currentBond1;
+    private double currentBond2;
 
     private AtomDesign atomDesign1;
     private AtomDesign atomDesign2;
@@ -70,8 +72,10 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         this.currentRadius2 = -1.0;
         this.currentColor1 = null;
         this.currentColor2 = null;
-        this.currentStyle1 = null;
-        this.currentStyle2 = null;
+        this.currentStyle1 = false;
+        this.currentStyle2 = false;
+        this.currentBond1 = -1.0;
+        this.currentBond2 = -1.0;
 
         this.atomDesign1 = null;
         this.atomDesign2 = null;
@@ -79,6 +83,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         this.atomDesignAdaptor1 = null;
 
         this.updateAtomDesign(true, true);
+        this.updateVisibleCylinder();
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();
         this.getChildren().add(this.bondCylinder1);
@@ -119,6 +124,17 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
                 this.atomDesign2.addAdaptor(this.atomDesignAdaptor2);
             }
         }
+    }
+
+    private void updateVisibleCylinder() {
+        this.currentStyle1 = this.isBallStyle(this.atomDesign1);
+        this.currentStyle2 = this.isBallStyle(this.atomDesign2);
+        this.bondCylinder1.setVisible(!this.currentStyle1);
+        this.bondCylinder2.setVisible(!this.currentStyle2);
+    }
+
+    private boolean isBallStyle(AtomDesign atomDesign) {
+        return atomDesign != null && atomDesign.getAtomsStyle() == AtomsStyle.BALL;
     }
 
     private void updateXYZOfCylinder() {
@@ -199,7 +215,6 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (color1 == null) {
             color1 = ElementUtil.getColor(atom1.getName());
         }
-
         this.currentColor1 = color1;
 
         PhongMaterial material1 = new PhongMaterial();
@@ -216,7 +231,6 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (color2 == null) {
             color2 = ElementUtil.getColor(atom2.getName());
         }
-
         this.currentColor2 = color2;
 
         PhongMaterial material2 = new PhongMaterial();
@@ -245,8 +259,10 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             this.updateAtomDesign(false, true);
         }
 
-        this.updateXYZOfCylinder();
-        this.updateColorOfCylinder();
+        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+            this.updateXYZOfCylinder();
+            this.updateColorOfCylinder();
+        }
     }
 
     @Override
@@ -264,7 +280,9 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        this.updateXYZOfCylinder();
+        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+            this.updateXYZOfCylinder();
+        }
     }
 
     @Override
@@ -283,7 +301,9 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        this.updateXYZOfCylinder();
+        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+            this.updateXYZOfCylinder();
+        }
     }
 
     @Override
@@ -302,7 +322,9 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        this.updateColorOfCylinder();
+        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+            this.updateColorOfCylinder();
+        }
     }
 
     @Override
@@ -310,17 +332,27 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (atomsStyle == null) {
             return;
         } else if (atomDesign == this.atomDesign1) {
-            if (atomsStyle == this.currentStyle1) {
+            if (this.isBallStyle(atomDesign) == this.currentStyle1) {
                 return;
             }
         } else if (atomDesign == this.atomDesign2) {
-            if (atomsStyle == this.currentStyle2) {
+            if (this.isBallStyle(atomDesign) == this.currentStyle2) {
                 return;
             }
         } else {
             return;
         }
 
-        // TODO
+        if (this.currentStyle1 && this.currentStyle2) {
+            this.updateXYZOfCylinder();
+            this.updateColorOfCylinder();
+        }
+
+        this.updateVisibleCylinder();
+    }
+
+    @Override
+    public void onBondWidthChanged(AtomDesign atomDesign, double bondWidth) {
+        // TODO 自動生成されたメソッド・スタブ
     }
 }

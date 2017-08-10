@@ -19,4 +19,6 @@ public interface AtomDesignListener {
 
     public abstract void onAtomsStyleChanged(AtomDesign atomDesign, AtomsStyle atomsStyle);
 
+    public abstract void onBondWidthChanged(AtomDesign atomDesign, double bondWidth);
+
 }

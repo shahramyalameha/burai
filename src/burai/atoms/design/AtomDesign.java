@@ -29,7 +29,9 @@ public class AtomDesign {
 
     private AtomsStyle atomsStyle;
 
-    public AtomDesign(double radius, Color color, AtomsStyle atomsStyle) {
+    private double bondWidth;
+
+    public AtomDesign(double radius, Color color) {
         if (radius <= 0.0) {
             throw new IllegalArgumentException("radius is not positive.");
         }
@@ -38,24 +40,21 @@ public class AtomDesign {
             throw new IllegalArgumentException("color is null.");
         }
 
-        if (atomsStyle == null) {
-            throw new IllegalArgumentException("atomsStyle is null.");
-        }
-
         this.countAdaptors = 0;
         this.adaptors = null;
 
         this.radius = radius;
         this.color = color;
-        this.atomsStyle = atomsStyle;
+        this.atomsStyle = AtomsStyle.BALL_STICK;
+        this.bondWidth = 1.0;
     }
 
-    public AtomDesign(double radius, double red, double green, double blue, AtomsStyle atomsStyle) {
-        this(radius, Color.color(red, green, blue), atomsStyle);
+    public AtomDesign(double radius, double red, double green, double blue) {
+        this(radius, Color.color(red, green, blue));
     }
 
-    public AtomDesign(String name, AtomsStyle atomsStyle) {
-        this(ElementUtil.getCovalentRadius(name), ElementUtil.getColor(name), atomsStyle);
+    public AtomDesign(String name) {
+        this(ElementUtil.getCovalentRadius(name), ElementUtil.getColor(name));
     }
 
     public void addAdaptor(AtomDesignAdaptor adaptor) {
@@ -98,7 +97,7 @@ public class AtomDesign {
     }
 
     public void setRadius(double radius) {
-        if (this.radius <= 0.0) {
+        if (radius <= 0.0) {
             return;
         }
 
@@ -122,7 +121,7 @@ public class AtomDesign {
     }
 
     public void setColor(Color color) {
-        if (this.color == null) {
+        if (color == null) {
             return;
         }
 
@@ -146,7 +145,7 @@ public class AtomDesign {
     }
 
     public void setAtomsStyle(AtomsStyle atomsStyle) {
-        if (this.atomsStyle == null) {
+        if (atomsStyle == null) {
             return;
         }
 
@@ -160,6 +159,30 @@ public class AtomDesign {
                 }
                 if (listener != null) {
                     listener.onAtomsStyleChanged(this, this.atomsStyle);
+                }
+            }
+        }
+    }
+
+    public double getBondWidth() {
+        return this.bondWidth;
+    }
+
+    public void setBondWidth(double bondWidth) {
+        if (bondWidth <= 0.0) {
+            return;
+        }
+
+        this.bondWidth = bondWidth;
+
+        if (this.adaptors != null && !this.adaptors.isEmpty()) {
+            for (AtomDesignAdaptor adaptor : this.adaptors) {
+                AtomDesignListener listener = null;
+                if (adaptor != null && adaptor.isAlive()) {
+                    listener = adaptor.getListener();
+                }
+                if (listener != null) {
+                    listener.onBondWidthChanged(this, this.bondWidth);
                 }
             }
         }
