@@ -117,15 +117,12 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
             this.currentRadius = radius;
         }
 
-        double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
-        radius *= scale;
-
         if (this.isSelected()) {
-            double radiusMin = scale * 0.80;
-            radius = Math.max(1.05 * radius, radiusMin);
+            radius = Math.max(1.05 * radius, 0.80);
         }
 
-        this.atomSphere.setRadius(radius);
+        double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
+        this.atomSphere.setRadius(scale * radius);
     }
 
     private boolean isStickStyle() {
