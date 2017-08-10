@@ -58,6 +58,19 @@ public class XYZAxis extends Group {
         text.setRotationAxis(Rotate.Z_AXIS);
         text.setRotate(180.0);
 
+        if (this.design != null) {
+            Color fontColor = this.design.getFontColor();
+            if (fontColor != null) {
+                text.setFill(fontColor);
+            }
+
+            this.design.addOnFontColorChanged(fontColor_ -> {
+                if (fontColor_ != null) {
+                    text.setFill(fontColor_);
+                }
+            });
+        }
+
         Group group = new Group();
         group.getChildren().add(cylinder);
         group.getChildren().add(text);
