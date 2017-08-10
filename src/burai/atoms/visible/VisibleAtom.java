@@ -104,9 +104,8 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
         double radius = -1.0;
         if (this.currentStyle) {
-            double bond = this.atomDesign.getBondWidth();
-            radius = BOND_SCALE * bond;
-            this.currentBond = bond;
+            this.currentBond = this.atomDesign.getBondWidth();
+            radius = (BOND_SCALE / RADIUS_SCALE_NORM) * this.currentBond;
 
         } else {
             if (this.atomDesign != null) {
