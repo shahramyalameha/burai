@@ -21,9 +21,15 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
 
     private Cell cell;
 
+    private boolean silent;
+
     private boolean keepOperation;
 
     public ViewerCell(AtomsViewer atomsViewer, Cell cell) {
+        this(atomsViewer, cell, false);
+    }
+
+    public ViewerCell(AtomsViewer atomsViewer, Cell cell, boolean silent) {
         super(atomsViewer);
 
         if (cell == null) {
@@ -31,6 +37,7 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
         }
 
         this.cell = cell;
+        this.silent = silent;
         this.keepOperation = false;
     }
 
@@ -91,7 +98,7 @@ public class ViewerCell extends ViewerComponent<VisibleCell> {
 
     @Override
     protected VisibleCell createNode() {
-        return new VisibleCell(this.cell, this.atomsViewer.getDesign());
+        return new VisibleCell(this.cell, this.atomsViewer.getDesign(), this.silent);
     }
 
     public boolean isInCell(double sceneX, double sceneY, double sceneZ) {

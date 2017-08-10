@@ -63,7 +63,7 @@ public class AtomsViewer extends AtomsViewerBase<Group> {
 
         this.compassMode = false;
 
-        this.viewerCell = new ViewerCell(this, this.cell);
+        this.viewerCell = new ViewerCell(this, this.cell, silent);
         this.viewerSample = new ViewerSample(this, this.cell);
         this.viewerXYZAxis = new ViewerXYZAxis(this);
         if (!silent) {

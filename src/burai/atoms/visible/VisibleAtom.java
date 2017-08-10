@@ -37,9 +37,9 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     private boolean boldMode;
 
-    private AtomicSphere atomSphere;
-
     private boolean disableToSelect;
+
+    private AtomicSphere atomSphere;
 
     private double currentRadius;
     private Color currentColor;
@@ -61,11 +61,18 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         super(atom, design);
 
         this.model.addListener(this);
-        this.model.addPropertyListener(KEY_SELECTED, o -> this.updateSelected());
+
+        if (!disableToSelect) {
+            this.model.addPropertyListener(KEY_SELECTED, o -> {
+                this.updateRadiusOfSphere();
+                this.updateDrawMode();
+            });
+        }
 
         this.boldMode = boldMode;
-        this.atomSphere = new AtomicSphere(this, !this.boldMode);
         this.disableToSelect = disableToSelect;
+
+        this.atomSphere = new AtomicSphere(this, !this.boldMode);
 
         this.currentRadius = -1.0;
         this.currentColor = null;
@@ -79,7 +86,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         this.updateRadiusOfSphere();
         this.updateXYZOfSphere();
         this.updateColorOfSphere();
-        this.updateSelected();
+        this.updateDrawMode();
         this.getChildren().add(this.atomSphere);
     }
 
@@ -151,22 +158,19 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         this.atomSphere.setMaterial(material);
     }
 
-    private void updateSelected() {
-        if (this.disableToSelect) {
-            return;
-        }
-
+    private void updateDrawMode() {
         if (!this.isSelected()) {
-            this.updateRadiusOfSphere();
             this.atomSphere.setDrawMode(DrawMode.FILL);
-
         } else {
-            this.updateRadiusOfSphere();
             this.atomSphere.setDrawMode(DrawMode.LINE);
         }
     }
 
     public void setSelected(boolean selected) {
+        if (this.disableToSelect) {
+            return;
+        }
+
         Atom masterAtom = this.model.getMasterAtom();
         if (masterAtom == null) {
             return;
@@ -176,6 +180,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     public boolean isSelected() {
+        if (this.disableToSelect) {
+            return false;
+        }
+
         if (!this.model.hasProperty(KEY_SELECTED)) {
             return this.initializeSelected();
         }

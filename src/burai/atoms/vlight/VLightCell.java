@@ -70,7 +70,7 @@ public class VLightCell extends VLightComponent<VisibleCell> {
 
     @Override
     protected VisibleCell createNode() {
-        return new VisibleCell(this.cell, null, true);
+        return new VisibleCell(this.cell, null, true, true);
     }
 
     public void detachFromCell() {

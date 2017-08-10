@@ -32,18 +32,26 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
     private boolean boldMode;
 
+    private boolean disableToSelect;
+
     private Cylinder[] latticeCylinders;
 
     public VisibleCell(Cell cell, Design design) {
         this(cell, design, false);
     }
 
-    public VisibleCell(Cell cell, Design design, boolean boldMode) {
+    public VisibleCell(Cell cell, Design design, boolean disableToSelect) {
+        this(cell, design, disableToSelect, false);
+    }
+
+    public VisibleCell(Cell cell, Design design, boolean disableToSelect, boolean boldMode) {
         super(cell, design);
 
         this.model.addListener(this);
 
         this.boldMode = boldMode;
+        this.disableToSelect = disableToSelect;
+
         this.latticeCylinders = new Cylinder[12];
         for (int i = 0; i < latticeCylinders.length; i++) {
             this.latticeCylinders[i] = new Cylinder(1.0, 1.0, CYLINDER_DIV);
@@ -61,14 +69,7 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
     }
 
     private VisibleAtom createVisibleAtom(Atom atom) {
-        boolean disableToSelect = false;
-        if (!this.boldMode) {
-            disableToSelect = false;
-        } else {
-            disableToSelect = true;
-        }
-
-        VisibleAtom visibleAtom = new VisibleAtom(atom, this.design, disableToSelect, this.boldMode);
+        VisibleAtom visibleAtom = new VisibleAtom(atom, this.design, this.disableToSelect, this.boldMode);
         this.toBeFlushedProperty().addListener(o -> visibleAtom.setToBeFlushed(this.isToBeFlushed()));
         return visibleAtom;
     }
