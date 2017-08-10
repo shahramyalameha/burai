@@ -9,6 +9,7 @@
 
 package burai.atoms.visible;
 
+import burai.atoms.design.Design;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -26,8 +27,16 @@ public class XYZAxis extends Group {
     private static final double TEXT_SIZE = 0.50;
     private static final String TEXT_FONT = "Times New Roman";
 
+    private Design design;
+
     public XYZAxis() {
+        this(null);
+    }
+
+    public XYZAxis(Design design) {
         super();
+
+        this.design = design;
 
         this.creatAx(0, "X", Color.RED);
         this.creatAx(1, "Y", Color.BLUE);
@@ -44,7 +53,6 @@ public class XYZAxis extends Group {
 
         Text text = new Text(label);
         text.setFont(Font.font(TEXT_FONT, TEXT_SIZE));
-        //text.setTranslateX(-0.25 * TEXT_SIZE);
         text.setTranslateX(-0.33 * TEXT_SIZE);
         text.setTranslateY(0.10 * TEXT_SIZE + CYLINDER_HEIGHT);
         text.setRotationAxis(Rotate.Z_AXIS);

@@ -65,6 +65,6 @@ public class ViewerXYZAxis extends ViewerComponent<XYZAxis> {
 
     @Override
     protected XYZAxis createNode() {
-        return new XYZAxis();
+        return new XYZAxis(this.atomsViewer.getDesign());
     }
 }

@@ -39,6 +39,10 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
     private List<Atom> sampleAtoms;
     private List<Text> sampleTexts;
 
+    public AtomsSample(Cell cell) {
+        this(cell, null);
+    }
+
     public AtomsSample(Cell cell, Design design) {
         super();
 
