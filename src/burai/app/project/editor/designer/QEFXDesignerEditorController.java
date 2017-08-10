@@ -506,7 +506,7 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             this.setFieldStyle(this.bondWidthField, -1.0);
         }
 
-        this.cellWidthField.textProperty().addListener(o -> {
+        this.bondWidthField.textProperty().addListener(o -> {
             double value = this.getFieldValue(this.bondWidthField);
             this.setFieldStyle(this.bondWidthField, value);
 
