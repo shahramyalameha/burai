@@ -141,11 +141,12 @@
 
 .designer-button {
     -fx-fill: -fx-dark-text-color;
-    -fx-background-color: transparent;
+    -fx-background-color: dimgray;
     -fx-background-radius: 0.25em 0.0em 0.25em 0.5em;
     -fx-border-color: derive(-fx-dark-text-color, 15.0%);
     -fx-border-radius: 0.25em 0.0em 0.25em 0.5em;
     -fx-border-width: 0.1em;
     -fx-focus-traversable: false;
+    -fx-opacity: 0.8;
 }
 

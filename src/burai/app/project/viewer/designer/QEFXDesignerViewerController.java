@@ -37,7 +37,7 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     private static final long ANIMATION_TIME1 = 450L;
     private static final long ANIMATION_TIME2 = 550L;
 
-    private static final double DUAL_SCALE = 0.55;
+    private static final double DUAL_SCALE = 0.54;
     private static final double WIN_SCALE_WIDTH = 0.32;
     private static final double WIN_SCALE_HEIGHT = 0.32;
     private static final double OFF_SCALE_WIDTH = 0.02;
