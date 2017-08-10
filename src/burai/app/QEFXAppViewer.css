@@ -41,6 +41,6 @@
 
 .designerwin-pane {
     -fx-background-color: transparent;
-    -fx-effect: dropshadow(gaussian, derive(black, 36.0%), 4.5, 0.15, 0.5em, -0.416667em);
+    -fx-effect: dropshadow(gaussian, derive(black, 32.0%), 4.5, 0.15, 0.5em, -0.416667em);
 }
 
