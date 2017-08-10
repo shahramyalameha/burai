@@ -36,6 +36,10 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
 
     private Cylinder[] latticeCylinders;
 
+    private boolean currentShowing;
+    private double currentWidth;
+    private Color currentColor;
+
     public VisibleCell(Cell cell, Design design) {
         this(cell, design, false);
     }
@@ -57,11 +61,16 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
             this.latticeCylinders[i] = new Cylinder(1.0, 1.0, CYLINDER_DIV);
         }
 
+        this.currentShowing = false;
+        this.currentWidth = -1.0;
+        this.currentColor = null;
+
+        this.updateVisibleCylinders();
         this.updateRadiusOfCylinders();
         this.updateXYZOfCylinders();
         this.updateColorOfCylinders();
 
-        for (int i = 0; i < latticeCylinders.length; i++) {
+        for (int i = 0; i < this.latticeCylinders.length; i++) {
             this.getChildren().add(this.latticeCylinders[i]);
         }
 
@@ -98,7 +107,24 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
         }
     }
 
+    private void updateVisibleCylinders() {
+        this.currentShowing = this.design == null ? true : this.design.isShowingCell();
+
+        for (int i = 0; i < this.latticeCylinders.length; i++) {
+            this.latticeCylinders[i].setVisible(this.currentShowing);
+        }
+    }
+
     private void updateRadiusOfCylinders() {
+        double width = -1.0;
+        if (this.design != null) {
+            width = this.design.getCellWidth();
+        }
+        if (width <= 0.0) {
+            width = 1.0;
+        }
+        this.currentWidth = width;
+
         double[][] lattice = this.model.copyLattice();
         double aNorm = Matrix3D.norm(lattice[0]);
         double bNorm = Matrix3D.norm(lattice[1]);
@@ -109,7 +135,7 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
         double tSqrt = 3.0 / (1.0 / aSqrt + 1.0 / bSqrt + 1.0 / cSqrt);
         double tNorm = tSqrt * tSqrt;
         double scale = this.boldMode ? CYLINDER_SCALE_BOLD : CYLINDER_SCALE_NORM;
-        double radius = scale * tNorm;
+        double radius = scale * tNorm * width;
 
         for (int i = 0; i < latticeCylinders.length; i++) {
             this.latticeCylinders[i].setRadius(radius);
@@ -148,11 +174,20 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
     }
 
     private void updateColorOfCylinders() {
+        Color color = null;
+        if (this.design != null) {
+            color = this.design.getCellColor();
+        }
+        if (color == null) {
+            color = Color.BLACK;
+        }
+        this.currentColor = color;
+
         for (int i = 0; i < latticeCylinders.length; i++) {
             Cylinder cylinder = latticeCylinders[i];
             PhongMaterial material = new PhongMaterial();
-            material.setDiffuseColor(Color.BLACK);
-            material.setSpecularColor(Color.BLACK);
+            material.setDiffuseColor(color);
+            material.setSpecularColor(color);
             cylinder.setMaterial(material);
         }
     }
