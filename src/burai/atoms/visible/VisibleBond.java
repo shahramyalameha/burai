@@ -188,7 +188,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         double rate1 = rad1 / (rad1 + rad2);
         double rate2 = 1.0 - rate1;
-        if (anum1 == anum2) {
+        if (anum1 == anum2 &&
+                this.currentStyle1 == this.currentStyle2 && this.currentBond1 == this.currentBond2) {
             rate1 = 0.999;
             rate2 = 0.001;
         }
