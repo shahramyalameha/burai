@@ -52,6 +52,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
 
     private static final String ELEMENT_EMPTY_TEXT = "no element";
 
+    private static final String ERROR_STYLE = QEFXItem.ERROR_STYLE;
+
     private QEFXDesignerViewer viewer;
 
     private Design design;
@@ -180,20 +182,6 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.setupShowCell();
         this.setupCellColor();
         this.setupCellWidth();
-    }
-
-    private void updateToggleGraphics(ToggleButton toggle) {
-        if (toggle == null) {
-            return;
-        }
-
-        if (toggle.isSelected()) {
-            toggle.setGraphic(ToggleGraphics.getGraphic(
-                    TOGGLE_WIDTH, TOGGLE_HEIGHT, true, TOGGLE_TEXT_YES, TOGGLE_STYLE_YES));
-        } else {
-            toggle.setGraphic(ToggleGraphics.getGraphic(
-                    TOGGLE_WIDTH, TOGGLE_HEIGHT, false, TOGGLE_TEXT_NO, TOGGLE_STYLE_NO));
-        }
     }
 
     private void setupUndoButton() {
@@ -509,7 +497,32 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        if (this.design != null) {
+            double value = this.design.getBondWidth();
+            this.bondWidthField.setText(Double.toString(value));
+            this.setFieldStyle(this.bondWidthField, value);
+        } else {
+            this.bondWidthField.setText("");
+            this.setFieldStyle(this.bondWidthField, -1.0);
+        }
+
+        this.cellWidthField.textProperty().addListener(o -> {
+            double value = this.getFieldValue(this.bondWidthField);
+            this.setFieldStyle(this.bondWidthField, value);
+
+            if (value > 0.0) {
+                if (this.design != null) {
+                    this.design.setBondWidth(value);
+                }
+            }
+        });
+
+        if (this.bondWidthButton != null) {
+            QEFXItem.setupDefaultButton(this.bondWidthButton);
+            this.bondWidthButton.setOnAction(event -> {
+                this.bondWidthField.setText("1.0");
+            });
+        }
     }
 
     private void setupShowCell() {
@@ -562,6 +575,82 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        if (this.design != null) {
+            double value = this.design.getCellWidth();
+            this.cellWidthField.setText(Double.toString(value));
+            this.setFieldStyle(this.cellWidthField, value);
+        } else {
+            this.cellWidthField.setText("");
+            this.setFieldStyle(this.cellWidthField, -1.0);
+        }
+
+        this.cellWidthField.textProperty().addListener(o -> {
+            double value = this.getFieldValue(this.cellWidthField);
+            this.setFieldStyle(this.cellWidthField, value);
+
+            if (value > 0.0) {
+                if (this.design != null) {
+                    this.design.setCellWidth(value);
+                }
+            }
+        });
+
+        if (this.cellWidthButton != null) {
+            QEFXItem.setupDefaultButton(this.cellWidthButton);
+            this.cellWidthButton.setOnAction(event -> {
+                this.cellWidthField.setText("1.0");
+            });
+        }
+    }
+
+    private double getFieldValue(TextField textField) {
+        if (textField == null) {
+            return -1.0;
+        }
+
+        String text = textField.getText();
+        if (text == null) {
+            return -1.0;
+        }
+
+        text = text.trim();
+        if (text.isEmpty()) {
+            return -1.0;
+        }
+
+        double value = -1.0;
+        try {
+            value = Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            value = -1.0;
+        }
+
+        return value;
+    }
+
+    private void setFieldStyle(TextField textField, double value) {
+        if (textField == null) {
+            return;
+        }
+
+        if (value > 0.0) {
+            textField.setStyle(null);
+        } else {
+            textField.setStyle(ERROR_STYLE);
+        }
+    }
+
+    private void updateToggleGraphics(ToggleButton toggle) {
+        if (toggle == null) {
+            return;
+        }
+
+        if (toggle.isSelected()) {
+            toggle.setGraphic(ToggleGraphics.getGraphic(
+                    TOGGLE_WIDTH, TOGGLE_HEIGHT, true, TOGGLE_TEXT_YES, TOGGLE_STYLE_YES));
+        } else {
+            toggle.setGraphic(ToggleGraphics.getGraphic(
+                    TOGGLE_WIDTH, TOGGLE_HEIGHT, false, TOGGLE_TEXT_NO, TOGGLE_STYLE_NO));
+        }
     }
 }
