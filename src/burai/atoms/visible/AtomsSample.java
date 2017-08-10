@@ -12,6 +12,7 @@ package burai.atoms.visible;
 import java.util.ArrayList;
 import java.util.List;
 
+import burai.atoms.design.ColorChanged;
 import burai.atoms.design.Design;
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
@@ -23,6 +24,7 @@ import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -38,6 +40,7 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
     private List<Atom> sampleAtoms;
     private List<Text> sampleTexts;
+    private List<ColorChanged> sampleColors;
 
     public AtomsSample(Cell cell) {
         this(cell, null);
@@ -52,13 +55,15 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
 
         this.cell = cell;
         this.design = design;
+
         this.initializeSampleAtoms();
         this.setOneselfAsListener();
     }
 
     private void initializeSampleAtoms() {
-        this.sampleAtoms = new ArrayList<Atom>();
-        this.sampleTexts = new ArrayList<Text>();
+        this.sampleAtoms = new ArrayList<>();
+        this.sampleTexts = new ArrayList<>();
+        this.sampleColors = this.design == null ? null : new ArrayList<>();
 
         Atom[] atoms = this.cell.listAtoms();
         if (atoms != null) {
@@ -164,6 +169,22 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
         sampleText.setTranslateY(y + 0.15 * BETWEEN_ATOMS);
         this.sampleTexts.add(sampleText);
         this.getChildren().add(sampleText);
+
+        if (this.design != null) {
+            Color fontColor = this.design.getFontColor();
+            if (fontColor != null) {
+                sampleText.setFill(fontColor);
+            }
+
+            ColorChanged colorChanged = fontColor_ -> {
+                if (fontColor_ != null) {
+                    sampleText.setFill(fontColor_);
+                }
+            };
+
+            this.sampleColors.add(colorChanged);
+            this.design.addOnFontColorChanged(colorChanged);
+        }
     }
 
     private void removeElementFromSampleAtoms(Atom atom) {
@@ -193,6 +214,15 @@ public class AtomsSample extends Group implements AtomEventListener, CellEventLi
                     Text sampleText = this.sampleTexts.remove(i);
                     if (sampleText != null) {
                         this.getChildren().remove(sampleText);
+                    }
+                }
+
+                if (this.design != null) {
+                    if (i < this.sampleColors.size()) {
+                        ColorChanged sampleColor = this.sampleColors.remove(i);
+                        if (sampleColor != null) {
+                            this.design.removeOnFontColorChanged(sampleColor);
+                        }
                     }
                 }
 

@@ -116,6 +116,16 @@ public class Design {
         this.onBackColorChangedList.add(onBackColorChanged);
     }
 
+    public void removeOnBackColorChanged(ColorChanged onBackColorChanged) {
+        if (onBackColorChanged == null) {
+            return;
+        }
+
+        if (this.onBackColorChangedList != null) {
+            this.onBackColorChangedList.remove(onBackColorChanged);
+        }
+    }
+
     public Color getFontColor() {
         return this.fontColor;
     }
@@ -144,6 +154,16 @@ public class Design {
         }
 
         this.onFontColorChangedList.add(onFontColorChanged);
+    }
+
+    public void removeOnFontColorChanged(ColorChanged onFontColorChanged) {
+        if (onFontColorChanged == null) {
+            return;
+        }
+
+        if (this.onFontColorChangedList != null) {
+            this.onFontColorChangedList.remove(onFontColorChanged);
+        }
     }
 
     public Color getCellColor() {
@@ -176,6 +196,16 @@ public class Design {
         this.onCellColorChangedList.add(onCellColorChanged);
     }
 
+    public void removeOnCellColorChanged(ColorChanged onCellColorChanged) {
+        if (onCellColorChanged == null) {
+            return;
+        }
+
+        if (this.onCellColorChangedList != null) {
+            this.onCellColorChangedList.remove(onCellColorChanged);
+        }
+    }
+
     public boolean isShowingLegend() {
         return this.showingLegend;
     }
@@ -200,6 +230,16 @@ public class Design {
         }
 
         this.onShowingLegendChangedList.add(onShowingLegendChanged);
+    }
+
+    public void removeOnShowingLegendChanged(ShowingChanged onShowingLegendChanged) {
+        if (onShowingLegendChanged == null) {
+            return;
+        }
+
+        if (this.onShowingLegendChangedList != null) {
+            this.onShowingLegendChangedList.remove(onShowingLegendChanged);
+        }
     }
 
     public boolean isShowingAxis() {
@@ -228,6 +268,16 @@ public class Design {
         this.onShowingAxisChangedList.add(onShowingAxisChanged);
     }
 
+    public void removeOnShowingAxisChanged(ShowingChanged onShowingAxisChanged) {
+        if (onShowingAxisChanged == null) {
+            return;
+        }
+
+        if (this.onShowingAxisChangedList != null) {
+            this.onShowingAxisChangedList.remove(onShowingAxisChanged);
+        }
+    }
+
     public boolean isShowingCell() {
         return this.showingCell;
     }
@@ -252,6 +302,16 @@ public class Design {
         }
 
         this.onShowingCellChangedList.add(onShowingCellChanged);
+    }
+
+    public void removeOnShowingCellChanged(ShowingChanged onShowingCellChanged) {
+        if (onShowingCellChanged == null) {
+            return;
+        }
+
+        if (this.onShowingCellChangedList != null) {
+            this.onShowingCellChangedList.remove(onShowingCellChanged);
+        }
     }
 
     public double getBondWidth() {
@@ -284,6 +344,16 @@ public class Design {
         this.onBondWidthChangedList.add(onBondWidthChanged);
     }
 
+    public void removeOnBondWidthChanged(ValueChanged onBondWidthChanged) {
+        if (onBondWidthChanged == null) {
+            return;
+        }
+
+        if (this.onBondWidthChangedList != null) {
+            this.onBondWidthChangedList.remove(onBondWidthChanged);
+        }
+    }
+
     public double getCellWidth() {
         return this.cellWidth;
     }
@@ -312,6 +382,16 @@ public class Design {
         }
 
         this.onCellWidthChangedList.add(onCellWidthChanged);
+    }
+
+    public void removeOnCellWidthChanged(ValueChanged onCellWidthChanged) {
+        if (onCellWidthChanged == null) {
+            return;
+        }
+
+        if (this.onCellWidthChangedList != null) {
+            this.onCellWidthChangedList.remove(onCellWidthChanged);
+        }
     }
 
     public AtomDesign getAtomDesign(String name) {
