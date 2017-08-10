@@ -38,10 +38,11 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     private static final long ANIMATION_TIME2 = 550L;
 
     private static final double DUAL_SCALE = 0.54;
-    private static final double WIN_SCALE_WIDTH = 0.32;
-    private static final double WIN_SCALE_HEIGHT = 0.32;
-    private static final double OFF_SCALE_WIDTH = 0.02;
-    private static final double OFF_SCALE_HEIGHT = 0.02;
+    private static final double DUAL_SCALE_WIN = 0.50;
+    private static final double WIN_SCALE_WIDTH = 0.28;
+    private static final double WIN_SCALE_HEIGHT = 0.28;
+    private static final double OFF_SCALE_WIDTH = 0.04;
+    private static final double OFF_SCALE_HEIGHT = 0.01;
 
     private QEFXProjectController projectController;
 
@@ -251,8 +252,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         }
 
         if (this.dualWindow != null) {
-            double scale1 = (DUAL_SCALE - WIN_SCALE_WIDTH) * rate + WIN_SCALE_WIDTH;
-            double scale2 = (DUAL_SCALE - WIN_SCALE_HEIGHT) * rate + WIN_SCALE_HEIGHT;
+            double scale1 = (DUAL_SCALE_WIN - WIN_SCALE_WIDTH) * rate + WIN_SCALE_WIDTH;
+            double scale2 = (DUAL_SCALE_WIN - WIN_SCALE_HEIGHT) * rate + WIN_SCALE_HEIGHT;
 
             if (!async) {
                 this.dualWindow.setWidth(scale1 * width);
