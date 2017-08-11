@@ -127,6 +127,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private TextField bondWidthField;
 
     @FXML
+    private Label bondWidthLabel;
+
+    @FXML
     private Button bondWidthButton;
 
     @FXML
@@ -139,10 +142,16 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private ColorPicker cellColorPicker;
 
     @FXML
+    private Label cellColorLabel;
+
+    @FXML
     private Button cellColorButton;
 
     @FXML
     private TextField cellWidthField;
+
+    @FXML
+    private Label cellWidthLabel;
 
     @FXML
     private Button cellWidthButton;
@@ -278,8 +287,10 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.styleCombo.getItems().clear();
         this.styleCombo.getItems().addAll(AtomsStyle.values());
         this.styleCombo.setValue(this.design == null ? null : this.design.getAtomsStyle());
+        this.disableBondItems(this.styleCombo.getValue());
         this.styleCombo.setOnAction(event -> {
             AtomsStyle atomsStyle = this.styleCombo.getValue();
+            this.disableBondItems(atomsStyle);
             if (this.design != null && atomsStyle != null) {
                 this.design.setAtomsStyle(atomsStyle);
             }
@@ -525,6 +536,32 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         }
     }
 
+    private void disableBondItems(AtomsStyle atomsStyle) {
+        if (atomsStyle == null) {
+            return;
+        }
+
+        if (atomsStyle == AtomsStyle.BALL) {
+            this.disableBondItems(true);
+        } else {
+            this.disableBondItems(false);
+        }
+    }
+
+    private void disableBondItems(boolean disable) {
+        if (this.bondWidthField != null) {
+            this.bondWidthField.setDisable(disable);
+        }
+
+        if (this.bondWidthLabel != null) {
+            this.bondWidthLabel.setDisable(disable);
+        }
+
+        if (this.bondWidthButton != null) {
+            this.bondWidthButton.setDisable(disable);
+        }
+    }
+
     private void setupShowCell() {
         if (this.cellToggle == null) {
             return;
@@ -534,8 +571,10 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.cellToggle.setStyle(TOGGLE_STYLE);
         this.cellToggle.setSelected(this.design == null ? false : this.design.isShowingCell());
         this.updateToggleGraphics(this.cellToggle);
+        this.disableCellItems(!this.cellToggle.isSelected());
         this.cellToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.cellToggle);
+            this.disableCellItems(!this.cellToggle.isSelected());
             if (this.design != null) {
                 this.design.setShowingCell(this.cellToggle.isSelected());
             }
@@ -600,6 +639,32 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             this.cellWidthButton.setOnAction(event -> {
                 this.cellWidthField.setText("1.0");
             });
+        }
+    }
+
+    private void disableCellItems(boolean disable) {
+        if (this.cellColorPicker != null) {
+            this.cellColorPicker.setDisable(disable);
+        }
+
+        if (this.cellColorLabel != null) {
+            this.cellColorLabel.setDisable(disable);
+        }
+
+        if (this.cellColorButton != null) {
+            this.cellColorButton.setDisable(disable);
+        }
+
+        if (this.cellWidthField != null) {
+            this.cellWidthField.setDisable(disable);
+        }
+
+        if (this.cellWidthLabel != null) {
+            this.cellWidthLabel.setDisable(disable);
+        }
+
+        if (this.cellWidthButton != null) {
+            this.cellWidthButton.setDisable(disable);
         }
     }
 

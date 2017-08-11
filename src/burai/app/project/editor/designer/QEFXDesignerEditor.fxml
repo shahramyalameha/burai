@@ -197,7 +197,7 @@
             </BorderPane>
             <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
                <children>
-                  <Label text="Bond Width" />
+                  <Label fx:id="bondWidthLabel" text="Bond Width" />
                   <GridPane prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
                         <TextField fx:id="bondWidthField" prefWidth="200.0" />
@@ -244,8 +244,8 @@
             <GridPane hgap="5.0" prefWidth="395.0" vgap="5.0">
                <children>
                   <Label text="Show Cell ?" />
-                  <Label text="Cell Color" GridPane.rowIndex="1" />
-                  <Label text="Cell Width" GridPane.rowIndex="2" />
+                  <Label fx:id="cellColorLabel" text="Cell Color" GridPane.rowIndex="1" />
+                  <Label fx:id="cellWidthLabel" text="Cell Width" GridPane.rowIndex="2" />
                   <ToggleButton fx:id="cellToggle" mnemonicParsing="false" prefWidth="200.0" GridPane.columnIndex="1" />
                   <ColorPicker fx:id="cellColorPicker" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <GridPane prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
