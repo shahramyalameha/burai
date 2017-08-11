@@ -9,19 +9,25 @@
 
 package burai.com.periodic;
 
+import java.util.Map;
+
+import burai.app.QEFXMain;
+import burai.atoms.element.ElementUtil;
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.layout.GridPane;
-import burai.app.QEFXMain;
-import burai.atoms.element.ElementUtil;
 
 public class PeriodicTable extends Dialog<ElementButton> {
 
     private GridPane gridPane;
 
     public PeriodicTable() {
+        this(null);
+    }
+
+    public PeriodicTable(Map<String, String> styles) {
         super();
 
         DialogPane dialogPane = this.getDialogPane();
@@ -33,7 +39,7 @@ public class PeriodicTable extends Dialog<ElementButton> {
         dialogPane.setHeaderText("Select an element.");
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL);
 
-        this.createGridPane();
+        this.createGridPane(styles);
         dialogPane.setContent(this.gridPane);
 
         this.setResultConverter(buttonType -> {
@@ -41,7 +47,7 @@ public class PeriodicTable extends Dialog<ElementButton> {
         });
     }
 
-    private void createGridPane() {
+    private void createGridPane(Map<String, String> styles) {
         this.gridPane = new GridPane();
         this.gridPane.setHgap(0.0);
         this.gridPane.setVgap(0.0);
@@ -51,6 +57,14 @@ public class PeriodicTable extends Dialog<ElementButton> {
         for (String elementName : elementNames) {
             ElementButton elementButton = new ElementButton(elementName);
             elementButton.setDialog(this);
+
+            if (styles != null && !styles.isEmpty()) {
+                String style = styles.get(elementName);
+                if (style != null && !style.isEmpty()) {
+                    elementButton.setStyle(style);
+                }
+            }
+
             this.gridPane.add(elementButton, elementButton.getY() - 1, elementButton.getX() - 1);
         }
     }
