@@ -12,9 +12,9 @@ package burai.input;
 import java.util.List;
 
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.model.property.AtomProperty;
 import burai.input.card.QEAtomicPositions;
 import burai.input.card.QECard;
 import burai.input.card.QECardEvent;

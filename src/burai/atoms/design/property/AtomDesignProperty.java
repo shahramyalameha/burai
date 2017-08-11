@@ -9,13 +9,13 @@
 
 package burai.atoms.design.property;
 
-public class AtomProperty {
+public class AtomDesignProperty {
 
     private double radius;
 
     private double[] color;
 
-    protected AtomProperty() {
+    protected AtomDesignProperty() {
         this.radius = 0.0;
         this.color = null;
     }

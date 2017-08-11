@@ -15,10 +15,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.model.property.AtomProperty;
+import burai.atoms.model.property.CellProperty;
 
 public class AtomsLogger {
 

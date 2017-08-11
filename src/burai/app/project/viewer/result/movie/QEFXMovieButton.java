@@ -15,7 +15,7 @@ import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.result.movie.QEFXMovieEditor;
 import burai.app.project.viewer.result.QEFXResultButton;
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.com.consts.Constants;
 import burai.com.math.Matrix3D;
 import burai.project.Project;

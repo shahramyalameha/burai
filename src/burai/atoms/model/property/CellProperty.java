@@ -7,10 +7,10 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.atoms.model;
+package burai.atoms.model.property;
 
-public interface BondProperty {
+public interface CellProperty {
 
-    // NOP
+    public static final String AXIS = "axis";
 
 }

@@ -11,10 +11,10 @@ package burai.app.project.viewer.modeler.supercell;
 
 import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.model.property.AtomProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.com.env.Environments;
 import burai.com.math.Matrix3D;
 import burai.com.parallel.Parallel;

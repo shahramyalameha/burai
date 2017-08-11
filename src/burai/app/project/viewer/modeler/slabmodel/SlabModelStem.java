@@ -20,10 +20,10 @@ import java.util.UUID;
 
 import burai.app.project.viewer.modeler.ModelerBase;
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.model.property.AtomProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 

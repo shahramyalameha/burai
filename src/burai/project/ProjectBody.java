@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.atoms.reader.AtomsReader;
 import burai.atoms.reader.QEReader;
 import burai.input.QEBandInput;

@@ -12,8 +12,8 @@ package burai.atoms.viewer.operation.editor;
 import java.util.List;
 
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.property.AtomProperty;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.operation.ViewerEventManager;
 import burai.atoms.visible.VisibleAtom;

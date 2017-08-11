@@ -16,8 +16,8 @@ import java.util.Set;
 
 import burai.atoms.element.ElementUtil;
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
+import burai.atoms.model.property.AtomProperty;
 import burai.com.math.Matrix3D;
 import burai.input.card.QEAtomicPositions;
 import burai.input.card.QEAtomicSpecies;

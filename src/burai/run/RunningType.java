@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.com.env.Environments;
 import burai.input.QEInput;
 import burai.input.card.QECellParameters;

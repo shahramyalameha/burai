@@ -15,7 +15,7 @@ import java.util.List;
 import burai.atoms.design.Design;
 import burai.atoms.model.Atom;
 import burai.atoms.model.Cell;
-import burai.atoms.model.CellProperty;
+import burai.atoms.model.property.CellProperty;
 import burai.atoms.viewer.logger.AtomsLogger;
 import burai.atoms.viewer.logger.AtomsLoggerPFactory;
 import burai.atoms.viewer.operation.ViewerEventManager;

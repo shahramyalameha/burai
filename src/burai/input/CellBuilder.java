@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.exception.ZeroVolumCellException;
+import burai.atoms.model.property.AtomProperty;
 import burai.com.consts.Constants;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;

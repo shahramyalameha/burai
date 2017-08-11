@@ -10,13 +10,13 @@
 package burai.input;
 
 import burai.atoms.model.Atom;
-import burai.atoms.model.AtomProperty;
 import burai.atoms.model.Cell;
 import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
 import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
+import burai.atoms.model.property.AtomProperty;
 import burai.com.math.Lattice;
 import burai.com.math.Matrix3D;
 import burai.input.card.QEAtomicPositions;
