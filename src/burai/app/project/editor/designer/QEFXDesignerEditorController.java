@@ -115,10 +115,16 @@ public class QEFXDesignerEditorController extends QEFXAppController {
     private ColorPicker atomColorPicker;
 
     @FXML
+    private Label atomColorLabel;
+
+    @FXML
     private Button atomColorButton;
 
     @FXML
     private TextField atomRadiusField;
+
+    @FXML
+    private Label atomRadiusLabel;
 
     @FXML
     private Button atomRadiusButton;
@@ -401,21 +407,20 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             return;
         }
 
-        String text = null;
+        String name = null;
         String[] names = this.design.namesOfAtoms();
         if (names != null && names.length > 0) {
             Arrays.sort(names);
-            text = ElementUtil.toElementName(names[0]);
+            name = names[0];
         }
-        if (text != null) {
-            text = text.trim();
+        if (name != null) {
+            name = name.trim();
         }
-        if (text == null || text.isEmpty()) {
-            text = ELEMENT_EMPTY_TEXT;
+        if (name == null || name.isEmpty()) {
+            name = ELEMENT_EMPTY_TEXT;
         }
 
-        this.elemButton.setText(text);
-        this.updateElemName();
+        this.updateElemButton(name);
 
         this.elemButton.setOnAction(event -> {
             PeriodicTable periodicTable = new PeriodicTable();
@@ -425,44 +430,43 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             }
 
             ElementButton element = optElement.get();
-            String name = element.getName();
-            if (name != null) {
-                name = name.trim();
+            String name_ = element.getName();
+            if (name_ != null) {
+                name_ = name_.trim();
             }
 
-            if (name != null && !name.isEmpty()) {
-                this.elemButton.setText(name);
-                this.updateElemName();
+            if (name_ != null && !name_.isEmpty()) {
+                this.updateElemButton(name_);
             }
         });
     }
 
-    private void updateElemName() {
-        this.elemName = null;
-
-        String text = this.elemButton == null ? null : this.elemButton.getText();
-        if (text == null) {
+    private void updateElemButton(String text) {
+        if (this.elemButton == null) {
             return;
         }
 
-        text = text.trim();
-        if (text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             return;
         }
+
+        this.elemButton.setText(text);
 
         if (ELEMENT_EMPTY_TEXT.equals(text)) {
-            return;
+            this.elemName = null;
+            this.elemButton.setStyle(ERROR_STYLE);
+            this.atomColorPicker.setValue(null);
+            this.atomRadiusField.setText("");
+            this.disableAtomItems(true);
+
+        } else {
+            this.elemName = text;
+            this.elemButton.setStyle(null);
+            AtomDesign atomDesign = this.getAtomDesign();
+            this.atomColorPicker.setValue(atomDesign == null ? null : atomDesign.getColor());
+            this.atomRadiusField.setText(atomDesign == null ? "" : Double.toString(atomDesign.getRadius()));
+            this.disableAtomItems(false);
         }
-
-        this.elemName = text;
-    }
-
-    private AtomDesign getAtomDesign() {
-        if (this.design == null || this.elemName == null) {
-            return null;
-        }
-
-        return this.design.getAtomDesign(this.elemName);
     }
 
     private void setupAtomColor() {
@@ -488,8 +492,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         if (this.atomColorButton != null) {
             QEFXItem.setupDefaultButton(this.atomColorButton);
             this.atomColorButton.setOnAction(event -> {
-                if (this.elemName != null) {
-                    this.atomColorPicker.setValue(ElementUtil.getColor(this.elemName));
+                Color color = this.elemName == null ? null : ElementUtil.getColor(this.elemName);
+                if (color != null) {
+                    this.atomColorPicker.setValue(color);
                 }
             });
         }
@@ -500,7 +505,72 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             return;
         }
 
-        // TODO
+        AtomDesign atomDesign = this.getAtomDesign();
+
+        if (atomDesign != null) {
+            double value = atomDesign.getRadius();
+            this.atomRadiusField.setText(Double.toString(value));
+            this.setFieldStyle(this.atomRadiusField, value);
+        } else {
+            this.atomRadiusField.setText("");
+            this.setFieldStyle(this.atomRadiusField, -1.0);
+        }
+
+        this.atomRadiusField.textProperty().addListener(o -> {
+            double value = this.getFieldValue(this.atomRadiusField);
+            this.setFieldStyle(this.atomRadiusField, value);
+
+            if (value > 0.0) {
+                AtomDesign atomDesign_ = this.getAtomDesign();
+                if (atomDesign_ != null) {
+                    atomDesign_.setRadius(value);
+                }
+            }
+        });
+
+        if (this.atomRadiusButton != null) {
+            QEFXItem.setupDefaultButton(this.atomRadiusButton);
+            this.atomRadiusButton.setOnAction(event -> {
+                double value = this.elemName == null ? -1.0 : ElementUtil.getCovalentRadius(this.elemName);
+                if (value > 0.0) {
+                    this.atomRadiusField.setText(Double.toString(value));
+                }
+            });
+        }
+    }
+
+    private AtomDesign getAtomDesign() {
+        if (this.design == null || this.elemName == null) {
+            return null;
+        }
+
+        return this.design.getAtomDesign(this.elemName);
+    }
+
+    private void disableAtomItems(boolean disable) {
+        if (this.atomColorPicker != null) {
+            this.atomColorPicker.setDisable(disable);
+        }
+
+        if (this.atomColorLabel != null) {
+            this.atomColorLabel.setDisable(disable);
+        }
+
+        if (this.atomColorButton != null) {
+            this.atomColorButton.setDisable(disable);
+        }
+
+        if (this.atomRadiusField != null) {
+            this.atomRadiusField.setDisable(disable);
+        }
+
+        if (this.atomRadiusLabel != null) {
+            this.atomRadiusLabel.setDisable(disable);
+        }
+
+        if (this.atomRadiusButton != null) {
+            this.atomRadiusButton.setDisable(disable);
+        }
     }
 
     private void setupBondWidth() {
