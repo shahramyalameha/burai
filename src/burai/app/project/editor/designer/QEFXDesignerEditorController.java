@@ -11,6 +11,8 @@ package burai.app.project.editor.designer;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -423,7 +425,7 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.updateElemButton(name);
 
         this.elemButton.setOnAction(event -> {
-            PeriodicTable periodicTable = new PeriodicTable();
+            PeriodicTable periodicTable = new PeriodicTable(this.getStyleMap());
             Optional<ElementButton> optElement = periodicTable.showAndWait();
             if (optElement == null || !optElement.isPresent()) {
                 return;
@@ -439,6 +441,36 @@ public class QEFXDesignerEditorController extends QEFXAppController {
                 this.updateElemButton(name_);
             }
         });
+    }
+
+    private Map<String, String> getStyleMap() {
+        if (this.design == null) {
+            return null;
+        }
+
+        String[] names = this.design.namesOfAtoms();
+        if (names == null || names.length < 1) {
+            return null;
+        }
+
+        Map<String, String> styles = new HashMap<>();
+
+        for (String name : names) {
+            AtomDesign atomDesign = name == null ? null : this.design.getAtomDesign(name);
+            if (atomDesign == null) {
+                continue;
+            }
+
+            Color color = atomDesign.getColor();
+            String strColor = color == null ? null : color.toString();
+            strColor = strColor == null ? null : strColor.replaceAll("0x", "#");
+
+            if (strColor != null && !strColor.isEmpty()) {
+                styles.put(name, "-fx-base: " + strColor);
+            }
+        }
+
+        return styles;
     }
 
     private void updateElemButton(String text) {
