@@ -303,8 +303,11 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.styleCombo.setOnAction(event -> {
             AtomsStyle atomsStyle = this.styleCombo.getValue();
             this.disableBondItems(atomsStyle);
-            if (this.design != null && atomsStyle != null) {
-                this.design.setAtomsStyle(atomsStyle);
+            if (atomsStyle != null) {
+                if (this.design != null && atomsStyle != this.design.getAtomsStyle()) {
+                    this.design.storeDesign();
+                    this.design.setAtomsStyle(atomsStyle);
+                }
             }
         });
 
@@ -324,8 +327,11 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.backColorPicker.setValue(this.design == null ? null : this.design.getBackColor());
         this.backColorPicker.valueProperty().addListener(o -> {
             Color color = this.backColorPicker.getValue();
-            if (this.design != null && color != null) {
-                this.design.setBackColor(color);
+            if (color != null) {
+                if (this.design != null && !color.equals(this.design.getBackColor())) {
+                    this.design.storeDesign();
+                    this.design.setBackColor(color);
+                }
             }
         });
 
@@ -345,8 +351,11 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.fontColorPicker.setValue(this.design == null ? null : this.design.getFontColor());
         this.fontColorPicker.valueProperty().addListener(o -> {
             Color color = this.fontColorPicker.getValue();
-            if (this.design != null && color != null) {
-                this.design.setFontColor(color);
+            if (color != null) {
+                if (this.design != null && !color.equals(this.design.getFontColor())) {
+                    this.design.storeDesign();
+                    this.design.setFontColor(color);
+                }
             }
         });
 
@@ -369,8 +378,10 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.updateToggleGraphics(this.legendToggle);
         this.legendToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.legendToggle);
-            if (this.design != null) {
-                this.design.setShowingLegend(this.legendToggle.isSelected());
+            boolean showing = this.legendToggle.isSelected();
+            if (this.design != null && showing != this.design.isShowingLegend()) {
+                this.design.storeDesign();
+                this.design.setShowingLegend(showing);
             }
         });
 
@@ -393,8 +404,10 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.updateToggleGraphics(this.axisToggle);
         this.axisToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.axisToggle);
-            if (this.design != null) {
-                this.design.setShowingAxis(this.axisToggle.isSelected());
+            boolean showing = this.axisToggle.isSelected();
+            if (this.design != null && showing != this.design.isShowingAxis()) {
+                this.design.storeDesign();
+                this.design.setShowingAxis(showing);
             }
         });
 
@@ -520,7 +533,10 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             }
 
             Color color = this.atomColorPicker.getValue();
-            if (color != null) {
+            if (color != null && !color.equals(atomDesign_.getColor())) {
+                if (this.design != null) {
+                    this.design.storeDesign();
+                }
                 atomDesign_.setColor(color);
             }
         });
@@ -553,14 +569,19 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         }
 
         this.atomRadiusField.textProperty().addListener(o -> {
+            AtomDesign atomDesign_ = this.getAtomDesign();
+            if (atomDesign_ == null) {
+                return;
+            }
+
             double value = this.getFieldValue(this.atomRadiusField);
             this.setFieldStyle(this.atomRadiusField, value);
 
-            if (value > 0.0) {
-                AtomDesign atomDesign_ = this.getAtomDesign();
-                if (atomDesign_ != null) {
-                    atomDesign_.setRadius(value);
+            if (value > 0.0 && value != atomDesign_.getRadius()) {
+                if (this.design != null) {
+                    this.design.storeDesign();
                 }
+                atomDesign_.setRadius(value);
             }
         });
 
@@ -628,7 +649,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             this.setFieldStyle(this.bondWidthField, value);
 
             if (value > 0.0) {
-                if (this.design != null) {
+                if (this.design != null && value != this.design.getBondWidth()) {
+                    this.design.storeDesign();
                     this.design.setBondWidth(value);
                 }
             }
@@ -680,9 +702,11 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.disableCellItems(!this.cellToggle.isSelected());
         this.cellToggle.selectedProperty().addListener(o -> {
             this.updateToggleGraphics(this.cellToggle);
-            this.disableCellItems(!this.cellToggle.isSelected());
-            if (this.design != null) {
-                this.design.setShowingCell(this.cellToggle.isSelected());
+            boolean showing = this.cellToggle.isSelected();
+            this.disableCellItems(!showing);
+            if (this.design != null && showing != this.design.isShowingCell()) {
+                this.design.storeDesign();
+                this.design.setShowingCell(showing);
             }
         });
 
@@ -702,8 +726,11 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         this.cellColorPicker.setValue(this.design == null ? null : this.design.getCellColor());
         this.cellColorPicker.valueProperty().addListener(o -> {
             Color color = this.cellColorPicker.getValue();
-            if (this.design != null && color != null) {
-                this.design.setCellColor(color);
+            if (color != null) {
+                if (this.design != null && !color.equals(this.design.getCellColor())) {
+                    this.design.storeDesign();
+                    this.design.setCellColor(color);
+                }
             }
         });
 
@@ -734,7 +761,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             this.setFieldStyle(this.cellWidthField, value);
 
             if (value > 0.0) {
-                if (this.design != null) {
+                if (this.design != null && value != this.design.getCellWidth()) {
+                    this.design.storeDesign();
                     this.design.setCellWidth(value);
                 }
             }
