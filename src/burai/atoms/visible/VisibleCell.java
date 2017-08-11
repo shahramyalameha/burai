@@ -30,6 +30,8 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
     private static final double CYLINDER_SCALE_BOLD = 0.0080;
     private static final int CYLINDER_DIV = 6;
 
+    private static final double WMIN = 1.0e-3;
+
     private boolean boldMode;
 
     private boolean disableToSelect;
@@ -64,6 +66,8 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
         this.currentShowing = false;
         this.currentWidth = -1.0;
         this.currentColor = null;
+
+        this.setupDesign();
 
         this.updateVisibleCylinders();
         this.updateRadiusOfCylinders();
@@ -252,5 +256,48 @@ public class VisibleCell extends Visible<Cell> implements CellEventListener {
         if (index > -1) {
             children.remove(index);
         }
+    }
+
+    private void setupDesign() {
+        if (this.design == null) {
+            return;
+        }
+
+        this.design.addOnShowingCellChanged(showing -> {
+            if (showing == this.currentShowing) {
+                return;
+            }
+
+            if (!this.currentShowing) {
+                this.updateRadiusOfCylinders();
+                this.updateColorOfCylinders();
+            }
+
+            this.updateVisibleCylinders();
+        });
+
+        this.design.addOnCellWidthChanged(width -> {
+            if (width <= 0.0) {
+                return;
+            } else if (Math.abs(width - this.currentWidth) < WMIN) {
+                return;
+            }
+
+            if (this.currentShowing) {
+                this.updateRadiusOfCylinders();
+            }
+        });
+
+        this.design.addOnCellColorChanged(color -> {
+            if (color == null) {
+                return;
+            } else if (color.equals(this.currentColor)) {
+                return;
+            }
+
+            if (this.currentShowing) {
+                this.updateColorOfCylinders();
+            }
+        });
     }
 }

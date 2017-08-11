@@ -86,6 +86,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         this.updateRadiusOfCylinder();
         this.updateXYZOfCylinder();
         this.updateColorOfCylinder();
+
         this.getChildren().add(this.bondCylinder1);
         this.getChildren().add(this.bondCylinder2);
     }
@@ -362,15 +363,15 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     }
 
     @Override
-    public void onBondWidthChanged(AtomDesign atomDesign, double bondWidth) {
-        if (bondWidth <= 0.0) {
+    public void onBondWidthChanged(AtomDesign atomDesign, double bond) {
+        if (bond <= 0.0) {
             return;
         } else if (atomDesign == this.atomDesign1) {
-            if (CYLINDER_SCALE_NORM * Math.abs(bondWidth - this.currentBond1) < RMIN) {
+            if (CYLINDER_SCALE_NORM * Math.abs(bond - this.currentBond1) < RMIN) {
                 return;
             }
         } else if (atomDesign == this.atomDesign2) {
-            if (CYLINDER_SCALE_NORM * Math.abs(bondWidth - this.currentBond2) < RMIN) {
+            if (CYLINDER_SCALE_NORM * Math.abs(bond - this.currentBond2) < RMIN) {
                 return;
             }
         } else {

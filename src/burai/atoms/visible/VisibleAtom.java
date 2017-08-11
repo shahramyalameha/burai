@@ -87,6 +87,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         this.updateXYZOfSphere();
         this.updateColorOfSphere();
         this.updateDrawMode();
+
         this.getChildren().add(this.atomSphere);
     }
 
