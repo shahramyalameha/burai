@@ -53,13 +53,13 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
                 if (!event.isShiftDown()) {
                     // Shortcut + Z
                     if (design != null) {
-                        // TODO
+                        design.restoreDesign();
                     }
 
                 } else {
                     // Shortcut + Shift + Z
                     if (design != null) {
-                        // TODO
+                        design.subRestoreDesign();
                     }
                 }
 

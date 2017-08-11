@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import burai.atoms.design.logger.DesignLogger;
 import burai.atoms.element.ElementUtil;
 import javafx.scene.paint.Color;
 
@@ -41,6 +42,8 @@ public class Design {
 
     private Map<String, AtomDesign> atomDesigns;
 
+    private DesignLogger logger;
+
     public Design() {
         this.atomsStyle = AtomsStyle.BALL_STICK;
         this.backColor = Color.DIMGRAY;
@@ -61,6 +64,8 @@ public class Design {
         this.onCellWidthChangedList = null;
 
         this.atomDesigns = null;
+
+        this.logger = null;
     }
 
     public AtomsStyle getAtomsStyle() {
@@ -409,5 +414,29 @@ public class Design {
 
         String[] names = new String[nameSet.size()];
         return nameSet.toArray(names);
+    }
+
+    public void storeDesign() {
+        if (this.logger == null) {
+            this.logger = new DesignLogger(this);
+        }
+
+        this.logger.storeProperty();
+    }
+
+    public void restoreDesign() {
+        if (this.logger == null) {
+            this.logger = new DesignLogger(this);
+        }
+
+        this.logger.restoreProperty();
+    }
+
+    public void subRestoreDesign() {
+        if (this.logger == null) {
+            this.logger = new DesignLogger(this);
+        }
+
+        this.logger.subRestoreProperty();
     }
 }

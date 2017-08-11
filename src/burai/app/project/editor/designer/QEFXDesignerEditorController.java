@@ -211,7 +211,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
                 SVGLibrary.getGraphic(SVGData.UNDO, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
 
         this.undoButton.setOnAction(event -> {
-            // TODO
+            if (this.design != null) {
+                this.design.restoreDesign();
+            }
         });
     }
 
@@ -239,7 +241,9 @@ public class QEFXDesignerEditorController extends QEFXAppController {
                 SVGLibrary.getGraphic(SVGData.REDO, CTRL_GRAPHIC_SIZE, null, CTRL_GRAPHIC_CLASS));
 
         this.redoButton.setOnAction(event -> {
-            // TODO
+            if (this.design != null) {
+                this.design.subRestoreDesign();
+            }
         });
     }
 

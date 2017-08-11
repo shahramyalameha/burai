@@ -21,6 +21,7 @@ import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.NodeWrapper;
 import burai.com.fx.FXBufferedThread;
+import burai.com.keys.PriorKeyEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -28,6 +29,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -80,7 +82,7 @@ public class QEFXDesignerViewerController extends QEFXAppController {
 
         this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
         this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
-        this.atomsViewerPrim.linkAtomsViewer(this.atomsViewerDual);
+        this.setupAtomsViewers();
 
         try {
             this.dualWindow = new QEFXDesignerWindow(this.projectController, this.atomsViewerDual);
@@ -93,6 +95,31 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         if (this.dualWindow != null) {
             this.dualWindowThread = new FXBufferedThread(true);
         }
+    }
+
+    private void setupAtomsViewers() {
+        this.atomsViewerPrim.linkAtomsViewer(this.atomsViewerDual);
+
+        this.atomsViewerPrim.setOnKeyPressed(event -> {
+            if (event == null || PriorKeyEvent.isPriorKeyEvent(event)) {
+                return;
+            }
+
+            Design design = this.getDesign();
+            if (design == null) {
+                return;
+            }
+
+            if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
+                if (!event.isShiftDown()) {
+                    // Shortcut + Z
+                    design.restoreDesign();
+                } else {
+                    // Shortcut + Shift + Z
+                    design.subRestoreDesign();
+                }
+            }
+        });
     }
 
     public void centerAtomsViewer() {

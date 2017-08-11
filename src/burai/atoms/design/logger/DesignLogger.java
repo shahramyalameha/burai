@@ -89,7 +89,7 @@ public class DesignLogger {
         }
     }
 
-    public void subRestoreConfiguration() {
+    public void subRestoreProperty() {
         if (this.subProps == null || this.subProps.isEmpty()) {
             return;
         }

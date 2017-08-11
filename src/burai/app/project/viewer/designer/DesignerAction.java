@@ -13,7 +13,6 @@ import java.io.IOException;
 
 import burai.app.project.QEFXProjectController;
 import burai.app.project.editor.designer.QEFXDesignerEditor;
-import burai.atoms.design.Design;
 import burai.atoms.model.Cell;
 import burai.project.Project;
 import javafx.scene.Node;
@@ -24,8 +23,6 @@ public class DesignerAction {
     private Project project;
 
     private QEFXProjectController controller;
-
-    private Design design;
 
     private QEFXDesignerViewer designerViewer;
 
@@ -41,7 +38,6 @@ public class DesignerAction {
         this.project = project;
         this.controller = controller;
 
-        this.design = null;
         this.designerViewer = null;
     }
 
@@ -50,7 +46,7 @@ public class DesignerAction {
     }
 
     public void showDesigner() {
-        if (this.design == null || this.designerViewer == null) {
+        if (this.designerViewer == null) {
             this.initializeDesigner();
             return;
         }
@@ -66,10 +62,6 @@ public class DesignerAction {
                 this.designerViewer = null;
                 e.printStackTrace();
             }
-        }
-
-        if (this.design == null) {
-            this.design = this.designerViewer == null ? null : this.designerViewer.getDesign();
         }
 
         QEFXDesignerEditor designerEditor = null;
