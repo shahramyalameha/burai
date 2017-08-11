@@ -87,13 +87,13 @@ public class DesignProperty {
                 }
                 AtomDesign atomDesign = design.getAtomDesign(name);
                 if (atomDesign != null) {
-                    this.putAtomProperty(name, atomDesign);
+                    this.storeAtomDesign(name, atomDesign);
                 }
             }
         }
     }
 
-    public void storeProperty(String path) throws IOException {
+    public void storeDesign(String path) throws IOException {
         if (path == null) {
             return;
         }
@@ -106,7 +106,7 @@ public class DesignProperty {
         this.writeFile(path_);
     }
 
-    public void restoreProperty(Design design) {
+    public void restoreDesign(Design design) {
         if (design == null) {
             return;
         }
@@ -125,16 +125,51 @@ public class DesignProperty {
             Set<String> names = this.atomProperties.keySet();
             if (names != null && !names.isEmpty()) {
                 for (String name : names) {
-                    if (name == null) {
-                        continue;
-                    }
-                    AtomDesign atomDesign = design.getAtomDesign(name);
+                    AtomDesign atomDesign = name == null ? null : design.getAtomDesign(name);
                     if (atomDesign != null) {
-                        this.setAtomDesign(name, atomDesign);
+                        this.restoreAtomDesign(name, atomDesign);
                     }
                 }
             }
         }
+    }
+
+    private void storeAtomDesign(String name, AtomDesign atomDesign) {
+        if (name == null || atomDesign == null) {
+            return;
+        }
+
+        if (this.atomProperties == null) {
+            this.atomProperties = new HashMap<>();
+        }
+
+        AtomDesignProperty atomProperty = new AtomDesignProperty();
+        atomProperty.setRadius(atomDesign.getRadius());
+        atomProperty.setColor(this.colorToDoubles(atomDesign.getColor()));
+        atomProperty.setAtomsStyle(this.atmsStyleToId(atomDesign.getAtomsStyle()));
+        atomProperty.setBondWidth(atomDesign.getBondWidth());
+
+        this.atomProperties.put(name, atomProperty);
+    }
+
+    private void restoreAtomDesign(String name, AtomDesign atomDesign) {
+        if (name == null || atomDesign == null) {
+            return;
+        }
+
+        if (this.atomProperties == null) {
+            return;
+        }
+
+        AtomDesignProperty atomProperty = this.atomProperties.get(name);
+        if (atomProperty == null) {
+            return;
+        }
+
+        atomDesign.setRadius(atomProperty.getRadius());
+        atomDesign.setColor(this.doublesToColor(atomProperty.getColor()));
+        atomDesign.setAtomsStyle(this.idToAtomsStyle(atomProperty.getAtomsStyle()));
+        atomDesign.setBondWidth(atomProperty.getBondWidth());
     }
 
     private int atmsStyleToId(AtomsStyle atomsStyle) {
@@ -170,40 +205,6 @@ public class DesignProperty {
         }
 
         return color == null ? Color.TRANSPARENT : color;
-    }
-
-    private void putAtomProperty(String name, AtomDesign atomDesign) {
-        if (name == null || atomDesign == null) {
-            return;
-        }
-
-        if (this.atomProperties == null) {
-            this.atomProperties = new HashMap<>();
-        }
-
-        AtomDesignProperty atomProperty = new AtomDesignProperty();
-        atomProperty.setRadius(atomDesign.getRadius());
-        atomProperty.setColor(this.colorToDoubles(atomDesign.getColor()));
-
-        this.atomProperties.put(name, atomProperty);
-    }
-
-    private void setAtomDesign(String name, AtomDesign atomDesign) {
-        if (name == null || atomDesign == null) {
-            return;
-        }
-
-        if (this.atomProperties == null) {
-            return;
-        }
-
-        AtomDesignProperty atomProperty = this.atomProperties.get(name);
-        if (atomProperty == null) {
-            return;
-        }
-
-        atomDesign.setRadius(atomProperty.getRadius());
-        atomDesign.setColor(this.doublesToColor(atomProperty.getColor()));
     }
 
     private void readFile(String path) throws IOException {

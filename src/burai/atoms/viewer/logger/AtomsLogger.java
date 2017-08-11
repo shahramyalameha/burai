@@ -35,10 +35,10 @@ public class AtomsLogger {
     private Deque<Configuration> subConfigs;
 
     public AtomsLogger(Cell cell) {
-        this(DEFAULT_MAX_STORED, cell);
+        this(cell, DEFAULT_MAX_STORED);
     }
 
-    public AtomsLogger(int maxStored, Cell cell) {
+    public AtomsLogger(Cell cell, int maxStored) {
         if (cell == null) {
             throw new IllegalArgumentException("cell is null.");
         }
