@@ -28,12 +28,16 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
             this.node.setOnMouseReleased(event -> this.node.requestFocus());
         }
 
-        if (this.node != null) {
-            this.setupKeys(this.node, viewer);
+        if (this.node != null && viewer != null) {
+            this.setupEditorKeys(this.node, viewer);
+        }
+
+        if (viewer != null) {
+            this.setupViewerKeys(viewer);
         }
     }
 
-    private void setupKeys(Node node, QEFXDesignerViewer viewer) {
+    private void setupEditorKeys(Node node, QEFXDesignerViewer viewer) {
         if (node == null) {
             return;
         }
@@ -55,11 +59,17 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
                     if (design != null) {
                         design.restoreDesign();
                     }
+                    if (this.controller != null) {
+                        this.controller.refreshEditor();
+                    }
 
                 } else {
                     // Shortcut + Shift + Z
                     if (design != null) {
                         design.subRestoreDesign();
+                    }
+                    if (this.controller != null) {
+                        this.controller.refreshEditor();
                     }
                 }
 
@@ -67,6 +77,45 @@ public class QEFXDesignerEditor extends QEFXAppComponent<QEFXDesignerEditorContr
                 // Shortcut + C
                 if (viewer != null) {
                     viewer.centerAtomsViewer();
+                }
+            }
+        });
+    }
+
+    private void setupViewerKeys(QEFXDesignerViewer viewer) {
+        if (viewer == null) {
+            return;
+        }
+
+        viewer.setOnKeyPressed(event -> {
+            if (event == null) {
+                return;
+            }
+
+            if (PriorKeyEvent.isPriorKeyEvent(event)) {
+                return;
+            }
+
+            if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
+                Design design = viewer.getDesign();
+
+                if (!event.isShiftDown()) {
+                    // Shortcut + Z
+                    if (design != null) {
+                        design.restoreDesign();
+                    }
+                    if (this.controller != null) {
+                        this.controller.refreshEditor();
+                    }
+
+                } else {
+                    // Shortcut + Shift + Z
+                    if (design != null) {
+                        design.subRestoreDesign();
+                    }
+                    if (this.controller != null) {
+                        this.controller.refreshEditor();
+                    }
                 }
             }
         });

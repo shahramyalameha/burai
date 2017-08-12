@@ -16,7 +16,9 @@ import burai.app.project.QEFXProjectController;
 import burai.atoms.design.Design;
 import burai.atoms.model.Cell;
 import burai.atoms.viewer.NodeWrapper;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 
 public class QEFXDesignerViewer extends QEFXAppComponent<QEFXDesignerViewerController> {
 
@@ -39,6 +41,12 @@ public class QEFXDesignerViewer extends QEFXAppComponent<QEFXDesignerViewerContr
     public void addExclusiveNode(NodeWrapper nodeWrapper) {
         if (this.controller != null) {
             this.controller.addExclusiveNode(nodeWrapper);
+        }
+    }
+
+    public void setOnKeyPressed(EventHandler<? super KeyEvent> value) {
+        if (this.controller != null) {
+            this.controller.setOnKeyPressed(value);
         }
     }
 

@@ -21,15 +21,15 @@ import burai.atoms.model.Cell;
 import burai.atoms.viewer.AtomsViewer;
 import burai.atoms.viewer.NodeWrapper;
 import burai.com.fx.FXBufferedThread;
-import burai.com.keys.PriorKeyEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -54,6 +54,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
     private AtomsViewer atomsViewerPrim;
 
     private AtomsViewer atomsViewerDual;
+
+    private EventHandler<? super KeyEvent> atomsViewerKeyHandler;
 
     @FXML
     private StackPane basePane;
@@ -82,7 +84,8 @@ public class QEFXDesignerViewerController extends QEFXAppController {
 
         this.atomsViewerPrim = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
         this.atomsViewerDual = new AtomsViewer(cell, AtomsAction.getAtomsViewerSize(), true);
-        this.setupAtomsViewers();
+        this.atomsViewerPrim.linkAtomsViewer(this.atomsViewerDual);
+        this.atomsViewerPrim.setOnKeyPressed(event -> this.atomsViewerKeyHandler.handle(event));
 
         try {
             this.dualWindow = new QEFXDesignerWindow(this.projectController, this.atomsViewerDual);
@@ -95,31 +98,6 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         if (this.dualWindow != null) {
             this.dualWindowThread = new FXBufferedThread(true);
         }
-    }
-
-    private void setupAtomsViewers() {
-        this.atomsViewerPrim.linkAtomsViewer(this.atomsViewerDual);
-
-        this.atomsViewerPrim.setOnKeyPressed(event -> {
-            if (event == null || PriorKeyEvent.isPriorKeyEvent(event)) {
-                return;
-            }
-
-            Design design = this.getDesign();
-            if (design == null) {
-                return;
-            }
-
-            if (event.isShortcutDown() && KeyCode.Z.equals(event.getCode())) {
-                if (!event.isShiftDown()) {
-                    // Shortcut + Z
-                    design.restoreDesign();
-                } else {
-                    // Shortcut + Shift + Z
-                    design.subRestoreDesign();
-                }
-            }
-        });
     }
 
     public void centerAtomsViewer() {
@@ -138,6 +116,10 @@ public class QEFXDesignerViewerController extends QEFXAppController {
         if (this.atomsViewerPrim != null) {
             this.atomsViewerPrim.addExclusiveNode(nodeWrapper);
         }
+    }
+
+    public void setOnKeyPressed(EventHandler<? super KeyEvent> value) {
+        this.atomsViewerKeyHandler = value;
     }
 
     public Design getDesign() {

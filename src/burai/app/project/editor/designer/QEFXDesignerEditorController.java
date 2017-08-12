@@ -214,6 +214,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             if (this.design != null) {
                 this.design.restoreDesign();
             }
+
+            this.refreshEditor();
         });
     }
 
@@ -244,6 +246,8 @@ public class QEFXDesignerEditorController extends QEFXAppController {
             if (this.design != null) {
                 this.design.subRestoreDesign();
             }
+
+            this.refreshEditor();
         });
     }
 
@@ -850,6 +854,54 @@ public class QEFXDesignerEditorController extends QEFXAppController {
         } else {
             toggle.setGraphic(ToggleGraphics.getGraphic(
                     TOGGLE_WIDTH, TOGGLE_HEIGHT, false, TOGGLE_TEXT_NO, TOGGLE_STYLE_NO));
+        }
+    }
+
+    protected void refreshEditor() {
+        if (this.styleCombo != null) {
+            this.styleCombo.setValue(this.design == null ? null : this.design.getAtomsStyle());
+        }
+
+        if (this.backColorPicker != null) {
+            this.backColorPicker.setValue(this.design == null ? null : this.design.getBackColor());
+        }
+
+        if (this.fontColorPicker != null) {
+            this.fontColorPicker.setValue(this.design == null ? null : this.design.getFontColor());
+        }
+
+        if (this.legendToggle != null) {
+            this.legendToggle.setSelected(this.design == null ? false : this.design.isShowingLegend());
+        }
+
+        if (this.axisToggle != null) {
+            this.axisToggle.setSelected(this.design == null ? false : this.design.isShowingAxis());
+        }
+
+        if (this.atomColorPicker != null) {
+            AtomDesign atomDesign = this.getAtomDesign();
+            this.atomColorPicker.setValue(atomDesign == null ? null : atomDesign.getColor());
+        }
+
+        if (this.atomRadiusField != null) {
+            AtomDesign atomDesign = this.getAtomDesign();
+            this.atomRadiusField.setText(atomDesign == null ? "" : Double.toString(atomDesign.getRadius()));
+        }
+
+        if (this.bondWidthField != null) {
+            this.bondWidthField.setText(this.design == null ? "" : Double.toString(this.design.getBondWidth()));
+        }
+
+        if (this.cellToggle != null) {
+            this.cellToggle.setSelected(this.design == null ? false : this.design.isShowingCell());
+        }
+
+        if (this.cellColorPicker != null) {
+            this.cellColorPicker.setValue(this.design == null ? null : this.design.getCellColor());
+        }
+
+        if (this.cellWidthField != null) {
+            this.cellWidthField.setText(this.design == null ? "" : Double.toString(this.design.getCellWidth()));
         }
     }
 }
