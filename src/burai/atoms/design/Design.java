@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import burai.atoms.design.logger.DesignLogger;
+import burai.atoms.design.property.DesignLogger;
 import burai.atoms.element.ElementUtil;
 import javafx.scene.paint.Color;
 

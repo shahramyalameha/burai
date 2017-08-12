@@ -7,13 +7,12 @@
  * or http://www.gnu.org/copyleft/gpl.txt .
  */
 
-package burai.atoms.design.logger;
+package burai.atoms.design.property;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
 import burai.atoms.design.Design;
-import burai.atoms.design.property.DesignProperty;
 
 public class DesignLogger {
 
