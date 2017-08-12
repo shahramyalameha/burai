@@ -31,6 +31,8 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     private static final double CYLINDER_SCALE_BOLD = 0.12;
     private static final int CYLINDER_DIV = 12;
 
+    private static final double SHOWING_RADIUS_SCALE = 1.15;
+
     private static final double RMIN = 5.0e-3;
     private static final double RRMIN = RMIN * RMIN;
 
@@ -43,10 +45,11 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     private double currentRadius2;
     private Color currentColor1;
     private Color currentColor2;
-    private boolean currentStyle1;
-    private boolean currentStyle2;
+    private boolean currentBall1;
+    private boolean currentBall2;
     private double currentBond1;
     private double currentBond2;
+    private boolean currentShowing;
 
     private AtomDesign atomDesign1;
     private AtomDesign atomDesign2;
@@ -71,10 +74,11 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         this.currentRadius2 = -1.0;
         this.currentColor1 = null;
         this.currentColor2 = null;
-        this.currentStyle1 = false;
-        this.currentStyle2 = false;
+        this.currentBall1 = false;
+        this.currentBall2 = false;
         this.currentBond1 = -1.0;
         this.currentBond2 = -1.0;
+        this.currentShowing = false;
 
         this.atomDesign1 = null;
         this.atomDesign2 = null;
@@ -83,9 +87,15 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         this.updateAtomDesign(true, true);
         this.updateVisibleCylinder();
-        this.updateRadiusOfCylinder();
-        this.updateXYZOfCylinder();
-        this.updateColorOfCylinder();
+
+        if (!(this.currentBall1 && this.currentBall2)) {
+            this.updateXYZOfCylinder();
+        }
+
+        if (this.currentShowing) {
+            this.updateRadiusOfCylinder();
+            this.updateColorOfCylinder();
+        }
 
         this.getChildren().add(this.bondCylinder1);
         this.getChildren().add(this.bondCylinder2);
@@ -128,14 +138,11 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
     }
 
     private void updateVisibleCylinder() {
-        this.currentStyle1 = this.isBallStyle(this.atomDesign1);
-        this.currentStyle2 = this.isBallStyle(this.atomDesign2);
-        this.bondCylinder1.setVisible(!this.currentStyle1);
-        this.bondCylinder2.setVisible(!this.currentStyle2);
-    }
-
-    private boolean isBallStyle(AtomDesign atomDesign) {
-        return atomDesign != null && atomDesign.getAtomsStyle() == AtomsStyle.BALL;
+        this.currentBall1 = this.isBallStyle(this.atomDesign1);
+        this.currentBall2 = this.isBallStyle(this.atomDesign2);
+        this.bondCylinder1.setVisible(!this.currentBall1);
+        this.bondCylinder2.setVisible(!this.currentBall2);
+        this.currentShowing = !(this.currentBall1 && this.currentBall2);
     }
 
     private void updateRadiusOfCylinder() {
@@ -160,9 +167,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (rad1 <= 0.0) {
             rad1 = atom1.getRadius();
         }
-
         this.currentRadius1 = rad1;
-        rad1 = Math.sqrt(Math.max(rad1, 0.0));
 
         Atom atom2 = this.model.getAtom2();
         int anum2 = atom2.getAtomNum();
@@ -177,20 +182,33 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (rad2 <= 0.0) {
             rad2 = atom2.getRadius();
         }
-
         this.currentRadius2 = rad2;
-        rad2 = Math.sqrt(Math.max(rad2, 0.0));
 
         double dx = x2 - x1;
         double dy = y2 - y1;
         double dz = z2 - z1;
         double rr = dx * dx + dy * dy + dz * dz;
+
+        double rshow = SHOWING_RADIUS_SCALE * (rad1 + rad2);
+        if (rr > rshow * rshow) {
+            this.bondCylinder1.setVisible(false);
+            this.bondCylinder2.setVisible(false);
+            this.currentShowing = false;
+            return;
+        }
+
+        this.bondCylinder1.setVisible(!this.currentBall1);
+        this.bondCylinder2.setVisible(!this.currentBall2);
+        this.currentShowing = !(this.currentBall1 && this.currentBall2);
+
         double r = Math.sqrt(rr);
+        rad1 = Math.sqrt(Math.max(rad1, 0.0));
+        rad2 = Math.sqrt(Math.max(rad2, 0.0));
 
         double rate1 = rad1 / (rad1 + rad2);
         double rate2 = 1.0 - rate1;
         if (anum1 == anum2 &&
-                this.currentStyle1 == this.currentStyle2 && this.currentBond1 == this.currentBond2) {
+                this.currentBall1 == this.currentBall2 && this.currentBond1 == this.currentBond2) {
             rate1 = 0.999;
             rate2 = 0.001;
         }
@@ -249,6 +267,10 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         this.bondCylinder2.setMaterial(material2);
     }
 
+    private boolean isBallStyle(AtomDesign atomDesign) {
+        return atomDesign != null && atomDesign.getAtomsStyle() == AtomsStyle.BALL;
+    }
+
     @Override
     public void onLinkedAtomRenamed(BondEvent event) {
         AtomEvent atomEvent = event == null ? null : event.getAtomEvent();
@@ -269,8 +291,11 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             this.updateAtomDesign(false, true);
         }
 
-        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+        if (!(this.currentBall1 && this.currentBall2)) {
             this.updateXYZOfCylinder();
+        }
+
+        if (this.currentShowing) {
             this.updateColorOfCylinder();
         }
     }
@@ -290,7 +315,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+        if (!(this.currentBall1 && this.currentBall2)) {
             this.updateXYZOfCylinder();
         }
     }
@@ -311,7 +336,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+        if (!(this.currentBall1 && this.currentBall2)) {
             this.updateXYZOfCylinder();
         }
     }
@@ -332,7 +357,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+        if (this.currentShowing) {
             this.updateColorOfCylinder();
         }
     }
@@ -342,24 +367,27 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
         if (atomsStyle == null) {
             return;
         } else if (atomDesign == this.atomDesign1) {
-            if (this.isBallStyle(atomDesign) == this.currentStyle1) {
+            if (this.isBallStyle(atomDesign) == this.currentBall1) {
                 return;
             }
         } else if (atomDesign == this.atomDesign2) {
-            if (this.isBallStyle(atomDesign) == this.currentStyle2) {
+            if (this.isBallStyle(atomDesign) == this.currentBall2) {
                 return;
             }
         } else {
             return;
         }
 
-        if (this.currentStyle1 && this.currentStyle2) {
-            this.updateRadiusOfCylinder();
+        this.updateVisibleCylinder();
+
+        if (!(this.currentBall1 && this.currentBall2)) {
             this.updateXYZOfCylinder();
-            this.updateColorOfCylinder();
         }
 
-        this.updateVisibleCylinder();
+        if (this.currentShowing) {
+            this.updateRadiusOfCylinder();
+            this.updateColorOfCylinder();
+        }
     }
 
     @Override
@@ -378,7 +406,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
             return;
         }
 
-        if ((!this.currentStyle1) || (!this.currentStyle2)) {
+        if (this.currentShowing) {
             this.updateRadiusOfCylinder();
         }
     }

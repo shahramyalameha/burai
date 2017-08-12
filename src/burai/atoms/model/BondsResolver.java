@@ -12,7 +12,6 @@ package burai.atoms.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.application.Platform;
 import burai.atoms.model.event.AtomEvent;
 import burai.atoms.model.event.AtomEventListener;
 import burai.atoms.model.event.CellEvent;
@@ -20,6 +19,7 @@ import burai.atoms.model.event.CellEventListener;
 import burai.atoms.model.event.ModelEvent;
 import burai.com.env.Environments;
 import burai.com.parallel.Parallel;
+import javafx.application.Platform;
 
 public class BondsResolver implements AtomEventListener, CellEventListener {
 
@@ -27,7 +27,7 @@ public class BondsResolver implements AtomEventListener, CellEventListener {
 
     private static final double BOND_SCALE1 = 0.50;
 
-    private static final double BOND_SCALE2 = 1.15;
+    private static final double BOND_SCALE2 = 1.50;
 
     private static final double THR_ATOM_MOTION = 1.0e-3;
 

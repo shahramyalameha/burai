@@ -43,7 +43,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
     private double currentRadius;
     private Color currentColor;
-    private boolean currentStyle;
+    private boolean currentStick;
     private double currentBond;
 
     private AtomDesign atomDesign;
@@ -76,7 +76,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
         this.currentRadius = -1.0;
         this.currentColor = null;
-        this.currentStyle = false;
+        this.currentStick = false;
         this.currentBond = -1.0;
 
         this.atomDesign = null;
@@ -108,10 +108,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
     }
 
     private void updateRadiusOfSphere() {
-        this.currentStyle = this.isStickStyle();
+        this.currentStick = this.isStickStyle();
 
         double radius = -1.0;
-        if (this.currentStyle) {
+        if (this.currentStick) {
             this.currentBond = this.atomDesign.getBondWidth();
             radius = (BOND_SCALE / RADIUS_SCALE_NORM) * this.currentBond;
 
@@ -131,10 +131,6 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
 
         double scale = this.boldMode ? RADIUS_SCALE_BOLD : RADIUS_SCALE_NORM;
         this.atomSphere.setRadius(scale * radius);
-    }
-
-    private boolean isStickStyle() {
-        return this.atomDesign != null && this.atomDesign.getAtomsStyle() == AtomsStyle.STICK;
     }
 
     private void updateXYZOfSphere() {
@@ -202,6 +198,10 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         boolean selected = masterAtom.booleanProperty(KEY_SELECTED);
         this.model.setProperty(KEY_SELECTED, selected);
         return selected;
+    }
+
+    private boolean isStickStyle() {
+        return this.atomDesign != null && this.atomDesign.getAtomsStyle() == AtomsStyle.STICK;
     }
 
     public double getRadius() {
@@ -285,7 +285,7 @@ public class VisibleAtom extends Visible<Atom> implements AtomEventListener, Ato
         if (atomDesign != this.atomDesign || atomsStyle == null) {
             return;
         }
-        if (this.isStickStyle() == this.currentStyle) {
+        if (this.isStickStyle() == this.currentStick) {
             return;
         }
 
