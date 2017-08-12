@@ -87,15 +87,9 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         this.updateAtomDesign(true, true);
         this.updateVisibleCylinder();
-
-        if (!(this.currentBall1 && this.currentBall2)) {
-            this.updateXYZOfCylinder();
-        }
-
-        if (this.currentShowing) {
-            this.updateRadiusOfCylinder();
-            this.updateColorOfCylinder();
-        }
+        this.updateXYZOfCylinder();
+        this.updateRadiusOfCylinder();
+        this.updateColorOfCylinder();
 
         this.getChildren().add(this.bondCylinder1);
         this.getChildren().add(this.bondCylinder2);
@@ -207,8 +201,7 @@ public class VisibleBond extends Visible<Bond> implements BondEventListener, Ato
 
         double rate1 = rad1 / (rad1 + rad2);
         double rate2 = 1.0 - rate1;
-        if (anum1 == anum2 &&
-                this.currentBall1 == this.currentBall2 && this.currentBond1 == this.currentBond2) {
+        if (anum1 == anum2) {
             rate1 = 0.999;
             rate2 = 0.001;
         }
